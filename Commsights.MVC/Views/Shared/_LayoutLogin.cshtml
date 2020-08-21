@@ -1,0 +1,61 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"] - @Commsights.Data.Helpers.AppGlobal.CMSTitle</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="description" content="@Commsights.Data.Helpers.AppGlobal.CMSTitle">
+    <meta name="keywords" content="@Commsights.Data.Helpers.AppGlobal.CMSTitle">
+    <meta name="author" content="@Commsights.Data.Helpers.AppGlobal.Title">
+    <link rel="apple-touch-icon" href="@Commsights.Data.Helpers.AppGlobal.LogoURLFull">
+    <link rel="shortcut icon" type="image/x-icon" href="@Commsights.Data.Helpers.AppGlobal.LogoURLFull">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+    <link href="/plugins/iCheck/square/blue.css" rel="stylesheet" type="text/css" />
+    <script>
+        function BeginRequestHandler() {
+            Slider();
+        }
+        function EndRequestHandler() {
+            $('#Dim').css("display", "none");
+            $('#BackGround').fadeTo("fast", 2);
+        }
+        function Slider() {
+            $('#Dim').css("display", "");
+            $('#Dim').css("z-index", "10");
+            $('#Dim').css("position", "absolute");
+            $('#Dim').css("top", ($(window).height() - $('#Dim').height()) / 2 + $(window).scrollTop() + "px");
+            $('#Dim').css("left", ($(window).width() - $('#Dim').width()) / 2 + $(window).scrollLeft() + "px");
+            $('#BackGround').fadeTo("fast", 0.5);
+            $('#Dim').focus();
+        }
+    </script>
+</head>
+<body id="BackGround" class="login-page" style="background-color:#000000;">
+    <div id="Dim" style="display: none;">
+        <div class="msgbox">
+            <img src="@Commsights.Data.Helpers.AppGlobal.LoadingURLFull" alt="Processing, please wait!"
+                 title="Processing, please wait!" width="200px" height="200px" />
+        </div>
+    </div>
+    @RenderBody()
+
+    <script src="/plugins/jQuery/jQuery-2.1.4.min.js" type="text/javascript"></script>
+    <script src="/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/plugins/iCheck/icheck.min.js" type="text/javascript"></script>
+    <script>
+        $(function () {
+            $('input').iCheck({
+                checkboxClass: 'icheckbox_square-blue',
+                radioClass: 'iradio_square-blue',
+                increaseArea: '20%' // optional
+            });
+        });
+    </script>
+
+</body>
+</html>

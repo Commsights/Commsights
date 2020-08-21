@@ -1,0 +1,174 @@
+﻿@{ ViewData["Title"] = "Menu Permission"; }
+<div class='col-xs-12'>
+    <div class='box'>
+        <div class='box-header'>
+            <ul>
+                <li>
+                    <i class="fa fa-shield"></i>
+                    <a href="#">Permission</a>
+                </li>
+                <li class="active">
+                    <a href="#"> Menu permission</a>
+                </li>
+            </ul>
+        </div>
+        <div class='box-body'>
+            <div class="row">
+                <div class='col-sm-12'>
+                    <div class='col-sm-4'>
+                        @(Html.Kendo().DropDownList()
+                     .Name("Membership")
+                     .DataValueField("Id")
+                     .DataTextField("FullName")
+                     .HtmlAttributes(new { style = "width:100%; font-size: 16px;" })
+                      .Events(e => e.DataBound("onMembershipDataBound"))
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetAllToList", "Membership")))
+                            )
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-success btn-sm" onclick="Search()">
+                            <span class="fa fa-search"></span>
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="InitializationMenuPermission()">
+                            <span class="fa fa-refresh"></span>
+                        </button>
+                    </div>
+                    <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
+                        <input id="chkAll" type="checkbox">
+                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">All</p>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="SaveAllMenuPermission()">
+                            <span class="fa fa-save"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <br />
+            @(Html.Kendo().Grid<Commsights.Data.Models.MembershipPermission>()
+.Name("MembershipPermission")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fa fa-pencil-square-o").HtmlAttributes(new { style = "font-size: 16px; padding-left:14px; padding-top:6px; border-radius: 6px; font-weight:bold;" }); }).Width(120);
+    columns.Bound(t => t.MenuId).Title("Menu").Width(300);
+    columns.Bound(t => t.IsView).Title("View").Width(100);
+})
+.ToolBar(toolBar => toolBar.Search())
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { style = "font-size: 16px;" })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.Id);
+    model.Field(t => t.MenuId).Editable(false);
+})
+.Events(t => { t.RequestEnd("onGridRequestEnd"); })
+.Read(t => t.Action("GetByMembershipIDToList", "MembershipPermission").Data("filterMembershipPermission"))
+.Update(t => t.Action("Update", "MembershipPermission"))
+)
+)
+        </div>
+    </div>
+</div>
+
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+
+<script>
+    function onGridRequestEnd(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            var response = e.response;
+            var messageType = response.split('-')[0];
+            var note = response.split('-')[1];
+            var notification = $("#Notification").data("kendoNotification");
+            notification.show(note, messageType);
+            $("#MembershipPermission").data("kendoGrid").dataSource.read();
+        }
+    }
+    function filterMembershipPermission(e) {
+        var membershipIDValue = $("#Membership").data("kendoDropDownList").value();
+        return { membershipID: membershipIDValue };
+
+    }
+    function onMembershipDataBound() {
+        var control = $("#Membership").data("kendoDropDownList");
+        var controlLength = control.dataSource.data().length;
+        if (controlLength > 0) {
+            control.select(0);
+            control.trigger("change");
+        }
+    }
+    function Search() {
+        $("#MembershipPermission").data("kendoGrid").dataSource.read();
+    }
+    function InitializationMenuPermission() {
+        var membershipIDValue = $("#Membership").data("kendoDropDownList").value();
+          $.ajax(
+              {
+                  type: "POST",
+                  datatype: "JSON",
+                  url: '@Url.Action("InitializationMenuPermission", "MembershipPermission")',
+                  data: { membershipID: membershipIDValue },
+            success: function (result) {
+                var messageType = result.split('-')[0];
+                var note = result.split('-')[1];
+                var notification = $("#Notification").data("kendoNotification");
+                notification.show(note, messageType);
+                Search();
+            },
+            error: function (jqXHR, exception) {},
+            complete: function () { },
+              })
+
+    }
+    function SaveAllMenuPermission() {
+        var membershipIDValue = $("#Membership").data("kendoDropDownList").value();
+        var isAllValue = document.getElementById('chkAll').checked;
+        $.ajax(
+            {
+                type: "POST",
+                datatype: "JSON",
+                url: '@Url.Action("SaveAllMenuPermission", "MembershipPermission")',
+                data: { membershipID: membershipIDValue, isAll: isAllValue },
+                success: function (result) {
+                    var messageType = result.split('-')[0];
+                    var note = result.split('-')[1];
+                    var notification = $("#Notification").data("kendoNotification");
+                    notification.show(note, messageType);
+                    Search();
+                },
+                error: function (jqXHR, exception) { },
+                complete: function () { },
+            });
+    }
+</script>

@@ -1,0 +1,102 @@
+﻿@{ ViewData["Title"] = "Config"; }
+<div class='col-xs-12'>
+    <div class='box'>
+        <div class='box-header'>
+            <ul>
+                <li>
+                    <i class="fa fa-gear"></i>
+                    <a href="#">System</a>
+                </li>
+                <li class="active">
+                    <a href="#"> Config</a>
+                </li>
+            </ul>
+        </div>
+        <div class='box-body'>
+            @(Html.Kendo().Grid<Commsights.Data.Models.Config>()
+.Name("Config")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fa fa-pencil-square-o").HtmlAttributes(new { style = "font-size: 16px; padding-left:14px; padding-top:6px; border-radius: 6px; font-weight:bold;" }); command.Destroy().Text("&nbsp;").IconClass("fa fa-trash-o").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:10px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(120);
+    columns.Bound(t => t.Id).Title("ID").Width(50);
+    columns.Bound(t => t.ParentId).Title("ParentID").Width(50);
+    columns.Bound(t => t.Title).Title("Title").Width(200);
+    columns.Bound(t => t.GroupName).Title("GroupName").Width(200);
+    columns.Bound(t => t.Code).Title("Code").Width(200);
+    columns.Bound(t => t.CodeName).Title("CodeName").Width(200);
+    columns.Bound(t => t.CodeNameSub).Title("CodeNameSub").Width(200);
+    columns.Bound(t => t.SortOrder).Title("SortOrder").Width(200);
+    columns.Bound(t => t.Icon).Title("Icon").Width(200);
+    columns.Bound(t => t.Controller).Title("Controller").Width(200);
+    columns.Bound(t => t.Action).Title("Action").Width(200);
+    columns.Bound(t => t.Urlfull).Title("URLFull").Width(200);
+    columns.Bound(t => t.Urlsub).Title("URLSub").Width(200);
+    columns.Bound(t => t.Note).Title("Note").Width(200);
+    columns.Bound(t => t.Active).Title("Active").Width(200);
+    columns.Bound(t => t.IsMenuLeft).Title("IsMenuLeft").Width(200);
+})
+.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fa fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:10px;" }))
+.ToolBar(toolBar => toolBar.Search())
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { style = "font-size: 16px;" })
+.Search(search => { search.Field(f => f.Title); search.Field(f => f.Urlfull);})
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.Id);
+    model.Field(t => t.Id).Editable(false);
+})
+.Events(t => { t.RequestEnd("onGridRequestEnd"); })
+.Read(t => t.Action("GetAllToList", "Config"))
+.Destroy(t => t.Action("Delete", "Config"))
+.Create(t => t.Action("Create", "Config"))
+.Update(t => t.Action("Update", "Config"))
+)
+)
+        </div>
+    </div>
+</div>
+
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+
+<script>
+    function onGridRequestEnd(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            var response = e.response;
+            var messageType = response.split('-')[0];
+            var note = response.split('-')[1];
+            var notification = $("#Notification").data("kendoNotification");
+            notification.show(note, messageType);
+            $("#Config").data("kendoGrid").dataSource.read();
+        }
+    }
+
+</script>

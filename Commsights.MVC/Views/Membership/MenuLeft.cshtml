@@ -1,0 +1,42 @@
+﻿@model List<Commsights.Data.Models.Config>
+
+@{
+    foreach (Commsights.Data.Models.Config item in Model)
+    {
+        if (item.ParentId == 0)
+        {
+            <li class='treeview'>
+                <a href='#' title="@item.Title">
+                    <i class='@item.Icon'></i><span> @item.Title</span>
+                    <span class='pull-right-container'>
+                        <i class='fa fa-angle-left pull-right'></i>
+                    </span>
+                </a>
+                <ul class='treeview-menu'>
+                    @foreach (Commsights.Data.Models.Config item01 in Model)
+                    {
+                        if (item01.ParentId == item.Id)
+                        {
+                            <li><a href="@Url.Action(item01.Action, item01.Controller, new {area = ""})" title="@item01.Title"><i class='@item01.Icon'></i> @item01.Title</a></li>
+                        }
+                    }
+                </ul>
+            </li>
+        }
+    }
+}
+<li><a href="@Url.Action("Logout", "Membership", new {area = ""})" title="Sign out"><i class="fa fa-power-off"></i> <span> Sign out</span></a></li>
+
+
+<script>
+    function setMenuLeftActive() {
+        var tag = $('a[href="' + this.location.pathname + '"]');
+        var tag02 = tag.parent('li');
+        tag02.addClass('active');
+        var tag01 = tag.parent('li').parent('ul').parent('li');
+        tag01.addClass('active');
+    }
+    jQuery(function ($) {
+        setMenuLeftActive();
+    });
+</script>
