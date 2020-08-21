@@ -1,0 +1,7 @@
+@model Commsights.Data.Models.Config
+@(Html.Kendo().DropDownListFor(t => t)
+                   .DataValueField("Id")
+                   .DataTextField("CodeName")
+                   .HtmlAttributes(new { style = "width:100%; font-size: 16px;" })
+                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetBrandToList", "Config")))
+)

@@ -24,6 +24,11 @@ namespace Commsights.Data.Repositories
             Config item = _context.Set<Config>().FirstOrDefault(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.Title.Equals(title));
             return item == null ? true : false;
         }
+        public bool IsValidByGroupNameAndCodeAndCodeName(string groupName, string code, string codeName)
+        {
+            Config item = _context.Set<Config>().FirstOrDefault(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.CodeName.Equals(codeName));
+            return item == null ? true : false;
+        }
         public List<Config> GetByCodeToList(string code)
         {
             return _context.Config.Where(item => item.Code.Equals(code)).ToList();

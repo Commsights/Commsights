@@ -117,14 +117,11 @@ namespace Commsights.Data.Models
 
             modelBuilder.Entity<MembershipPermission>(entity =>
             {
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
+                entity.Property(e => e.Id).HasColumnName("ID");               
 
                 entity.Property(e => e.DateCreated).HasColumnType("datetime");
 
                 entity.Property(e => e.DateUpdated).HasColumnType("datetime");
-
 
                 entity.Property(e => e.MembershipId).HasColumnName("MembershipID");
 
@@ -133,6 +130,14 @@ namespace Commsights.Data.Models
                 entity.Property(e => e.Note).HasMaxLength(4000);
 
                 entity.Property(e => e.ParentId).HasColumnName("ParentID");
+
+                entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
+
+                entity.Property(e => e.BrandId).HasColumnName("BrandID");
+
+                entity.Property(e => e.ProductId).HasColumnName("ProductID");     
+                
+                entity.Property(e => e.Product).HasMaxLength(4000);
             });
 
             //modelBuilder.Entity<MembershipAccessHistory>(entity =>

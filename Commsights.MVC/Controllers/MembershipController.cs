@@ -76,6 +76,10 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult BrandOfCustomer()
+        {
+            return View();
+        }
         public ActionResult GetAllToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _membershipRepository.GetAllToList();
@@ -85,6 +89,35 @@ namespace Commsights.MVC.Controllers
         {
             var data = _membershipRepository.GetByParentIDToList(151);
             return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCustomerToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _membershipRepository.GetByParentIDToList(150);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public IActionResult CreateCustomer(Membership model)
+        {
+            Initialization(model, 0);
+            model.ParentId = 150;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            if (_membershipRepository.IsExistEmail(model.Email) == false)
+            {
+                if (_membershipRepository.IsExistPhone(model.Email) == false)
+                {
+                    result = _membershipRepository.Create(model);
+                }
+            }
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
         }
         public IActionResult CreateEmployee(Membership model)
         {

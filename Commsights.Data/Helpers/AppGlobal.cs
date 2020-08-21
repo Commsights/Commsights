@@ -23,6 +23,22 @@ namespace Commsights.Data.Helpers
         #endregion
 
         #region AppSettings 
+        public static string Brand
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Brand").Value;
+            }
+        }
+        public static string Product
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Product").Value;
+            }
+        }
         public static string ScanFinish
         {
             get

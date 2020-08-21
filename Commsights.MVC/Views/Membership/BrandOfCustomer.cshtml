@@ -1,4 +1,4 @@
-﻿@{ ViewData["Title"] = "Customer"; }
+﻿@{ ViewData["Title"] = "Brand of Customer"; }
 <div class='col-xs-12'>
     <div class='box'>
         <div class='box-header'>
@@ -8,27 +8,34 @@
                     <a href="#">Customer</a>
                 </li>
                 <li class="active">
-                    <a href="#"> Customer</a>
+                    <a href="#"> Brand of Customer</a>
                 </li>
             </ul>
         </div>
         <div class='box-body'>
-            @(Html.Kendo().Grid<Commsights.Data.Models.Membership>()
-.Name("Membership")
+            <div class="row">
+                <div class='col-sm-12'>
+                    <div class='col-sm-4'>
+                        @(Html.Kendo().DropDownList()
+                     .Name("Membership")
+                     .DataValueField("Id")
+                     .DataTextField("FullName")
+                     .HtmlAttributes(new { style = "width:100%; font-size: 16px;" })
+                      .Events(e => e.DataBound("onMembershipDataBound").Change("onMembershipChange"))
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCustomerToList", "Membership")))
+                            )
+                    </div>
+                </div>
+            </div>
+            <br />
+            @(Html.Kendo().Grid<Commsights.Data.Models.MembershipPermission>()
+.Name("MembershipPermission")
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fa fa-pencil-square-o").HtmlAttributes(new { style = "font-size: 16px; padding-left:14px; padding-top:6px; border-radius: 6px; font-weight:bold;" }); command.Destroy().Text("&nbsp;").IconClass("fa fa-trash-o").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:10px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(120);
-    columns.Bound(t => t.FullName).Title("Full name").Width(300);
-    columns.Bound(t => t.ShortName).Title("Short name").Width(200);
-    columns.Bound(t => t.EnglishName).Title("English name").Width(200);
-    columns.Bound(t => t.Email).Title("Email").Width(200);
-    columns.Bound(t => t.Phone).Title("Phone").Width(200);
-    columns.Bound(t => t.Address).Title("Address").Width(200);
-    columns.Bound(t => t.ContactName).Title("Contact").Width(200);
-    columns.Bound(t => t.ContactPhone).Title("Phone").Width(200);
-    columns.Bound(t => t.ContactEmail).Title("Email").Width(200);
-    columns.Bound(t => t.Password).Title("Password").Width(200);
     columns.Bound(t => t.Id).Title("ID").Width(50);
+    columns.Bound(t => t.BrandId).EditorTemplateName("Config_Brand").Title("Brand").Width(300);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fa fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:10px;" }))
 .ToolBar(toolBar => toolBar.Search())
@@ -56,7 +63,6 @@
 .FileName("Config.pdf")
 )
 .HtmlAttributes(new { style = "font-size: 16px;" })
-.Search(search => { search.Field(f => f.FullName); search.Field(f => f.Email); search.Field(f => f.Phone); })
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
@@ -66,10 +72,10 @@
     model.Field(t => t.Id).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetCustomerToList", "Membership"))
-.Destroy(t => t.Action("Delete", "Membership"))
-.Create(t => t.Action("CreateCustomer", "Membership"))
-.Update(t => t.Action("Update", "Membership"))
+.Read(t => t.Action("GetByMembershipIDToList", "MembershipPermission").Data("filterMembershipPermission"))
+.Destroy(t => t.Action("Delete", "MembershipPermission"))
+.Create(t => t.Action("CreateBrand", "MembershipPermission").Data("filterMembershipPermissionCreateBrand"))
+.Update(t => t.Action("Update", "MembershipPermission"))
 )
 )
         </div>
@@ -82,13 +88,34 @@
     .Width(400)
 )
 
-<script>function onGridRequestEnd(e) {
+<script>
+    function onGridRequestEnd(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
             var response = e.response;
             var messageType = response.split('-')[0];
             var note = response.split('-')[1];
             var notification = $("#Notification").data("kendoNotification");
             notification.show(note, messageType);
-            $("#Membership").data("kendoGrid").dataSource.read();
+            $("#MembershipPermission").data("kendoGrid").dataSource.read();
         }
-    }</script>
+    }
+    function onMembershipDataBound() {
+        var control = $("#Membership").data("kendoDropDownList");
+        var controlLength = control.dataSource.data().length;
+        if (controlLength > 0) {
+            control.select(0);
+            control.trigger("change");
+        }
+    }
+    function onMembershipChange() {
+        $("#MembershipPermission").data("kendoGrid").dataSource.read();
+    }
+    function filterMembershipPermission(e) {
+        var membershipIDValue = $("#Membership").data("kendoDropDownList").value();
+        return { membershipID: membershipIDValue };
+    }
+    function filterMembershipPermissionCreateBrand(e) {
+        var membershipIDValue = $("#Membership").data("kendoDropDownList").value();
+        return { membershipID: membershipIDValue };
+    }
+</script>

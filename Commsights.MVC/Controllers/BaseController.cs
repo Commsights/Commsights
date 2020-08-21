@@ -35,7 +35,7 @@ namespace Commsights.MVC.Controllers
             membershipAccessHistory.Controller = Controller;
             membershipAccessHistory.Action = Action;
             membershipAccessHistory.QueryString = QueryString;
-            _membershipAccessHistoryRepository.Create(membershipAccessHistory);
+            //_membershipAccessHistoryRepository.Create(membershipAccessHistory);
             return true;
         }
         public override void OnActionExecuting(ActionExecutingContext context)

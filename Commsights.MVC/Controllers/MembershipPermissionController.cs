@@ -44,6 +44,26 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
             return Json(note);
         }
+        public IActionResult CreateBrand(MembershipPermission model, int membershipID)
+        {
+            model.MembershipId = membershipID;
+            model.BrandId = 160;
+            model.ProductId = 0;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _membershipPermissionRepository.Create(model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+
         public IActionResult Update(MembershipPermission model)
         {
             Initialization();
@@ -57,6 +77,20 @@ namespace Commsights.MVC.Controllers
             else
             {
                 note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
+        public IActionResult Delete(int ID)
+        {
+            string note = AppGlobal.InitString;
+            int result = _membershipPermissionRepository.Delete(ID);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.DeleteFail;
             }
             return Json(note);
         }

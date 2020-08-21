@@ -21,6 +21,11 @@ namespace Commsights.Data.Models
         public string Password { get; set; }
         public string Guicode { get; set; }
         public string TaxCode { get; set; }
+        public string ShortName { get; set; }
+        public string EnglishName { get; set; }
+        public string ContactName { get; set; }
+        public string ContactPhone { get; set; }
+        public string ContactEmail { get; set; }
         public void InitDefaultValue()
         {
             if (string.IsNullOrEmpty(this.Guicode))
