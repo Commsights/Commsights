@@ -19,6 +19,14 @@ namespace Commsights.Data.Repositories
         {
             return _context.MembershipPermission.Where(item => item.MembershipId == membershipID).OrderBy(item => item.Id).ToList();
         }
+        public List<MembershipPermission> GetBrandOfCustomerToList(int membershipID)
+        {
+            return _context.MembershipPermission.Where(item => item.MembershipId == membershipID && item.BrandId > 0 && item.ProductId == 0).OrderBy(item => item.Id).ToList();
+        }
+        public List<MembershipPermission> GetCustomerOfBrandToList(int brandId)
+        {
+            return _context.MembershipPermission.Where(item => item.BrandId == brandId && item.ProductId == 0).OrderBy(item => item.Id).ToList();
+        }
         public void InitializationMenuPermission(int membershipID, int requestUserID)
         {
             List<MembershipPermission> list = _context.MembershipPermission.Where(item => item.MembershipId == membershipID && item.MenuId > 0).ToList();

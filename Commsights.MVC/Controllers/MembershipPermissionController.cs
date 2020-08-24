@@ -27,9 +27,21 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
-        public ActionResult GetByMembershipIDToList([DataSourceRequest] DataSourceRequest request, int membershipID)
+
+        public ActionResult GetByMembershipIDAndToList([DataSourceRequest] DataSourceRequest request, int membershipID)
         {
             var data = _membershipPermissionRepository.GetByMembershipIDToList(membershipID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetBrandOfCustomerToList([DataSourceRequest] DataSourceRequest request, int membershipID)
+        {
+            var data = _membershipPermissionRepository.GetBrandOfCustomerToList(membershipID);
+            return Json(data.ToDataSourceResult(request));
+        }
+
+        public ActionResult GetCustomerOfBrandToList([DataSourceRequest] DataSourceRequest request, int brandId)
+        {
+            var data = _membershipPermissionRepository.GetCustomerOfBrandToList(brandId);
             return Json(data.ToDataSourceResult(request));
         }
         public IActionResult InitializationMenuPermission(int membershipID)
@@ -47,7 +59,6 @@ namespace Commsights.MVC.Controllers
         public IActionResult CreateBrand(MembershipPermission model, int membershipID)
         {
             model.MembershipId = membershipID;
-            model.BrandId = 160;
             model.ProductId = 0;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
@@ -63,7 +74,24 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
-
+        public IActionResult CreateCustomer(MembershipPermission model, int brandID)
+        {
+            model.BrandId = brandID;
+            model.ProductId = 0;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _membershipPermissionRepository.Create(model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
         public IActionResult Update(MembershipPermission model)
         {
             Initialization();

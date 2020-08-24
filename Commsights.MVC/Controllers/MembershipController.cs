@@ -80,6 +80,10 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult CustomerOfBrand()
+        {
+            return View();
+        }
         public ActionResult GetAllToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _membershipRepository.GetAllToList();
