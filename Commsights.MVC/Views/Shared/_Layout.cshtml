@@ -61,8 +61,8 @@
             </ul>
         </nav>
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <a href="#" class="brand-link" title="CRM">
-                <img src="/dist/img/AdminLTELogo.png"
+            <a href="@Commsights.Data.Helpers.AppGlobal.Domain" class="brand-link" title="CRM">
+                <img src="@Commsights.Data.Helpers.AppGlobal.LogoURLFull"
                      alt="CRM" title="CRM"
                      class="brand-image img-circle elevation-3"
                      style="opacity: .8">
@@ -81,36 +81,141 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <i class="nav-icon fas fa-database"></i>
                                 <p>
-                                    Dashboard
+                                    Data
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="../../index.html" class="nav-link">
+                                    <a href="/Product/Index" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Dashboard v1</p>
+                                        <p>Article original</p>
+                                    </a>
+                                </li>                                
+                            </ul>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-user-friends"></i>
+                                <p>
+                                    Customer
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/Membership/Customer" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Customer category</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="../../index2.html" class="nav-link">
+                                    <a href="/Membership/BrandOfCustomer" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Dashboard v2</p>
+                                        <p>Brand of customer</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="../../index3.html" class="nav-link">
+                                    <a href="/Membership/ProductOfCustomer" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Dashboard v3</p>
+                                        <p>Product of customer</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/Membership/CustomerOfBrand" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Customer of brand</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-cog"></i>
+                                <p>
+                                    System
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/Config/Scan" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Website scan</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/Config/WebsiteCategory" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Website category</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/Config/WebsiteType" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Website type</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/Config/MembershipType" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Membership type</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/Config/Brand" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Brand</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/Config/BrandSub" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Brand sub</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/Config/Index" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Config</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-shield-alt"></i>
+                                <p>
+                                    Permission
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/Membership/Employee" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Employee</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/MembershipPermission/Index" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Menu permission</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/Config/Menu" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Menu</p>
                                     </a>
                                 </li>
                             </ul>
                         </li>
                         <li class="nav-item">
                             <a href="@Url.Action("Logout", "Membership", new {area = ""})" title="Sign out" class="nav-link">
-                                <i class="nav-icon fas fa-th"></i>
+                                <i class="nav-icon fas fa-power-off"></i>
                                 <p>
                                     Sign out
                                 </p>
@@ -120,36 +225,40 @@
                 </nav>
             </div>
         </aside>
-        <div class="content-wrapper">
-            <section class="content-header">               
-            </section>
-            <section class="content">
+        <div class="content-wrapper">           
+            <section class="content" style="padding-top:10px;">
                 <div class="container-fluid">
                     @RenderBody()
                     
                 </div>
             </section>
         </div>
-        <footer class="main-footer">
+        @*<footer class="main-footer">
             <div class="float-right d-none d-sm-block">
                 <b>Version</b> 3.0.5
             </div>
             <strong>Copyright &copy; 2020 <a title="@Commsights.Data.Helpers.AppGlobal.Title" target="_blank" href="https://www.commsights.com/">@Commsights.Data.Helpers.AppGlobal.Title</a>.</strong> All rights reserved.
         </footer>
         <aside class="control-sidebar control-sidebar-dark">
-        </aside>
+        </aside>*@
     </div>
-    @*<script src="/AdminLTE_3_0_5/plugins/jquery/jquery.min.js"></script>
-
-        <script src="/AdminLTE_3_0_5/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-        <script src="/AdminLTE_3_0_5/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>*@
 
     <script src="/AdminLTE_3_0_5/dist/js/adminlte.min.js"></script>
 
     <script src="/AdminLTE_3_0_5/dist/js/demo.js"></script>
     <script src="/js/site.js"></script>
-    <script type="text/javascript">
+    <script>
+        function setMenuLeftActive() {            
+            var tag = $('a[href="' + this.location.pathname + '"]');            
+            tag.addClass('active');
+            var tag01 = tag.parent('li').parent('ul').parent('li');
+            tag01.addClass('menu-open');
+            var tag02 = tag01.children('a');
+            tag02.addClass('active');
+        }
+        jQuery(function ($) {
+            setMenuLeftActive();
+        });
     </script>
 
 </body>

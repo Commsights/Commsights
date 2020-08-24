@@ -1,28 +1,22 @@
 ﻿@{ ViewData["Title"] = "Brand"; }
-<div class='col-xs-12'>
-    <div class='box'>
-        <div class='box-header'>
-            <ul>
-                <li>
-                    <i class="fa fa-users"></i>
-                    <a href="#">Customer</a>
-                </li>
-                <li class="active">
-                    <a href="#"> Brand</a>
-                </li>
-            </ul>
-        </div>
-        <div class='box-body'>            
-            @(Html.Kendo().Grid<Commsights.Data.Models.Config>()
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Customer - Brand</h3>
+            </div>
+            <div class="card-body">
+                @(Html.Kendo().Grid<Commsights.Data.Models.Config>()
 .Name("Config")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fa fa-pencil-square-o").HtmlAttributes(new { style = "font-size: 16px; padding-left:14px; padding-top:6px; border-radius: 6px; font-weight:bold;" }); command.Destroy().Text("&nbsp;").IconClass("fa fa-trash-o").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:10px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(120);
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
     columns.Bound(t => t.Id).Title("ID").Width(50);
     columns.Bound(t => t.CodeName).Title("Name").Width(200);
     columns.Bound(t => t.Note).Title("Note").Width(200);
 })
-.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fa fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:10px;" }))
+.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
 .Sortable()
@@ -47,7 +41,7 @@
 .RepeatHeaders()
 .FileName("Config.pdf")
 )
-.HtmlAttributes(new { style = "font-size: 16px;" })
+.HtmlAttributes(new { @class = "KendoGrid" })
 .Search(search => { search.Field(f => f.CodeName); search.Field(f => f.Note);})
 .DataSource(dataSource => dataSource
 .Ajax()
@@ -64,6 +58,7 @@
 .Update(t => t.Action("Update", "Config"))
 )
 )
+            </div>
         </div>
     </div>
 </div>

@@ -1,39 +1,32 @@
 ﻿@{ ViewData["Title"] = "Menu Permission"; }
-<div class='col-xs-12'>
-    <div class='box'>
-        <div class='box-header'>
-            <ul>
-                <li>
-                    <i class="fa fa-shield"></i>
-                    <a href="#">Permission</a>
-                </li>
-                <li class="active">
-                    <a href="#"> Menu permission</a>
-                </li>
-            </ul>
-        </div>
-        <div class='box-body'>
-            <div class="row">
-                <div class='col-sm-12'>
-                    <div class='col-sm-4'>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Permission - Menu permission</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-4">
                         @(Html.Kendo().DropDownList()
                      .Name("Membership")
                      .DataValueField("Id")
                      .DataTextField("FullName")
-                     .HtmlAttributes(new { style = "width:100%; font-size: 16px;" })
+                     .HtmlAttributes(new { @class = "form-control" })
                       .Events(e => e.DataBound("onMembershipDataBound"))
                        .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetAllToList", "Membership")))
                             )
                     </div>
-                    <div class='col-sm-1'>
-                        <button type="button" class="btn btn-success btn-sm" onclick="Search()">
-                            <span class="fa fa-search"></span>
+                    <div class="col-sm-1">
+                        <button type="button" class="btn btn-success" onclick="onSearch()">
+                            <span class="fas fa-search"></span>
                         </button>
                     </div>
                     <div class='col-sm-1'>
-                        <button type="button" class="btn btn-primary btn-sm" onclick="InitializationMenuPermission()">
-                            <span class="fa fa-refresh"></span>
+                        <button type="button" class="btn btn-primary" onclick="onInitializationMenuPermission()">
+                            <span class="fas fa-sync-alt"></span>
                         </button>
                     </div>
                     <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
@@ -41,18 +34,17 @@
                         <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">All</p>
                     </div>
                     <div class='col-sm-1'>
-                        <button type="button" class="btn btn-primary btn-sm" onclick="SaveAllMenuPermission()">
-                            <span class="fa fa-save"></span>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="onSaveAllMenuPermission()">
+                            <span class="fas fa-save"></span>
                         </button>
                     </div>
-                </div>
-            </div>
-            <br />
-            @(Html.Kendo().Grid<Commsights.Data.Models.MembershipPermission>()
+                </div>               
+                <br />
+                @(Html.Kendo().Grid<Commsights.Data.Models.MembershipPermission>()
 .Name("MembershipPermission")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fa fa-pencil-square-o").HtmlAttributes(new { style = "font-size: 16px; padding-left:14px; padding-top:6px; border-radius: 6px; font-weight:bold;" }); }).Width(120);
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
     columns.Bound(t => t.MenuId).Title("Menu").Width(300);
     columns.Bound(t => t.IsView).Title("View").Width(100);
 })
@@ -80,7 +72,7 @@
 .RepeatHeaders()
 .FileName("Config.pdf")
 )
-.HtmlAttributes(new { style = "font-size: 16px;" })
+.HtmlAttributes(new { @class = "KendoGrid" })
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
@@ -94,6 +86,7 @@
 .Update(t => t.Action("Update", "MembershipPermission"))
 )
 )
+            </div>           
         </div>
     </div>
 </div>
@@ -128,10 +121,10 @@
             control.trigger("change");
         }
     }
-    function Search() {
+    function onSearch() {
         $("#MembershipPermission").data("kendoGrid").dataSource.read();
     }
-    function InitializationMenuPermission() {
+    function onInitializationMenuPermission() {
         var membershipIDValue = $("#Membership").data("kendoDropDownList").value();
           $.ajax(
               {
@@ -151,7 +144,7 @@
               })
 
     }
-    function SaveAllMenuPermission() {
+    function onSaveAllMenuPermission() {
         var membershipIDValue = $("#Membership").data("kendoDropDownList").value();
         var isAllValue = document.getElementById('chkAll').checked;
         $.ajax(

@@ -1,0 +1,19 @@
+.btn
+{
+    height:38px;
+    width:100%;
+}
+input[type="checkbox"] {
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+}
+.KendoGrid {
+    font-size: 12px;
+    height: 600px;
+}
+@media (max-height: 700px) {
+    .KendoGrid {        
+        height: 450px;
+    } 
+}

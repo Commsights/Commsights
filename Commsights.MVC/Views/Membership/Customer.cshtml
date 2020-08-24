@@ -1,32 +1,24 @@
 ﻿@{ ViewData["Title"] = "Customer"; }
-<div class='col-xs-12'>
-    <div class='box'>
-        <div class='box-header'>
-            <ul>
-                <li>
-                    <i class="fa fa-users"></i>
-                    <a href="#">Customer</a>
-                </li>
-                <li class="active">
-                    <a href="#"> Customer</a>
-                </li>
-            </ul>
-        </div>
-        <div class='box-body'>
-            <div class="row">
-                <div class='col-sm-12'>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Customer - Customer category</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
                     <div class='col-sm-1'>
-                        <a href="/Membership/CustomerDetail/0" class="btn btn-success"><i class="fa fa-plus"></i></a>
+                        <a href="/Membership/CustomerDetail/0" class="btn btn-success"><i class="fas fa-plus"></i></a>
                     </div>
                 </div>
-            </div>
-            <br />
-            @(Html.Kendo().Grid<Commsights.Data.Models.Membership>()
+                <br />
+                @(Html.Kendo().Grid<Commsights.Data.Models.Membership>()
 .Name("Membership")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fa fa-trash-o").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:10px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(60);
-    columns.Template(@"<a href='/Membership/CustomerDetail/#=Id#' class='btn btn-success' style='color:white;'><i class='fa fa-external-link'></i></a>").Width(60).HtmlAttributes(new { style = "text-align:center;" });
+    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
+    columns.Template(@"<a href='/Membership/CustomerDetail/#=Id#' class='btn btn-success' style='color:white;'><i class='fas fa-edit'></i></a>").Width(70).HtmlAttributes(new { style = "text-align:center;" });
     columns.Bound(t => t.FullName).Title("Full name").Width(300);
     columns.Bound(t => t.Email).Title("Email").Width(200);
     columns.Bound(t => t.Phone).Title("Phone").Width(200);
@@ -56,7 +48,7 @@
 .RepeatHeaders()
 .FileName("Config.pdf")
 )
-.HtmlAttributes(new { style = "font-size: 16px;" })
+.HtmlAttributes(new { @class = "KendoGrid" })
 .Search(search => { search.Field(f => f.FullName); search.Field(f => f.Email); search.Field(f => f.Phone); })
 .DataSource(dataSource => dataSource
 .Ajax()
@@ -71,6 +63,7 @@
 .Destroy(t => t.Action("Delete", "Membership"))
 )
 )
+            </div>
         </div>
     </div>
 </div>

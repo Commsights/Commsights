@@ -1,42 +1,34 @@
 ﻿@{ ViewData["Title"] = "Brand of customer"; }
-<div class='col-xs-12'>
-    <div class='box'>
-        <div class='box-header'>
-            <ul>
-                <li>
-                    <i class="fa fa-users"></i>
-                    <a href="#">Customer</a>
-                </li>
-                <li class="active">
-                    <a href="#"> Brand of customer</a>
-                </li>
-            </ul>
-        </div>
-        <div class='box-body'>
-            <div class="row">
-                <div class='col-sm-12'>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Customer - Brand of customer</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
                     <div class='col-sm-4'>
                         @(Html.Kendo().DropDownList()
                      .Name("Customer")
                      .DataValueField("Id")
                      .DataTextField("FullName")
-                     .HtmlAttributes(new { style = "width:100%; font-size: 16px;" })
+                     .HtmlAttributes(new { @class = "form-control" })
                       .Events(e => e.DataBound("onCustomerDataBound").Change("onCustomerChange"))
                        .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCustomerToList", "Membership")))
                             )
                     </div>
                 </div>
-            </div>
-            <br />
-            @(Html.Kendo().Grid<Commsights.Data.Models.MembershipPermission>()
+                <br />
+                @(Html.Kendo().Grid<Commsights.Data.Models.MembershipPermission>()
 .Name("MembershipPermission")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fa fa-pencil-square-o").HtmlAttributes(new { style = "font-size: 16px; padding-left:14px; padding-top:6px; border-radius: 6px; font-weight:bold;" }); command.Destroy().Text("&nbsp;").IconClass("fa fa-trash-o").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:10px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(120);    
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
     columns.Bound(t => t.BrandId).EditorTemplateName("Config_Brand").Title("Brand").Width(300);
 })
-.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fa fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:10px;" }))
+.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
 .Sortable()
@@ -61,7 +53,7 @@
 .RepeatHeaders()
 .FileName("Config.pdf")
 )
-.HtmlAttributes(new { style = "font-size: 16px;" })
+.HtmlAttributes(new { @class = "KendoGrid" })
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
@@ -77,6 +69,7 @@
 .Update(t => t.Action("Update", "MembershipPermission"))
 )
 )
+            </div>
         </div>
     </div>
 </div>

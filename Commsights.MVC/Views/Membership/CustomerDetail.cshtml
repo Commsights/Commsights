@@ -2,95 +2,95 @@
 
 @model Commsights.Data.Models.Membership
 
-<div class='col-xs-12'>
-    <div class='box'>
-        <div class='box-header'>
-            <ul>
-                <li>
-                    <i class="fa fa-users"></i>
-                    <a href="#">Customer</a>
-                </li>
-                <li class="active">
-                    <a href="#"> Customer detail</a>
-                </li>
-            </ul>
-        </div>
-        <div class='box-body'>
-            <form asp-action="SaveCustomer" asp-controller="Membership">
-                @Html.HiddenFor(Model => Model.Id)
-                <div class="row">
-                    <div class='col-md-10'>
-                    </div>
-                    <div class='col-md-1'>
-                        <button style="width:100%;" type="submit" title="Save" class="btn btn-primary">
-                            <span class="fa fa-save"></span>
-                        </button>
-                    </div>
-                    <div class='col-md-1'>
-                        <a asp-action="Cancel" asp-controller="Membership" title="Customer category" style="width:100%;" class="btn btn-info">
-                            <span class="fa fa-arrow-left"></span>
-                        </a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class='form-group'>
-                            <label for='Account'>Customer</label>
-                            @(Html.TextBoxFor(Model => Model.Account, new { placeholder = "Customer", @class = "form-control" }))
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Customer - Customer detail</h3>
+            </div>
+            <div class="card-body">
+                <form asp-action="SaveCustomer" asp-controller="Membership">
+                    @Html.HiddenFor(Model => Model.Id)
+                    <div class="row">
+                        <div class='col-md-10'>
+                        </div>                       
+                        <div class='col-md-1'>
+                            <button style="width:100%;" type="submit" title="Save" class="btn btn-primary">
+                                <span class="fas fa-save"></span>
+                            </button>
                         </div>
-                        <div class='form-group'>
-                            <label for='FullName'>Full name</label>
-                            @(Html.TextBoxFor(Model => Model.FullName, new { placeholder = "Full name", @class = "form-control" }))
-                        </div>
-                        <div class='form-group'>
-                            <label for='ShortName'>Short name</label>
-                            @(Html.TextBoxFor(Model => Model.ShortName, new { placeholder = "Short name", @class = "form-control" }))
-                        </div>
-                        <div class='form-group'>
-                            <label for='EnglishName'>English name</label>
-                            @(Html.TextBoxFor(Model => Model.EnglishName, new { placeholder = "English name", @class = "form-control" }))
-                        </div>
-                        <div class='form-group'>
-                            <label for='Address'>Address</label>
-                            @(Html.TextBoxFor(Model => Model.Address, new { placeholder = "Address", @class = "form-control" }))
+                        <div class='col-md-1'>
+                            <a asp-action="Cancel" asp-controller="Membership" title="Customer category" style="width:100%;" class="btn btn-info">
+                                <span class="fas fa-arrow-left"></span>
+                            </a>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class='form-group'>
-                            <label for='Email'>Email</label>
-                            @(Html.TextBoxFor(Model => Model.Email, new { placeholder = "Email", @class = "form-control" }))
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class='form-group'>
+                                <label for='Account'>Customer</label>
+                                @(Html.TextBoxFor(Model => Model.Account, new { placeholder = "Customer", @class = "form-control" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='FullName'>Full name</label>
+                                @(Html.TextBoxFor(Model => Model.FullName, new { placeholder = "Full name", @class = "form-control" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='ShortName'>Short name</label>
+                                @(Html.TextBoxFor(Model => Model.ShortName, new { placeholder = "Short name", @class = "form-control" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='EnglishName'>English name</label>
+                                @(Html.TextBoxFor(Model => Model.EnglishName, new { placeholder = "English name", @class = "form-control" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='Address'>Address</label>
+                                @(Html.TextBoxFor(Model => Model.Address, new { placeholder = "Address", @class = "form-control" }))
+                            </div>
                         </div>
-                        <div class='form-group'>
-                            <label for='Phone'>Phone</label>
-                            @(Html.TextBoxFor(Model => Model.Phone, new { placeholder = "Phone", @class = "form-control" }))
-                        </div>
-                        <div class='form-group'>
-                            <label for='Password'>Password</label>
-                            @(Html.TextBoxFor(Model => Model.Password, new { placeholder = "Password", @type= "password", @class = "form-control" }))
-                        </div>
-                        <div class='form-group'>
-                            <img src="@Url.Content(Commsights.Data.Helpers.AppGlobal.Domain+Commsights.Data.Helpers.AppGlobal.URLImagesCustomer + "/" + Model.Avatar)" alt="@Url.Content(Model.Avatar)" class="img-thumbnail" style="width:50%; height:50%;" />
-                        </div>
-                        <div class='form-group'>
-                            @(Html.Kendo().Upload()
+                        <div class="col-md-6">
+                            <div class='form-group'>
+                                <label for='Email'>Email</label>
+                                @(Html.TextBoxFor(Model => Model.Email, new { placeholder = "Email", @class = "form-control" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='Phone'>Phone</label>
+                                @(Html.TextBoxFor(Model => Model.Phone, new { placeholder = "Phone", @class = "form-control" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='Password'>Password</label>
+                                @(Html.TextBoxFor(Model => Model.Password, new { placeholder = "Password", @type= "password", @class = "form-control" }))
+                            </div>
+                            <div class='form-group'>
+                                <table>
+                                    <tr>
+                                        <td style="width:50%;" valign="top">
+                                            @(Html.Kendo().Upload()
                               .Name("Upload")
+                              .HtmlAttributes(new { @class = "form-control" })
                                 )
+                                        </td>
+                                        <td style="width:50%;" valign="top">
+                                            <img src="@Url.Content(Commsights.Data.Helpers.AppGlobal.Domain+Commsights.Data.Helpers.AppGlobal.URLImagesCustomer + "/" + Model.Avatar)" alt="@Url.Content(Model.Avatar)" class="img-thumbnail" />
+                                        </td>
+                                    </tr>
+                                </table>                                                    
+                            </div>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
 
-            <br />
-            @(Html.Kendo().Grid<Commsights.Data.Models.MembershipPermission>()
+                <br />
+                @(Html.Kendo().Grid<Commsights.Data.Models.MembershipPermission>()
 .Name("MembershipPermission")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fa fa-pencil-square-o").HtmlAttributes(new { style = "font-size: 16px; padding-left:14px; padding-top:6px; border-radius: 6px; font-weight:bold;" }); command.Destroy().Text("&nbsp;").IconClass("fa fa-trash-o").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:10px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(120);
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
     columns.Bound(t => t.FullName).Title("Contact").Width(200);
     columns.Bound(t => t.Email).Title("Email").Width(200);
     columns.Bound(t => t.Phone).Title("Phone").Width(200);
 })
-.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fa fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:10px;" }))
+.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
 .Sortable()
@@ -115,7 +115,7 @@
 .RepeatHeaders()
 .FileName("Config.pdf")
 )
-.HtmlAttributes(new { style = "font-size: 16px;" })
+.HtmlAttributes(new { @class = "KendoGrid" })
 .Search(search => { search.Field(f => f.FullName); search.Field(f => f.Email); search.Field(f => f.Phone); })
 .DataSource(dataSource => dataSource
 .Ajax()
@@ -132,9 +132,13 @@
 .Update(t => t.Action("Update", "MembershipPermission"))
 )
 )
+            </div>
         </div>
     </div>
 </div>
+
+
+
 
 @(Html.Kendo().Notification()
     .Name("Notification")
