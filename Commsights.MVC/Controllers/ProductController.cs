@@ -162,6 +162,27 @@ namespace Commsights.MVC.Controllers
                                     author = AppGlobal.RemoveHTMLTags(author);
                                 }
                                 break;
+                            case 294:
+                                author = author.Replace(@"<span class=""afcba-source"">", @"~");
+                                author = author.Split('~')[0];
+                                author = author.Replace(@"data-role=""author"">", @"~");
+                                if (author.Split('~').Length > 1)
+                                {
+                                    author = author.Split('~')[author.Split('~').Length - 1];
+                                    author = AppGlobal.RemoveHTMLTags(author);
+                                    author = author.Replace(@",", @"");
+                                }
+                                break;
+                            case 295:
+                                author = author.Replace(@"<div class=""soucre_news"">", @"~");
+                                author = author.Split('~')[0];
+                                author = author.Replace(@"<p style=""text-align: right;"">", @"~");
+                                if (author.Split('~').Length > 1)
+                                {
+                                    author = author.Split('~')[author.Split('~').Length - 1];
+                                    author = AppGlobal.RemoveHTMLTags(author);
+                                }
+                                break;
                         }
                         author = author.Trim();
                         product.Author = author;
@@ -170,6 +191,36 @@ namespace Commsights.MVC.Controllers
             }
             catch
             {
+            }
+        }
+        public void GetURL(Product product)
+        {
+            string url = product.Urlcode;
+            string f0 = "";
+            string f1 = "";
+            switch (product.ParentId)
+            {
+                case 295:
+                    f0 = url.Split('-')[url.Split('-').Length - 1];
+                    f1 = f0;
+                    f1 = f1.Replace(@".html", @".htm");
+                    f1 = f1.Replace(@"n", @"");
+                    url = url.Replace(f0, f1);
+                    product.Urlcode = url;
+                    break;
+                case 182:
+                    url = "https://baobinhphuoc.com.vn/Content/" + url;
+                    product.Urlcode = url;
+                    break;
+                case 395:
+                    url = url.Replace(@".vn", @".vn/");
+                    product.Urlcode = url;
+                    break;
+                case 506:
+                    f0 = url.Split('=')[url.Split('=').Length - 1];
+                    url = "https://danang.gov.vn/web/guest/chi-tiet?id=" + f0;
+                    product.Urlcode = url;
+                    break;
             }
         }
         public void ParseRSS(List<Product> list, Config item)
@@ -190,9 +241,26 @@ namespace Commsights.MVC.Controllers
                 product.MetaTitle = AppGlobal.SetName(product.Title);
                 rssSubNode = rssNode.SelectSingleNode("link");
                 product.Urlcode = rssSubNode != null ? rssSubNode.InnerText : "";
+                switch (product.ParentId)
+                {
+                    case 301:
+                        rssSubNode = rssNode.SelectSingleNode("id");
+                        product.Urlcode = rssSubNode != null ? rssSubNode.InnerText : "";
+                        break;
+                }
+                this.GetURL(product);
                 this.GetAuthorFromURL(product);
                 rssSubNode = rssNode.SelectSingleNode("description");
                 product.Description = rssSubNode != null ? rssSubNode.InnerText : "";
+                switch (product.ParentId)
+                {
+                    case 301:
+                        rssSubNode = rssNode.SelectSingleNode("id");
+                        product.Urlcode = rssSubNode != null ? rssSubNode.InnerText : "";
+                        rssSubNode = rssNode.SelectSingleNode("summary");
+                        product.Description = rssSubNode != null ? rssSubNode.InnerText : "";
+                        break;
+                }
                 product.Description = AppGlobal.RemoveHTMLTags(product.Description);
                 rssSubNode = rssNode.SelectSingleNode("pubDate");
                 string pubDate = rssSubNode != null ? rssSubNode.InnerText : "";
@@ -216,7 +284,7 @@ namespace Commsights.MVC.Controllers
 
         public IActionResult ScanFull()
         {
-            List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website);            
+            List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website);
             foreach (Config item in listConfig)
             {
                 switch (item.ParentId)
@@ -227,12 +295,65 @@ namespace Commsights.MVC.Controllers
                     case 8:
                     case 263:
                     case 278:
+                    case 294:
+                    case 295:
+                    case 168:
+                    case 296:
+                    case 169:
+                    case 301:
+                    case 431:
+                    case 182:
+                    case 187:
+                    case 196:
+                    case 200:
+                    case 206:
+                    case 315:
+                    case 228:
+                    case 229:
+                    case 231:
+                    case 341:
+                    case 343:
+                    case 359:
+                    case 363:
+                    case 364:
+                    case 368:
+                    case 372:
+                    case 378:
+                    case 381:
+                    case 386:
+                    case 389:
+                    case 393:
+                    case 395:
+                    case 419:
+                    case 420:
+                    case 421:
+                    case 422:
+                    case 425:
+                    case 432:
+                    case 483:
+                    case 450:
+                    case 478:
+                    case 492:
+                    case 530:
+                    case 533:
+                    case 544:
+                    case 506:
+                    case 560:
+                    case 593:
+                    case 597:
+                    case 603:
+                    case 628:
+                    case 634:
+                    case 636:
+                    case 690:
+                    case 700:
+                    case 801:
                         List<Product> list = new List<Product>();
                         this.ParseRSS(list, item);
-                        _productRepository.Range(list);
+                        //_productRepository.Range(list);
                         break;
                 }
-            }            
+            }
             string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
             return Json(note);
         }
