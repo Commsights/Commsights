@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,20 +11,24 @@ using Commsights.Data.Repositories;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Extensions.Hosting.Internal;
 
 namespace Commsights.MVC.Controllers
 {
     public class MembershipController : BaseController
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IMembershipRepository _membershipRepository;
         private readonly IConfigRepository _configResposistory;
         private ICompositeViewEngine _viewEngine;
-        public MembershipController(IMembershipRepository membershipRepository, IConfigRepository configResposistory, ICompositeViewEngine viewEngine, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
+        public MembershipController(IHostingEnvironment hostingEnvironment, IMembershipRepository membershipRepository, IConfigRepository configResposistory, ICompositeViewEngine viewEngine, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
+            _hostingEnvironment = hostingEnvironment;
             _membershipRepository = membershipRepository;
             _configResposistory = configResposistory;
             _viewEngine = viewEngine;
@@ -72,6 +77,15 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult CustomerDetail(int Id)
+        {
+            Membership membership = new Membership();
+            if (Id > 0)
+            {
+                membership = _membershipRepository.GetByID(Id);
+            }
+            return View(membership);
+        }
         public IActionResult Employee()
         {
             return View();
@@ -80,9 +94,17 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult ProductOfCustomer()
+        {
+            return View();
+        }
         public IActionResult CustomerOfBrand()
         {
             return View();
+        }
+        public ActionResult Cancel()
+        {
+            return RedirectToAction("Customer");
         }
         public ActionResult GetAllToList([DataSourceRequest] DataSourceRequest request)
         {
@@ -99,16 +121,52 @@ namespace Commsights.MVC.Controllers
             var data = _membershipRepository.GetByParentIDToList(150);
             return Json(data.ToDataSourceResult(request));
         }
+        [AcceptVerbs("Post")]
+        public IActionResult SaveCustomer(Membership model)
+        {
+            model.ParentId = AppGlobal.ParentIDCustomer;
+            model.Active = true;
+            if (Request.Form.Files.Count > 0)
+            {
+                var file = Request.Form.Files[0];
+                if (file != null)
+                {
+                    string fileExtension = Path.GetExtension(file.FileName);
+                    string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                    fileName = AppGlobal.SetName(fileName);
+                    fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
+                    var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.URLImagesCustomer, fileName);
+                    using (var stream = new FileStream(physicalPath, FileMode.Create))
+                    {
+                        file.CopyToAsync(stream);
+                        model.Avatar = fileName;
+                    }
+                }
+            }
+            if (model.Id > 0)
+            {
+                Initialization(model, 1);
+                model.Initialization(InitType.Update, RequestUserID);
+                _membershipRepository.Update(model.Id, model);
+            }
+            else
+            {
+                Initialization(model, 0);
+                model.Initialization(InitType.Insert, RequestUserID);
+                _membershipRepository.Create(model);
+            }
+            return RedirectToAction("CustomerDetail", new { ID = model.Id });
+        }
         public IActionResult CreateCustomer(Membership model)
         {
             Initialization(model, 0);
-            model.ParentId = 150;
+            model.ParentId = AppGlobal.ParentIDCustomer;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
             if (_membershipRepository.IsExistEmail(model.Email) == false)
             {
-                if (_membershipRepository.IsExistPhone(model.Email) == false)
+                if (_membershipRepository.IsExistPhone(model.Phone) == false)
                 {
                     result = _membershipRepository.Create(model);
                 }
@@ -126,7 +184,8 @@ namespace Commsights.MVC.Controllers
         public IActionResult CreateEmployee(Membership model)
         {
             Initialization(model, 0);
-            model.ParentId = 151;
+            model.ParentId = AppGlobal.ParentIDEmployee;
+            model.Active = true;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
@@ -186,6 +245,6 @@ namespace Commsights.MVC.Controllers
             Response.Cookies.Delete("Password");
             HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");
-        }       
+        }
     }
 }

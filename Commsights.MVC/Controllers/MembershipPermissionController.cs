@@ -33,15 +33,24 @@ namespace Commsights.MVC.Controllers
             var data = _membershipPermissionRepository.GetByMembershipIDToList(membershipID);
             return Json(data.ToDataSourceResult(request));
         }
-        public ActionResult GetBrandOfCustomerToList([DataSourceRequest] DataSourceRequest request, int membershipID)
+        public ActionResult GetMembershipIDAndBrandToList([DataSourceRequest] DataSourceRequest request, int membershipID)
         {
-            var data = _membershipPermissionRepository.GetBrandOfCustomerToList(membershipID);
+            var data = _membershipPermissionRepository.GetByMembershipIDAndCodeToList(membershipID, AppGlobal.Brand);
             return Json(data.ToDataSourceResult(request));
         }
-
-        public ActionResult GetCustomerOfBrandToList([DataSourceRequest] DataSourceRequest request, int brandId)
+        public ActionResult GetByMembershipIDAndBrandIDAndProductToList([DataSourceRequest] DataSourceRequest request, int membershipID, int brandID)
         {
-            var data = _membershipPermissionRepository.GetCustomerOfBrandToList(brandId);
+            var data = _membershipPermissionRepository.GetByMembershipIDAndBrandIDAndCodeToList(membershipID, brandID, AppGlobal.Product);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetBrandIdAndCodeToList([DataSourceRequest] DataSourceRequest request, int brandId)
+        {
+            var data = _membershipPermissionRepository.GetBrandIdAndCodeToList(brandId, AppGlobal.Brand);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetMembershipContactToList([DataSourceRequest] DataSourceRequest request, int membershipID)
+        {
+            var data = _membershipPermissionRepository.GetByMembershipIDAndCodeToList(membershipID, AppGlobal.Contact);
             return Json(data.ToDataSourceResult(request));
         }
         public IActionResult InitializationMenuPermission(int membershipID)
@@ -56,10 +65,52 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
             return Json(note);
         }
+        public IActionResult CreateContact(MembershipPermission model, int membershipID)
+        {
+            string note = AppGlobal.InitString;
+            note = AppGlobal.Error + " - " + AppGlobal.CreateFail + ", " + AppGlobal.Error001;
+            if (membershipID > 0)
+            {
+                model.MembershipId = membershipID;
+                model.Code = AppGlobal.Contact;
+
+                model.Initialization(InitType.Insert, RequestUserID);
+                int result = 0;
+                result = _membershipPermissionRepository.Create(model);
+                if (result > 0)
+                {
+                    note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+                }
+                else
+                {
+                    note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+                }
+            }
+            return Json(note);
+        }
+        public IActionResult CreateProduct(MembershipPermission model, int membershipID, int brandID)
+        {
+            model.Code = AppGlobal.Product;
+            model.MembershipId = membershipID;
+            model.BrandId = brandID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _membershipPermissionRepository.Create(model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
         public IActionResult CreateBrand(MembershipPermission model, int membershipID)
         {
+            model.Code = AppGlobal.Brand;
             model.MembershipId = membershipID;
-            model.ProductId = 0;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;

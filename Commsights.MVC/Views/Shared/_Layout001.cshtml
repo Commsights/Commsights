@@ -1,0 +1,189 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"] - @Commsights.Data.Helpers.AppGlobal.CMSTitle</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="description" content="@Commsights.Data.Helpers.AppGlobal.CMSTitle">
+    <meta name="keywords" content="@Commsights.Data.Helpers.AppGlobal.CMSTitle">
+    <meta name="author" content="@Commsights.Data.Helpers.AppGlobal.Title">
+    <link rel="apple-touch-icon" href="@Commsights.Data.Helpers.AppGlobal.LogoURLFull">
+    <link rel="shortcut icon" type="image/x-icon" href="@Commsights.Data.Helpers.AppGlobal.LogoURLFull">
+
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+    <link href="/dist/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css" />
+    <link href="/plugins/iCheck/flat/blue.css" rel="stylesheet" type="text/css" />
+    <link href="/plugins/morris/morris.css" rel="stylesheet" type="text/css" />
+    <link href="/plugins/jvectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet" type="text/css" />
+    <link href="/plugins/datepicker/datepicker3.css" rel="stylesheet" type="text/css" />
+    <link href="/plugins/daterangepicker/daterangepicker-bs3.css" rel="stylesheet" type="text/css" />
+    <link href="/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css" rel="stylesheet" type="text/css" />
+    <link href="/css/site.css" rel="stylesheet" type="text/css" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://kendo.cdn.telerik.com/2020.2.617/styles/kendo.bootstrap-v4.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://kendo.cdn.telerik.com/2020.2.617/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2020.2.617/js/jszip.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2020.2.617/js/kendo.all.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2020.2.617/js/kendo.aspnetmvc.min.js"></script>
+    <script>
+        function BeginRequestHandler() {
+            Slider();
+        }
+        function EndRequestHandler() {
+            $('#Dim').css("display", "none");
+            $('#BackGround').fadeTo("fast", 2);
+        }
+        function Slider() {
+            $('#Dim').css("display", "");
+            $('#Dim').css("z-index", "10");
+            $('#Dim').css("position", "absolute");
+            $('#Dim').css("top", ($(window).height() - $('#Dim').height()) / 2 + $(window).scrollTop() + "px");
+            $('#Dim').css("left", ($(window).width() - $('#Dim').width()) / 2 + $(window).scrollLeft() + "px");
+            $('#BackGround').fadeTo("fast", 0.5);
+            $('#Dim').focus();
+        }
+    </script>
+</head>
+<body class="skin-blue sidebar-mini" id="BackGround">
+    <div id="Dim" style="display: none;">
+        <div class="msgbox">
+            <img src="@Commsights.Data.Helpers.AppGlobal.LoadingURLFull" alt="Processing, please wait!"
+                 title="Processing, please wait!" width="200px" height="200px" />
+        </div>
+    </div>
+    <div class="wrapper">
+        <header class="main-header">
+            <a href="@Commsights.Data.Helpers.AppGlobal.Domain" class="logo">
+                <span class="logo-mini"><b>CRM</b></span>
+                <span class="logo-lg"><b>@Commsights.Data.Helpers.AppGlobal.Title - CRM</b></span>
+            </a>
+            <nav class="navbar navbar-static-top" role="navigation">
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown user user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="@Commsights.Data.Helpers.AppGlobal.LogoURLFull" class="user-image" alt="Lê Thanh Sơn" />
+                                <span class="hidden-xs">Lê Thanh Sơn</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <!-- User image -->
+                                <li class="user-header">
+                                    <img src="@Commsights.Data.Helpers.AppGlobal.LogoURLFull" class="img-circle" alt="Lê Thanh Sơn" />
+                                    <p>
+                                        Lê Thanh Sơn
+                                        <small>0937843970</small>
+                                        <small>lethanhson123@gmail.com</small>
+                                    </p>
+                                </li>
+                                <li class="user-footer">
+                                    <div class="pull-left">
+                                        <a href="#" class="btn btn-default btn-flat">Close</a>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <aside class="main-sidebar">
+            <section class="sidebar">
+                <div class="user-panel">
+                    <div class="pull-left image">
+                        <img src="@Commsights.Data.Helpers.AppGlobal.Logo160_160URLFull" class="img-circle" alt="Lê Thanh Sơn" />
+                    </div>
+                    <div class="pull-left info">
+                        <p>Lê Thanh Sơn</p>
+                        <a href="#"><i class="fa fa-circle text-success"></i> 0937843970</a>
+                    </div>
+                </div>
+                <ul id="MenuLeft" class="sidebar-menu">
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-database"></i> <span>Data</span> <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="/Product/Index"><i class="fa fa-circle-o"></i> Article original</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-users"></i> <span>Customer</span> <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="/Membership/Customer"><i class="fa fa-circle-o"></i> Customer category</a></li>
+                            <li><a href="/Membership/BrandOfCustomer"><i class="fa fa-circle-o"></i> Brand of customer</a></li>
+                            <li><a href="/Membership/ProductOfCustomer"><i class="fa fa-circle-o"></i> Product of customer</a></li>
+                            <li><a href="/Membership/CustomerOfBrand"><i class="fa fa-circle-o"></i> Customer of brand</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-gear"></i> <span>System</span> <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="/Config/Scan"><i class="fa fa-circle-o"></i> Website scan</a></li>
+                            <li><a href="/Config/WebsiteCategory"><i class="fa fa-circle-o"></i> Website category</a></li>
+                            <li><a href="/Config/WebsiteType"><i class="fa fa-circle-o"></i> Website type</a></li>
+                            <li><a href="/Config/MembershipType"><i class="fa fa-circle-o"></i> Membership type</a></li>
+                            <li><a href="/Config/Brand"><i class="fa fa-circle-o"></i> Brand</a></li>
+                            <li><a href="/Config/BrandSub"><i class="fa fa-circle-o"></i> Brand sub</a></li>
+                            <li><a href="/Config/Index"><i class="fa fa-circle-o"></i> Config</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-shield"></i> <span>Permission</span> <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="/Membership/Employee"><i class="fa fa-circle-o"></i> Employee</a></li>
+                            <li><a href="/MembershipPermission/Index"><i class="fa fa-circle-o"></i> Menu permission</a></li>
+                            <li><a href="/Config/Menu"><i class="fa fa-circle-o"></i> Menu</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="@Url.Action("Logout", "Membership", new {area = ""})"><i class="fa fa-power-off"></i> <span>Sign out</span></a></li>
+                </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+            <section class="content">
+                <div class="row">
+                    @RenderBody()
+                </div>
+            </section>
+        </div>
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs">
+                <b>Version</b> 2.2.0
+            </div>
+            <strong>Copyright &copy; 2020 <a title="@Commsights.Data.Helpers.AppGlobal.Title" target="_blank" href="https://www.commsights.com/">@Commsights.Data.Helpers.AppGlobal.Title</a>.</strong> All rights reserved.
+        </footer>
+        <div class="control-sidebar-bg"></div>
+    </div>
+    <script>
+        function setMenuLeftActive() {
+            var tag = $('a[href="' + this.location.pathname + '"]');
+            var tag02 = tag.parent('li');
+            tag02.addClass('active');
+            var tag01 = tag.parent('li').parent('ul').parent('li');
+            tag01.addClass('active');
+        }
+        jQuery(function ($) {
+            setMenuLeftActive();
+        });
+    </script>
+    <script src="/dist/js/app.min.js" type="text/javascript"></script>
+    <script src="/js/site.js" type="text/javascript"></script>
+</body>
+</html>

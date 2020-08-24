@@ -12,5 +12,9 @@ namespace Commsights.Data.Models
         public int? BrandId { get; set; }
         public int? ProductId { get; set; }
         public string Product { get; set; }
+        public string Code { get; set; }
+        public string FullName { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
     }
 }

@@ -19,13 +19,17 @@ namespace Commsights.Data.Repositories
         {
             return _context.MembershipPermission.Where(item => item.MembershipId == membershipID).OrderBy(item => item.Id).ToList();
         }
-        public List<MembershipPermission> GetBrandOfCustomerToList(int membershipID)
+        public List<MembershipPermission> GetBrandIdAndCodeToList(int brandId, string code)
         {
-            return _context.MembershipPermission.Where(item => item.MembershipId == membershipID && item.BrandId > 0 && item.ProductId == 0).OrderBy(item => item.Id).ToList();
+            return _context.MembershipPermission.Where(item => item.BrandId == brandId && item.Code.Equals(code)).OrderBy(item => item.Id).ToList();
         }
-        public List<MembershipPermission> GetCustomerOfBrandToList(int brandId)
+        public List<MembershipPermission> GetByMembershipIDAndCodeToList(int membershipID, string code)
         {
-            return _context.MembershipPermission.Where(item => item.BrandId == brandId && item.ProductId == 0).OrderBy(item => item.Id).ToList();
+            return _context.MembershipPermission.Where(item => item.MembershipId == membershipID && item.Code.Equals(code)).OrderBy(item => item.DateUpdated).ToList();
+        }
+        public List<MembershipPermission> GetByMembershipIDAndBrandIDAndCodeToList(int membershipID, int brandId, string code)
+        {
+            return _context.MembershipPermission.Where(item => item.MembershipId == membershipID && item.BrandId == brandId && item.Code.Equals(code)).OrderBy(item => item.DateUpdated).ToList();
         }
         public void InitializationMenuPermission(int membershipID, int requestUserID)
         {

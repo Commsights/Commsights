@@ -8,8 +8,9 @@ namespace Commsights.Data.Repositories
     public interface IMembershipPermissionRepository : IRepository<MembershipPermission>
     {
         public List<MembershipPermission> GetByMembershipIDToList(int membershipID);
-        public List<MembershipPermission> GetBrandOfCustomerToList(int membershipID);
-        public List<MembershipPermission> GetCustomerOfBrandToList(int brandId);
+        public List<MembershipPermission> GetBrandIdAndCodeToList(int brandId, string code);
+        public List<MembershipPermission> GetByMembershipIDAndCodeToList(int membershipID, string code);
+        public List<MembershipPermission> GetByMembershipIDAndBrandIDAndCodeToList(int membershipID, int brandId, string code);
         public void InitializationMenuPermission(int membershipID, int requestUserID);
         public void SaveAllMenuPermission(int membershipID, bool isAll, int requestUserID);
     }

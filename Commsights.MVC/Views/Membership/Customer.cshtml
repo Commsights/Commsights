@@ -13,24 +13,25 @@
             </ul>
         </div>
         <div class='box-body'>
+            <div class="row">
+                <div class='col-sm-12'>
+                    <div class='col-sm-1'>
+                        <a href="/Membership/CustomerDetail/0" class="btn btn-success"><i class="fa fa-plus"></i></a>
+                    </div>
+                </div>
+            </div>
+            <br />
             @(Html.Kendo().Grid<Commsights.Data.Models.Membership>()
 .Name("Membership")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fa fa-pencil-square-o").HtmlAttributes(new { style = "font-size: 16px; padding-left:14px; padding-top:6px; border-radius: 6px; font-weight:bold;" }); command.Destroy().Text("&nbsp;").IconClass("fa fa-trash-o").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:10px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(120);
+    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fa fa-trash-o").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:10px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(60);
+    columns.Template(@"<a href='/Membership/CustomerDetail/#=Id#' class='btn btn-success' style='color:white;'><i class='fa fa-external-link'></i></a>").Width(60).HtmlAttributes(new { style = "text-align:center;" });
     columns.Bound(t => t.FullName).Title("Full name").Width(300);
-    columns.Bound(t => t.ShortName).Title("Short name").Width(200);
-    columns.Bound(t => t.EnglishName).Title("English name").Width(200);
     columns.Bound(t => t.Email).Title("Email").Width(200);
     columns.Bound(t => t.Phone).Title("Phone").Width(200);
-    columns.Bound(t => t.Address).Title("Address").Width(200);
-    columns.Bound(t => t.ContactName).Title("Contact").Width(200);
-    columns.Bound(t => t.ContactPhone).Title("Phone").Width(200);
-    columns.Bound(t => t.ContactEmail).Title("Email").Width(200);
-    columns.Bound(t => t.Password).Title("Password").Width(200);
     columns.Bound(t => t.Id).Title("ID").Width(50);
 })
-.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fa fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:10px;" }))
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
 .Sortable()
@@ -68,8 +69,6 @@
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetCustomerToList", "Membership"))
 .Destroy(t => t.Action("Delete", "Membership"))
-.Create(t => t.Action("CreateCustomer", "Membership"))
-.Update(t => t.Action("Update", "Membership"))
 )
 )
         </div>
@@ -82,7 +81,8 @@
     .Width(400)
 )
 
-<script>function onGridRequestEnd(e) {
+<script>
+    function onGridRequestEnd(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
             var response = e.response;
             var messageType = response.split('-')[0];

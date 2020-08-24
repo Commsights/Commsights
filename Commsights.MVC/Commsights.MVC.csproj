@@ -35,4 +35,8 @@
     <ProjectReference Include="..\Commsights.Service\Commsights.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\Customer\" />
+  </ItemGroup>
+
 </Project>

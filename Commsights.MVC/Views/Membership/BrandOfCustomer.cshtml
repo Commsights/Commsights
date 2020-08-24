@@ -17,11 +17,11 @@
                 <div class='col-sm-12'>
                     <div class='col-sm-4'>
                         @(Html.Kendo().DropDownList()
-                     .Name("Membership")
+                     .Name("Customer")
                      .DataValueField("Id")
                      .DataTextField("FullName")
                      .HtmlAttributes(new { style = "width:100%; font-size: 16px;" })
-                      .Events(e => e.DataBound("onMembershipDataBound").Change("onMembershipChange"))
+                      .Events(e => e.DataBound("onCustomerDataBound").Change("onCustomerChange"))
                        .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCustomerToList", "Membership")))
                             )
@@ -33,8 +33,7 @@
 .Name("MembershipPermission")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fa fa-pencil-square-o").HtmlAttributes(new { style = "font-size: 16px; padding-left:14px; padding-top:6px; border-radius: 6px; font-weight:bold;" }); command.Destroy().Text("&nbsp;").IconClass("fa fa-trash-o").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:10px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(120);
-    columns.Bound(t => t.Id).Title("ID").Width(50);
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fa fa-pencil-square-o").HtmlAttributes(new { style = "font-size: 16px; padding-left:14px; padding-top:6px; border-radius: 6px; font-weight:bold;" }); command.Destroy().Text("&nbsp;").IconClass("fa fa-trash-o").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:10px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(120);    
     columns.Bound(t => t.BrandId).EditorTemplateName("Config_Brand").Title("Brand").Width(300);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fa fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:10px;" }))
@@ -72,7 +71,7 @@
     model.Field(t => t.Id).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetBrandOfCustomerToList", "MembershipPermission").Data("filterMembershipPermission"))
+.Read(t => t.Action("GetMembershipIDAndBrandToList", "MembershipPermission").Data("filterMembershipPermission"))
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
 .Create(t => t.Action("CreateBrand", "MembershipPermission").Data("filterMembershipPermissionCreateBrand"))
 .Update(t => t.Action("Update", "MembershipPermission"))
@@ -99,23 +98,23 @@
             $("#MembershipPermission").data("kendoGrid").dataSource.read();
         }
     }
-    function onMembershipDataBound() {
-        var control = $("#Membership").data("kendoDropDownList");
+    function onCustomerDataBound() {
+        var control = $("#Customer").data("kendoDropDownList");
         var controlLength = control.dataSource.data().length;
         if (controlLength > 0) {
             control.select(0);
             control.trigger("change");
         }
     }
-    function onMembershipChange() {
+    function onCustomerChange() {
         $("#MembershipPermission").data("kendoGrid").dataSource.read();
     }
     function filterMembershipPermission(e) {
-        var membershipIDValue = $("#Membership").data("kendoDropDownList").value();
+        var membershipIDValue = $("#Customer").data("kendoDropDownList").value();
         return { membershipID: membershipIDValue };
     }
     function filterMembershipPermissionCreateBrand(e) {
-        var membershipIDValue = $("#Membership").data("kendoDropDownList").value();
+        var membershipIDValue = $("#Customer").data("kendoDropDownList").value();
         return { membershipID: membershipIDValue };
     }
 </script>

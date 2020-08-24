@@ -33,8 +33,7 @@
 .Name("MembershipPermission")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fa fa-pencil-square-o").HtmlAttributes(new { style = "font-size: 16px; padding-left:14px; padding-top:6px; border-radius: 6px; font-weight:bold;" }); command.Destroy().Text("&nbsp;").IconClass("fa fa-trash-o").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:10px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(120);
-    columns.Bound(t => t.Id).Title("ID").Width(50);
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fa fa-pencil-square-o").HtmlAttributes(new { style = "font-size: 16px; padding-left:14px; padding-top:6px; border-radius: 6px; font-weight:bold;" }); command.Destroy().Text("&nbsp;").IconClass("fa fa-trash-o").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:10px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(120);    
     columns.Bound(t => t.MembershipId).EditorTemplateName("Membership_Customer").Title("Customer").Width(300);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fa fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:10px;" }))
@@ -72,7 +71,7 @@
     model.Field(t => t.Id).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetCustomerOfBrandToList", "MembershipPermission").Data("filterMembershipPermission"))
+.Read(t => t.Action("GetBrandIdAndCodeToList", "MembershipPermission").Data("filterMembershipPermission"))
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
 .Create(t => t.Action("CreateCustomer", "MembershipPermission").Data("filterMembershipPermissionCreateCustomer"))
 .Update(t => t.Action("Update", "MembershipPermission"))

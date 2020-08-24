@@ -17,12 +17,52 @@ namespace Commsights.Data.Helpers
 
         public static string InitString => string.Empty;
 
-        public static string DateTimeCode => DateTime.Now.ToString("ddMMyyyyHHmmsstt");
+        public static string DateTimeCode => DateTime.Now.ToString("ddMMyyyyHHmmss");
 
         public static string InitGuiCode => Guid.NewGuid().ToString();
         #endregion
 
         #region AppSettings 
+        public static string Error001
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Error001").Value;
+            }
+        }
+        public static int ParentIDCompetitor
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("ParentIDCompetitor").Value);
+            }
+        }
+        public static int ParentIDCustomer
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("ParentIDCustomer").Value);
+            }
+        }
+        public static int ParentIDEmployee
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("ParentIDEmployee").Value);
+            }
+        }
+        public static string Contact
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Contact").Value;
+            }
+        }
         public static string Brand
         {
             get
@@ -77,6 +117,22 @@ namespace Commsights.Data.Helpers
             {
                 var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                 return builder.Build().GetSection("AppSettings").GetSection("Logo160_160").Value;
+            }
+        }
+        public static string URLImagesCustomer
+        {
+            get
+            {
+                string result = AppGlobal.Images + "/" + AppGlobal.Customer;
+                return result;
+            }
+        }
+        public static string Customer
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Customer").Value;
             }
         }
         public static string Images
@@ -486,14 +542,14 @@ namespace Commsights.Data.Helpers
         #region Functions
         public static string SetContent(string content)
         {
-            content = content.Replace(@"</br>", @"");            
+            content = content.Replace(@"</br>", @"");
             content = content.Replace(@"</a>", @"");
             content = content.Replace(@"<div>", @"");
             content = content.Replace(@"</div>", @"");
             content = content.Replace(@"<p>", @"");
             content = content.Replace(@"</p>", @"");
             content = content.Replace(@"/>", @"");
-            content = content.Replace(@"content=""", @"");            
+            content = content.Replace(@"content=""", @"");
             return content;
         }
         public static string RemoveHTMLTags(string content)
