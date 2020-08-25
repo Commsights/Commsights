@@ -303,8 +303,17 @@ namespace Commsights.MVC.Controllers
                 if (item.IsMenuLeft == true)
                 {
                     List<Product> list = new List<Product>();
-                    this.ParseRSS(list, item);
-                    _productRepository.Range(list);
+                    try
+                    {
+                        this.ParseRSS(list, item);
+                    }
+                    catch
+                    {
+                    }
+                    if (list.Count > 0)
+                    {
+                        _productRepository.Range(list);
+                    }
                 }
                 //switch (item.ParentID)
                 //{
