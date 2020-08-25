@@ -58,7 +58,7 @@ namespace Commsights.MVC.Controllers
                     model.EncryptPassword();
                     break;
                 case 1:
-                    Membership model001 = _membershipRepository.GetByID(model.Id);
+                    Membership model001 = _membershipRepository.GetByID(model.ID);
                     if (model001 != null)
                     {
                         if (model.Password != model001.Password)
@@ -77,12 +77,12 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
-        public IActionResult CustomerDetail(int Id)
+        public IActionResult CustomerDetail(int ID)
         {
             Membership membership = new Membership();
-            if (Id > 0)
+            if (ID > 0)
             {
-                membership = _membershipRepository.GetByID(Id);
+                membership = _membershipRepository.GetByID(ID);
             }
             return View(membership);
         }
@@ -124,7 +124,7 @@ namespace Commsights.MVC.Controllers
         [AcceptVerbs("Post")]
         public IActionResult SaveCustomer(Membership model)
         {
-            model.ParentId = AppGlobal.ParentIDCustomer;
+            model.ParentID = AppGlobal.ParentIDCustomer;
             model.Active = true;
             if (Request.Form.Files.Count > 0)
             {
@@ -143,11 +143,11 @@ namespace Commsights.MVC.Controllers
                     }
                 }
             }
-            if (model.Id > 0)
+            if (model.ID > 0)
             {
                 Initialization(model, 1);
                 model.Initialization(InitType.Update, RequestUserID);
-                _membershipRepository.Update(model.Id, model);
+                _membershipRepository.Update(model.ID, model);
             }
             else
             {
@@ -155,12 +155,12 @@ namespace Commsights.MVC.Controllers
                 model.Initialization(InitType.Insert, RequestUserID);
                 _membershipRepository.Create(model);
             }
-            return RedirectToAction("CustomerDetail", new { ID = model.Id });
+            return RedirectToAction("CustomerDetail", new { ID = model.ID });
         }
         public IActionResult CreateCustomer(Membership model)
         {
             Initialization(model, 0);
-            model.ParentId = AppGlobal.ParentIDCustomer;
+            model.ParentID = AppGlobal.ParentIDCustomer;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
@@ -184,7 +184,7 @@ namespace Commsights.MVC.Controllers
         public IActionResult CreateEmployee(Membership model)
         {
             Initialization(model, 0);
-            model.ParentId = AppGlobal.ParentIDEmployee;
+            model.ParentID = AppGlobal.ParentIDEmployee;
             model.Active = true;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
@@ -211,7 +211,7 @@ namespace Commsights.MVC.Controllers
             Initialization(model, 1);
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
-            int result = _membershipRepository.Update(model.Id, model);
+            int result = _membershipRepository.Update(model.ID, model);
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;

@@ -148,7 +148,7 @@ namespace Commsights.MVC.Controllers
             Initialization();
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
-            int result = _membershipPermissionRepository.Update(model.Id, model);
+            int result = _membershipPermissionRepository.Update(model.ID, model);
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;

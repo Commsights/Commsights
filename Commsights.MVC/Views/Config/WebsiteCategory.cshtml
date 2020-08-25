@@ -11,12 +11,12 @@
 .Name("ConfigDataTransfer")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.Id).Title("ID").Width(100);
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);    
     columns.Bound(t => t.IsMenuLeft).Title("Is RSS").Width(100);
-    columns.Bound(t => t.WebsiteType.TextName).EditorTemplateName("Config_WebsiteType").Title("Type").Width(200);
-    columns.Bound(t => t.Title).Title("Title").Width(200);
-    columns.Bound(t => t.Urlfull).Title("URL").Width(300);
+    columns.Bound(t => t.Parent.TextName).EditorTemplateName("Config_WebsiteType").Title("Type").Width(200);
+    columns.Bound(t => t.Title).Title("Title").Width(300);
+    columns.Bound(t => t.URLFull).Title("URL").Width(300);
+    columns.Bound(t => t.ID).Title("ID").Width(100);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
@@ -44,18 +44,18 @@
 .FileName("Config.pdf")
 )
 .HtmlAttributes(new { @class = "KendoGrid" })
-.Search(search => { search.Field(f => f.Title); search.Field(f => f.Urlfull);})
+.Search(search => { search.Field(f => f.Title); search.Field(f => f.URLFull);})
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
 .Model(model =>
 {
-    model.Id(t => t.Id);
-    model.Field(t => t.Id).Editable(false);
-    model.Field(t => t.WebsiteType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Id(t => t.ID);
+    model.Field(t => t.ID).Editable(false);
+    model.Field(t => t.Parent).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetDataTransferWebisteAndActiveToList", "Config"))
+.Read(t => t.Action("GetDataTransferParentByGroupNameAndCodeAndActiveToList", "Config"))
 .Destroy(t => t.Action("Delete", "Config"))
 .Create(t => t.Action("CreateWebisteDataTransfer", "Config"))
 .Update(t => t.Action("UpdateDataTransfer", "Config"))
@@ -80,7 +80,7 @@
             var note = response.split('-')[1];
             var notification = $("#Notification").data("kendoNotification");
             notification.show(note, messageType);
-            $("#Config").data("kendoGrid").dataSource.read();
+            $("#ConfigDataTransfer").data("kendoGrid").dataSource.read();
         }
     }
 

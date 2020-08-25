@@ -59,8 +59,7 @@
 .PageSize(1000)
 .Model(model =>
 {
-    model.Id(t => t.Id);
-    model.Field(t => t.Id).Editable(false);
+    model.Id(t => t.ID);    
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetMembershipIDAndBrandToList", "MembershipPermission").Data("filterMembershipPermission"))

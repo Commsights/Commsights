@@ -55,7 +55,7 @@ namespace Commsights.Data.Repositories
         }
         public bool IsLoginByID(int ID, string password)
         {
-            var membership = _context.Membership.FirstOrDefault(user => user.Id == ID);
+            var membership = _context.Membership.FirstOrDefault(user => user.ID == ID);
             if (membership != null)
             {
                 if (SecurityHelper.Decrypt(membership.Guicode, membership.Password).Equals(password))

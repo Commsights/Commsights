@@ -39,6 +39,26 @@ namespace Commsights.MVC.Controllers
                 model.Action = "Index";
             }
         }
+        private void Initialization(ConfigDataTransfer model)
+        {
+            if (!string.IsNullOrEmpty(model.CodeName))
+            {
+                model.CodeName = model.CodeName.Trim();
+            }
+            if (!string.IsNullOrEmpty(model.Note))
+            {
+                model.Note = model.Note.Trim();
+            }
+            if (string.IsNullOrEmpty(model.Icon))
+            {
+                model.Icon = "fa fa-circle-o";
+            }
+            if (string.IsNullOrEmpty(model.Action))
+            {
+                model.Action = "Index";
+            }
+            model.ParentID = model.Parent.ID;
+        }
         public IActionResult Index()
         {
             return View();
@@ -97,7 +117,7 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetBrandToList([DataSourceRequest] DataSourceRequest request)
         {
-            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Brand).Where(item => item.ParentId == 0);
+            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Brand).Where(item => item.ParentID == 0);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetWebisteToList([DataSourceRequest] DataSourceRequest request)
@@ -115,9 +135,14 @@ namespace Commsights.MVC.Controllers
             var data = _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
             return Json(data.ToDataSourceResult(request));
         }
-        public ActionResult GetDataTransferWebisteAndActiveToList([DataSourceRequest] DataSourceRequest request)
+        public ActionResult GetDataTransferChildrenWebisteAndActiveToList([DataSourceRequest] DataSourceRequest request)
         {
-            var data = _configResposistory.GetDataTransferByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
+            var data = _configResposistory.GetDataTransferChildrenCountByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetDataTransferParentByGroupNameAndCodeAndActiveToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetDataTransferParentByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
             return Json(data.ToDataSourceResult(request));
         }
         public IActionResult CreateBrand(Config model)
@@ -125,7 +150,7 @@ namespace Commsights.MVC.Controllers
             Initialization(model);
             model.GroupName = AppGlobal.CRM;
             model.Code = AppGlobal.Brand;
-            model.ParentId = 0;
+            model.ParentID = 0;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
@@ -146,7 +171,7 @@ namespace Commsights.MVC.Controllers
         public IActionResult CreateBrandSub(Config model, int parentID)
         {
             Initialization(model);
-            model.ParentId = parentID;
+            model.ParentID = parentID;
             model.GroupName = AppGlobal.CRM;
             model.Code = AppGlobal.Brand;
             string note = AppGlobal.InitString;
@@ -226,13 +251,13 @@ namespace Commsights.MVC.Controllers
         public IActionResult CreateWebiste(Config model, int parentID)
         {
             Initialization(model);
-            model.ParentId = parentID;
+            model.ParentID = parentID;
             model.GroupName = AppGlobal.CRM;
             model.Code = AppGlobal.Website;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
-            if (_configResposistory.IsValidByGroupNameAndCodeAndURL(model.GroupName, model.Code, model.Urlfull) == true)
+            if (_configResposistory.IsValidByGroupNameAndCodeAndURL(model.GroupName, model.Code, model.URLFull) == true)
             {
                 result = _configResposistory.Create(model);
             }
@@ -254,11 +279,11 @@ namespace Commsights.MVC.Controllers
             model.GroupName = AppGlobal.CRM;
             model.Code = AppGlobal.Website;
             model.Active = true;
-            model.ParentId = 0;
+            model.ParentID = 0;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
-            if (_configResposistory.IsValidByGroupNameAndCodeAndURL(model.GroupName, model.Code, model.Urlfull) == true)
+            if (_configResposistory.IsValidByGroupNameAndCodeAndURL(model.GroupName, model.Code, model.URLFull) == true)
             {
                 result = _configResposistory.Create(model);
             }
@@ -277,15 +302,13 @@ namespace Commsights.MVC.Controllers
             Initialization(model);
             model.GroupName = AppGlobal.CRM;
             model.Code = AppGlobal.Website;
-            model.Active = true;
-            model.ParentId = 0;
+            model.Active = true;            
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
-            int result = 0;
-            Config config = model.MapTo<Config>();
-            if (_configResposistory.IsValidByGroupNameAndCodeAndURL(config.GroupName, config.Code, config.Urlfull) == true)
+            int result = 0;            
+            if (_configResposistory.IsValidByGroupNameAndCodeAndURL(model.GroupName, model.Code, model.URLFull) == true)
             {
-                result = _configResposistory.Create(config);
+                result = _configResposistory.Create(model);
             }
             if (result > 0)
             {
@@ -318,7 +341,7 @@ namespace Commsights.MVC.Controllers
             Initialization(model);
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
-            int result = _configResposistory.Update(model.Id, model);
+            int result = _configResposistory.Update(model.ID, model);
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
@@ -334,9 +357,7 @@ namespace Commsights.MVC.Controllers
             Initialization(model);
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
-            //Config config = model.MapTo<Config>();
-            model.ParentId = model.WebsiteType.Id;
-            int result = _configResposistory.Update(model.Id, model);
+            int result = _configResposistory.Update(model.ID, model);
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
@@ -346,7 +367,7 @@ namespace Commsights.MVC.Controllers
                 note = AppGlobal.Error + " - " + AppGlobal.EditFail;
             }
             return Json(note);
-        }
+        }        
 
         public IActionResult Delete(int ID)
         {

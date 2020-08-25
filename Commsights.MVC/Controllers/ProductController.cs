@@ -62,7 +62,7 @@ namespace Commsights.MVC.Controllers
             Initialization(model);
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
-            int result = _productRepository.Update(model.Id, model);
+            int result = _productRepository.Update(model.ID, model);
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
@@ -88,7 +88,7 @@ namespace Commsights.MVC.Controllers
                             html = reader.ReadToEnd();
                         }
                         string author = html;
-                        switch (product.ParentId)
+                        switch (product.ParentID)
                         {
                             case 1:
                                 author = author.Replace(@"</article>", @"~");
@@ -198,7 +198,7 @@ namespace Commsights.MVC.Controllers
             string url = product.Urlcode;
             string f0 = "";
             string f1 = "";
-            switch (product.ParentId)
+            switch (product.ParentID)
             {
                 case 295:
                     f0 = url.Split('-')[url.Split('-').Length - 1];
@@ -226,22 +226,22 @@ namespace Commsights.MVC.Controllers
         public void ParseRSS(List<Product> list, Config item)
         {
             XmlDocument rssXmlDoc = new XmlDocument();
-            rssXmlDoc.Load(item.Urlfull);
+            rssXmlDoc.Load(item.URLFull);
             XmlNodeList rssNodes = rssXmlDoc.SelectNodes("rss/channel/item");
             StringBuilder rssContent = new StringBuilder();
             foreach (XmlNode rssNode in rssNodes)
             {
                 Product product = new Product();
                 product.Initialization(InitType.Insert, RequestUserID);
-                product.ParentId = item.ParentId;
-                product.CategoryId = item.Id;
+                product.ParentID = item.ParentID;
+                product.CategoryId = item.ID;
                 XmlNode rssSubNode = rssNode.SelectSingleNode("title");
                 product.Title = rssSubNode != null ? rssSubNode.InnerText : "";
                 product.MetaTitle = AppGlobal.SetName(product.Title);
                 product.MetaTitle = AppGlobal.SetName(product.Title);
                 rssSubNode = rssNode.SelectSingleNode("link");
                 product.Urlcode = rssSubNode != null ? rssSubNode.InnerText : "";
-                switch (product.ParentId)
+                switch (product.ParentID)
                 {
                     case 301:
                         rssSubNode = rssNode.SelectSingleNode("id");
@@ -252,7 +252,7 @@ namespace Commsights.MVC.Controllers
                 this.GetAuthorFromURL(product);
                 rssSubNode = rssNode.SelectSingleNode("description");
                 product.Description = rssSubNode != null ? rssSubNode.InnerText : "";
-                switch (product.ParentId)
+                switch (product.ParentID)
                 {
                     case 301:
                         rssSubNode = rssNode.SelectSingleNode("id");
@@ -287,7 +287,7 @@ namespace Commsights.MVC.Controllers
             List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website);
             foreach (Config item in listConfig)
             {
-                switch (item.ParentId)
+                switch (item.ParentID)
                 {
                     case 1:
                     case 5:

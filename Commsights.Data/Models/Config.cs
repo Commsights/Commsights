@@ -13,8 +13,8 @@ namespace Commsights.Data.Models
         public string Icon { get; set; }
         public string Controller { get; set; }
         public string Action { get; set; }
-        public string Urlfull { get; set; }
-        public string Urlsub { get; set; }
+        public string URLFull { get; set; }
+        public string URLSub { get; set; }
         public string Title { get; set; }
         public bool? IsMenuLeft { get; set; }
     }

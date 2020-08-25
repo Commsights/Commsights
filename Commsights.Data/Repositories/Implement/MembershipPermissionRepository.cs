@@ -17,11 +17,11 @@ namespace Commsights.Data.Repositories
         }
         public List<MembershipPermission> GetByMembershipIDToList(int membershipID)
         {
-            return _context.MembershipPermission.Where(item => item.MembershipId == membershipID).OrderBy(item => item.Id).ToList();
+            return _context.MembershipPermission.Where(item => item.MembershipId == membershipID).OrderBy(item => item.ID).ToList();
         }
         public List<MembershipPermission> GetBrandIdAndCodeToList(int brandId, string code)
         {
-            return _context.MembershipPermission.Where(item => item.BrandId == brandId && item.Code.Equals(code)).OrderBy(item => item.Id).ToList();
+            return _context.MembershipPermission.Where(item => item.BrandId == brandId && item.Code.Equals(code)).OrderBy(item => item.ID).ToList();
         }
         public List<MembershipPermission> GetByMembershipIDAndCodeToList(int membershipID, string code)
         {
@@ -40,7 +40,7 @@ namespace Commsights.Data.Repositories
             {
                 MembershipPermission membershipPermission = new MembershipPermission();
                 membershipPermission.MembershipId = membershipID;
-                membershipPermission.MenuId = menu.Id;
+                membershipPermission.MenuId = menu.ID;
                 membershipPermission.IsView = false;
                 membershipPermission.Initialization(InitType.Insert, requestUserID);
                 _context.MembershipPermission.Add(membershipPermission);

@@ -6,7 +6,7 @@ namespace Commsights.Data.DataTransferObject
 {
     public class ModelTemplate
     {
-        public int? Id { get; set; }
+        public int? ID { get; set; }
         public string TextName { get; set; }
     }
 }

@@ -1,8 +1,11 @@
 ﻿using Commsights.Data.DataTransferObject;
 using Commsights.Data.Helpers;
 using Commsights.Data.Models;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 
@@ -18,7 +21,7 @@ namespace Commsights.Data.Repositories
         }
         public bool IsValidByGroupNameAndCodeAndURL(string groupName, string code, string url)
         {
-            Config item = _context.Set<Config>().FirstOrDefault(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.Urlfull.Equals(url));
+            Config item = _context.Set<Config>().FirstOrDefault(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.URLFull.Equals(url));
             return item == null ? true : false;
         }
         public bool IsValidByGroupNameAndCodeAndTitle(string groupName, string code, string title)
@@ -43,20 +46,38 @@ namespace Commsights.Data.Repositories
         {
             return _context.Config.Where(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.Active.Equals(active)).OrderBy(item => item.Title).ToList();
         }
-        public List<ConfigDataTransfer> GetDataTransferByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active)
+        public List<ConfigDataTransfer> GetDataTransferParentByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active)
         {
             List<ConfigDataTransfer> listConfigDataTransfer = new List<ConfigDataTransfer>();
-            var listData = _context.Config.Where(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.Active.Equals(active)).Join(_context.Config, config => config.ParentId, parent => parent.Id, (config, parent) => new { Config = config, TextName = parent.CodeName }).ToList();
-            ConfigDataTransfer model;
-            foreach (var item in listData)
-            {                
-                model = item.Config.MapTo<ConfigDataTransfer>();
-                model.WebsiteType = new ModelTemplate();
-                model.WebsiteType.Id = model.ParentId;
-                model.WebsiteType.TextName = item.TextName;
-                listConfigDataTransfer.Add(model);
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@Active",active)
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectParentByGroupNameAndCodeAndActive", parameters);
+            listConfigDataTransfer = SQLHelper.ToList<ConfigDataTransfer>(dt);
+            foreach (var item in listConfigDataTransfer)
+            {
+                item.Parent = new ModelTemplate();
+                item.Parent.ID = item.ParentID;
+                item.Parent.TextName = item.ParentName;
             }
             return listConfigDataTransfer;
+        }
+        public List<ConfigDataTransfer> GetDataTransferChildrenCountByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active)
+        {
+            List<ConfigDataTransfer> listConfigDataTransfer = new List<ConfigDataTransfer>();
+            SqlParameter[] parameters =
+                        {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@Active",active)
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectDisplayByGroupNameAndCodeAndActive", parameters);
+            listConfigDataTransfer = SQLHelper.ToList<ConfigDataTransfer>(dt);
+            return listConfigDataTransfer;
+
         }
     }
 }

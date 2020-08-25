@@ -13,9 +13,9 @@ namespace Commsights.Data.Helpers
         {
             model.DateUpdated = AppGlobal.InitDateTime;
             model.UserUpdated = initUser;
-            if (model.ParentId == null)
+            if (model.ParentID == null)
             {
-                model.ParentId = 0;
+                model.ParentID = 0;
             }
             switch (type)
             {

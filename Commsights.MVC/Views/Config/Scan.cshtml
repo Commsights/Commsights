@@ -11,12 +11,12 @@
                     <div class='col-sm-4'>
                         @(Html.Kendo().DropDownList()
                      .Name("Website")
-                     .DataValueField("Id")
-                     .DataTextField("Title")
+                     .DataValueField("ID")
+                     .DataTextField("DisplayName")
                      .HtmlAttributes(new { @class = "form-control" })
                       .Events(e => e.DataBound("onWebsiteDataBound").Change("onWebsiteChange"))
                        .Filter(FilterType.Contains)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetWebisteAndActiveToList", "Config")))
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferChildrenWebisteAndActiveToList", "Config")))
                             )
                     </div>
                     <div class='col-sm-2'>
@@ -32,7 +32,7 @@
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
     columns.Bound(t => t.Title).Title("Title").Width(200);
-    columns.Bound(t => t.Urlfull).Title("URL").Width(300);
+    columns.Bound(t => t.URLFull).Title("URL").Width(300);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
@@ -60,13 +60,13 @@
 .FileName("Config.pdf")
 )
 .HtmlAttributes(new { @class = "KendoGrid" })
-.Search(search => { search.Field(f => f.Title); search.Field(f => f.Urlfull);})
+.Search(search => { search.Field(f => f.Title); search.Field(f => f.URLFull);})
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
 .Model(model =>
 {
-    model.Id(t => t.Id);
+    model.Id(t => t.ID);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetByParentIDToList", "Config").Data("filterConfig"))

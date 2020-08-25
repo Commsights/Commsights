@@ -12,7 +12,7 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.Id).Title("ID").Width(50);
+    columns.Bound(t => t.ID).Title("ID").Width(50);
     columns.Bound(t => t.CodeName).Title("Name").Width(200);
     columns.Bound(t => t.Note).Title("Note").Width(200);
 })
@@ -48,8 +48,8 @@
 .PageSize(1000)
 .Model(model =>
 {
-    model.Id(t => t.Id);
-    model.Field(t => t.Id).Editable(false);
+    model.Id(t => t.ID);
+    model.Field(t => t.ID).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetMembershipTypeToList", "Config"))

@@ -12,8 +12,8 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.Id).Title("ID").Width(50);
-    columns.Bound(t => t.ParentId).Title("ParentID").Width(50);
+    columns.Bound(t => t.ID).Title("ID").Width(50);
+    columns.Bound(t => t.ParentID).Title("ParentID").Width(50);
     columns.Bound(t => t.Title).Title("Title").Width(200);
     columns.Bound(t => t.GroupName).Title("GroupName").Width(200);
     columns.Bound(t => t.Code).Title("Code").Width(200);
@@ -23,8 +23,8 @@
     columns.Bound(t => t.Icon).Title("Icon").Width(200);
     columns.Bound(t => t.Controller).Title("Controller").Width(200);
     columns.Bound(t => t.Action).Title("Action").Width(200);
-    columns.Bound(t => t.Urlfull).Title("URLFull").Width(200);
-    columns.Bound(t => t.Urlsub).Title("URLSub").Width(200);
+    columns.Bound(t => t.URLFull).Title("URLFull").Width(200);
+    columns.Bound(t => t.URLSub).Title("URLSub").Width(200);
     columns.Bound(t => t.Note).Title("Note").Width(200);
     columns.Bound(t => t.Active).Title("Active").Width(200);
     columns.Bound(t => t.IsMenuLeft).Title("IsMenuLeft").Width(200);
@@ -55,14 +55,14 @@
 .FileName("Config.pdf")
 )
 .HtmlAttributes(new { @class = "KendoGrid" })
-.Search(search => { search.Field(f => f.Title); search.Field(f => f.Urlfull);})
+.Search(search => { search.Field(f => f.Title); search.Field(f => f.URLFull);})
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
 .Model(model =>
 {
-    model.Id(t => t.Id);
-    model.Field(t => t.Id).Editable(false);
+    model.Id(t => t.ID);
+    model.Field(t => t.ID).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetAllToList", "Config"))
