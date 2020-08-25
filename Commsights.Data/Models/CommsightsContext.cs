@@ -21,6 +21,7 @@ namespace Commsights.Data.Models
 
         public virtual DbSet<MembershipAccessHistory> MembershipAccessHistory { get; set; }
         public virtual DbSet<Product> Product { get; set; }
+        public virtual DbSet<ProductSearch> ProductSearch { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

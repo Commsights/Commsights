@@ -249,7 +249,7 @@ namespace Commsights.MVC.Controllers
                         break;
                 }
                 this.GetURL(product);
-                this.GetAuthorFromURL(product);
+                //this.GetAuthorFromURL(product);
                 rssSubNode = rssNode.SelectSingleNode("description");
                 product.Description = rssSubNode != null ? rssSubNode.InnerText : "";
                 switch (product.ParentID)
@@ -272,11 +272,24 @@ namespace Commsights.MVC.Controllers
                 {
                     product.DatePublish = DateTime.Now;
                 }
-                if (_productRepository.IsValid(product.Urlcode) == true)
+                if (!string.IsNullOrEmpty(product.Title))
                 {
                     product.Title = product.Title.Trim();
+                }
+                if (!string.IsNullOrEmpty(product.Description))
+                {
                     product.Description = product.Description.Trim();
+                }
+                if (!string.IsNullOrEmpty(product.Urlcode))
+                {
                     product.Urlcode = product.Urlcode.Trim();
+                }
+                if (!string.IsNullOrEmpty(product.Author))
+                {
+                    product.Author = product.Author.Trim();
+                }
+                if (_productRepository.IsValid(product.Urlcode) == true)
+                {
                     list.Add(product);
                 }
             }
@@ -348,9 +361,12 @@ namespace Commsights.MVC.Controllers
                     case 690:
                     case 700:
                     case 801:
+                        //if (item.ParentID == 229)
+                        //{
                         List<Product> list = new List<Product>();
                         this.ParseRSS(list, item);
-                        //_productRepository.Range(list);
+                        _productRepository.Range(list);
+                        //}                        
                         break;
                 }
             }

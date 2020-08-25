@@ -25,7 +25,7 @@ namespace Commsights.Data.Repositories
         public int Create(T model, out T result);
 
         public int Update(int ID, T model);
-
+        public int UpdateRange(List<T> list);
         public int Delete(int ID);
         public int DeleteRange(List<T> list);
 

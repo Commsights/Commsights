@@ -302,10 +302,10 @@ namespace Commsights.MVC.Controllers
             Initialization(model);
             model.GroupName = AppGlobal.CRM;
             model.Code = AppGlobal.Website;
-            model.Active = true;            
+            model.Active = true;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
-            int result = 0;            
+            int result = 0;
             if (_configResposistory.IsValidByGroupNameAndCodeAndURL(model.GroupName, model.Code, model.URLFull) == true)
             {
                 result = _configResposistory.Create(model);
@@ -360,6 +360,15 @@ namespace Commsights.MVC.Controllers
             int result = _configResposistory.Update(model.ID, model);
             if (result > 0)
             {
+                if (model.Code == AppGlobal.Website)
+                {
+                    List<Config> list = _configResposistory.GetByParentIDToList(model.ID);
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        list[i].IsMenuLeft = model.IsMenuLeft;
+                    }
+                    _configResposistory.UpdateRange(list);
+                }
                 note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
             }
             else
@@ -367,7 +376,7 @@ namespace Commsights.MVC.Controllers
                 note = AppGlobal.Error + " - " + AppGlobal.EditFail;
             }
             return Json(note);
-        }        
+        }
 
         public IActionResult Delete(int ID)
         {

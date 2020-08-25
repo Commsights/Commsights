@@ -127,6 +127,11 @@ namespace Commsights.Data.Repositories
             }
             return _context.SaveChanges();
         }
+        public int UpdateRange(List<T> list)
+        {
+            _context.Set<T>().UpdateRange(list);
+            return _context.SaveChanges();
+        }
 
         public List<T> GetByPageAndPageSizeToList(int Page, int PageSize)
         {
