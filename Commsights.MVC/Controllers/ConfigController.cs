@@ -9,6 +9,7 @@ using Commsights.Data.Repositories;
 using Commsights.Data.Models;
 using Commsights.Data.Helpers;
 using Commsights.Data.Enum;
+using Commsights.Data.DataTransferObject;
 
 namespace Commsights.MVC.Controllers
 {
@@ -112,6 +113,11 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetWebisteAndActiveToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetDataTransferWebisteAndActiveToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetDataTransferByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
             return Json(data.ToDataSourceResult(request));
         }
         public IActionResult CreateBrand(Config model)
@@ -266,6 +272,31 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
+        public IActionResult CreateWebisteDataTransfer(ConfigDataTransfer model)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.Website;
+            model.Active = true;
+            model.ParentId = 0;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            Config config = model.MapTo<Config>();
+            if (_configResposistory.IsValidByGroupNameAndCodeAndURL(config.GroupName, config.Code, config.Urlfull) == true)
+            {
+                result = _configResposistory.Create(config);
+            }
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
         public IActionResult Create(Config model)
         {
             string note = AppGlobal.InitString;
@@ -287,6 +318,24 @@ namespace Commsights.MVC.Controllers
             Initialization(model);
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
+            int result = _configResposistory.Update(model.Id, model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
+        public IActionResult UpdateDataTransfer(ConfigDataTransfer model)
+        {
+            Initialization(model);
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Update, RequestUserID);
+            //Config config = model.MapTo<Config>();
+            model.ParentId = model.WebsiteType.Id;
             int result = _configResposistory.Update(model.Id, model);
             if (result > 0)
             {

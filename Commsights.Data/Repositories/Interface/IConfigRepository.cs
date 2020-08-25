@@ -14,5 +14,6 @@ namespace Commsights.Data.Repositories
         public List<Config> GetByCodeToList(string code);
         public List<Config> GetByGroupNameAndCodeToList(string groupName, string code);
         public List<Config> GetByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active);
+        public List<ConfigDataTransfer> GetDataTransferByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active);
     }
 }

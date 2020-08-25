@@ -7,14 +7,14 @@
                 <h3 class="card-title">Website - Website category</h3>
             </div>
             <div class="card-body">
-                @(Html.Kendo().Grid<Commsights.Data.Models.Config>()
-.Name("Config")
+                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ConfigDataTransfer>()
+.Name("ConfigDataTransfer")
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.Id).Title("ID").Width(50);
+    columns.Bound(t => t.Id).Title("ID").Width(100);
     columns.Bound(t => t.IsMenuLeft).Title("Is RSS").Width(100);
-    columns.Bound(t => t.ParentId).EditorTemplateName("Config_WebsiteType").Title("Type").Width(200);
+    columns.Bound(t => t.WebsiteType.TextName).EditorTemplateName("Config_WebsiteType").Title("Type").Width(200);
     columns.Bound(t => t.Title).Title("Title").Width(200);
     columns.Bound(t => t.Urlfull).Title("URL").Width(300);
 })
@@ -52,12 +52,13 @@
 {
     model.Id(t => t.Id);
     model.Field(t => t.Id).Editable(false);
+    model.Field(t => t.WebsiteType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetWebisteAndActiveToList", "Config"))
+.Read(t => t.Action("GetDataTransferWebisteAndActiveToList", "Config"))
 .Destroy(t => t.Action("Delete", "Config"))
-.Create(t => t.Action("CreateWebiste001", "Config"))
-.Update(t => t.Action("Update", "Config"))
+.Create(t => t.Action("CreateWebisteDataTransfer", "Config"))
+.Update(t => t.Action("UpdateDataTransfer", "Config"))
 )
 )
             </div>
