@@ -297,78 +297,81 @@ namespace Commsights.MVC.Controllers
 
         public IActionResult ScanFull()
         {
-            List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website);
+            List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveAndIsMenuLeftToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, false, true);
             foreach (Config item in listConfig)
             {
-                switch (item.ParentID)
+                if (item.IsMenuLeft == true)
                 {
-                    case 1:
-                    case 5:
-                    case 6:
-                    case 8:
-                    case 263:
-                    case 278:
-                    case 294:
-                    case 295:
-                    case 168:
-                    case 296:
-                    case 169:
-                    case 301:
-                    case 431:
-                    case 182:
-                    case 187:
-                    case 196:
-                    case 200:
-                    case 206:
-                    case 315:
-                    case 228:
-                    case 229:
-                    case 231:
-                    case 341:
-                    case 343:
-                    case 359:
-                    case 363:
-                    case 364:
-                    case 368:
-                    case 372:
-                    case 378:
-                    case 381:
-                    case 386:
-                    case 389:
-                    case 393:
-                    case 395:
-                    case 419:
-                    case 420:
-                    case 421:
-                    case 422:
-                    case 425:
-                    case 432:
-                    case 483:
-                    case 450:
-                    case 478:
-                    case 492:
-                    case 530:
-                    case 533:
-                    case 544:
-                    case 506:
-                    case 560:
-                    case 593:
-                    case 597:
-                    case 603:
-                    case 628:
-                    case 634:
-                    case 636:
-                    case 690:
-                    case 700:
-                    case 801:
-                        //if (item.ParentID == 229)
-                        //{
-                        List<Product> list = new List<Product>();
-                        this.ParseRSS(list, item);
-                        _productRepository.Range(list);
-                        //}                        
-                        break;
+                    List<Product> list = new List<Product>();
+                    this.ParseRSS(list, item);
+                    _productRepository.Range(list);
                 }
+                //switch (item.ParentID)
+                //{
+                //    case 1:
+                //    case 5:
+                //    case 6:
+                //    case 8:
+                //    case 263:
+                //    case 278:
+                //    case 294:
+                //    case 295:
+                //    case 168:
+                //    case 296:
+                //    case 169:
+                //    case 301:
+                //    case 431:
+                //    case 182:
+                //    case 187:
+                //    case 196:
+                //    case 200:
+                //    case 206:
+                //    case 315:
+                //    case 228:
+                //    case 229:
+                //    case 231:
+                //    case 341:
+                //    case 343:
+                //    case 359:
+                //    case 363:
+                //    case 364:
+                //    case 368:
+                //    case 372:
+                //    case 378:
+                //    case 381:
+                //    case 386:
+                //    case 389:
+                //    case 393:
+                //    case 395:
+                //    case 419:
+                //    case 420:
+                //    case 421:
+                //    case 422:
+                //    case 425:
+                //    case 432:
+                //    case 483:
+                //    case 450:
+                //    case 478:
+                //    case 492:
+                //    case 530:
+                //    case 533:
+                //    case 544:
+                //    case 506:
+                //    case 560:
+                //    case 593:
+                //    case 597:
+                //    case 603:
+                //    case 628:
+                //    case 634:
+                //    case 636:
+                //    case 690:
+                //    case 700:
+                //    case 801:                        
+                //        List<Product> list = new List<Product>();
+                //        this.ParseRSS(list, item);
+                //        _productRepository.Range(list);                                              
+                //        break;
+                //}
             }
             string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
             return Json(note);

@@ -259,6 +259,11 @@ namespace Commsights.MVC.Controllers
             int result = 0;
             if (_configResposistory.IsValidByGroupNameAndCodeAndURL(model.GroupName, model.Code, model.URLFull) == true)
             {
+                //Config parent = _configResposistory.GetByID(parentID);
+                //if (parent != null)
+                //{
+                //    model.IsMenuLeft = parent.IsMenuLeft;
+                //}
                 result = _configResposistory.Create(model);
             }
             if (result > 0)
@@ -270,33 +275,7 @@ namespace Commsights.MVC.Controllers
                 note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
             }
             return Json(note);
-        }
-
-
-        public IActionResult CreateWebiste001(Config model)
-        {
-            Initialization(model);
-            model.GroupName = AppGlobal.CRM;
-            model.Code = AppGlobal.Website;
-            model.Active = true;
-            model.ParentID = 0;
-            string note = AppGlobal.InitString;
-            model.Initialization(InitType.Insert, RequestUserID);
-            int result = 0;
-            if (_configResposistory.IsValidByGroupNameAndCodeAndURL(model.GroupName, model.Code, model.URLFull) == true)
-            {
-                result = _configResposistory.Create(model);
-            }
-            if (result > 0)
-            {
-                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
-            }
-            else
-            {
-                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
-            }
-            return Json(note);
-        }
+        }       
         public IActionResult CreateWebisteDataTransfer(ConfigDataTransfer model)
         {
             Initialization(model);
