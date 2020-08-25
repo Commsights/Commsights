@@ -1,25 +1,28 @@
-﻿@{ ViewData["Title"] = "Website category"; }
+﻿@{ ViewData["Title"] = "Search detail"; }
 
+
+@model Commsights.MVC.Models.BaseViewModel
+@Html.HiddenFor(Model => Model.ID)
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">System - Website category</h3>
+                <h3 class="card-title">Data - Search detail</h3>
             </div>
             <div class="card-body">
-                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ConfigDataTransfer>()
-.Name("ConfigDataTransfer")
+                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ProductSearchPropertyDataTransfer>()
+.Name("ProductSearchPropertyDataTransfer")
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.IsMenuLeft).Title("Is RSS").Width(100);
-    columns.Bound(t => t.Parent.TextName).EditorTemplateName("Config_WebsiteType").Title("Type").Width(200);
-    columns.Bound(t => t.Title).Title("Title").Width(300);
-    columns.Bound(t => t.URLFull).Title("URLFull").Width(300);    
-    columns.Bound(t => t.ID).Title("ID").Width(100);
+    columns.Bound(t => t.ArticleType.TextName).EditorTemplateName("Config_ArticleType").Title("Type").Width(200);
+    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=URLCode#"");' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Title + URL").Width(1000);
+    columns.Bound(t => t.WebsiteName).Title("Website").Width(200);
+    columns.Bound(t => t.ChannelName).Title("Channel").Width(200);
+    columns.Bound(t => t.DatePublish).Title("Publish").Width(200);
+    columns.Bound(t => t.Description).Title("Description").Width(2000);
+    columns.Bound(t => t.URLCode).Title("URL").Width(2000);
 })
-.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
-.ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
 .Sortable()
 .Scrollable()
@@ -44,21 +47,22 @@
 .FileName("Config.pdf")
 )
 .HtmlAttributes(new { @class = "KendoGrid" })
-.Search(search => { search.Field(f => f.Title); search.Field(f => f.URLFull);})
+.Search(search => { search.Field(f => f.Title); search.Field(f => f.URLCode); search.Field(f => f.Description); })
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
 .Model(model =>
 {
     model.Id(t => t.ID);
-    model.Field(t => t.ID).Editable(false);
-    model.Field(t => t.Parent).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Field(t => t.DatePublish).Editable(false);
+    model.Field(t => t.Title).Editable(false);
+    model.Field(t => t.WebsiteName).Editable(false);
+    model.Field(t => t.ChannelName).Editable(false);
+    model.Field(t => t.Description).Editable(false);
+    model.Field(t => t.URLCode).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetDataTransferParentByGroupNameAndCodeAndActiveToList", "Config"))
-.Destroy(t => t.Action("Delete", "Config"))
-.Create(t => t.Action("CreateWebisteDataTransfer", "Config"))
-.Update(t => t.Action("UpdateDataTransfer", "Config"))
+.Read(t => t.Action("GetDataTransferProductSearchByProductSearchIDToList", "ProductSearchProperty").Data("filterProductSearchProperty"))
 )
 )
             </div>
@@ -66,12 +70,13 @@
     </div>
 </div>
 
+
+
 @(Html.Kendo().Notification()
     .Name("Notification")
     .Position(p => p.Pinned(true).Top(30).Right(30))
     .Width(400)
 )
-
 <script>
     function onGridRequestEnd(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
@@ -80,8 +85,11 @@
             var note = response.split('-')[1];
             var notification = $("#Notification").data("kendoNotification");
             notification.show(note, messageType);
-            $("#ConfigDataTransfer").data("kendoGrid").dataSource.read();
+            $("#ProductSearchPropertyDataTransfer").data("kendoGrid").dataSource.read();
         }
     }
-
+    function filterProductSearchProperty(e) {
+        var productSearchIDValue = $("#ID").val();
+        return { productSearchID: productSearchIDValue };
+    }
 </script>

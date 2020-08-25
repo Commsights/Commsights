@@ -38,7 +38,7 @@
                             <span class="fas fa-save"></span>
                         </button>
                     </div>
-                </div>               
+                </div>
                 <br />
                 @(Html.Kendo().Grid<Commsights.Data.Models.MembershipPermission>()
 .Name("MembershipPermission")
@@ -86,7 +86,7 @@
 .Update(t => t.Action("Update", "MembershipPermission"))
 )
 )
-            </div>           
+            </div>
         </div>
     </div>
 </div>
@@ -125,6 +125,7 @@
         $("#MembershipPermission").data("kendoGrid").dataSource.read();
     }
     function onInitializationMenuPermission() {
+        BeginRequestHandler();
         var membershipIDValue = $("#Membership").data("kendoDropDownList").value();
           $.ajax(
               {
@@ -132,7 +133,8 @@
                   datatype: "JSON",
                   url: '@Url.Action("InitializationMenuPermission", "MembershipPermission")',
                   data: { membershipID: membershipIDValue },
-            success: function (result) {
+                  success: function (result) {
+                      EndRequestHandler();
                 var messageType = result.split('-')[0];
                 var note = result.split('-')[1];
                 var notification = $("#Notification").data("kendoNotification");
@@ -145,6 +147,7 @@
 
     }
     function onSaveAllMenuPermission() {
+        BeginRequestHandler();
         var membershipIDValue = $("#Membership").data("kendoDropDownList").value();
         var isAllValue = document.getElementById('chkAll').checked;
         $.ajax(
@@ -154,6 +157,7 @@
                 url: '@Url.Action("SaveAllMenuPermission", "MembershipPermission")',
                 data: { membershipID: membershipIDValue, isAll: isAllValue },
                 success: function (result) {
+                    EndRequestHandler();
                     var messageType = result.split('-')[0];
                     var note = result.split('-')[1];
                     var notification = $("#Notification").data("kendoNotification");

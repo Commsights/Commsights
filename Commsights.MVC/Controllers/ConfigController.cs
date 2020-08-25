@@ -91,6 +91,10 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult ArticleType()
+        {
+            return View();
+        }
         public ActionResult GetAllToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _configResposistory.GetAllToList();
@@ -113,6 +117,11 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetWebsiteTypeToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.WebsiteType);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetArticleTypeToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.ArticleType).Where(item => item.ParentID == 0);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetBrandToList([DataSourceRequest] DataSourceRequest request)
@@ -144,6 +153,29 @@ namespace Commsights.MVC.Controllers
         {
             var data = _configResposistory.GetDataTransferParentByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
             return Json(data.ToDataSourceResult(request));
+        }
+        public IActionResult CreateArticleType(Config model)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.ArticleType;
+            model.ParentID = 0;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            if (_configResposistory.IsValidByGroupNameAndCodeAndCodeName(model.GroupName, model.Code, model.CodeName) == true)
+            {
+                result = _configResposistory.Create(model);
+            }
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
         }
         public IActionResult CreateBrand(Config model)
         {
@@ -275,7 +307,7 @@ namespace Commsights.MVC.Controllers
                 note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
             }
             return Json(note);
-        }       
+        }
         public IActionResult CreateWebisteDataTransfer(ConfigDataTransfer model)
         {
             Initialization(model);

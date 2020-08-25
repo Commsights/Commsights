@@ -1,5 +1,7 @@
 ﻿@{ ViewData["Title"] = "Search"; }
 
+@model Commsights.MVC.Models.BaseViewModel
+
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
@@ -8,12 +10,31 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class='col-sm-8'>
+                    <div class='col-sm-2'>
+                        @(Html.Kendo().DatePickerFor(Model => Model.DatePublishBegin)
+                                     .Format("dd/MM/yyyy")
+                                     .HtmlAttributes(new { @class = "form-control", title = "Begin" })
+                                     .DateInput()
+                                )
+                    </div>
+                    <div class='col-sm-2'>
+                        @(Html.Kendo().DatePickerFor(Model => Model.DatePublishEnd)
+                                     .Format("dd/MM/yyyy")
+                                     .HtmlAttributes(new { @class = "form-control", title = "End" })
+                                     .DateInput()
+                                )
+                    </div>
+                    <div class='col-sm-6'>
                         <input id="Search" name="Search" class="form-control" placeholder="Search" type="text" value="" />
                     </div>
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" onclick="onSearch()">
                             <span class="fa fa-search"></span>
+                        </button>
+                    </div>                    
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="onSaveProductSearch()">
+                            <span class="fas fa-save"></span>
                         </button>
                     </div>
                 </div>
@@ -21,13 +42,14 @@
                 @(Html.Kendo().Grid<Commsights.Data.Models.Product>()
 .Name("Product")
 .Columns(columns =>
-{    
+{   
     columns.Bound(t => t.DatePublish).Title("Publish").Width(200);
     columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=Urlcode#"");' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Title + URL").Width(1000);
     columns.Bound(t => t.Description).Title("Description").Width(2000);
     columns.Bound(t => t.Urlcode).Title("URL").Width(2000);
+    columns.Bound(t => t.DateUpdated).Title("Updated").Width(200);
+    columns.Bound(t => t.ID).Title("ID").Width(100);
 })
-.ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
 .Sortable()
 .Scrollable()
@@ -58,13 +80,10 @@
 .PageSize(1000)
 .Model(model =>
 {
-    model.Id(t => t.ID);
-    model.Field(t => t.DatePublish).Editable(false);
-    model.Field(t => t.Title).Editable(false);
-    model.Field(t => t.Urlcode).Editable(false);
+    model.Id(t => t.ID);   
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetBySearchToList", "Product").Data("filterProduct"))
+.Read(t => t.Action("GetBySearchAndDatePublishBeginAndDatePublishEndToList", "Product").Data("filterProduct"))
 )
 )
             </div>
@@ -92,9 +111,30 @@
     }
     function filterProduct(e) {
         var searchValue = $("#Search").val();
-        return { search: searchValue };
+        var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
+        var datePublishEndValue = toDate02($("#DatePublishEnd").val());
+        return { search: searchValue, datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue };
     }
     function onSearch() {
         $("#Product").data("kendoGrid").dataSource.read();
+    }
+    function onSaveProductSearch() {
+        BeginRequestHandler();
+        var searchValue = $("#Search").val();
+        var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
+        var datePublishEndValue = toDate02($("#DatePublishEnd").val());
+        $.ajax(
+            {
+                type: "POST",
+                datatype: "JSON",
+                url: '@Url.Action("SaveProductSearch", "ProductSearch")',
+                data: { search: searchValue, datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue },
+                success: function (result) {
+                    EndRequestHandler(); 
+                    window.location.replace(result);
+                },
+                error: function (jqXHR, exception) { },
+                complete: function () { },
+            });
     }
 </script>

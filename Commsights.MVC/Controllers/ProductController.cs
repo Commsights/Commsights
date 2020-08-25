@@ -43,13 +43,17 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult Index()
         {
-            ProductViewModel model = new ProductViewModel();
+            BaseViewModel model = new BaseViewModel();
             model.DatePublish = DateTime.Now;
             return View(model);
         }
         public IActionResult Search()
         {
-            return View();
+            BaseViewModel model = new BaseViewModel();
+            DateTime now = DateTime.Now;
+            model.DatePublishBegin = new DateTime(now.Year, now.Month, 1);
+            model.DatePublishEnd = new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month));
+            return View(model);
         }
         public ActionResult GetByCategoryIDAndDatePublishToList([DataSourceRequest] DataSourceRequest request, int categoryID, DateTime datePublish)
         {
@@ -59,6 +63,11 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetBySearchToList([DataSourceRequest] DataSourceRequest request, string search)
         {
             var data = _productRepository.GetBySearchToList(search);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetBySearchAndDatePublishBeginAndDatePublishEndToList([DataSourceRequest] DataSourceRequest request, string search, DateTime datePublishBegin, DateTime datePublishEnd)
+        {
+            var data = _productRepository.GetBySearchAndDatePublishBeginAndDatePublishEndToList(search, datePublishBegin, datePublishEnd);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetByParentIDAndDatePublishToList([DataSourceRequest] DataSourceRequest request, int parentID, DateTime datePublish)
@@ -269,8 +278,7 @@ namespace Commsights.MVC.Controllers
                         rssSubNode = rssNode.SelectSingleNode("summary");
                         product.Description = rssSubNode != null ? rssSubNode.InnerText : "";
                         break;
-                }
-                product.Description = AppGlobal.RemoveHTMLTags(product.Description);
+                }                
                 rssSubNode = rssNode.SelectSingleNode("pubDate");
                 string pubDate = rssSubNode != null ? rssSubNode.InnerText : "";
                 try
@@ -287,6 +295,7 @@ namespace Commsights.MVC.Controllers
                 }
                 if (!string.IsNullOrEmpty(product.Description))
                 {
+                    product.Description = AppGlobal.RemoveHTMLTags(product.Description);
                     product.Description = product.Description.Trim();
                 }
                 if (!string.IsNullOrEmpty(product.Urlcode))

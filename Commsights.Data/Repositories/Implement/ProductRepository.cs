@@ -32,6 +32,18 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<Product> GetBySearchAndDatePublishBeginAndDatePublishEndToList(string search, DateTime datePublishBegin, DateTime datePublishEnd)
+        {
+            List<Product> list = new List<Product>();
+            if (!string.IsNullOrEmpty(search))
+            {
+                search = search.Trim();
+                datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+                datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+                list = _context.Product.Where(item => (item.Title.Contains(search) || item.Description.Contains(search)) && (datePublishBegin <= item.DatePublish && item.DatePublish <= datePublishEnd)).OrderByDescending(item => item.DatePublish).ToList();
+            }
+            return list;
+        }
         public bool IsValid(string url)
         {
             Product item = _context.Set<Product>().FirstOrDefault(item => item.Urlcode.Equals(url));

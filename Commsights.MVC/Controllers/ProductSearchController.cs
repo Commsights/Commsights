@@ -28,5 +28,21 @@ namespace Commsights.MVC.Controllers
         private void Initialization(ProductSearch model)
         {
         }
+        public IActionResult Index()
+        {
+            return View();
+        }
+        public IActionResult Detail(int ID)
+        {
+            BaseViewModel model = new BaseViewModel();
+            model.ID = ID;
+            return View(model);
+        }
+        public IActionResult SaveProductSearch(string search, DateTime datePublishBegin, DateTime datePublishEnd)
+        {
+            ProductSearch productSearch = _productSearchRepository.SaveProductSearch(search, datePublishBegin, datePublishEnd, RequestUserID);
+            string result = AppGlobal.Domain + "ProductSearch/Detail/" + productSearch.ID;
+            return Json(result);
+        }
     }
 }

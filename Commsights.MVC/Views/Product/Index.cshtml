@@ -1,6 +1,6 @@
 ﻿@{ ViewData["Title"] = "Article original"; }
 
-@model Commsights.MVC.Models.ProductViewModel
+@model Commsights.MVC.Models.BaseViewModel
 
 <div class="row">
     <div class="col-md-12">
@@ -15,7 +15,7 @@
                      .Name("Website")
                      .DataValueField("Id")
                      .DataTextField("Title")
-                     .HtmlAttributes(new { style = "width:100%; font-size: 16px;" })
+                     .HtmlAttributes(new { @class = "form-control" })
                       .Events(e => e.DataBound("onWebsiteDataBound"))
                        .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetWebisteAndActiveToList", "Config")))
@@ -24,7 +24,7 @@
                     <div class='col-sm-2'>
                         @(Html.Kendo().DatePickerFor(Model => Model.DatePublish)
                                      .Format("dd/MM/yyyy")
-                                     .HtmlAttributes(new { style = "width: 100%; font-size: 16px; text-align: right;", title = "Date publish" })
+                                     .HtmlAttributes(new { @class = "form-control", title = "Date publish" })
                                      .DateInput()
                                 )
                     </div>

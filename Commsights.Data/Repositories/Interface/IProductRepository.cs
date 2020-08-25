@@ -11,5 +11,6 @@ namespace Commsights.Data.Repositories
         public List<Product> GetByCategoryIDAndDatePublishToList(int categoryID, DateTime datePublish);
         public List<Product> GetByParentIDAndDatePublishToList(int parentID, DateTime datePublish);
         public List<Product> GetBySearchToList(string search);
+        public List<Product> GetBySearchAndDatePublishBeginAndDatePublishEndToList(string search, DateTime datePublishBegin, DateTime datePublishEnd);
     }
 }

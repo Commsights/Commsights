@@ -6,6 +6,7 @@ using System.Text;
 namespace Commsights.Data.Repositories
 {
     public interface IProductSearchRepository : IRepository<ProductSearch>
-    {  
+    {
+        public ProductSearch SaveProductSearch(string search, DateTime datePublishBegin, DateTime datePublishEnd, int requestUserID);
     }
 }
