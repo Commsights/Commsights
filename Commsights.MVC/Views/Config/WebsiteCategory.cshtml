@@ -15,7 +15,7 @@
     columns.Bound(t => t.IsMenuLeft).Title("Is RSS").Width(100);
     columns.Bound(t => t.Parent.TextName).EditorTemplateName("Config_WebsiteType").Title("Type").Width(200);
     columns.Bound(t => t.Title).Title("Title").Width(300);    
-    columns.Template(@"<a target='_blank' href='#=URLFull#' style='color: blue;'>#=URLFull#</a>").Title("URL").Width(300);
+    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=URLFull#"");' style='color: blue; cursor: pointer;'>#=URLFull#</a>").Title("URL").Width(300);
     columns.Bound(t => t.ID).Title("ID").Width(100);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))

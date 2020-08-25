@@ -40,6 +40,14 @@
             $('#BackGround').fadeTo("fast", 0.5);
             $('#Dim').focus();
         }
+        function OpenWindowByURL(URLParamater, w = 100, h = 200) {
+            var width01 = screen.width - w;
+            var height01 = screen.height - h;
+            var left = (screen.width - width01) / 2;
+            var top = (screen.height - height01) / 3;
+            var url = URLParamater;
+            window.open(url, '_blank', 'location=yes,height=' + height01 + ',width=' + width01 + ',scrollbars=yes,status=yes,toolbar=yes,top=' + top + ',left=' + left + '');
+        }
     </script>
 </head>
 <body class="hold-transition sidebar-mini" id="BackGround">
@@ -89,11 +97,17 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
+                                    <a href="/Product/Search" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Search</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
                                     <a href="/Product/Index" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Article original</p>
                                     </a>
-                                </li>                                
+                                </li>
                             </ul>
                         </li>
                         <li class="nav-item has-treeview">

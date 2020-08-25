@@ -47,9 +47,18 @@ namespace Commsights.MVC.Controllers
             model.DatePublish = DateTime.Now;
             return View(model);
         }
+        public IActionResult Search()
+        {
+            return View();
+        }
         public ActionResult GetByCategoryIDAndDatePublishToList([DataSourceRequest] DataSourceRequest request, int categoryID, DateTime datePublish)
         {
             var data = _productRepository.GetByCategoryIDAndDatePublishToList(categoryID, datePublish);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetBySearchToList([DataSourceRequest] DataSourceRequest request, string search)
+        {
+            var data = _productRepository.GetBySearchToList(search);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetByParentIDAndDatePublishToList([DataSourceRequest] DataSourceRequest request, int parentID, DateTime datePublish)

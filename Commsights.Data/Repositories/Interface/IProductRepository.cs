@@ -10,5 +10,6 @@ namespace Commsights.Data.Repositories
         public bool IsValid(string url);
         public List<Product> GetByCategoryIDAndDatePublishToList(int categoryID, DateTime datePublish);
         public List<Product> GetByParentIDAndDatePublishToList(int parentID, DateTime datePublish);
+        public List<Product> GetBySearchToList(string search);
     }
 }
