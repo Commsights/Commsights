@@ -24,14 +24,18 @@
                                      .DateInput()
                                 )
                     </div>
-                    <div class='col-sm-6'>
+                    <div class='col-sm-4'>
                         <input id="Search" name="Search" class="form-control" placeholder="Search" type="text" value="" />
                     </div>
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" onclick="onSearch()">
                             <span class="fa fa-search"></span>
                         </button>
-                    </div>                    
+                    </div>      
+                    <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
+                        <input id="chkAll" type="checkbox">
+                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">All</p>
+                    </div>
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-primary btn-sm" onclick="onSaveProductSearch()">
                             <span class="fas fa-save"></span>
@@ -42,8 +46,9 @@
                 @(Html.Kendo().Grid<Commsights.Data.Models.Product>()
 .Name("Product")
 .Columns(columns =>
-{   
-
+{
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" });}).Width(150);
+    columns.Bound(t => t.Active).Title("Select").Width(100);
     columns.Bound(t => t.DatePublish).Title("Publish").Width(200);
     columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=Urlcode#"");' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Title + URL").Width(1000);
     columns.Bound(t => t.Description).Title("Description").Width(2000);
@@ -81,10 +86,14 @@
 .PageSize(1000)
 .Model(model =>
 {
-    model.Id(t => t.ID);   
+    model.Id(t => t.ID);
+    model.Field(t => t.ID).Editable(false);
+    model.Field(t => t.DateUpdated).Editable(false);
+    model.Field(t => t.DatePublish).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetBySearchAndDatePublishBeginAndDatePublishEndToList", "Product").Data("filterProduct"))
+.Update(t => t.Action("Update", "Product"))
 )
 )
             </div>
@@ -124,12 +133,13 @@
         var searchValue = $("#Search").val();
         var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
         var datePublishEndValue = toDate02($("#DatePublishEnd").val());
+        var isAllValue = document.getElementById('chkAll').checked;
         $.ajax(
             {
                 type: "POST",
                 datatype: "JSON",
                 url: '@Url.Action("SaveProductSearch", "ProductSearch")',
-                data: { search: searchValue, datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue },
+                data: { search: searchValue, datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, isAll: isAllValue },
                 success: function (result) {
                     EndRequestHandler(); 
                     window.location.replace(result);

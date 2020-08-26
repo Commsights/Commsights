@@ -1,2 +1,113 @@
 ﻿@{ ViewData["Title"] = "Index"; }
 
+@model Commsights.Data.Models.ProductSearch
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Data - Search result</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class='col-sm-2'>
+                        @(Html.Kendo().DatePickerFor(Model => Model.DatePublishBegin)
+                                     .Format("dd/MM/yyyy")
+                                     .HtmlAttributes(new { @class = "form-control", title = "Begin" })
+                                     .DateInput()
+                                )
+                    </div>
+                    <div class='col-sm-2'>
+                        @(Html.Kendo().DatePickerFor(Model => Model.DatePublishEnd)
+                                     .Format("dd/MM/yyyy")
+                                     .HtmlAttributes(new { @class = "form-control", title = "End" })
+                                     .DateInput()
+                                )
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-success" onclick="onSearch()">
+                            <span class="fa fa-search"></span>
+                        </button>
+                    </div>
+                </div>
+                <br />
+                @(Html.Kendo().Grid<Commsights.Data.Models.ProductSearch>()
+.Name("ProductSearch")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
+    columns.Template(@"<a href='/ProductSearch/Detail/#=ID#' class='btn btn-success' style='color:white;'><i class='fas fa-edit'></i></a>").Width(70).HtmlAttributes(new { style = "text-align:center;" });
+    columns.Bound(t => t.DateSearch).Title("Search").Width(200).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.DatePublishBegin).Title("Begin").Width(200).HtmlAttributes(new { @class = "text-right" }).Format("{0: dd/MM/yyyy}");
+    columns.Bound(t => t.DatePublishEnd).Title("End").Width(200).HtmlAttributes(new { @class = "text-right" }).Format("{0: dd/MM/yyyy}");
+    columns.Bound(t => t.SearchString).Title("Key word").Width(500).HtmlAttributes(new { @style = "font-weight: bold;" });
+
+})
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid" })
+.Search(search => { search.Field(f => f.SearchString); })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.ID);
+})
+.Events(t => { t.RequestEnd("onGridRequestEnd"); })
+.Read(t => t.Action("GetByDateSearchBeginAndDateSearchEndToList", "ProductSearch").Data("filterProductSearch"))
+.Destroy(t => t.Action("Delete", "ProductSearch"))
+)
+)
+            </div>
+        </div>
+    </div>
+</div>
+
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+<script>
+    function onGridRequestEnd(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            var response = e.response;
+            var messageType = response.split('-')[0];
+            var note = response.split('-')[1];
+            var notification = $("#Notification").data("kendoNotification");
+            notification.show(note, messageType);
+            $("#ProductSearch").data("kendoGrid").dataSource.read();
+        }
+    }
+    function filterProductSearch(e) {
+        var dateSearchBeginValue = toDate02($("#DatePublishBegin").val());
+        var dateSearchEndValue = toDate02($("#DatePublishEnd").val());
+        return { dateSearchBegin: dateSearchBeginValue, dateSearchEnd: dateSearchEndValue };
+    }
+    function onSearch() {
+        $("#ProductSearch").data("kendoGrid").dataSource.read();
+    }
+</script>
+

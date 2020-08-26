@@ -16,7 +16,18 @@ namespace Commsights.Data.Repositories
         {
             _context = context;
         }
-        public ProductSearch SaveProductSearch(string search, DateTime datePublishBegin, DateTime datePublishEnd, int requestUserID)
+        public List<ProductSearch> GetByDateSearchBeginAndDateSearchEndToList(DateTime dateSearchBegin, DateTime dateSearchEnd)
+        {
+            List<ProductSearch> list = new List<ProductSearch>();
+            if (dateSearchBegin.Year > 2000)
+            {
+                dateSearchBegin = new DateTime(dateSearchBegin.Year, dateSearchBegin.Month, dateSearchBegin.Day, 0, 0, 0);
+                dateSearchEnd = new DateTime(dateSearchEnd.Year, dateSearchEnd.Month, dateSearchEnd.Day, 23, 59, 59);
+                list = _context.ProductSearch.Where(item => (dateSearchBegin <= item.DateSearch && item.DateSearch <= dateSearchEnd)).OrderByDescending(item => item.DateSearch).ToList();
+            }
+            return list;
+        }
+        public ProductSearch SaveProductSearch(string search, DateTime datePublishBegin, DateTime datePublishEnd, int requestUserID, bool isAll)
         {
             ProductSearch productSearch = new ProductSearch();
             if (!string.IsNullOrEmpty(search))
@@ -33,17 +44,27 @@ namespace Commsights.Data.Repositories
                 datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
                 datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
                 listProduct = _context.Product.Where(item => (item.Title.Contains(search) || item.Description.Contains(search)) && (datePublishBegin <= item.DatePublish && item.DatePublish <= datePublishEnd)).OrderByDescending(item => item.DatePublish).ToList();
-                foreach (Product product in listProduct)
+                for (int i = 0; i < listProduct.Count; i++)
                 {
-                    ProductSearchProperty productSearchProperty = new ProductSearchProperty();
-                    productSearchProperty.Initialization(InitType.Insert, requestUserID);
-                    productSearchProperty.ProductID = product.ID;
-                    productSearchProperty.ProductSearchID = productSearch.ID;
-                    productSearchProperty.ArticleTypeID = AppGlobal.ArticleTypeID;
-                    productSearchProperty.Active = true;
-                    listProductSearchProperty.Add(productSearchProperty);
+                    if (isAll == true)
+                    {
+                        listProduct[i].Active = isAll;
+                    }
+                    if (listProduct[i].Active == true)
+                    {
+                        ProductSearchProperty productSearchProperty = new ProductSearchProperty();
+                        productSearchProperty.Initialization(InitType.Insert, requestUserID);
+                        productSearchProperty.ProductID = listProduct[i].ID;
+                        productSearchProperty.ProductSearchID = productSearch.ID;
+                        productSearchProperty.ArticleTypeID = AppGlobal.ArticleTypeID;
+                        productSearchProperty.Active = true;
+                        listProductSearchProperty.Add(productSearchProperty);
+                    }
                 }
-                _context.Set<ProductSearchProperty>().AddRange(listProductSearchProperty);
+                if (isAll == true)
+                {
+                    _context.Set<Product>().AddRange(listProduct);
+                }
                 _context.SaveChanges();
             }
             return productSearch;
