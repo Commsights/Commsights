@@ -25,13 +25,13 @@ namespace Commsights.MVC.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IMembershipRepository _membershipRepository;
         private readonly IConfigRepository _configResposistory;
-        private ICompositeViewEngine _viewEngine;
+        
         public MembershipController(IHostingEnvironment hostingEnvironment, IMembershipRepository membershipRepository, IConfigRepository configResposistory, ICompositeViewEngine viewEngine, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
             _hostingEnvironment = hostingEnvironment;
             _membershipRepository = membershipRepository;
             _configResposistory = configResposistory;
-            _viewEngine = viewEngine;
+            
         }
         private void Initialization(Membership model, int action)
         {

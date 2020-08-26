@@ -18,8 +18,9 @@ namespace Commsights.MVC.Controllers
 {
     public class ConfigController : BaseController
     {
-        private readonly IConfigRepository _configResposistory;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IConfigRepository _configResposistory;
+       
         public ConfigController(IHostingEnvironment hostingEnvironment, IConfigRepository configResposistory, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
             _hostingEnvironment = hostingEnvironment;
@@ -649,7 +650,8 @@ namespace Commsights.MVC.Controllers
                 note = AppGlobal.Error + " - " + AppGlobal.DeleteFail;
             }
             return Json(note);
-        }        
+        }
+        
         public ActionResult UploadPressList()
         {
             int result = 0;
@@ -689,41 +691,41 @@ namespace Commsights.MVC.Controllers
                                                 List<Config> list = new List<Config>();
                                                 for (int i = 2; i <= totalRows; i++)
                                                 {
-                                                    Config config = new Config();
-                                                    config.GroupName = AppGlobal.CRM;
-                                                    config.Code = AppGlobal.PressList;
-                                                    config.Initialization(InitType.Insert, RequestUserID);
+                                                    Config model = new Config();
+                                                    model.GroupName = AppGlobal.CRM;
+                                                    model.Code = AppGlobal.PressList;
+                                                    model.Initialization(InitType.Insert, RequestUserID);
                                                     try
                                                     {
                                                         if (workSheet.Cells[i, 2].Value != null)
                                                         {
-                                                            config.CodeName = workSheet.Cells[i, 2].Value.ToString().Trim();
+                                                            model.CodeName = workSheet.Cells[i, 2].Value.ToString().Trim();
                                                         }
                                                         if (workSheet.Cells[i, 3].Value != null)
                                                         {
                                                             string blackWhite = workSheet.Cells[i, 3].Value.ToString().Trim();
                                                             blackWhite = blackWhite.Replace(@",", "");
                                                             blackWhite = blackWhite.Replace(@".", "");
-                                                            config.BlackWhite = int.Parse(blackWhite);
+                                                            model.BlackWhite = int.Parse(blackWhite);
                                                         }
                                                         if (workSheet.Cells[i, 4].Value != null)
                                                         {
                                                             string color = workSheet.Cells[i, 4].Value.ToString().Trim();
                                                             color = color.Replace(@",", "");
                                                             color = color.Replace(@".", "");
-                                                            config.Color = int.Parse(color);
+                                                            model.Color = int.Parse(color);
                                                         }
                                                     }
                                                     catch
                                                     {
 
                                                     }
-                                                    if (_configResposistory.IsValidByGroupNameAndCodeAndCodeName(config.GroupName, config.Code, config.CodeName))
+                                                    if (_configResposistory.IsValidByGroupNameAndCodeAndCodeName(model.GroupName, model.Code, model.CodeName))
                                                     {
-                                                        list.Add(config);
+                                                        list.Add(model);
                                                     }
                                                 }
-                                                //result = _configResposistory.Range(list);
+                                                result = _configResposistory.Range(list);
                                             }
                                         }
                                     }

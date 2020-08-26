@@ -35,7 +35,7 @@ namespace Commsights.Data.Repositories
             return item == null ? true : false;
         }
         public Config GetByGroupNameAndCodeAndCodeName(string groupName, string code, string codeName)
-        {
+        {            
             Config item = _context.Set<Config>().FirstOrDefault(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.CodeName.Equals(codeName));
             return item;
         }

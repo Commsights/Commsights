@@ -20,7 +20,7 @@ namespace Commsights.Data.Models
         public string ContentMain { get; set; }
         public decimal? Price { get; set; }
         public int? PriceUnitId { get; set; }
-        public int? Page { get; set; }
+        public string Page { get; set; }
 
         public string TitleEnglish { get; set; }
         public string FileName { get; set; }

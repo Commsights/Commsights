@@ -69,7 +69,7 @@ namespace Commsights.Data.Repositories
             }
             return false;
         }
-        public Membership GetMembershipByAccount(string account)
+        public Membership GetByAccount(string account)
         {
             Membership membership = new Membership();
             if (!string.IsNullOrEmpty(account))

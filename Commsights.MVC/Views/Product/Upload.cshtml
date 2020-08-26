@@ -8,13 +8,13 @@
             </div>
             <div class="card-body">
                 <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadScan", "Product")'>
-                    <div class='col-sm-6'>
+                    <div class='col-sm-12'>
                         <div class='form-group'>
                             <label for='Download'>Bước 01: File excel mẫu: </label>
                             <a href="@Commsights.Data.Helpers.AppGlobal.URLDownloadExcel/Scan.xlsx" target="_blank">Download</a>
                         </div>
                     </div>
-                    <div class='col-sm-6'>
+                    <div class='col-sm-12'>
                         <div class='form-group'>
                             <label for='Ten'>Bước 02: Chọn file excel có dữ liệu: </label>
                             @(Html.Kendo().Upload()
