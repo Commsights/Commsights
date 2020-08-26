@@ -69,5 +69,14 @@ namespace Commsights.Data.Repositories
             }
             return false;
         }
+        public Membership GetMembershipByAccount(string account)
+        {
+            Membership membership = new Membership();
+            if (!string.IsNullOrEmpty(account))
+            {
+                membership = _context.Membership.FirstOrDefault(item => item.Account.Equals(account));
+            }
+            return membership;
+        }
     }
 }

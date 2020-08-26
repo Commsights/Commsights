@@ -1,10 +1,10 @@
-﻿@{ ViewData["Title"] = "Article type"; }
+﻿@{ ViewData["Title"] = "Frequency"; }
 
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">System - Article type</h3>
+                <h3 class="card-title">System - Frequency</h3>
             </div>
             <div class="card-body">
                 @(Html.Kendo().Grid<Commsights.Data.Models.Config>()
@@ -52,9 +52,9 @@
     model.Field(t => t.ID).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetArticleTypeToList", "Config"))
+.Read(t => t.Action("GetFrequencyToList", "Config"))
 .Destroy(t => t.Action("Delete", "Config"))
-.Create(t => t.Action("CreateArticleType", "Config"))
+.Create(t => t.Action("CreateFrequency", "Config"))
 .Update(t => t.Action("Update", "Config"))
 )
 )

@@ -7,15 +7,20 @@
                 <h3 class="card-title">System - Press list</h3>
             </div>
             <div class="card-body">
-                @(Html.Kendo().Grid<Commsights.Data.Models.Config>()
-.Name("Config")
+                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ConfigDataTransfer>()
+.Name("ConfigDataTransfer")
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.ID).Title("ID").Width(50);
-    columns.Bound(t => t.CodeName).Title("Name").Width(200);
+    columns.Bound(t => t.CodeName).Title("Name").Width(300);
+    columns.Bound(t => t.Country.TextName).EditorTemplateName("Config_Country").Title("Country").Width(200);
+    columns.Bound(t => t.Language.TextName).EditorTemplateName("Config_Language").Title("Language").Width(200);
+    columns.Bound(t => t.MediaType.TextName).EditorTemplateName("Config_MediaType").Title("Media type").Width(200);
+    columns.Bound(t => t.Frequency.TextName).EditorTemplateName("Config_Frequency").Title("Frequency").Width(200);
+    columns.Bound(t => t.ColorType.TextName).EditorTemplateName("Config_ColorType").Title("Color type").Width(200);
     columns.Bound(t => t.BlackWhite).Title("BlackWhite").Width(200).HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.Color).Title("Color").Width(200).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.ID).Title("ID").Width(100);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
@@ -51,12 +56,17 @@
 {
     model.Id(t => t.ID);
     model.Field(t => t.ID).Editable(false);
+    model.Field(t => t.Country).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Field(t => t.Language).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Field(t => t.MediaType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Field(t => t.Frequency).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Field(t => t.ColorType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetPressListToList", "Config"))
+.Read(t => t.Action("GetDataTransferPressListByGroupNameAndCodeToList", "Config"))
 .Destroy(t => t.Action("Delete", "Config"))
-.Create(t => t.Action("CreatePressList", "Config"))
-.Update(t => t.Action("Update", "Config"))
+.Create(t => t.Action("CreateDataTransferPressList", "Config"))
+.Update(t => t.Action("UpdateDataTransferPressList", "Config"))
 )
 )
             </div>
@@ -78,7 +88,7 @@
             var note = response.split('-')[1];
             var notification = $("#Notification").data("kendoNotification");
             notification.show(note, messageType);
-            $("#Config").data("kendoGrid").dataSource.read();
+            $("#ConfigDataTransfer").data("kendoGrid").dataSource.read();
         }
     }
 </script>

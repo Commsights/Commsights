@@ -55,6 +55,10 @@ namespace Commsights.MVC.Controllers
             model.DatePublishEnd = new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month));
             return View(model);
         }
+        public IActionResult Upload()
+        {
+            return View();
+        }
         public ActionResult GetByCategoryIDAndDatePublishToList([DataSourceRequest] DataSourceRequest request, int categoryID, DateTime datePublish)
         {
             var data = _productRepository.GetByCategoryIDAndDatePublishToList(categoryID, datePublish);
@@ -278,7 +282,7 @@ namespace Commsights.MVC.Controllers
                         rssSubNode = rssNode.SelectSingleNode("summary");
                         product.Description = rssSubNode != null ? rssSubNode.InnerText : "";
                         break;
-                }                
+                }
                 rssSubNode = rssNode.SelectSingleNode("pubDate");
                 string pubDate = rssSubNode != null ? rssSubNode.InnerText : "";
                 try
@@ -403,5 +407,6 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
             return Json(note);
         }
+
     }
 }

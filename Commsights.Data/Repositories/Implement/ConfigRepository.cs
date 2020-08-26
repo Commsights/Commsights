@@ -34,6 +34,11 @@ namespace Commsights.Data.Repositories
             Config item = _context.Set<Config>().FirstOrDefault(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.CodeName.Equals(codeName));
             return item == null ? true : false;
         }
+        public Config GetByGroupNameAndCodeAndCodeName(string groupName, string code, string codeName)
+        {
+            Config item = _context.Set<Config>().FirstOrDefault(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.CodeName.Equals(codeName));
+            return item;
+        }
         public List<Config> GetByCodeToList(string code)
         {
             return _context.Config.Where(item => item.Code.Equals(code)).ToList();
@@ -60,7 +65,7 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@Active",active)
             };
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectParentByGroupNameAndCodeAndActive", parameters);
-            list = SQLHelper.ToList<ConfigDataTransfer>(dt);            
+            list = SQLHelper.ToList<ConfigDataTransfer>(dt);
             for (int i = 0; i < list.Count; i++)
             {
                 list[i].Parent = new ModelTemplate();
@@ -82,6 +87,36 @@ namespace Commsights.Data.Repositories
             list = SQLHelper.ToList<ConfigDataTransfer>(dt);
             return list;
 
+        }
+        public List<ConfigDataTransfer> GetDataTransferPressListByGroupNameAndCodeToList(string groupName, string code)
+        {
+            List<ConfigDataTransfer> list = new List<ConfigDataTransfer>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code)
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectDataTransferPressListByGroupNameAndCode", parameters);
+            list = SQLHelper.ToList<ConfigDataTransfer>(dt);
+            for (int i = 0; i < list.Count; i++)
+            {
+                list[i].Country = new ModelTemplate();
+                list[i].Country.ID = list[i].CountryID;
+                list[i].Country.TextName = list[i].CountryName;
+                list[i].MediaType = new ModelTemplate();
+                list[i].MediaType.ID = list[i].MediaTypeID;
+                list[i].MediaType.TextName = list[i].MediaTypeName;
+                list[i].Language = new ModelTemplate();
+                list[i].Language.ID = list[i].LanguageID;
+                list[i].Language.TextName = list[i].LanguageName;
+                list[i].Frequency = new ModelTemplate();
+                list[i].Frequency.ID = list[i].FrequencyID;
+                list[i].Frequency.TextName = list[i].FrequencyName;
+                list[i].ColorType = new ModelTemplate();
+                list[i].ColorType.ID = list[i].ColorTypeID;
+                list[i].ColorType.TextName = list[i].ColorTypeName;
+            }
+            return list;
         }
     }
 }

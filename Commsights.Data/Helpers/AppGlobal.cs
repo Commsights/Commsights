@@ -17,7 +17,7 @@ namespace Commsights.Data.Helpers
 
         public static string InitString => string.Empty;
 
-        public static string DateTimeCode => DateTime.Now.ToString("ddMMyyyyHHmmss");
+        public static string DateTimeCode => DateTime.Now.ToString("yyyyMMddHHmmss");
 
         public static string InitGuiCode => Guid.NewGuid().ToString();
         #endregion
@@ -93,6 +93,38 @@ namespace Commsights.Data.Helpers
             {
                 var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                 return builder.Build().GetSection("AppSettings").GetSection("PressList").Value;
+            }
+        }
+        public static string Country
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Country").Value;
+            }
+        }
+        public static string Language
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Language").Value;
+            }
+        }
+        public static string Frequency
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Frequency").Value;
+            }
+        }
+        public static string Color
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Color").Value;
             }
         }
         public static string Brand
@@ -342,6 +374,14 @@ namespace Commsights.Data.Helpers
             {
                 var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                 return builder.Build().GetSection("AppSettings").GetSection("URLDownloadExcel").Value;
+            }
+        }
+        public static string URLScan
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("URLScan").Value;
             }
         }
         public static string FTPUploadExcel
