@@ -1,25 +1,45 @@
-﻿@{ ViewData["Title"] = "Brand of customer"; }
+﻿@{ ViewData["Title"] = "Competitor detail"; }
+
+@model Commsights.Data.Models.Membership
 
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Customer - Brand of customer</h3>
+                <h3 class="card-title">Customer - Competitor detail</h3>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class='col-sm-6'>
-                        @(Html.Kendo().DropDownList()
-                     .Name("Customer")
-                     .DataValueField("ID")
-                     .DataTextField("FullName")
-                     .HtmlAttributes(new { @class = "form-control" })
-                      .Events(e => e.DataBound("onCustomerDataBound").Change("onCustomerChange"))
-                       .Filter(FilterType.Contains)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCustomerToList", "Membership")))
-                            )
+                <form asp-action="SaveCompetitor" asp-controller="Membership">
+                    @Html.HiddenFor(Model => Model.ID)
+                    <div class="row">
+                        <div class='col-md-10'>
+                        </div>
+                        <div class='col-md-1'>
+                            <button style="width:100%;" type="submit" title="Save" class="btn btn-primary">
+                                <span class="fas fa-save"></span>
+                            </button>
+                        </div>
+                        <div class='col-md-1'>
+                            <a asp-action="CompetitorCancel" asp-controller="Membership" title="Competitor category" style="width:100%;" class="btn btn-info">
+                                <span class="fas fa-arrow-left"></span>
+                            </a>
+                        </div>
                     </div>
-                </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class='form-group'>
+                                <label for='Account'>Competitor</label>
+                                @(Html.TextBoxFor(Model => Model.Account, new { placeholder = "Competitor", @class = "form-control" }))
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class='form-group'>
+                                <label for='FullName'>Full name</label>
+                                @(Html.TextBoxFor(Model => Model.FullName, new { placeholder = "Full name", @class = "form-control" }))
+                            </div>
+                        </div>
+                    </div>
+                </form>
                 <br />
                 @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.MembershipPermissionDataTransfer>()
 .Name("MembershipPermissionDataTransfer")
@@ -91,23 +111,12 @@
             $("#MembershipPermissionDataTransfer").data("kendoGrid").dataSource.read();
         }
     }
-    function onCustomerDataBound() {
-        var control = $("#Customer").data("kendoDropDownList");
-        var controlLength = control.dataSource.data().length;
-        if (controlLength > 0) {
-            control.select(0);
-            control.trigger("change");
-        }
-    }
-    function onCustomerChange() {
-        $("#MembershipPermissionDataTransfer").data("kendoGrid").dataSource.read();
-    }
     function filterMembershipPermission(e) {
-        var membershipIDValue = $("#Customer").data("kendoDropDownList").value();        
+        var membershipIDValue = $("#ID").val();
         return { membershipID: membershipIDValue };
     }
     function filterMembershipPermissionCreateBrand(e) {
-        var membershipIDValue = $("#Customer").data("kendoDropDownList").value();
+        var membershipIDValue = $("#ID").val();
         return { membershipID: membershipIDValue };
     }
 </script>

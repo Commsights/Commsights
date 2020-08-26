@@ -2,5 +2,6 @@
                    .DataValueField("ID")
                    .DataTextField("CodeName")
                    .HtmlAttributes(new {data_bind= "value: Parent", @class = "form-control" })
+                    .Filter(FilterType.Contains)
                    .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetWebsiteTypeToList", "Config")))
 )

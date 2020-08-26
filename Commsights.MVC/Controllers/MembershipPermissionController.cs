@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Commsights.Data.DataTransferObject;
 using Commsights.Data.Enum;
 using Commsights.Data.Helpers;
 using Commsights.Data.Models;
@@ -38,14 +39,24 @@ namespace Commsights.MVC.Controllers
             var data = _membershipPermissionRepository.GetByMembershipIDAndCodeToList(membershipID, AppGlobal.Brand);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetDataTransferBrandByMembershipIDAndCodeToList([DataSourceRequest] DataSourceRequest request, int membershipID)
+        {
+            var data = _membershipPermissionRepository.GetDataTransferBrandByMembershipIDAndCodeToList(membershipID, AppGlobal.Brand);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetDataTransferMembershipByBrandIDAndCodeToList([DataSourceRequest] DataSourceRequest request, int brandID)
+        {
+            var data = _membershipPermissionRepository.GetDataTransferMembershipByBrandIDAndCodeToList(brandID, AppGlobal.Brand);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetByMembershipIDAndBrandIDAndProductToList([DataSourceRequest] DataSourceRequest request, int membershipID, int brandID)
         {
             var data = _membershipPermissionRepository.GetByMembershipIDAndBrandIDAndCodeToList(membershipID, brandID, AppGlobal.Product);
             return Json(data.ToDataSourceResult(request));
         }
-        public ActionResult GetBrandIdAndCodeToList([DataSourceRequest] DataSourceRequest request, int brandId)
+        public ActionResult GetBrandIDAndCodeToList([DataSourceRequest] DataSourceRequest request, int brandID)
         {
-            var data = _membershipPermissionRepository.GetBrandIdAndCodeToList(brandId, AppGlobal.Brand);
+            var data = _membershipPermissionRepository.GetBrandIDAndCodeToList(brandID, AppGlobal.Brand);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetMembershipContactToList([DataSourceRequest] DataSourceRequest request, int membershipID)
@@ -71,7 +82,7 @@ namespace Commsights.MVC.Controllers
             note = AppGlobal.Error + " - " + AppGlobal.CreateFail + ", " + AppGlobal.Error001;
             if (membershipID > 0)
             {
-                model.MembershipId = membershipID;
+                model.MembershipID = membershipID;
                 model.Code = AppGlobal.Contact;
 
                 model.Initialization(InitType.Insert, RequestUserID);
@@ -91,8 +102,8 @@ namespace Commsights.MVC.Controllers
         public IActionResult CreateProduct(MembershipPermission model, int membershipID, int brandID)
         {
             model.Code = AppGlobal.Product;
-            model.MembershipId = membershipID;
-            model.BrandId = brandID;
+            model.MembershipID = membershipID;
+            model.BrandID = brandID;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
@@ -110,7 +121,7 @@ namespace Commsights.MVC.Controllers
         public IActionResult CreateBrand(MembershipPermission model, int membershipID)
         {
             model.Code = AppGlobal.Brand;
-            model.MembershipId = membershipID;
+            model.MembershipID = membershipID;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
@@ -127,8 +138,8 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult CreateCustomer(MembershipPermission model, int brandID)
         {
-            model.BrandId = brandID;
-            model.ProductId = 0;
+            model.BrandID = brandID;
+            model.ProductID = 0;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
@@ -146,6 +157,78 @@ namespace Commsights.MVC.Controllers
         public IActionResult Update(MembershipPermission model)
         {
             Initialization();
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Update, RequestUserID);
+            int result = _membershipPermissionRepository.Update(model.ID, model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateDataTransferBrand(MembershipPermissionDataTransfer model, int membershipID)
+        {
+            model.Code = AppGlobal.Brand;
+            model.MembershipID = membershipID;
+            model.BrandID = model.Brand.ID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _membershipPermissionRepository.Create(model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateDataTransferMembership(MembershipPermissionDataTransfer model, int brandID)
+        {
+            model.Code = AppGlobal.Brand;
+            model.BrandID = brandID;
+            model.MembershipID = model.Membership.ID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _membershipPermissionRepository.Create(model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult UpdateDataTransfer(MembershipPermissionDataTransfer model)
+        {
+            Initialization();
+            model.BrandID = model.Brand.ID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Update, RequestUserID);
+            int result = _membershipPermissionRepository.Update(model.ID, model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
+        public IActionResult UpdateDataTransferMembership(MembershipPermissionDataTransfer model)
+        {
+            Initialization();
+            model.MembershipID = model.Membership.ID;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
             int result = _membershipPermissionRepository.Update(model.ID, model);

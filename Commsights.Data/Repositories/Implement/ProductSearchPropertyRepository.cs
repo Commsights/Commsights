@@ -20,40 +20,40 @@ namespace Commsights.Data.Repositories
         }
         public List<ProductSearchPropertyDataTransfer> GetDataTransferProductSearchByProductSearchIDToList(int productSearchID)
         {
-            List<ProductSearchPropertyDataTransfer> listProductSearchPropertyDataTransfer = new List<ProductSearchPropertyDataTransfer>();
+            List<ProductSearchPropertyDataTransfer> list = new List<ProductSearchPropertyDataTransfer>();
             SqlParameter[] parameters =
                        {
                 new SqlParameter("@ProductSearchID",productSearchID),
             };
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSearchPropertySelectProductSearchByProductSearchID", parameters);
-            listProductSearchPropertyDataTransfer = SQLHelper.ToList<ProductSearchPropertyDataTransfer>(dt);
-            foreach (var item in listProductSearchPropertyDataTransfer)
+            list = SQLHelper.ToList<ProductSearchPropertyDataTransfer>(dt);           
+            for (int i = 0; i < list.Count; i++)
             {
-                item.ArticleType = new ModelTemplate();
-                item.ArticleType.ID = item.ArticleTypeID;
-                item.ArticleType.TextName = item.ArticleTypeName;
+                list[i].ArticleType = new ModelTemplate();
+                list[i].ArticleType.ID = list[i].ArticleTypeID;
+                list[i].ArticleType.TextName = list[i].ArticleTypeName;
             }
-            return listProductSearchPropertyDataTransfer;
+            return list;
         }
         public List<ProductSearchPropertyDataTransfer> GetDataTransferByParentIDToList(int parentID)
         {
-            List<ProductSearchPropertyDataTransfer> listProductSearchPropertyDataTransfer = new List<ProductSearchPropertyDataTransfer>();
+            List<ProductSearchPropertyDataTransfer> list = new List<ProductSearchPropertyDataTransfer>();
             SqlParameter[] parameters =
                        {
                 new SqlParameter("@ParentID",parentID),
             };
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSearchPropertySelectDataTransferByParentID", parameters);
-            listProductSearchPropertyDataTransfer = SQLHelper.ToList<ProductSearchPropertyDataTransfer>(dt);
-            foreach (var item in listProductSearchPropertyDataTransfer)
+            list = SQLHelper.ToList<ProductSearchPropertyDataTransfer>(dt);           
+            for (int i = 0; i < list.Count; i++)
             {
-                item.Company = new ModelTemplate();
-                item.Company.ID = item.CompanyID;
-                item.Company.TextName = item.CompanyName;
-                item.AssessType = new ModelTemplate();
-                item.AssessType.ID = item.AssessID;
-                item.AssessType.TextName = item.AssessName;
+                list[i].Company = new ModelTemplate();
+                list[i].Company.ID = list[i].CompanyID;
+                list[i].Company.TextName = list[i].CompanyName;
+                list[i].AssessType = new ModelTemplate();
+                list[i].AssessType.ID = list[i].AssessID;
+                list[i].AssessType.TextName = list[i].AssessName;
             }
-            return listProductSearchPropertyDataTransfer;
+            return list;
         }
     }
 }

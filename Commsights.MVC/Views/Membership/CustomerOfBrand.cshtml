@@ -1,17 +1,17 @@
-﻿@{ ViewData["Title"] = "Customer of brand"; }
+﻿@{ ViewData["Title"] = "Company of brand"; }
 
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Customer - Customer of brand</h3>
+                <h3 class="card-title">Customer - Company of brand</h3>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class='col-sm-4'>
                         @(Html.Kendo().DropDownList()
                      .Name("Brand")
-                     .DataValueField("Id")
+                     .DataValueField("ID")
                      .DataTextField("CodeName")
                      .HtmlAttributes(new { @class = "form-control" })
                       .Events(e => e.DataBound("onBrandDataBound").Change("onBrandChange"))
@@ -21,12 +21,12 @@
                     </div>
                 </div>
                 <br />
-                @(Html.Kendo().Grid<Commsights.Data.Models.MembershipPermission>()
-.Name("MembershipPermission")
+                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.MembershipPermissionDataTransfer>()
+.Name("MembershipPermissionDataTransfer")
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.MembershipId).EditorTemplateName("Membership_Customer").Title("Customer").Width(300);
+    columns.Bound(t => t.Membership.TextName).EditorTemplateName("Membership_Membership").Title("Company").Width(300);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
@@ -59,13 +59,13 @@
 .PageSize(1000)
 .Model(model =>
 {
-    model.Id(t => t.ID);    
+    model.Id(t => t.ID);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetBrandIdAndCodeToList", "MembershipPermission").Data("filterMembershipPermission"))
+.Read(t => t.Action("GetDataTransferMembershipByBrandIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermission"))
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
-.Create(t => t.Action("CreateCustomer", "MembershipPermission").Data("filterMembershipPermissionCreateCustomer"))
-.Update(t => t.Action("Update", "MembershipPermission"))
+.Create(t => t.Action("CreateDataTransferMembership", "MembershipPermission").Data("filterMembershipPermissionCreateCustomer"))
+.Update(t => t.Action("UpdateDataTransferMembership", "MembershipPermission"))
 )
 )
             </div>
@@ -87,7 +87,7 @@
             var note = response.split('-')[1];
             var notification = $("#Notification").data("kendoNotification");
             notification.show(note, messageType);
-            $("#MembershipPermission").data("kendoGrid").dataSource.read();
+            $("#MembershipPermissionDataTransfer").data("kendoGrid").dataSource.read();
         }
     }
     function onBrandDataBound() {
@@ -99,7 +99,7 @@
         }
     }
     function onBrandChange() {
-        $("#MembershipPermission").data("kendoGrid").dataSource.read();
+        $("#MembershipPermissionDataTransfer").data("kendoGrid").dataSource.read();
     }
     function filterMembershipPermission(e) {
         var brandIDValue = $("#Brand").data("kendoDropDownList").value();

@@ -45,7 +45,7 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.MenuId).Title("Menu").Width(300);
+    columns.Bound(t => t.MenuID).Title("Menu").Width(300);
     columns.Bound(t => t.IsView).Title("View").Width(100);
 })
 .ToolBar(toolBar => toolBar.Search())
@@ -79,7 +79,7 @@
 .Model(model =>
 {
     model.Id(t => t.ID);
-    model.Field(t => t.MenuId).Editable(false);
+    model.Field(t => t.MenuID).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetByMembershipIDToList", "MembershipPermission").Data("filterMembershipPermission"))

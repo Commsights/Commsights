@@ -2,7 +2,7 @@
 @(Html.Kendo().DropDownListFor(t => t)
                    .DataValueField("ID")
                    .DataTextField("FullName")
-                   .HtmlAttributes(new {data_bind= "value: Company", @class = "form-control" })
+                   .HtmlAttributes(new {data_bind= "value: Membership", @class = "form-control" })
                     .Filter(FilterType.Contains)
                    .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByCompanyToList", "Membership")))
 )

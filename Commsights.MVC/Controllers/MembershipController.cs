@@ -86,7 +86,20 @@ namespace Commsights.MVC.Controllers
             }
             return View(membership);
         }
+        public IActionResult CompetitorDetail(int ID)
+        {
+            Membership membership = new Membership();
+            if (ID > 0)
+            {
+                membership = _membershipRepository.GetByID(ID);
+            }
+            return View(membership);
+        }
         public IActionResult Employee()
+        {
+            return View();
+        }
+        public IActionResult Competitor()
         {
             return View();
         }
@@ -102,13 +115,22 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
-        public ActionResult Cancel()
+        public ActionResult CustomerCancel()
         {
             return RedirectToAction("Customer");
+        }
+        public ActionResult CompetitorCancel()
+        {
+            return RedirectToAction("Competitor");
         }
         public ActionResult GetAllToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _membershipRepository.GetAllToList();
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCompetitorToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _membershipRepository.GetByParentIDToList(AppGlobal.ParentIDCompetitor);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetEmployeeToList([DataSourceRequest] DataSourceRequest request)
@@ -125,6 +147,25 @@ namespace Commsights.MVC.Controllers
         {
             var data = _membershipRepository.GetByCompanyToList();
             return Json(data.ToDataSourceResult(request));
+        }
+        [AcceptVerbs("Post")]
+        public IActionResult SaveCompetitor(Membership model)
+        {
+            model.ParentID = AppGlobal.ParentIDCompetitor;
+            model.Active = true;
+            if (model.ID > 0)
+            {
+                Initialization(model, 1);
+                model.Initialization(InitType.Update, RequestUserID);
+                _membershipRepository.Update(model.ID, model);
+            }
+            else
+            {
+                Initialization(model, 0);
+                model.Initialization(InitType.Insert, RequestUserID);
+                _membershipRepository.Create(model);
+            }
+            return RedirectToAction("CompetitorDetail", new { ID = model.ID });
         }
         [AcceptVerbs("Post")]
         public IActionResult SaveCustomer(Membership model)

@@ -11,7 +11,7 @@
                     <div class='col-sm-4'>
                         @(Html.Kendo().DropDownList()
                      .Name("Customer")
-                     .DataValueField("Id")
+                     .DataValueField("ID")
                      .DataTextField("FullName")
                      .HtmlAttributes(new { style = "width:100%; font-size: 16px;" })
                       .Events(e => e.DataBound("onCustomerDataBound").Change("onCustomerChange"))
@@ -22,12 +22,12 @@
                     <div class='col-sm-4'>
                         @(Html.Kendo().DropDownList()
                      .Name("Brand")
-                     .DataValueField("BrandId")
-                     .DataTextField("BrandId")
+                     .DataValueField("BrandID")
+                     .DataTextField("BrandName")
                      .HtmlAttributes(new { @class = "form-control" })
                       .Events(e => e.DataBound("onBrandDataBound"))
                        .Filter(FilterType.Contains)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetMembershipIDAndBrandToList", "MembershipPermission").Data("filterBrand")))
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferBrandByMembershipIDAndCodeToList", "MembershipPermission").Data("filterBrand")))
                             )
                     </div>
                     <div class='col-sm-1'>
@@ -135,7 +135,7 @@
     }
     function filterProduct(e) {
         var membershipIDValue = $("#Customer").data("kendoDropDownList").value();
-        var brandIDValue = $("#Brand").data("kendoDropDownList").value();
+        var brandIDValue = $("#Brand").data("kendoDropDownList").value();       
         return { membershipID: membershipIDValue, brandID: brandIDValue };
     }
     function filterCreateProduct(e) {

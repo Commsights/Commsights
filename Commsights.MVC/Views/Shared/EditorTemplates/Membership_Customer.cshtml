@@ -3,5 +3,6 @@
                    .DataValueField("ID")
                    .DataTextField("FullName")
                    .HtmlAttributes(new { style = "width:100%; font-size: 16px;" })
+                    .Filter(FilterType.Contains)
                    .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCustomerToList", "Membership")))
 )

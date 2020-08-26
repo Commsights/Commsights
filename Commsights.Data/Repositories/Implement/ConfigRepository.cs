@@ -52,7 +52,7 @@ namespace Commsights.Data.Repositories
         }
         public List<ConfigDataTransfer> GetDataTransferParentByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active)
         {
-            List<ConfigDataTransfer> listConfigDataTransfer = new List<ConfigDataTransfer>();
+            List<ConfigDataTransfer> list = new List<ConfigDataTransfer>();
             SqlParameter[] parameters =
                        {
                 new SqlParameter("@GroupName",groupName),
@@ -60,18 +60,18 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@Active",active)
             };
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectParentByGroupNameAndCodeAndActive", parameters);
-            listConfigDataTransfer = SQLHelper.ToList<ConfigDataTransfer>(dt);
-            foreach (var item in listConfigDataTransfer)
+            list = SQLHelper.ToList<ConfigDataTransfer>(dt);            
+            for (int i = 0; i < list.Count; i++)
             {
-                item.Parent = new ModelTemplate();
-                item.Parent.ID = item.ParentID;
-                item.Parent.TextName = item.ParentName;
+                list[i].Parent = new ModelTemplate();
+                list[i].Parent.ID = list[i].ParentID;
+                list[i].Parent.TextName = list[i].ParentName;
             }
-            return listConfigDataTransfer;
+            return list;
         }
         public List<ConfigDataTransfer> GetDataTransferChildrenCountByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active)
         {
-            List<ConfigDataTransfer> listConfigDataTransfer = new List<ConfigDataTransfer>();
+            List<ConfigDataTransfer> list = new List<ConfigDataTransfer>();
             SqlParameter[] parameters =
                         {
                 new SqlParameter("@GroupName",groupName),
@@ -79,8 +79,8 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@Active",active)
             };
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectDisplayByGroupNameAndCodeAndActive", parameters);
-            listConfigDataTransfer = SQLHelper.ToList<ConfigDataTransfer>(dt);
-            return listConfigDataTransfer;
+            list = SQLHelper.ToList<ConfigDataTransfer>(dt);
+            return list;
 
         }
     }
