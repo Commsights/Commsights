@@ -103,9 +103,9 @@ namespace Commsights.Data.Repositories
                 list[i].Country = new ModelTemplate();
                 list[i].Country.ID = list[i].CountryID;
                 list[i].Country.TextName = list[i].CountryName;
-                list[i].MediaType = new ModelTemplate();
-                list[i].MediaType.ID = list[i].MediaTypeID;
-                list[i].MediaType.TextName = list[i].MediaTypeName;
+                list[i].Parent = new ModelTemplate();
+                list[i].Parent.ID = list[i].ParentID;
+                list[i].Parent.TextName = list[i].ParentName;
                 list[i].Language = new ModelTemplate();
                 list[i].Language.ID = list[i].LanguageID;
                 list[i].Language.TextName = list[i].LanguageName;

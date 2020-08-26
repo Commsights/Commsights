@@ -16,14 +16,12 @@ namespace Commsights.Data.DataTransferObject
             }
         }
         public string ParentName { get; set; }
-        public string CountryName { get; set; }
-        public string MediaTypeName { get; set; }
+        public string CountryName { get; set; }       
         public string LanguageName { get; set; }
         public string FrequencyName { get; set; }
         public string ColorTypeName { get; set; }
         public ModelTemplate Parent { get; set; }
-        public ModelTemplate Country { get; set; }
-        public ModelTemplate MediaType { get; set; }
+        public ModelTemplate Country { get; set; }        
         public ModelTemplate Language { get; set; }
         public ModelTemplate Frequency { get; set; }
         public ModelTemplate ColorType { get; set; }

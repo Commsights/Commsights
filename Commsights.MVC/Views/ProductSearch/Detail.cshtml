@@ -8,7 +8,7 @@
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Data - Search detail</h3>
+                <h3 class="card-title">Data - Search analytical</h3>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -31,7 +31,7 @@
     columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/ProductSearchProperty/Index/#=ID#"");' class='btn btn-success' style='color:white;'><i class='fas fa-list-ul'></i></a>").Width(70).HtmlAttributes(new { style = "text-align:center;" });
     columns.Bound(t => t.ArticleType.TextName).EditorTemplateName("Config_ArticleType").Title("Type").Width(200);
     columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=URLCode#"");' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Title + URL").Width(1000);
-    columns.Bound(t => t.WebsiteName).Title("Website").Width(200);
+    columns.Bound(t => t.WebsiteName).Title("Source").Width(200);
     columns.Bound(t => t.ChannelName).Title("Channel").Width(200);
     columns.Bound(t => t.DatePublish).Title("Publish").Width(200);
     columns.Bound(t => t.Description).Title("Description").Width(2000);

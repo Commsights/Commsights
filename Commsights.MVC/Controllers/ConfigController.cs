@@ -70,11 +70,7 @@ namespace Commsights.MVC.Controllers
             if (model.Country != null)
             {
                 model.CountryID = model.Country.ID;
-            }
-            if (model.MediaType != null)
-            {
-                model.MediaTypeID = model.MediaType.ID;
-            }
+            }           
             if (model.Language != null)
             {
                 model.LanguageID = model.Language.ID;

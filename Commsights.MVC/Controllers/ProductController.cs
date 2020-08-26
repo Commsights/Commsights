@@ -512,16 +512,18 @@ namespace Commsights.MVC.Controllers
                                                         Config parent = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.PressList, mediaTitle);
                                                         if (parent == null)
                                                         {
+                                                            parent = new Config();
                                                             if (workSheet.Cells[i, 12].Value != null)
                                                             {
                                                                 string type = workSheet.Cells[i, 12].Value.ToString().Trim();
                                                                 Config mediaType = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.WebsiteType, type);
                                                                 if (mediaType == null)
                                                                 {
+                                                                    mediaType = new Config();
                                                                     mediaType.Initialization(InitType.Insert, RequestUserID);
                                                                     _configResposistory.Create(mediaType);
                                                                 }
-                                                                parent.MediaTypeID = mediaType.ID;
+                                                                parent.ParentID = mediaType.ID;
                                                             }
                                                             if (workSheet.Cells[i, 13].Value != null)
                                                             {
@@ -529,6 +531,7 @@ namespace Commsights.MVC.Controllers
                                                                 Config country = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.WebsiteType, type);
                                                                 if (country == null)
                                                                 {
+                                                                    country = new Config();
                                                                     country.Initialization(InitType.Insert, RequestUserID);
                                                                     _configResposistory.Create(country);
                                                                 }
@@ -540,6 +543,7 @@ namespace Commsights.MVC.Controllers
                                                                 Config language = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.WebsiteType, type);
                                                                 if (language == null)
                                                                 {
+                                                                    language = new Config();
                                                                     language.Initialization(InitType.Insert, RequestUserID);
                                                                     _configResposistory.Create(language);
                                                                 }
@@ -551,6 +555,7 @@ namespace Commsights.MVC.Controllers
                                                                 Config frequency = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.WebsiteType, type);
                                                                 if (frequency == null)
                                                                 {
+                                                                    frequency = new Config();
                                                                     frequency.Initialization(InitType.Insert, RequestUserID);
                                                                     _configResposistory.Create(frequency);
                                                                 }
@@ -562,6 +567,7 @@ namespace Commsights.MVC.Controllers
                                                                 Config colorType = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.WebsiteType, type);
                                                                 if (colorType == null)
                                                                 {
+                                                                    colorType = new Config();
                                                                     colorType.Initialization(InitType.Insert, RequestUserID);
                                                                     _configResposistory.Create(colorType);
                                                                 }
@@ -603,6 +609,7 @@ namespace Commsights.MVC.Controllers
                                                                 productSearchProperty.ParentID = 0;
                                                                 productSearchProperty.ProductID = model.ID;
                                                                 productSearchProperty.ProductSearchID = productSearch.ID;
+                                                                productSearchProperty.ArticleTypeID = 2488;
                                                                 productSearchProperty.Initialization(InitType.Insert, RequestUserID);
                                                                 _productSearchPropertyRepository.Create(productSearchProperty);
                                                                 if (productSearchProperty.ID > 0)
@@ -613,8 +620,10 @@ namespace Commsights.MVC.Controllers
                                                                         Membership membership = _membershipRepository.GetByAccount(companyName);
                                                                         if (membership == null)
                                                                         {
+                                                                            membership = new Membership();
                                                                             membership.Account = companyName;
                                                                             membership.FullName = companyName;
+                                                                            membership.ParentID = AppGlobal.ParentIDCompetitor;
                                                                             membership.Initialization(InitType.Insert, RequestUserID);
                                                                             _membershipRepository.Create(membership);
                                                                         }
@@ -623,8 +632,7 @@ namespace Commsights.MVC.Controllers
                                                                             ProductSearchProperty productSearchPropertySub = new ProductSearchProperty();
                                                                             productSearchPropertySub.ParentID = productSearchProperty.ID;
                                                                             productSearchPropertySub.CompanyID = membership.ID;
-                                                                            productSearchPropertySub.AssessID = 2566;
-                                                                            productSearchPropertySub.ArticleTypeID = 2488;
+                                                                            productSearchPropertySub.AssessID = 2566;                                                                            
                                                                             productSearchPropertySub.Initialization(InitType.Insert, RequestUserID);
                                                                             _productSearchPropertyRepository.Create(productSearchPropertySub);
                                                                         }
