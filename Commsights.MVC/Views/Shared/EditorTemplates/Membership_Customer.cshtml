@@ -1,7 +1,6 @@
 @model Commsights.Data.Models.Membership
-
 @(Html.Kendo().DropDownListFor(t => t)
-                   .DataValueField("Id")
+                   .DataValueField("ID")
                    .DataTextField("FullName")
                    .HtmlAttributes(new { style = "width:100%; font-size: 16px;" })
                    .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCustomerToList", "Membership")))

@@ -49,7 +49,7 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult Search()
         {
-            BaseViewModel model = new BaseViewModel();
+            ProductSearch model = new ProductSearch();
             DateTime now = DateTime.Now;
             model.DatePublishBegin = new DateTime(now.Year, now.Month, 1);
             model.DatePublishEnd = new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month));

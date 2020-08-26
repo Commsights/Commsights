@@ -8,9 +8,7 @@ namespace Commsights.MVC.Models
     public class BaseViewModel
     {
         public int ID { get; set; }
-        public string Search { get; set; }
         public DateTime DatePublish { get; set; }
-        public DateTime DatePublishBegin { get; set; }
-        public DateTime DatePublishEnd { get; set; }
+
     }
 }

@@ -11,5 +11,6 @@ namespace Commsights.Data.Repositories
         public bool IsLoginByID(int ID, string password);
         public bool IsExistPhone(string phone);
         public bool IsExistEmail(string email);
+        public List<Membership> GetByCompanyToList();
     }
 }

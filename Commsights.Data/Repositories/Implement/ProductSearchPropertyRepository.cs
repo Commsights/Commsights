@@ -35,5 +35,25 @@ namespace Commsights.Data.Repositories
             }
             return listProductSearchPropertyDataTransfer;
         }
+        public List<ProductSearchPropertyDataTransfer> GetDataTransferByParentIDToList(int parentID)
+        {
+            List<ProductSearchPropertyDataTransfer> listProductSearchPropertyDataTransfer = new List<ProductSearchPropertyDataTransfer>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ParentID",parentID),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSearchPropertySelectDataTransferByParentID", parameters);
+            listProductSearchPropertyDataTransfer = SQLHelper.ToList<ProductSearchPropertyDataTransfer>(dt);
+            foreach (var item in listProductSearchPropertyDataTransfer)
+            {
+                item.Company = new ModelTemplate();
+                item.Company.ID = item.CompanyID;
+                item.Company.TextName = item.CompanyName;
+                item.AssessType = new ModelTemplate();
+                item.AssessType.ID = item.AssessID;
+                item.AssessType.TextName = item.AssessName;
+            }
+            return listProductSearchPropertyDataTransfer;
+        }
     }
 }

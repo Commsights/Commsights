@@ -40,7 +40,7 @@ namespace Commsights.Data.Repositories
         }
         public List<Config> GetByGroupNameAndCodeToList(string groupName, string code)
         {
-            return _context.Config.Where(item => item.GroupName.Equals(groupName) && item.Code.Equals(code)).OrderBy(item => item.ID).ToList();
+            return _context.Config.Where(item => item.GroupName.Equals(groupName) && item.Code.Equals(code)).OrderBy(item => item.CodeName).ToList();
         }
         public List<Config> GetByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active)
         {

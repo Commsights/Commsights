@@ -1,0 +1,6 @@
+@(Html.Kendo().DropDownListFor(t => t)
+                   .DataValueField("ID")
+                   .DataTextField("CodeName")
+                   .HtmlAttributes(new {data_bind= "value: AssessType", @class = "form-control" })
+                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetAssessTypeToList", "Config")))
+)

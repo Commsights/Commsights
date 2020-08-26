@@ -1,7 +1,8 @@
 ﻿@{ ViewData["Title"] = "Search detail"; }
 
 
-@model Commsights.MVC.Models.BaseViewModel
+@model Commsights.Data.Models.ProductSearch
+
 @Html.HiddenFor(Model => Model.ID)
 <div class="row">
     <div class="col-md-12">
@@ -10,11 +11,24 @@
                 <h3 class="card-title">Data - Search detail</h3>
             </div>
             <div class="card-body">
+                <div class="row">
+                    <div class='col-sm-2'>
+                        @(Html.TextBoxFor(Model => Model.DatePublishBegin, "{0:dd/MM/yyyy}", new { placeholder = "Begin", disabled = "disabled", @class = "form-control text-right" }))
+                    </div>
+                    <div class='col-sm-2'>
+                        @(Html.TextBoxFor(Model => Model.DatePublishEnd, "{0:dd/MM/yyyy}", new { placeholder = "End", disabled = "disabled", @class = "form-control text-right" }))
+                    </div>
+                    <div class='col-sm-8'>
+                        @(Html.TextBoxFor(Model => Model.SearchString, new { placeholder = "Search", disabled = "disabled", @class = "form-control" }))
+                    </div>
+                </div>
+                <br />
                 @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ProductSearchPropertyDataTransfer>()
 .Name("ProductSearchPropertyDataTransfer")
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
+    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/ProductSearchProperty/Index/#=ID#"");' class='btn btn-success' style='color:white;'><i class='fas fa-list-ul'></i></a>").Width(70).HtmlAttributes(new { style = "text-align:center;" });
     columns.Bound(t => t.ArticleType.TextName).EditorTemplateName("Config_ArticleType").Title("Type").Width(200);
     columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=URLCode#"");' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Title + URL").Width(1000);
     columns.Bound(t => t.WebsiteName).Title("Website").Width(200);
@@ -54,6 +68,7 @@
 .Model(model =>
 {
     model.Id(t => t.ID);
+    model.Field(t => t.ArticleType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
     model.Field(t => t.DatePublish).Editable(false);
     model.Field(t => t.Title).Editable(false);
     model.Field(t => t.WebsiteName).Editable(false);

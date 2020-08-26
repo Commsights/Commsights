@@ -9,5 +9,6 @@ namespace Commsights.Data.Repositories
     public interface IProductSearchPropertyRepository : IRepository<ProductSearchProperty>
     {
         public List<ProductSearchPropertyDataTransfer> GetDataTransferProductSearchByProductSearchIDToList(int productSearchID);
+        public List<ProductSearchPropertyDataTransfer> GetDataTransferByParentIDToList(int parentID);
     }
 }

@@ -15,6 +15,10 @@ namespace Commsights.Data.Repositories
         {
             _context = context;
         }
+        public List<Membership> GetByCompanyToList()
+        {
+            return _context.Membership.Where(item => item.ParentID == AppGlobal.ParentIDCustomer || item.ParentID == AppGlobal.ParentIDCompetitor).OrderBy(item => item.FullName).ToList();
+        }
         public bool IsExistEmail(string email)
         {
             var membership = _context.Membership.FirstOrDefault(user => user.Email.Equals(email));

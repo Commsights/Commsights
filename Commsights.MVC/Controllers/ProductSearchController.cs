@@ -34,10 +34,13 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult Detail(int ID)
         {
-            BaseViewModel model = new BaseViewModel();
-            model.ID = ID;
+            ProductSearch model = new ProductSearch();
+            if (ID > 0)
+            {
+                model = _productSearchRepository.GetByID(ID);
+            }
             return View(model);
-        }
+        }       
         public IActionResult SaveProductSearch(string search, DateTime datePublishBegin, DateTime datePublishEnd)
         {
             ProductSearch productSearch = _productSearchRepository.SaveProductSearch(search, datePublishBegin, datePublishEnd, RequestUserID);

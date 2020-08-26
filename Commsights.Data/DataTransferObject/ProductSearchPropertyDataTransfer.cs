@@ -17,6 +17,10 @@ namespace Commsights.Data.DataTransferObject
         public string WebsiteName { get; set; }
         public string ChannelName { get; set; }
         public string ArticleTypeName { get; set; }
+        public string CompanyName { get; set; }
+        public string AssessName { get; set; }
         public ModelTemplate ArticleType { get; set; }
+        public ModelTemplate Company { get; set; }
+        public ModelTemplate AssessType { get; set; }
     }
 }

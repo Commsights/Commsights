@@ -113,12 +113,17 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetEmployeeToList([DataSourceRequest] DataSourceRequest request)
         {
-            var data = _membershipRepository.GetByParentIDToList(151);
+            var data = _membershipRepository.GetByParentIDToList(AppGlobal.ParentIDEmployee);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetCustomerToList([DataSourceRequest] DataSourceRequest request)
         {
-            var data = _membershipRepository.GetByParentIDToList(150);
+            var data = _membershipRepository.GetByParentIDToList(AppGlobal.ParentIDCustomer);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetByCompanyToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _membershipRepository.GetByCompanyToList();
             return Json(data.ToDataSourceResult(request));
         }
         [AcceptVerbs("Post")]
