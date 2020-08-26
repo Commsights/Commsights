@@ -17,5 +17,7 @@ namespace Commsights.Data.Models
         public string URLSub { get; set; }
         public string Title { get; set; }
         public bool? IsMenuLeft { get; set; }
+        public int? BlackWhite { get; set; }
+        public int? Color { get; set; }
     }
 }

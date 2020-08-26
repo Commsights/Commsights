@@ -1,0 +1,56 @@
+﻿@{ ViewData["Title"] = "Upload"; }
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Upload - Press list</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadPressList", "Config")'>
+                    <div class='col-sm-6'>
+                        <div class='form-group'>
+                            <label for='Download'>Bước 01: File excel mẫu: </label>
+                            <a href="@Commsights.Data.Helpers.AppGlobal.URLDownloadExcel/PressList.xlsx" target="_blank">Download</a>
+                        </div>
+                    </div>
+                    <div class='col-sm-6'>
+                        <div class='form-group'>
+                            <label for='Ten'>Bước 02: Chọn file excel có dữ liệu: </label>
+                            @(Html.Kendo().Upload()
+                                  .Name("Upload")
+                            )
+                        </div>
+                    </div>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='Upload'></label>
+                            <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload Press list</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+    </div>
+</div>
+
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+
+<script>
+    function onGridRequestEnd(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            var response = e.response;
+            var messageType = response.split('-')[0];
+            var note = response.split('-')[1];
+            var notification = $("#Notification").data("kendoNotification");
+            notification.show(note, messageType);
+            $("#Config").data("kendoGrid").dataSource.read();
+        }
+    }
+</script>

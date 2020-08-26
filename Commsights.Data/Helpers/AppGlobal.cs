@@ -87,6 +87,14 @@ namespace Commsights.Data.Helpers
                 return builder.Build().GetSection("AppSettings").GetSection("AssessType").Value;
             }
         }
+        public static string PressList
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("PressList").Value;
+            }
+        }
         public static string Brand
         {
             get
@@ -327,17 +335,23 @@ namespace Commsights.Data.Helpers
                 var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                 return builder.Build().GetSection("AppSettings").GetSection("LoginFail").Value;
             }
-        }
-
-        public static string FileFTP
+        }       
+        public static string URLDownloadExcel
         {
             get
             {
                 var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-                return builder.Build().GetSection("AppSettings").GetSection("FileFTP").Value;
+                return builder.Build().GetSection("AppSettings").GetSection("URLDownloadExcel").Value;
             }
         }
-
+        public static string FTPUploadExcel
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("FTPUploadExcel").Value;
+            }
+        }
         public static string ConectionString
         {
             get
