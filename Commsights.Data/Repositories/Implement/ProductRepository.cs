@@ -53,12 +53,12 @@ namespace Commsights.Data.Repositories
             }
             return item == null ? true : false;
         }
-        public bool IsValidByFileName(string fileName)
+        public bool IsValidByFileNameAndDatePublish(string fileName, DateTime datePublish)
         {
             Product item = null;
             if (!string.IsNullOrEmpty(fileName))
             {
-                item = _context.Set<Product>().FirstOrDefault(item => item.FileName.Equals(fileName));
+                item = _context.Set<Product>().FirstOrDefault(item => item.FileName.Equals(fileName) && item.DatePublish.Equals(datePublish));
             }
             return item == null ? true : false;
         }

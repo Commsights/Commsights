@@ -939,6 +939,7 @@ namespace Commsights.MVC.Controllers
                 html = webClient.DownloadString(model.ImageThumbnail);
                 if (html.Contains(@"andi.vn"))
                 {
+                    model.IsVideo = false;
                     string content = html;
                     if (content.Contains(@"onclick=""showVideo('"))
                     {
@@ -1029,7 +1030,7 @@ namespace Commsights.MVC.Controllers
                                             ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
                                             if (workSheet != null)
                                             {
-                                                List<ProductSearchProperty> listProductSearchProperty = new List<ProductSearchProperty>();
+
                                                 int totalRows = workSheet.Dimension.Rows;
                                                 ProductSearch productSearch = new ProductSearch();
                                                 DateTime now = DateTime.Now;
@@ -1041,6 +1042,7 @@ namespace Commsights.MVC.Controllers
                                                 _productSearchRepository.Create(productSearch);
                                                 for (int i = 6; i <= totalRows; i++)
                                                 {
+                                                    List<ProductSearchProperty> listProductSearchProperty = new List<ProductSearchProperty>();
                                                     Membership membership = new Membership();
                                                     Product model = new Product();
                                                     model.Initialization(InitType.Insert, RequestUserID);
@@ -1050,6 +1052,10 @@ namespace Commsights.MVC.Controllers
                                                     try
                                                     {
                                                         string datePublish = "";
+                                                        if (workSheet.Cells[i, 11].Value != null)
+                                                        {
+                                                            model.Page = workSheet.Cells[i, 11].Value.ToString().Trim();
+                                                        }
                                                         if (workSheet.Cells[i, 1].Value != null)
                                                         {
                                                             datePublish = workSheet.Cells[i, 1].Value.ToString().Trim();
@@ -1058,6 +1064,9 @@ namespace Commsights.MVC.Controllers
                                                                 int year = int.Parse(datePublish.Split('/')[2]);
                                                                 int month = int.Parse(datePublish.Split('/')[1]);
                                                                 int day = int.Parse(datePublish.Split('/')[0]);
+                                                                int hour = int.Parse(model.Page.Split(':')[0]);
+                                                                int minutes = int.Parse(model.Page.Split(':')[1]);
+                                                                int second = int.Parse(model.Page.Split(':')[2]);
                                                                 model.DatePublish = new DateTime(year, month, day, 0, 0, 0);
                                                             }
                                                             catch
@@ -1099,6 +1108,10 @@ namespace Commsights.MVC.Controllers
                                                             model.Title = workSheet.Cells[i, 5].Value.ToString().Trim();
                                                             model.ImageThumbnail = workSheet.Cells[i, 5].Hyperlink.AbsoluteUri.Trim();
                                                             this.GetURLByURLAndi(model, listProductSearchProperty);
+                                                        }
+                                                        if (workSheet.Cells[i, 6].Value != null)
+                                                        {
+                                                            model.TitleEnglish = workSheet.Cells[i, 6].Value.ToString().Trim();
                                                         }
                                                         if (workSheet.Cells[i, 7].Value != null)
                                                         {
@@ -1161,10 +1174,7 @@ namespace Commsights.MVC.Controllers
                                                             }
                                                             model.ParentID = parent.ID;
                                                         }
-                                                        if (workSheet.Cells[i, 11].Value != null)
-                                                        {
-                                                            model.Page = workSheet.Cells[i, 11].Value.ToString().Trim();
-                                                        }
+
                                                         if (workSheet.Cells[i, 12].Value != null)
                                                         {
                                                             model.Duration = workSheet.Cells[i, 12].Value.ToString().Trim();
@@ -1177,7 +1187,7 @@ namespace Commsights.MVC.Controllers
                                                         saveModel = _productRepository.IsValid(model.Urlcode);
                                                         if (model.IsVideo != null)
                                                         {
-                                                            saveModel = _productRepository.IsValidByFileName(model.Urlcode);
+                                                            saveModel = _productRepository.IsValidByFileNameAndDatePublish(model.Urlcode, model.DatePublish);
                                                         }
                                                         if (saveModel)
                                                         {
@@ -1220,7 +1230,7 @@ namespace Commsights.MVC.Controllers
                                                         }
                                                         result = productSearch.ID;
                                                     }
-                                                    catch
+                                                    catch (Exception e)
                                                     {
                                                     }
                                                 }

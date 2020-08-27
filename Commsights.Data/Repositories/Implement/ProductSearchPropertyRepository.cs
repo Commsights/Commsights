@@ -20,7 +20,7 @@ namespace Commsights.Data.Repositories
         }
         public List<ProductSearchProperty> GetByProductIDToList(int productID)
         {
-            return _context.ProductSearchProperty.Where(item => item.ProductID == (productID)).ToList();
+            return _context.ProductSearchProperty.Where(item => item.ProductID == (productID)).OrderByDescending(item => item.ID).ToList();
         }
         public List<ProductSearchPropertyDataTransfer> GetDataTransferProductSearchByProductSearchIDToList(int productSearchID)
         {
