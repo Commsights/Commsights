@@ -29,6 +29,10 @@ namespace Commsights.Data.Models
         public int? Reach { get; set; }
         public string Duration { get; set; }
         public bool? IsVideo { get; set; }
+        public int? ArticleTypeID { get; set; }
+        public int? CompanyID { get; set; }
+        public int? AssessID { get; set; }
+
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
         public DateTime DatePublish { get; set; }

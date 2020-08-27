@@ -276,6 +276,9 @@ namespace Commsights.MVC.Controllers
             foreach (XmlNode rssNode in rssNodes)
             {
                 Product product = new Product();
+                product.CompanyID = AppGlobal.CompetitorID;
+                product.ArticleTypeID = AppGlobal.ArticleTypeID;
+                product.AssessID = AppGlobal.AssessID;
                 product.Initialization(InitType.Insert, RequestUserID);
                 product.ParentID = item.ParentID;
                 product.CategoryId = item.ID;
