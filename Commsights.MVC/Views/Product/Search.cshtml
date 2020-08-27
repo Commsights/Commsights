@@ -31,7 +31,7 @@
                         <button type="button" class="btn btn-success" onclick="onSearch()">
                             <span class="fa fa-search"></span>
                         </button>
-                    </div>      
+                    </div>
                     <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
                         <input id="chkAll" type="checkbox">
                         <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">All</p>
@@ -56,6 +56,7 @@
     columns.Bound(t => t.DateUpdated).Title("Updated").Width(200);
     columns.Bound(t => t.ID).Title("ID").Width(100);
 })
+.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .Editable(editable => editable.Mode(GridEditMode.InLine))
 .Sortable()
 .Scrollable()
@@ -141,7 +142,7 @@
                 url: '@Url.Action("SaveProductSearch", "ProductSearch")',
                 data: { search: searchValue, datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, isAll: isAllValue },
                 success: function (result) {
-                    EndRequestHandler(); 
+                    EndRequestHandler();
                     window.location.replace(result);
                 },
                 error: function (jqXHR, exception) { },

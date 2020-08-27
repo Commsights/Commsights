@@ -200,7 +200,7 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetDataTransferPressListByGroupNameAndCodeToList([DataSourceRequest] DataSourceRequest request)
         {
-            var data = _configResposistory.GetDataTransferPressListByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.PressList).Where(item => item.ParentID == 0);
+            var data = _configResposistory.GetDataTransferPressListByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.PressList);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetPressListToList([DataSourceRequest] DataSourceRequest request)
@@ -588,12 +588,11 @@ namespace Commsights.MVC.Controllers
         {
             Initialization(model);
             model.GroupName = AppGlobal.CRM;
-            model.Code = AppGlobal.PressList;
-            model.ParentID = 0;
+            model.Code = AppGlobal.PressList;               
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
-            if (_configResposistory.IsValidByGroupNameAndCodeAndCodeName(model.GroupName, model.Code, model.CodeName) == true)
+            if (_configResposistory.IsValidByGroupNameAndCodeAndTitle(model.GroupName, model.Code, model.Title) == true)
             {
                 result = _configResposistory.Create(model);
             }

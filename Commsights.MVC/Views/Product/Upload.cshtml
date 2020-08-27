@@ -1,7 +1,7 @@
 ﻿@{ ViewData["Title"] = "Upload"; }
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="card card-primary">
             <div class="card-header">
                 <h3 class="card-title">Upload - Excel Scan</h3>
@@ -18,21 +18,84 @@
                         <div class='form-group'>
                             <label for='Ten'>Bước 02: Chọn file excel có dữ liệu: </label>
                             @(Html.Kendo().Upload()
-                                  .Name("Upload")
+                                  .Name("UploadScan")
                             )
                         </div>
                     </div>
                     <div class='col-sm-12'>
                         <div class='form-group'>
                             <label for='Upload'></label>
-                            <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload Press list</button>
+                            <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload Scan</button>
                         </div>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Upload - Excel Younet</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadYounet", "Product")'>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='Download'>Bước 01: File excel mẫu: </label>
+                            <a href="@Commsights.Data.Helpers.AppGlobal.URLDownloadExcel/Younet.xlsx" target="_blank">Download</a>
+                        </div>
+                    </div>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='Ten'>Bước 02: Chọn file excel có dữ liệu: </label>
+                            @(Html.Kendo().Upload()
+                                  .Name("UploadYounet")
+                            )
+                        </div>
+                    </div>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='Upload'></label>
+                            <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload Younet</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Upload - Excel Andi source</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadAndiSource", "Product")'>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='Download'>Bước 01: File excel mẫu: </label>
+                            <a href="@Commsights.Data.Helpers.AppGlobal.URLDownloadExcel/AndiSource.xlsx" target="_blank">Download</a>
+                        </div>
+                    </div>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='Ten'>Bước 02: Chọn file excel có dữ liệu: </label>
+                            @(Html.Kendo().Upload()
+                                  .Name("UploadAndiSource")
+                            )
+                        </div>
+                    </div>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='Upload'></label>
+                            <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload Andi source</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
     </div>
 </div>
 

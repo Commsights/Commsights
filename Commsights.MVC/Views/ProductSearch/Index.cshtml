@@ -43,6 +43,7 @@
     columns.Bound(t => t.SearchString).Title("Key word").Width(500).HtmlAttributes(new { @style = "font-weight: bold;" });
 
 })
+.ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
 .Sortable()
 .Scrollable()

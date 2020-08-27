@@ -21,9 +21,13 @@ namespace Commsights.Data.Models
         public decimal? Price { get; set; }
         public int? PriceUnitId { get; set; }
         public string Page { get; set; }
-
         public string TitleEnglish { get; set; }
         public string FileName { get; set; }
+        public int? Liked { get; set; }
+        public int? Comment { get; set; }
+        public int? Share { get; set; }
+        public int? Reach { get; set; }
+        public string Duration { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
         public DateTime DatePublish { get; set; }

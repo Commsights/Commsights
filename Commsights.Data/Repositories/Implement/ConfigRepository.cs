@@ -39,6 +39,11 @@ namespace Commsights.Data.Repositories
             Config item = _context.Set<Config>().FirstOrDefault(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.CodeName.Equals(codeName));
             return item;
         }
+        public Config GetByGroupNameAndCodeAndTitle(string groupName, string code, string title)
+        {
+            Config item = _context.Set<Config>().FirstOrDefault(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.Title.Equals(title));
+            return item;
+        }
         public List<Config> GetByCodeToList(string code)
         {
             return _context.Config.Where(item => item.Code.Equals(code)).ToList();

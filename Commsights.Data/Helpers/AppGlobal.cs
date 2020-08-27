@@ -31,12 +31,44 @@ namespace Commsights.Data.Helpers
                 return builder.Build().GetSection("AppSettings").GetSection("Error001").Value;
             }
         }
+        public static int CompetitorID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("CompetitorID").Value);
+            }
+        }
+        public static int WebsiteID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("WebsiteID").Value);
+            }
+        }
+        public static int ParentID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("ParentID").Value);
+            }
+        }
         public static int ArticleTypeID
         {
             get
             {
                 var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                 return int.Parse(builder.Build().GetSection("AppSettings").GetSection("ArticleTypeID").Value);
+            }
+        }
+        public static int AssessID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("AssessID").Value);
             }
         }
         public static int ParentIDCompetitor
