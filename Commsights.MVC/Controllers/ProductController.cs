@@ -69,9 +69,17 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
-        public IActionResult ViewVideo()
+        public IActionResult ViewContent(int ID)
         {
-            return View();
+            ProductViewContentViewModel model = new ProductViewContentViewModel();
+            model.Product = new Product();
+            model.ListProductSearchProperty = new List<ProductSearchProperty>();
+            if (ID > 0)
+            {
+                model.Product = _productRepository.GetByID(ID);
+                model.ListProductSearchProperty = _productSearchPropertyRepository.GetByProductIDToList(ID);
+            }
+            return View(model);
         }
         public ActionResult GetByCategoryIDAndDatePublishToList([DataSourceRequest] DataSourceRequest request, int categoryID, DateTime datePublish)
         {
@@ -92,7 +100,7 @@ namespace Commsights.MVC.Controllers
         {
             var data = _productRepository.GetByParentIDAndDatePublishToList(parentID, datePublish);
             return Json(data.ToDataSourceResult(request));
-        }        
+        }
         public IActionResult Update(Product model)
         {
             Initialization(model);
@@ -108,7 +116,7 @@ namespace Commsights.MVC.Controllers
                 note = AppGlobal.Error + " - " + AppGlobal.EditFail;
             }
             return Json(note);
-        }        
+        }
         public void GetAuthorFromURL(Product product)
         {
             string html = "";
@@ -921,32 +929,70 @@ namespace Commsights.MVC.Controllers
             }
             return RedirectToAction(action, controller, new { ID = result });
         }
-        public string GetURLByURLAndi(string uRLAndi)
+        public void GetURLByURLAndi(Product model, List<ProductSearchProperty> listProductSearchProperty)
         {
-            string url = "";
             string html = "";
             try
             {
                 WebClient webClient = new WebClient();
                 webClient.Encoding = System.Text.Encoding.UTF8;
-                html = webClient.DownloadString(uRLAndi);
-                html = html.Replace(@"rel=""canonical""", @"~");
-                if (html.Split('~').Length > 1)
+                html = webClient.DownloadString(model.ImageThumbnail);
+                if (html.Contains(@"andi.vn"))
                 {
-                    html = html.Split('~')[1];
-                    html = html.Replace(@"href=""", @"~");
+                    string content = html;
+                    if (content.Contains(@"onclick=""showVideo('"))
+                    {
+                        content = content.Replace(@"onclick=""showVideo('", @"~");
+                        if (content.Split('~').Length > 1)
+                        {
+                            content = content.Split('~')[1];
+                            content = content.Replace(@"'", @"~");
+                            content = content.Split('~')[0];
+                            model.Image = "http://video.andi.vn/" + content;
+                            model.IsVideo = true;
+                        }
+                    }
+                    html = html.Replace(@"<div style=""text-align:center;"">", @"~");
                     if (html.Split('~').Length > 1)
                     {
                         html = html.Split('~')[1];
-                        html = html.Split('"')[0];
-                        url = html.Trim();
+                        html = html.Replace(@"</div>", @"~");
+                        html = html.Split('~')[0];
+                        html = html.Replace(@"src='", @"~");
+                        html = html.Replace(@"'", @"~");
+                        foreach (string url in html.Split('~'))
+                        {
+                            if (url.Contains(@"http://"))
+                            {
+                                ProductSearchProperty productSearchProperty = new ProductSearchProperty();
+                                productSearchProperty.Note = url;
+                                productSearchProperty.ProductSearchID = 0;
+                                model.Initialization(InitType.Insert, RequestUserID);
+                                listProductSearchProperty.Add(productSearchProperty);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+
+                    html = html.Replace(@"rel=""canonical""", @"~");
+                    if (html.Split('~').Length > 1)
+                    {
+                        html = html.Split('~')[1];
+                        html = html.Replace(@"href=""", @"~");
+                        if (html.Split('~').Length > 1)
+                        {
+                            html = html.Split('~')[1];
+                            html = html.Split('"')[0];
+                            model.Urlcode = html.Trim();
+                        }
                     }
                 }
             }
             catch
             {
             }
-            return url;
         }
         public ActionResult UploadAndiSource()
         {
@@ -983,6 +1029,7 @@ namespace Commsights.MVC.Controllers
                                             ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
                                             if (workSheet != null)
                                             {
+                                                List<ProductSearchProperty> listProductSearchProperty = new List<ProductSearchProperty>();
                                                 int totalRows = workSheet.Dimension.Rows;
                                                 ProductSearch productSearch = new ProductSearch();
                                                 DateTime now = DateTime.Now;
@@ -1051,7 +1098,7 @@ namespace Commsights.MVC.Controllers
                                                         {
                                                             model.Title = workSheet.Cells[i, 5].Value.ToString().Trim();
                                                             model.ImageThumbnail = workSheet.Cells[i, 5].Hyperlink.AbsoluteUri.Trim();
-                                                            model.Urlcode = this.GetURLByURLAndi(model.ImageThumbnail);
+                                                            this.GetURLByURLAndi(model, listProductSearchProperty);
                                                         }
                                                         if (workSheet.Cells[i, 7].Value != null)
                                                         {
@@ -1126,7 +1173,13 @@ namespace Commsights.MVC.Controllers
                                                         {
                                                             model.Author = workSheet.Cells[i, 14].Value.ToString().Trim();
                                                         }
-                                                        if (_productRepository.IsValid(model.Urlcode))
+                                                        bool saveModel = true;
+                                                        saveModel = _productRepository.IsValid(model.Urlcode);
+                                                        if (model.IsVideo != null)
+                                                        {
+                                                            saveModel = _productRepository.IsValidByFileName(model.Urlcode);
+                                                        }
+                                                        if (saveModel)
                                                         {
                                                             model.MetaTitle = AppGlobal.SetName(model.Title);
                                                             model.CategoryId = model.ParentID;
@@ -1135,6 +1188,16 @@ namespace Commsights.MVC.Controllers
                                                         }
                                                         if (model.ID > 0)
                                                         {
+                                                            if (listProductSearchProperty.Count > 0)
+                                                            {
+                                                                model.Urlcode = "/Product/ViewContent/" + model.ID;
+                                                                _productRepository.Update(model.ID, model);
+                                                                for (int j = 0; j < listProductSearchProperty.Count; j++)
+                                                                {
+                                                                    listProductSearchProperty[j].ProductID = model.ID;
+                                                                }
+                                                                _productSearchPropertyRepository.Range(listProductSearchProperty);
+                                                            }
                                                             if (productSearch.ID > 0)
                                                             {
                                                                 ProductSearchProperty productSearchProperty = new ProductSearchProperty();

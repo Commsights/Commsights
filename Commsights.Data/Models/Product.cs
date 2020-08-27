@@ -28,6 +28,7 @@ namespace Commsights.Data.Models
         public int? Share { get; set; }
         public int? Reach { get; set; }
         public string Duration { get; set; }
+        public bool? IsVideo { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
         public DateTime DatePublish { get; set; }

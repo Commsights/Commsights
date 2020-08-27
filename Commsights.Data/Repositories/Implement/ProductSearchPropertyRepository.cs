@@ -18,6 +18,10 @@ namespace Commsights.Data.Repositories
         {
             _context = context;
         }
+        public List<ProductSearchProperty> GetByProductIDToList(int productID)
+        {
+            return _context.ProductSearchProperty.Where(item => item.ProductID == (productID)).ToList();
+        }
         public List<ProductSearchPropertyDataTransfer> GetDataTransferProductSearchByProductSearchIDToList(int productSearchID)
         {
             List<ProductSearchPropertyDataTransfer> list = new List<ProductSearchPropertyDataTransfer>();
@@ -26,7 +30,7 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@ProductSearchID",productSearchID),
             };
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSearchPropertySelectProductSearchByProductSearchID", parameters);
-            list = SQLHelper.ToList<ProductSearchPropertyDataTransfer>(dt);           
+            list = SQLHelper.ToList<ProductSearchPropertyDataTransfer>(dt);
             for (int i = 0; i < list.Count; i++)
             {
                 list[i].ArticleType = new ModelTemplate();
@@ -43,7 +47,7 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@ParentID",parentID),
             };
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSearchPropertySelectDataTransferByParentID", parameters);
-            list = SQLHelper.ToList<ProductSearchPropertyDataTransfer>(dt);           
+            list = SQLHelper.ToList<ProductSearchPropertyDataTransfer>(dt);
             for (int i = 0; i < list.Count; i++)
             {
                 list[i].Company = new ModelTemplate();
