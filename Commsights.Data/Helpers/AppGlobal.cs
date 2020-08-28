@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -682,6 +683,107 @@ namespace Commsights.Data.Helpers
         }
         #endregion
         #region Functions
+        public static string GetContentByURL(string url)
+        {
+            WebClient webClient = new WebClient();
+            webClient.Encoding = System.Text.Encoding.UTF8;
+            string html = webClient.DownloadString(url);
+            string content = html;
+            content = content.Replace(@"</body>", @"</body>~");
+            content = content.Split('~')[0];
+            content = content.Replace(@"</head>", @"~");
+            if (content.Split('~').Length > 0)
+            {
+                content = content.Split('~')[1];
+                content = content.Replace(@"<footer", @"~");
+                content = content.Split('~')[0];
+                content = content.Replace(@"</h1>", @"~");
+                if (content.Split('~').Length > 0)
+                {
+                    content = content.Split('~')[1];
+                }
+            }
+            content = RemoveHTMLTags(content);
+            return content;
+        }
+        public static void GetParametersByURL(Product model)
+        {
+            model.Title = "";
+            model.Description = "";
+            model.Author = "";
+            WebClient webClient = new WebClient();
+            webClient.Encoding = System.Text.Encoding.UTF8;
+            string html = webClient.DownloadString(model.Urlcode);
+            string title = html;
+            title = title.Replace(@"</h1>", @"~");
+            title = title.Split('~')[0];
+            if (title.Split('>').Length > 0)
+            {
+                title = title.Split('>')[1];
+            }
+            if (string.IsNullOrEmpty(title))
+            {
+                title = html;
+                title = title.Replace(@"""headline"":", @"~");
+                if (title.Split('~').Length > 0)
+                {
+                    title = title.Split('~')[1];
+                    title = title.Split(',')[0];
+                    title = title.Replace(@""":", @"");
+                }
+            }
+            if (!string.IsNullOrEmpty(title))
+            {
+                model.Title = title;
+            }
+            string description = html;
+            description = description.Replace(@"""description"":", @"~");
+            if (description.Split('~').Length > 0)
+            {
+                description = description.Split('~')[1];
+                description = description.Split(',')[0];
+                description = description.Replace(@""":", @"");
+            }
+            if (!string.IsNullOrEmpty(description))
+            {
+                model.Description = description;
+            }
+            string datePublished = html;
+            datePublished = datePublished.Replace(@"""datePublished"":", @"~");
+            if (datePublished.Split('~').Length > 0)
+            {
+                datePublished = datePublished.Split('~')[1];
+                datePublished = datePublished.Split(',')[0];
+                datePublished = datePublished.Replace(@""":", @"");
+            }
+            if (!string.IsNullOrEmpty(datePublished))
+            {
+                try
+                {
+                    model.DatePublish = DateTime.Parse(datePublished);
+                }
+                catch
+                {
+                }
+            }
+            string author = html;
+            author = author.Replace(@"""author"":", @"~");
+            if (author.Split('~').Length > 0)
+            {
+                author = author.Split('~')[1];
+                author = author.Replace(@"""name"":", @"~");
+                if (author.Split('~').Length > 0)
+                {
+                    author = author.Split('~')[1];
+                    author = author.Split('}')[0];
+                    author = author.Replace(@""":", @"");
+                }
+            }
+            if (!string.IsNullOrEmpty(author))
+            {
+                model.Author = author;
+            }
+        }
         public static string SetDomainByURL(string url)
         {
             string domain = url;
@@ -707,6 +809,7 @@ namespace Commsights.Data.Helpers
         {
             Regex regex = new Regex("\\<[^\\>]*\\>");
             content = regex.Replace(content, String.Empty);
+            content = content.Trim();
             return content;
         }
         public static string SetName(string fileName)
