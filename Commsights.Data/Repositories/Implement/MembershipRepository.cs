@@ -39,11 +39,7 @@ namespace Commsights.Data.Repositories
         }
         public bool IsLoginByAccount(string account, string password)
         {
-            var membership = _context.Membership.FirstOrDefault(user => user.Account.Equals(account));
-            if (membership == null)
-            {
-                membership = _context.Membership.FirstOrDefault(user => user.Email.Equals(account));
-            }
+            var membership = _context.Membership.FirstOrDefault(user => user.Email.Equals(account));           
             if (membership == null)
             {
                 membership = _context.Membership.FirstOrDefault(user => user.Phone.Equals(account));

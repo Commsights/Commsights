@@ -48,16 +48,7 @@
                                 @(Html.TextBoxFor(Model => Model.Address, new { placeholder = "Address", @class = "form-control" }))
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class='form-group'>
-                                <label for='CpnyID'>Category</label>
-                                @(Html.Kendo().DropDownListFor(Model => Model.ParentID)
-                                      .DataValueField("ID")
-                                      .DataTextField("CodeName")
-                                      .HtmlAttributes(new { style = "width:100%;" })
-                                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetMembershipTypeToList", "Config")))
-                                    )
-                            </div>
+                        <div class="col-md-6">                            
                             <div class='form-group'>
                                 <label for='Email'>Email</label>
                                 @(Html.TextBoxFor(Model => Model.Email, new { placeholder = "Email", @class = "form-control" }))

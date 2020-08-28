@@ -1,22 +1,22 @@
-﻿@{ ViewData["Title"] = "Company of brand"; }
+﻿@{ ViewData["Title"] = "Company by Industry"; }
 
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Customer - Company of brand</h3>
+                <h3 class="card-title">Customer - Company by Industry</h3>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class='col-sm-4'>
+                    <div class='col-sm-6'>
                         @(Html.Kendo().DropDownList()
-                     .Name("Brand")
+                     .Name("Customer")
                      .DataValueField("ID")
-                     .DataTextField("CodeName")
+                     .DataTextField("FullName")
                      .HtmlAttributes(new { @class = "form-control" })
-                      .Events(e => e.DataBound("onBrandDataBound").Change("onBrandChange"))
+                      .Events(e => e.DataBound("onCustomerDataBound").Change("onCustomerChange"))
                        .Filter(FilterType.Contains)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetBrandToList", "Config")))
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCustomerToList", "Membership")))
                             )
                     </div>
                 </div>
@@ -26,7 +26,7 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.Membership.TextName).EditorTemplateName("Membership_Membership").Title("Company").Width(300);
+    columns.Bound(t => t.Brand.TextName).EditorTemplateName("Config_Brand").Title("Brand").Width(300);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
@@ -60,12 +60,13 @@
 .Model(model =>
 {
     model.Id(t => t.ID);
+    model.Field(t => t.Brand).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetDataTransferMembershipByBrandIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermission"))
+.Read(t => t.Action("GetDataTransferBrandByMembershipIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermission"))
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
-.Create(t => t.Action("CreateDataTransferMembership", "MembershipPermission").Data("filterMembershipPermissionCreateCustomer"))
-.Update(t => t.Action("UpdateDataTransferMembership", "MembershipPermission"))
+.Create(t => t.Action("CreateDataTransferBrand", "MembershipPermission").Data("filterMembershipPermissionCreateBrand"))
+.Update(t => t.Action("UpdateDataTransfer", "MembershipPermission"))
 )
 )
             </div>
@@ -90,23 +91,23 @@
             $("#MembershipPermissionDataTransfer").data("kendoGrid").dataSource.read();
         }
     }
-    function onBrandDataBound() {
-        var control = $("#Brand").data("kendoDropDownList");
+    function onCustomerDataBound() {
+        var control = $("#Customer").data("kendoDropDownList");
         var controlLength = control.dataSource.data().length;
         if (controlLength > 0) {
             control.select(0);
             control.trigger("change");
         }
     }
-    function onBrandChange() {
+    function onCustomerChange() {
         $("#MembershipPermissionDataTransfer").data("kendoGrid").dataSource.read();
     }
     function filterMembershipPermission(e) {
-        var brandIDValue = $("#Brand").data("kendoDropDownList").value();
-        return { brandID: brandIDValue };
+        var membershipIDValue = $("#Customer").data("kendoDropDownList").value();        
+        return { membershipID: membershipIDValue };
     }
-    function filterMembershipPermissionCreateCustomer(e) {
-        var brandIDValue = $("#Brand").data("kendoDropDownList").value();
-        return { brandID: brandIDValue };
+    function filterMembershipPermissionCreateBrand(e) {
+        var membershipIDValue = $("#Customer").data("kendoDropDownList").value();
+        return { membershipID: membershipIDValue };
     }
 </script>

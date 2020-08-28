@@ -108,11 +108,11 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
-        public IActionResult Brand()
+        public IActionResult Industry()
         {
             return View();
         }
-        public IActionResult BrandSub()
+        public IActionResult Segment()
         {
             return View();
         }

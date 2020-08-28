@@ -107,11 +107,11 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
-        public IActionResult ProductOfCustomer()
+        public IActionResult CompanyByIndustry()
         {
             return View();
         }
-        public IActionResult CustomerOfBrand()
+        public IActionResult IndustryByCompany()
         {
             return View();
         }
