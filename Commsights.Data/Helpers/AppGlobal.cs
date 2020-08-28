@@ -31,6 +31,38 @@ namespace Commsights.Data.Helpers
                 return builder.Build().GetSection("AppSettings").GetSection("Error001").Value;
             }
         }
+        public static int CountryID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("CountryID").Value);
+            }
+        }
+        public static int LanguageID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("LanguageID").Value);
+            }
+        }
+        public static int FrequencyID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("FrequencyID").Value);
+            }
+        }
+        public static int ColorTypeID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("ColorTypeID").Value);
+            }
+        }
         public static int CompetitorID
         {
             get
@@ -399,7 +431,7 @@ namespace Commsights.Data.Helpers
                 var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                 return builder.Build().GetSection("AppSettings").GetSection("LoginFail").Value;
             }
-        }       
+        }
         public static string URLDownloadExcel
         {
             get
@@ -650,6 +682,15 @@ namespace Commsights.Data.Helpers
         }
         #endregion
         #region Functions
+        public static string SetDomainByURL(string url)
+        {
+            string domain = url;
+            domain = domain.Replace(@"https://", @"");
+            domain = domain.Replace(@"http://", @"");
+            domain = domain.Split('/')[0];
+            domain = domain.Replace(@"www.", @"");
+            return domain;
+        }
         public static string SetContent(string content)
         {
             content = content.Replace(@"</br>", @"");

@@ -13,7 +13,7 @@
                     <div class='col-sm-3'>
                         @(Html.Kendo().DropDownList()
                      .Name("Website")
-                     .DataValueField("Id")
+                     .DataValueField("ID")
                      .DataTextField("Title")
                      .HtmlAttributes(new { @class = "form-control" })
                       .Events(e => e.DataBound("onWebsiteDataBound"))
@@ -46,9 +46,8 @@
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
     columns.Bound(t => t.DatePublish).Title("Publish").Width(200);
-    columns.Bound(t => t.Title).Title("Title").Width(1000);
-    columns.Bound(t => t.Description).Title("Description").Width(2000);
-    columns.Bound(t => t.Urlcode).Title("URL").Width(1000);    
+    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=Urlcode#"");' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Title + URL").Width(1000);
+    columns.Bound(t => t.Description).Title("Description").Width(2000);    
 })
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))

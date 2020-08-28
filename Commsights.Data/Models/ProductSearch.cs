@@ -10,12 +10,12 @@ namespace Commsights.Data.Models
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
-        public DateTime? DateSearch { get; set; }
+        public DateTime DateSearch { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
-        public DateTime? DatePublishBegin { get; set; }
+        public DateTime DatePublishBegin { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
-        public DateTime? DatePublishEnd { get; set; }
+        public DateTime DatePublishEnd { get; set; }
     }
 }

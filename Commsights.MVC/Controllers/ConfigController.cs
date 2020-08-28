@@ -243,6 +243,11 @@ namespace Commsights.MVC.Controllers
             var data = _configResposistory.GetDataTransferParentByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetDataTransferWebsiteByGroupNameAndCodeAndActiveToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetDataTransferWebsiteByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
+            return Json(data.ToDataSourceResult(request));
+        }
         public IActionResult CreateColor(Config model)
         {
             Initialization(model);

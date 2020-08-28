@@ -13,9 +13,12 @@
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
     columns.Bound(t => t.IsMenuLeft).Title("Is RSS").Width(100);
-    columns.Bound(t => t.Parent.TextName).EditorTemplateName("Config_WebsiteType").Title("Type").Width(200);
     columns.Bound(t => t.Title).Title("Title").Width(300);
-    columns.Bound(t => t.URLFull).Title("URLFull").Width(300);    
+    columns.Bound(t => t.URLFull).Title("URLFull").Width(300);
+    columns.Bound(t => t.Parent.TextName).EditorTemplateName("Config_WebsiteType").Title("Media type").Width(200);
+    columns.Bound(t => t.Country.TextName).EditorTemplateName("Config_Country").Title("Country").Width(200);
+    columns.Bound(t => t.Language.TextName).EditorTemplateName("Config_Language").Title("Language").Width(200);
+    columns.Bound(t => t.Frequency.TextName).EditorTemplateName("Config_Frequency").Title("Frequency").Width(200);
     columns.Bound(t => t.ID).Title("ID").Width(100);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
@@ -52,10 +55,14 @@
 {
     model.Id(t => t.ID);
     model.Field(t => t.ID).Editable(false);
+    model.Field(t => t.Country).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Field(t => t.Language).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
     model.Field(t => t.Parent).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Field(t => t.Frequency).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Field(t => t.ColorType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetDataTransferParentByGroupNameAndCodeAndActiveToList", "Config"))
+.Read(t => t.Action("GetDataTransferWebsiteByGroupNameAndCodeAndActiveToList", "Config"))
 .Destroy(t => t.Action("Delete", "Config"))
 .Create(t => t.Action("CreateWebisteDataTransfer", "Config"))
 .Update(t => t.Action("UpdateDataTransfer", "Config"))

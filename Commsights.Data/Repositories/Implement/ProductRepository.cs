@@ -1,6 +1,10 @@
-﻿using Commsights.Data.Models;
+﻿using Commsights.Data.DataTransferObject;
+using Commsights.Data.Helpers;
+using Commsights.Data.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +25,14 @@ namespace Commsights.Data.Repositories
         public List<Product> GetByParentIDAndDatePublishToList(int parentID, DateTime datePublish)
         {
             return _context.Product.Where(item => item.ParentID == parentID && item.DatePublish.Year == datePublish.Year && item.DatePublish.Month == datePublish.Month && item.DatePublish.Day == datePublish.Day).OrderByDescending(item => item.DateUpdated).ToList();
+        }
+        public List<Product> GetByDatePublishToList(DateTime datePublish)
+        {
+            return _context.Product.Where(item => item.DatePublish.Year == datePublish.Year && item.DatePublish.Month == datePublish.Month && item.DatePublish.Day == datePublish.Day).OrderByDescending(item => item.DateUpdated).ToList();
+        }
+        public List<Product> GetByDateUpdatedToList(DateTime dateUpdated)
+        {
+            return _context.Product.Where(item => item.DateUpdated.Year == dateUpdated.Year && item.DateUpdated.Month == dateUpdated.Month && item.DateUpdated.Day == dateUpdated.Day).OrderByDescending(item => item.DateUpdated).ToList();
         }
         public List<Product> GetBySearchToList(string search)
         {
@@ -61,6 +73,33 @@ namespace Commsights.Data.Repositories
                 item = _context.Set<Product>().FirstOrDefault(item => item.FileName.Equals(fileName) && item.DatePublish.Equals(datePublish));
             }
             return item == null ? true : false;
+        }
+        public List<ProductDataTransfer> GetDataTransferByProductSearchIDToList(int productSearchID)
+        {
+            List<ProductDataTransfer> list = new List<ProductDataTransfer>();
+            if(productSearchID>0)
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ProductSearchID",productSearchID),
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectDataTransferByProductSearchID", parameters);
+                list = SQLHelper.ToList<ProductDataTransfer>(dt);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    list[i].ArticleType = new ModelTemplate();
+                    list[i].ArticleType.ID = list[i].ArticleTypeID;
+                    list[i].ArticleType.TextName = list[i].ArticleTypeName;
+                    list[i].Company = new ModelTemplate();
+                    list[i].Company.ID = list[i].CompanyID;
+                    list[i].Company.TextName = list[i].CompanyName;
+                    list[i].AssessType = new ModelTemplate();
+                    list[i].AssessType.ID = list[i].AssessID;
+                    list[i].AssessType.TextName = list[i].AssessName;
+                }
+            }    
+            
+            return list;
         }
     }
 }

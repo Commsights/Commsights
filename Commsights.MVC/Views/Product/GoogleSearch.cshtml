@@ -1,35 +1,29 @@
-﻿@{ ViewData["Title"] = "Brand sub"; }
+﻿@{ ViewData["Title"] = "Google search"; }
 
+@model Commsights.Data.Models.ProductSearch
+@Html.HiddenFor(Model => Model.ID)
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Customer - Brand sub</h3>
+                <h3 class="card-title">Data - Google search</h3>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class='col-sm-4'>
-                        @(Html.Kendo().DropDownList()
-                     .Name("Brand")
-                     .DataValueField("ID")
-                     .DataTextField("CodeName")
-                    .HtmlAttributes(new { @class = "form-control" })
-                      .Events(e => e.DataBound("onBrandDataBound").Change("onBrandChange"))
-                       .Filter(FilterType.Contains)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetBrandToList", "Config")))
-                            )
-
-                    </div>
-                </div>
-                <br />
-                @(Html.Kendo().Grid<Commsights.Data.Models.Config>()
-.Name("Config")
+                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ProductDataTransfer>()
+.Name("ProductDataTransfer")
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.ID).Title("ID").Width(50);
-    columns.Bound(t => t.CodeName).Title("Name").Width(200);
-    columns.Bound(t => t.Note).Title("Note").Width(200);
+    columns.Bound(t => t.DatePublish).Title("Publish").Width(300);
+    columns.Bound(t => t.ArticleType.TextName).EditorTemplateName("Config_ArticleType").Title("Article type").Width(200);
+    columns.Bound(t => t.Company.TextName).EditorTemplateName("Membership_Company").Title("Company").Width(200);
+    columns.Bound(t => t.AssessType.TextName).EditorTemplateName("Config_AssessType").Title("Assess").Width(200);
+    columns.Bound(t => t.Title).Title("Title").Width(300);
+    columns.Bound(t => t.Urlcode).Title("URL").Width(300);
+    columns.Bound(t => t.Author).Title("Author").Width(300);
+    columns.Bound(t => t.Description).Title("Description").Width(300);
+    columns.Bound(t => t.ContentMain).Title("Content").Width(300);
+
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
@@ -57,20 +51,22 @@
 .FileName("Config.pdf")
 )
 .HtmlAttributes(new { @class = "KendoGrid" })
-.Search(search => { search.Field(f => f.CodeName); search.Field(f => f.Note);})
+.Search(search => { search.Field(f => f.Title); search.Field(f => f.Urlcode); search.Field(f => f.Description); })
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
 .Model(model =>
 {
     model.Id(t => t.ID);
-    model.Field(t => t.ID).Editable(false);
+    model.Field(t => t.ArticleType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Field(t => t.Company).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Field(t => t.AssessType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetByParentIDToList", "Config").Data("filterConfig"))
-.Destroy(t => t.Action("Delete", "Config"))
-.Create(t => t.Action("CreateBrandSub", "Config").Data("filterConfigCreateBrand"))
-.Update(t => t.Action("Update", "Config"))
+.Read(t => t.Action("GetDataTransferByProductSearchIDToList", "Product").Data("filterProduct"))
+.Destroy(t => t.Action("Delete", "Product"))
+.Create(t => t.Action("CreateDataTransfer", "Product").Data("filterProductCreate"))
+.Update(t => t.Action("UpdateDataTransfer", "Product"))
 )
 )
             </div>
@@ -85,7 +81,6 @@
     .Position(p => p.Pinned(true).Top(30).Right(30))
     .Width(400)
 )
-
 <script>
     function onGridRequestEnd(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
@@ -94,28 +89,15 @@
             var note = response.split('-')[1];
             var notification = $("#Notification").data("kendoNotification");
             notification.show(note, messageType);
-            $("#Config").data("kendoGrid").dataSource.read();
+            $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
         }
     }
-    function onBrandDataBound() {
-        var control = $("#Brand").data("kendoDropDownList");
-        var controlLength = control.dataSource.data().length;
-        if (controlLength > 0) {
-            control.select(0);
-            control.trigger("change");
-        }
+    function filterProduct(e) {
+        var productSearchIDValue = $("#ID").val();
+        return { productSearchID: productSearchIDValue };
     }
-    function onBrandChange() {
-        $("#Config").data("kendoGrid").dataSource.read();
-    }
-    function filterConfig(e) {
-        var parentIDValue = $("#Brand").data("kendoDropDownList").value();
-        return { parentID: parentIDValue };
-
-    }
-    function filterConfigCreateBrand(e) {
-        var parentIDValue = $("#Brand").data("kendoDropDownList").value();
-        return { parentID: parentIDValue };
-
+    function filterProductCreate(e) {
+        var productSearchIDValue = $("#ID").val();
+        return { productSearchID: productSearchIDValue };
     }
 </script>

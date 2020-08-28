@@ -36,28 +36,28 @@
     <div class="col-md-4">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Upload - Excel Younet</h3>
+                <h3 class="card-title">Upload - Excel Google search</h3>
             </div>
             <div class="card-body">
-                <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadYounet", "Product")'>
+                <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadGoogleSearch", "Product")'>
                     <div class='col-sm-12'>
                         <div class='form-group'>
                             <label for='Download'>Bước 01: File excel mẫu: </label>
-                            <a href="@Commsights.Data.Helpers.AppGlobal.URLDownloadExcel/Younet.xlsx" target="_blank">Download</a>
+                            <a href="@Commsights.Data.Helpers.AppGlobal.URLDownloadExcel/GoogleSearch.xlsx" target="_blank">Download</a>
                         </div>
                     </div>
                     <div class='col-sm-12'>
                         <div class='form-group'>
                             <label for='Ten'>Bước 02: Chọn file excel có dữ liệu: </label>
                             @(Html.Kendo().Upload()
-                                  .Name("UploadYounet")
+                                  .Name("UploadGoogleSearch")
                             )
                         </div>
                     </div>
                     <div class='col-sm-12'>
                         <div class='form-group'>
                             <label for='Upload'></label>
-                            <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload Younet</button>
+                            <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload GoogleSearch</button>
                         </div>
                     </div>
                 </form>
@@ -100,28 +100,28 @@
     <div class="col-md-4">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Upload - Excel Google search</h3>
+                <h3 class="card-title">Upload - Excel Younet</h3>
             </div>
             <div class="card-body">
-                <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadGoogleSearch", "Product")'>
+                <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadYounet", "Product")'>
                     <div class='col-sm-12'>
                         <div class='form-group'>
                             <label for='Download'>Bước 01: File excel mẫu: </label>
-                            <a href="@Commsights.Data.Helpers.AppGlobal.URLDownloadExcel/GoogleSearch.xlsx" target="_blank">Download</a>
+                            <a href="@Commsights.Data.Helpers.AppGlobal.URLDownloadExcel/Younet.xlsx" target="_blank">Download</a>
                         </div>
                     </div>
                     <div class='col-sm-12'>
                         <div class='form-group'>
                             <label for='Ten'>Bước 02: Chọn file excel có dữ liệu: </label>
                             @(Html.Kendo().Upload()
-                                  .Name("UploadGoogleSearch")
+                                  .Name("UploadYounet")
                             )
                         </div>
                     </div>
                     <div class='col-sm-12'>
                         <div class='form-group'>
                             <label for='Upload'></label>
-                            <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload GoogleSearch</button>
+                            <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload Younet</button>
                         </div>
                     </div>
                 </form>

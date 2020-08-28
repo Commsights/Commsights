@@ -2,6 +2,7 @@
 
 @model Commsights.Data.Models.Membership
 
+
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
@@ -31,11 +32,20 @@
                                 <label for='Account'>Competitor</label>
                                 @(Html.TextBoxFor(Model => Model.Account, new { placeholder = "Competitor", @class = "form-control" }))
                             </div>
-                        </div>
-                        <div class="col-md-6">
                             <div class='form-group'>
                                 <label for='FullName'>Full name</label>
                                 @(Html.TextBoxFor(Model => Model.FullName, new { placeholder = "Full name", @class = "form-control" }))
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class='form-group'>
+                                <label for='CpnyID'>Category</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.ParentID)
+                                      .DataValueField("ID")
+                                      .DataTextField("CodeName")
+                                      .HtmlAttributes(new { style = "width:100%;" })
+                                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetMembershipTypeToList", "Config")))
+                                    )
                             </div>
                         </div>
                     </div>

@@ -58,7 +58,7 @@ namespace Commsights.Data.Repositories
         }
         public List<Config> GetByGroupNameAndCodeAndActiveAndIsMenuLeftToList(string groupName, string code, bool active, bool isMenuLeft)
         {
-            return _context.Config.Where(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.Active.Equals(active) && item.IsMenuLeft.Equals(isMenuLeft)).OrderBy(item => item.ID).ToList();
+            return _context.Config.Where(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.Active.Equals(active) && item.IsMenuLeft.Equals(isMenuLeft)).OrderBy(item => item.URLFull).ToList();
         }
         public List<ConfigDataTransfer> GetDataTransferParentByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active)
         {
@@ -76,6 +76,37 @@ namespace Commsights.Data.Repositories
                 list[i].Parent = new ModelTemplate();
                 list[i].Parent.ID = list[i].ParentID;
                 list[i].Parent.TextName = list[i].ParentName;
+            }
+            return list;
+        }
+        public List<ConfigDataTransfer> GetDataTransferWebsiteByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active)
+        {
+            List<ConfigDataTransfer> list = new List<ConfigDataTransfer>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@Active",active)
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectDataTransferWebisteByGroupNameAndCode", parameters);
+            list = SQLHelper.ToList<ConfigDataTransfer>(dt);
+            for (int i = 0; i < list.Count; i++)
+            {
+                list[i].Country = new ModelTemplate();
+                list[i].Country.ID = list[i].CountryID;
+                list[i].Country.TextName = list[i].CountryName;
+                list[i].Parent = new ModelTemplate();
+                list[i].Parent.ID = list[i].ParentID;
+                list[i].Parent.TextName = list[i].ParentName;
+                list[i].Language = new ModelTemplate();
+                list[i].Language.ID = list[i].LanguageID;
+                list[i].Language.TextName = list[i].LanguageName;
+                list[i].Frequency = new ModelTemplate();
+                list[i].Frequency.ID = list[i].FrequencyID;
+                list[i].Frequency.TextName = list[i].FrequencyName;
+                list[i].ColorType = new ModelTemplate();
+                list[i].ColorType.ID = list[i].ColorTypeID;
+                list[i].ColorType.TextName = list[i].ColorTypeName;
             }
             return list;
         }
