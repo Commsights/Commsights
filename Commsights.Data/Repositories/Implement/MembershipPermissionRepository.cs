@@ -93,6 +93,53 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<MembershipPermissionDataTransfer> GetDataTransferIndustryByParentIDToList(int parentID)
+        {
+            List<MembershipPermissionDataTransfer> list = new List<MembershipPermissionDataTransfer>();
+            if (parentID > 0)
+            {
+                SqlParameter[] parameters =
+                      {
+                new SqlParameter("@ParentID",parentID)
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectDataTransferIndustryByParentID", parameters);
+                list = SQLHelper.ToList<MembershipPermissionDataTransfer>(dt);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    list[i].Industry = new ModelTemplate();
+                    list[i].Industry.ID = list[i].IndustryID;
+                    list[i].Industry.TextName = list[i].IndustryName;
+                    list[i].IndustryCompare = new ModelTemplate();
+                    list[i].IndustryCompare.ID = list[i].IndustryCompareID;
+                    list[i].IndustryCompare.TextName = list[i].IndustryCompareName;
+                }
+            }
+            return list;
+        }
+        public List<MembershipPermissionDataTransfer> GetDataTransferIndustryByParentIDAndCodeToList(int parentID, string code)
+        {
+            List<MembershipPermissionDataTransfer> list = new List<MembershipPermissionDataTransfer>();
+            if (parentID > 0)
+            {
+                SqlParameter[] parameters =
+                      {
+                new SqlParameter("@ParentID",parentID),
+                new SqlParameter("@Code",code)
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectDataTransferIndustryByParentIDAndCode", parameters);
+                list = SQLHelper.ToList<MembershipPermissionDataTransfer>(dt);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    list[i].Industry001 = new ModelTemplateIndustry();
+                    list[i].Industry001.IndustryID = list[i].IndustryID;
+                    list[i].Industry001.TextName = list[i].IndustryName;
+                    list[i].IndustryCompare001 = new ModelTemplateIndustry();
+                    list[i].IndustryCompare001.IndustryID = list[i].IndustryCompareID;
+                    list[i].IndustryCompare001.TextName = list[i].IndustryCompareName;
+                }
+            }
+            return list;
+        }
         public List<MembershipPermission> GetByMembershipIDAndIndustryIDAndCodeToList(int membershipID, int industryID, string code)
         {
             List<MembershipPermission> list = new List<MembershipPermission>();

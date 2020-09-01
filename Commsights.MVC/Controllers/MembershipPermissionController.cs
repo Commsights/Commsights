@@ -28,9 +28,14 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
-        public IActionResult IndustryAndSegmentAndProduct()
+        public IActionResult IndustryAndSegmentAndProduct(int ID)
         {
-            return View();
+            MembershipPermission model = new MembershipPermission();
+            if (ID > 0)
+            {
+                model = _membershipPermissionRepository.GetByID(ID);
+            }
+            return View(model);
         }
         public ActionResult GetByMembershipIDToList([DataSourceRequest] DataSourceRequest request, int membershipID)
         {
@@ -40,6 +45,16 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetDataTransferMembershipByIndustryIDAndCodeToList([DataSourceRequest] DataSourceRequest request, int industryID)
         {
             var data = _membershipPermissionRepository.GetDataTransferMembershipByIndustryIDAndCodeToList(industryID, AppGlobal.Industry);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetDataTransferIndustryByParentIDToList([DataSourceRequest] DataSourceRequest request, int parentID)
+        {
+            var data = _membershipPermissionRepository.GetDataTransferIndustryByParentIDToList(parentID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetDataTransferIndustryByParentIDAndCodeToList([DataSourceRequest] DataSourceRequest request, int parentID)
+        {
+            var data = _membershipPermissionRepository.GetDataTransferIndustryByParentIDAndCodeToList(parentID, AppGlobal.Industry);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetDataTransferIndustryByMembershipIDAndIndustryToList([DataSourceRequest] DataSourceRequest request, int membershipID)
@@ -181,6 +196,26 @@ namespace Commsights.MVC.Controllers
             model.Code = AppGlobal.Industry;
             model.MembershipID = membershipID;
             model.IndustryID = model.Industry.ID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _membershipPermissionRepository.Create(model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateDataTransferIndustryByParentID(MembershipPermissionDataTransfer model, int parentID)
+        {
+            model.Code = AppGlobal.Industry;
+            model.ParentID = parentID;
+            model.IndustryID = model.Industry001.IndustryID;
+            model.IndustryCompareID = model.IndustryCompare001.IndustryID;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;

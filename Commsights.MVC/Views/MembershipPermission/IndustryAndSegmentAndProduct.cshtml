@@ -1,19 +1,22 @@
 ﻿@{ Layout = "~/Views/Shared/_LayoutWindow.cshtml"; ViewData["Title"] = "Industry and Product"; }
 
+@model Commsights.Data.Models.MembershipPermission
+@Html.HiddenFor(Model => Model.ID)
 <div class="card card-primary card-outline">
     <div class="card-header">
         <h5 class="card-title m-0">Industry and Product</h5>
     </div>
     <div class="card-body">
         <div class="row">
-            <div class='col-md-6'>
+            <div class='col-md-12'>
                 <h3><b>Industry</b></h3>
                 @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.MembershipPermissionDataTransfer>()
-.Name("MembershipPermissionDataTransfer")
+.Name("MembershipPermissionDataTransferIndustry")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);    
-    
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
+    columns.Bound(t => t.Industry001.TextName).EditorTemplateName("MembershipPermission_Customer_Industry").EditorViewData(new { CustomerID = Model.MembershipID, ValueBind = "value: Industry001" }).Title("Customer").Width(300);
+    columns.Bound(t => t.IndustryCompare001.TextName).EditorTemplateName("MembershipPermission_Compare_Industry").EditorViewData(new { CompareID = Model.CompanyID, ValueBind = "value: IndustryCompare001" }).Title("Compare").Width(300);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
@@ -46,21 +49,22 @@
 .PageSize(1000)
 .Model(model =>
 {
-    model.Id(t => t.ID);    
+    model.Id(t => t.ID);
+    model.Field(t => t.Industry001).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplateIndustry());
+    model.Field(t => t.IndustryCompare001).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplateIndustry());
 })
-.Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetFrequencyToList", "Config"))
-.Destroy(t => t.Action("Delete", "Config"))
-.Create(t => t.Action("CreateFrequency", "Config"))
-.Update(t => t.Action("Update", "Config"))
+.Events(t => { t.RequestEnd("onMembershipPermissionIndustryGridRequestEnd"); })
+.Read(t => t.Action("GetDataTransferIndustryByParentIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermissionIndustry"))
+.Destroy(t => t.Action("Delete", "MembershipPermission"))
+.Create(t => t.Action("CreateDataTransferIndustryByParentID", "MembershipPermission").Data("filterCreateDataTransferIndustryByParentID"))
 )
 )
             </div>
-            <div class='col-md-6'>
+            <div class='col-md-12'>
                 <h3><b>Product</b></h3>
-                
+
             </div>
-        </div>       
+        </div>
     </div>
 </div>
 
@@ -71,5 +75,22 @@
 )
 
 <script>
-
+    function onMembershipPermissionIndustryGridRequestEnd(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            var response = e.response;
+            var messageType = response.split('-')[0];
+            var note = response.split('-')[1];
+            var notification = $("#Notification").data("kendoNotification");
+            notification.show(note, messageType);
+            $("#MembershipPermissionDataTransferIndustry").data("kendoGrid").dataSource.read();
+        }
+    }
+    function filterMembershipPermissionIndustry(e) {
+        var parentIDValue = $("#ID").val();
+        return { parentID: parentIDValue };
+    }
+    function filterCreateDataTransferIndustryByParentID(e) {
+        var parentIDValue = $("#ID").val();
+        return { parentID: parentIDValue };
+    }
 </script>
