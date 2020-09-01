@@ -11,6 +11,7 @@ namespace Commsights.Data.Models
         public int? CategoryID { get; set; }
         public int? BrandID { get; set; }
         public int? ProductID { get; set; }
+        public int? CompanyID { get; set; }
         public string Product { get; set; }
         public string Code { get; set; }
         public string FullName { get; set; }

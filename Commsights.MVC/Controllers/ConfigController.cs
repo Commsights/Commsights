@@ -28,6 +28,14 @@ namespace Commsights.MVC.Controllers
         }
         private void Initialization(Config model)
         {
+            if (!string.IsNullOrEmpty(model.Title))
+            {
+                model.Title = model.Title.Trim();
+            }
+            if (!string.IsNullOrEmpty(model.URLFull))
+            {
+                model.URLFull = model.URLFull.Trim();
+            }
             if (!string.IsNullOrEmpty(model.CodeName))
             {
                 model.CodeName = model.CodeName.Trim();

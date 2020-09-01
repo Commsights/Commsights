@@ -32,6 +32,14 @@ namespace Commsights.Data.Helpers
                 return builder.Build().GetSection("AppSettings").GetSection("Error001").Value;
             }
         }
+        public static int IndustryIDUnknown
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("IndustryIDUnknown").Value);
+            }
+        }
         public static int CountryID
         {
             get
@@ -126,6 +134,14 @@ namespace Commsights.Data.Helpers
             {
                 var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                 return int.Parse(builder.Build().GetSection("AppSettings").GetSection("ParentIDEmployee").Value);
+            }
+        }
+        public static string Competitor
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Competitor").Value;
             }
         }
         public static string Contact
@@ -806,7 +822,7 @@ namespace Commsights.Data.Helpers
             return content;
         }
         public static string RemoveHTMLTags(string content)
-        {
+        {                       
             Regex regex = new Regex("\\<[^\\>]*\\>");
             content = regex.Replace(content, String.Empty);
             content = content.Trim();

@@ -1,5 +1,8 @@
 ﻿@{ ViewData["Title"] = "Upload"; }
 
+
+@model Commsights.MVC.Models.BaseViewModel
+
 <div class="row">
     <div class="col-md-4">
         <div class="card card-primary">
@@ -10,16 +13,28 @@
                 <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadScan", "Product")'>
                     <div class='col-sm-12'>
                         <div class='form-group'>
-                            <label for='Download'>Bước 01: File excel mẫu: </label>
+                            <label for='Download'>Step 01: File excel template: </label>
                             <a href="@Commsights.Data.Helpers.AppGlobal.URLDownloadExcel/Scan.xlsx" target="_blank">Download</a>
                         </div>
                     </div>
                     <div class='col-sm-12'>
                         <div class='form-group'>
-                            <label for='Ten'>Bước 02: Chọn file excel có dữ liệu: </label>
+                            <label for='Ten'>Step 02: Select the excel file include data: </label>
                             @(Html.Kendo().Upload()
                                   .Name("UploadScan")
                             )
+                        </div>
+                    </div>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='IndustryID'>Step 03: Select Industry: </label>
+                            @(Html.Kendo().DropDownListFor(Model => Model.IndustryIDUploadScan)
+                           .DataValueField("ID")
+                           .DataTextField("CodeName")
+                           .HtmlAttributes(new { style = "width:100%;" })
+                          .Events(e => e.DataBound("onIndustryIDUploadScanDataBound"))
+                           .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetBrandToList", "Config")))
+                                )
                         </div>
                     </div>
                     <div class='col-sm-12'>
@@ -42,16 +57,28 @@
                 <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadGoogleSearch", "Product")'>
                     <div class='col-sm-12'>
                         <div class='form-group'>
-                            <label for='Download'>Bước 01: File excel mẫu: </label>
+                            <label for='Download'>Step 01: File excel template: </label>
                             <a href="@Commsights.Data.Helpers.AppGlobal.URLDownloadExcel/GoogleSearch.xlsx" target="_blank">Download</a>
                         </div>
                     </div>
                     <div class='col-sm-12'>
                         <div class='form-group'>
-                            <label for='Ten'>Bước 02: Chọn file excel có dữ liệu: </label>
+                            <label for='Ten'>Step 02: Select the excel file include data: </label>
                             @(Html.Kendo().Upload()
                                   .Name("UploadGoogleSearch")
                             )
+                        </div>
+                    </div>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='IndustryID'>Step 03: Select Industry: </label>
+                            @(Html.Kendo().DropDownListFor(Model => Model.IndustryIDUploadGoogleSearch)
+                           .DataValueField("ID")
+                           .DataTextField("CodeName")
+                           .HtmlAttributes(new { style = "width:100%;" })
+                          .Events(e => e.DataBound("onIndustryIDUploadGoogleSearchDataBound"))
+                           .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetBrandToList", "Config")))
+                                )
                         </div>
                     </div>
                     <div class='col-sm-12'>
@@ -74,16 +101,28 @@
                 <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadAndiSource", "Product")'>
                     <div class='col-sm-12'>
                         <div class='form-group'>
-                            <label for='Download'>Bước 01: File excel mẫu: </label>
+                            <label for='Download'>Step 01: File excel template: </label>
                             <a href="@Commsights.Data.Helpers.AppGlobal.URLDownloadExcel/AndiSource.xlsx" target="_blank">Download</a>
                         </div>
                     </div>
                     <div class='col-sm-12'>
                         <div class='form-group'>
-                            <label for='Ten'>Bước 02: Chọn file excel có dữ liệu: </label>
+                            <label for='Ten'>Step 02: Select the excel file include data: </label>
                             @(Html.Kendo().Upload()
                                   .Name("UploadAndiSource")
                             )
+                        </div>
+                    </div>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='IndustryID'>Step 03: Select Industry: </label>
+                            @(Html.Kendo().DropDownListFor(Model => Model.IndustryIDUploadAndiSource)
+                           .DataValueField("ID")
+                           .DataTextField("CodeName")
+                           .HtmlAttributes(new { style = "width:100%;" })
+                          .Events(e => e.DataBound("onIndustryIDUploadAndiSourceDataBound"))
+                           .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetBrandToList", "Config")))
+                                )
                         </div>
                     </div>
                     <div class='col-sm-12'>
@@ -106,16 +145,28 @@
                 <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadYounet", "Product")'>
                     <div class='col-sm-12'>
                         <div class='form-group'>
-                            <label for='Download'>Bước 01: File excel mẫu: </label>
+                            <label for='Download'>Step 01: File excel template: </label>
                             <a href="@Commsights.Data.Helpers.AppGlobal.URLDownloadExcel/Younet.xlsx" target="_blank">Download</a>
                         </div>
                     </div>
                     <div class='col-sm-12'>
                         <div class='form-group'>
-                            <label for='Ten'>Bước 02: Chọn file excel có dữ liệu: </label>
+                            <label for='Ten'>Step 02: Select the excel file include data: </label>
                             @(Html.Kendo().Upload()
                                   .Name("UploadYounet")
                             )
+                        </div>
+                    </div>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='IndustryID'>Step 03: Select Industry: </label>
+                            @(Html.Kendo().DropDownListFor(Model => Model.IndustryIDUploadYounet)
+                           .DataValueField("ID")
+                           .DataTextField("CodeName")
+                           .HtmlAttributes(new { style = "width:100%;" })
+                          .Events(e => e.DataBound("onIndustryIDUploadYounetDataBound"))
+                           .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetBrandToList", "Config")))
+                                )
                         </div>
                     </div>
                     <div class='col-sm-12'>
@@ -146,6 +197,34 @@
             var notification = $("#Notification").data("kendoNotification");
             notification.show(note, messageType);
             $("#Config").data("kendoGrid").dataSource.read();
+        }
+    }
+    function onIndustryIDUploadScanDataBound() {
+        var control = $("#IndustryIDUploadScan").data("kendoDropDownList");
+        var controlLength = control.dataSource.data().length;
+        if (controlLength > 0) {
+            control.select(0);
+        }
+    }
+    function onIndustryIDUploadGoogleSearchDataBound() {
+        var control = $("#IndustryIDUploadGoogleSearch").data("kendoDropDownList");
+        var controlLength = control.dataSource.data().length;
+        if (controlLength > 0) {
+            control.select(0);
+        }
+    }
+    function onIndustryIDUploadAndiSourceDataBound() {
+        var control = $("#IndustryIDUploadAndiSource").data("kendoDropDownList");
+        var controlLength = control.dataSource.data().length;
+        if (controlLength > 0) {
+            control.select(0);
+        }
+    }
+    function onIndustryIDUploadYounetDataBound() {
+        var control = $("#IndustryIDUploadYounet").data("kendoDropDownList");
+        var controlLength = control.dataSource.data().length;
+        if (controlLength > 0) {
+            control.select(0);
         }
     }
 </script>

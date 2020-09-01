@@ -115,6 +115,14 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult ProductName()
+        {
+            return View();
+        }
+        public IActionResult CompetitorByCompany()
+        {
+            return View();
+        }
         public ActionResult CustomerCancel()
         {
             return RedirectToAction("Customer");
@@ -140,7 +148,7 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetCustomerToList([DataSourceRequest] DataSourceRequest request)
         {
-            var data = _membershipRepository.GetByParentIDToList(AppGlobal.ParentIDCustomer);
+            var data = _membershipRepository.GetCustomerToList();
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetByCompanyToList([DataSourceRequest] DataSourceRequest request)

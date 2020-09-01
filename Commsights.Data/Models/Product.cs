@@ -32,6 +32,8 @@ namespace Commsights.Data.Models
         public int? ArticleTypeID { get; set; }
         public int? CompanyID { get; set; }
         public int? AssessID { get; set; }
+        public int? IndustryID { get; set; }
+        public int? SegmentID { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]

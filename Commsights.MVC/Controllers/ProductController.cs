@@ -387,12 +387,13 @@ namespace Commsights.MVC.Controllers
         public void ParseRSS(List<Product> list, Config item)
         {
             XmlDocument rssXmlDoc = new XmlDocument();
-            rssXmlDoc.Load(item.URLFull);
+            rssXmlDoc.Load(item.URLFull.Trim());
             XmlNodeList rssNodes = rssXmlDoc.SelectNodes("rss/channel/item");
             StringBuilder rssContent = new StringBuilder();
             foreach (XmlNode rssNode in rssNodes)
             {
                 Product product = new Product();
+                product.IndustryID = AppGlobal.IndustryIDUnknown;
                 product.CompanyID = AppGlobal.CompetitorID;
                 product.ArticleTypeID = AppGlobal.ArticleTypeID;
                 product.AssessID = AppGlobal.AssessID;
@@ -454,37 +455,36 @@ namespace Commsights.MVC.Controllers
                 }
                 if (_productRepository.IsValid(product.Urlcode) == true)
                 {
+                    product.ContentMain = AppGlobal.GetContentByURL(product.Urlcode);
                     list.Add(product);
                 }
             }
         }
         public IActionResult ScanFull()
         {
-            //List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveAndIsMenuLeftToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, false, true);
-            //foreach (Config item in listConfig)
-            //{
-            //    if (item.IsMenuLeft == true)
-            //    {
-            //        List<Product> list = new List<Product>();
-            //        try
-            //        {
-            //            this.ParseRSS(list, item);
-            //        }
-            //        catch
-            //        {
-            //        }
-            //        if (list.Count > 0)
-            //        {
-            //            _productRepository.Range(list);
-            //        }
-            //    }
-            //}
-            string url = "http://24hbinhduong.vn/neu-messi-o-lai-barca-chu-tich-bartomeu-san-sang-tu-chuc/";
-            AppGlobal.GetContentByURL(url);
+            List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveAndIsMenuLeftToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, false, true);
+            foreach (Config item in listConfig)
+            {
+                if (item.IsMenuLeft == true)
+                {
+                    List<Product> list = new List<Product>();
+                    try
+                    {
+                        this.ParseRSS(list, item);
+                    }
+                    catch
+                    {
+                    }
+                    if (list.Count > 0)
+                    {
+                        _productRepository.Range(list);
+                    }
+                }
+            }
             string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
             return Json(note);
         }
-        public ActionResult UploadScan()
+        public ActionResult UploadScan(Commsights.MVC.Models.BaseViewModel baseViewModel)
         {
             int result = 0;
             string action = "Upload";
@@ -531,6 +531,7 @@ namespace Commsights.MVC.Controllers
                                                 for (int i = 2; i <= totalRows; i++)
                                                 {
                                                     Product model = new Product();
+                                                    model.IndustryID = baseViewModel.IndustryIDUploadScan;
                                                     model.Initialization(InitType.Insert, RequestUserID);
                                                     try
                                                     {
@@ -749,7 +750,7 @@ namespace Commsights.MVC.Controllers
             }
             return RedirectToAction(action, controller, new { ID = result });
         }
-        public ActionResult UploadYounet()
+        public ActionResult UploadYounet(Commsights.MVC.Models.BaseViewModel baseViewModel)
         {
             int result = 0;
             string action = "Upload";
@@ -796,6 +797,7 @@ namespace Commsights.MVC.Controllers
                                                 for (int i = 2; i <= totalRows; i++)
                                                 {
                                                     Product model = new Product();
+                                                    model.IndustryID = baseViewModel.IndustryIDUploadYounet;
                                                     model.Initialization(InitType.Insert, RequestUserID);
                                                     model.DatePublish = DateTime.Now;
                                                     model.ParentID = AppGlobal.WebsiteID;
@@ -1051,7 +1053,7 @@ namespace Commsights.MVC.Controllers
             {
             }
         }
-        public ActionResult UploadAndiSource()
+        public ActionResult UploadAndiSource(Commsights.MVC.Models.BaseViewModel baseViewModel)
         {
             int result = 0;
             string action = "Upload";
@@ -1101,6 +1103,7 @@ namespace Commsights.MVC.Controllers
                                                     List<ProductSearchProperty> listProductSearchProperty = new List<ProductSearchProperty>();
                                                     Membership membership = new Membership();
                                                     Product model = new Product();
+                                                    model.IndustryID = baseViewModel.IndustryIDUploadAndiSource;
                                                     model.Initialization(InitType.Insert, RequestUserID);
                                                     model.DatePublish = DateTime.Now;
                                                     model.ParentID = AppGlobal.WebsiteID;
@@ -1310,7 +1313,7 @@ namespace Commsights.MVC.Controllers
             return RedirectToAction(action, controller, new { ID = result });
         }
 
-        public ActionResult UploadGoogleSearch()
+        public ActionResult UploadGoogleSearch(Commsights.MVC.Models.BaseViewModel baseViewModel)
         {
             int result = 0;
             string action = "Upload";
@@ -1358,6 +1361,7 @@ namespace Commsights.MVC.Controllers
                                                 for (int i = 4; i <= totalRows; i++)
                                                 {
                                                     Product model = new Product();
+                                                    model.IndustryID = baseViewModel.IndustryIDUploadGoogleSearch;
                                                     model.Initialization(InitType.Insert, RequestUserID);
                                                     model.DatePublish = DateTime.Now;
                                                     model.ParentID = AppGlobal.WebsiteID;

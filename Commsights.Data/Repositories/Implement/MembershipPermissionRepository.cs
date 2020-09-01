@@ -72,6 +72,27 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<MembershipPermissionDataTransfer> GetDataTransferCompanyByMembershipIDAndCodeToList(int membershipID, string code)
+        {
+            List<MembershipPermissionDataTransfer> list = new List<MembershipPermissionDataTransfer>();
+            if (membershipID > 0)
+            {
+                SqlParameter[] parameters =
+                      {
+                new SqlParameter("@MembershipID",membershipID),
+                new SqlParameter("@Code",code)
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectDataTransferCompanyByMembershipIDAndCode", parameters);
+                list = SQLHelper.ToList<MembershipPermissionDataTransfer>(dt);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    list[i].Company = new ModelTemplate();
+                    list[i].Company.ID = list[i].CompanyID;
+                    list[i].Company.TextName = list[i].CompanyName;
+                }
+            }
+            return list;
+        }
         public List<MembershipPermission> GetByMembershipIDAndBrandIDAndCodeToList(int membershipID, int brandID, string code)
         {
             List<MembershipPermission> list = new List<MembershipPermission>();

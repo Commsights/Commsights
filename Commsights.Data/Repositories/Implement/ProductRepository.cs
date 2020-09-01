@@ -40,7 +40,7 @@ namespace Commsights.Data.Repositories
             if (!string.IsNullOrEmpty(search))
             {
                 search = search.Trim();
-                list = _context.Product.Where(item => item.Title.Contains(search) || item.Description.Contains(search)).OrderByDescending(item => item.DatePublish).ToList();
+                list = _context.Product.Where(item => item.Title.Contains(search) || item.Description.Contains(search) || item.ContentMain.Contains(search)).OrderByDescending(item => item.DatePublish).ToList();
             }
             return list;
         }

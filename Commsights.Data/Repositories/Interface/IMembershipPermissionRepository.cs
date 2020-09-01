@@ -13,6 +13,7 @@ namespace Commsights.Data.Repositories
         public List<MembershipPermission> GetByMembershipIDAndCodeToList(int membershipID, string code);
         public List<MembershipPermission> GetByMembershipIDAndBrandIDAndCodeToList(int membershipID, int brandID, string code);
         public List<MembershipPermissionDataTransfer> GetDataTransferBrandByMembershipIDAndCodeToList(int membershipID, string code);
+        public List<MembershipPermissionDataTransfer> GetDataTransferCompanyByMembershipIDAndCodeToList(int membershipID, string code);
         public List<MembershipPermissionDataTransfer> GetDataTransferMembershipByBrandIDAndCodeToList(int brandID, string code);
         public void InitializationMenuPermission(int membershipID, int requestUserID);
         public void SaveAllMenuPermission(int membershipID, bool isAll, int requestUserID);

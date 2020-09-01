@@ -8,6 +8,9 @@
             </div>
             <div class="card-body">
                 <div class="row">
+                    <div class='col-sm-1'>
+                        Company
+                    </div>
                     <div class='col-sm-4'>
                         @(Html.Kendo().DropDownList()
                      .Name("Customer")
@@ -18,6 +21,9 @@
                        .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCustomerToList", "Membership")))
                             )
+                    </div>
+                    <div class='col-sm-1'>
+                        Industry
                     </div>
                     <div class='col-sm-4'>
                         @(Html.Kendo().DropDownList()
