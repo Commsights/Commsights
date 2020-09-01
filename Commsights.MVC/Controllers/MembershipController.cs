@@ -85,16 +85,7 @@ namespace Commsights.MVC.Controllers
                 membership = _membershipRepository.GetByID(ID);
             }
             return View(membership);
-        }
-        public IActionResult CompetitorDetail(int ID)
-        {
-            Membership membership = new Membership();
-            if (ID > 0)
-            {
-                membership = _membershipRepository.GetByID(ID);
-            }
-            return View(membership);
-        }
+        }       
         public IActionResult Employee()
         {
             return View();

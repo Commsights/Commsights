@@ -136,6 +136,14 @@ namespace Commsights.Data.Helpers
                 return int.Parse(builder.Build().GetSection("AppSettings").GetSection("ParentIDEmployee").Value);
             }
         }
+        public static string Industry
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Industry").Value;
+            }
+        }
         public static string Competitor
         {
             get

@@ -52,9 +52,9 @@
     model.Field(t => t.ID).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetBrandToList", "Config"))
+.Read(t => t.Action("GetIndustryToList", "Config"))
 .Destroy(t => t.Action("Delete", "Config"))
-.Create(t => t.Action("CreateBrand", "Config"))
+.Create(t => t.Action("CreateIndustry", "Config"))
 .Update(t => t.Action("Update", "Config"))
 )
 )

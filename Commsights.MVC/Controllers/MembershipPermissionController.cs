@@ -32,20 +32,19 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
-
-        public ActionResult GetByMembershipIDAndToList([DataSourceRequest] DataSourceRequest request, int membershipID)
+        public ActionResult GetByMembershipIDToList([DataSourceRequest] DataSourceRequest request, int membershipID)
         {
             var data = _membershipPermissionRepository.GetByMembershipIDToList(membershipID);
             return Json(data.ToDataSourceResult(request));
         }
-        public ActionResult GetMembershipIDAndBrandToList([DataSourceRequest] DataSourceRequest request, int membershipID)
+        public ActionResult GetDataTransferMembershipByIndustryIDAndCodeToList([DataSourceRequest] DataSourceRequest request, int industryID)
         {
-            var data = _membershipPermissionRepository.GetByMembershipIDAndCodeToList(membershipID, AppGlobal.Brand);
+            var data = _membershipPermissionRepository.GetDataTransferMembershipByIndustryIDAndCodeToList(industryID, AppGlobal.Industry);
             return Json(data.ToDataSourceResult(request));
         }
-        public ActionResult GetDataTransferBrandByMembershipIDAndCodeToList([DataSourceRequest] DataSourceRequest request, int membershipID)
+        public ActionResult GetDataTransferIndustryByMembershipIDAndIndustryToList([DataSourceRequest] DataSourceRequest request, int membershipID)
         {
-            var data = _membershipPermissionRepository.GetDataTransferBrandByMembershipIDAndCodeToList(membershipID, AppGlobal.Brand);
+            var data = _membershipPermissionRepository.GetDataTransferIndustryByMembershipIDAndCodeToList(membershipID, AppGlobal.Industry);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetDataTransferCompanyByMembershipIDAndCodeToList([DataSourceRequest] DataSourceRequest request, int membershipID)
@@ -53,19 +52,14 @@ namespace Commsights.MVC.Controllers
             var data = _membershipPermissionRepository.GetDataTransferCompanyByMembershipIDAndCodeToList(membershipID, AppGlobal.Competitor);
             return Json(data.ToDataSourceResult(request));
         }
-        public ActionResult GetDataTransferMembershipByBrandIDAndCodeToList([DataSourceRequest] DataSourceRequest request, int brandID)
+        public ActionResult GetByMembershipIDAndIndustryIDAndProductToList([DataSourceRequest] DataSourceRequest request, int membershipID, int industryID)
         {
-            var data = _membershipPermissionRepository.GetDataTransferMembershipByBrandIDAndCodeToList(brandID, AppGlobal.Brand);
+            var data = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCodeToList(membershipID, industryID, AppGlobal.Product);
             return Json(data.ToDataSourceResult(request));
         }
-        public ActionResult GetByMembershipIDAndBrandIDAndProductToList([DataSourceRequest] DataSourceRequest request, int membershipID, int brandID)
+        public ActionResult GetIndustryIDAndCodeToList([DataSourceRequest] DataSourceRequest request, int industryID)
         {
-            var data = _membershipPermissionRepository.GetByMembershipIDAndBrandIDAndCodeToList(membershipID, brandID, AppGlobal.Product);
-            return Json(data.ToDataSourceResult(request));
-        }
-        public ActionResult GetBrandIDAndCodeToList([DataSourceRequest] DataSourceRequest request, int brandID)
-        {
-            var data = _membershipPermissionRepository.GetBrandIDAndCodeToList(brandID, AppGlobal.Brand);
+            var data = _membershipPermissionRepository.GetIndustryIDAndCodeToList(industryID, AppGlobal.Industry);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetMembershipContactToList([DataSourceRequest] DataSourceRequest request, int membershipID)
@@ -108,15 +102,18 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
-        public IActionResult CreateProduct(MembershipPermission model, int membershipID, int brandID)
+        public IActionResult CreateProduct(MembershipPermission model, int membershipID, int industryID)
         {
             model.Code = AppGlobal.Product;
             model.MembershipID = membershipID;
-            model.BrandID = brandID;
+            model.IndustryID = industryID;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
-            result = _membershipPermissionRepository.Create(model);
+            if ((membershipID > 0) && (industryID > 0))
+            {
+                result = _membershipPermissionRepository.Create(model);
+            }
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
@@ -145,9 +142,9 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
-        public IActionResult CreateCustomer(MembershipPermission model, int brandID)
+        public IActionResult CreateCustomer(MembershipPermission model, int industryID)
         {
-            model.BrandID = brandID;
+            model.IndustryID = industryID;
             model.ProductID = 0;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
@@ -179,11 +176,11 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
-        public IActionResult CreateDataTransferBrand(MembershipPermissionDataTransfer model, int membershipID)
+        public IActionResult CreateDataTransferIndustry(MembershipPermissionDataTransfer model, int membershipID)
         {
-            model.Code = AppGlobal.Brand;
+            model.Code = AppGlobal.Industry;
             model.MembershipID = membershipID;
-            model.BrandID = model.Brand.ID;
+            model.IndustryID = model.Industry.ID;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
@@ -217,10 +214,10 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
-        public IActionResult CreateDataTransferMembership(MembershipPermissionDataTransfer model, int brandID)
+        public IActionResult CreateDataTransferMembership(MembershipPermissionDataTransfer model, int industryID)
         {
             model.Code = AppGlobal.Brand;
-            model.BrandID = brandID;
+            model.IndustryID = industryID;
             model.MembershipID = model.Membership.ID;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
@@ -239,7 +236,24 @@ namespace Commsights.MVC.Controllers
         public IActionResult UpdateDataTransfer(MembershipPermissionDataTransfer model)
         {
             Initialization();
-            model.BrandID = model.Brand.ID;
+            model.IndustryID = model.Industry.ID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Update, RequestUserID);
+            int result = _membershipPermissionRepository.Update(model.ID, model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
+        public IActionResult UpdateDataTransferIndustry(MembershipPermissionDataTransfer model)
+        {
+            Initialization();
+            model.IndustryID = model.Industry.ID;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
             int result = _membershipPermissionRepository.Update(model.ID, model);

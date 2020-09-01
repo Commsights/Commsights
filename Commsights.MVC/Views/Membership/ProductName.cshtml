@@ -27,13 +27,13 @@
                     </div>
                     <div class='col-sm-4'>
                         @(Html.Kendo().DropDownList()
-                     .Name("Brand")
-                     .DataValueField("BrandID")
-                     .DataTextField("BrandName")
+                     .Name("Industry")
+                     .DataValueField("IndustryID")
+                     .DataTextField("IndustryName")
                      .HtmlAttributes(new { @class = "form-control" })
-                      .Events(e => e.DataBound("onBrandDataBound"))
+                      .Events(e => e.DataBound("onIndustryDataBound"))
                        .Filter(FilterType.Contains)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferBrandByMembershipIDAndCodeToList", "MembershipPermission").Data("filterBrand")))
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferIndustryByMembershipIDAndIndustryToList", "MembershipPermission").Data("filterIndustry")))
                             )
                     </div>
                     <div class='col-sm-1'>
@@ -84,7 +84,7 @@
     model.Id(t => t.ID);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetByMembershipIDAndBrandIDAndProductToList", "MembershipPermission").Data("filterProduct"))
+.Read(t => t.Action("GetByMembershipIDAndIndustryIDAndProductToList", "MembershipPermission").Data("filterProduct"))
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
 .Create(t => t.Action("CreateProduct", "MembershipPermission").Data("filterCreateProduct"))
 .Update(t => t.Action("Update", "MembershipPermission"))
@@ -121,11 +121,11 @@
         }
     }
     function onCustomerChange() {
-        $("#Brand").data("kendoDropDownList").dataSource.read();
+        $("#Industry").data("kendoDropDownList").dataSource.read();
     }
 
-    function onBrandDataBound() {
-        var control = $("#Brand").data("kendoDropDownList");
+    function onIndustryDataBound() {
+        var control = $("#Industry").data("kendoDropDownList");
         var controlLength = control.dataSource.data().length;
         if (controlLength > 0) {
             control.select(0);
@@ -135,18 +135,18 @@
     function onSearch() {
         $("#MembershipPermission").data("kendoGrid").dataSource.read();
     }
-    function filterBrand(e) {
+    function filterIndustry(e) {
         var membershipIDValue = $("#Customer").data("kendoDropDownList").value();
         return { membershipID: membershipIDValue };
     }
     function filterProduct(e) {
         var membershipIDValue = $("#Customer").data("kendoDropDownList").value();
-        var brandIDValue = $("#Brand").data("kendoDropDownList").value();       
-        return { membershipID: membershipIDValue, brandID: brandIDValue };
+        var industryIDValue = $("#Industry").data("kendoDropDownList").value();       
+        return { membershipID: membershipIDValue, industryID: industryIDValue };
     }
     function filterCreateProduct(e) {
         var membershipIDValue = $("#Customer").data("kendoDropDownList").value();
-        var brandIDValue = $("#Brand").data("kendoDropDownList").value();
-        return { membershipID: membershipIDValue, brandID: brandIDValue };
+        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
+        return { membershipID: membershipIDValue, industryID: industryIDValue };
     }
 </script>

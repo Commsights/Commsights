@@ -4,21 +4,20 @@
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Customer - Segment</h3>
+                <h3 class="card-title">System - Segment</h3>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class='col-sm-4'>
                         @(Html.Kendo().DropDownList()
-                     .Name("Brand")
+                     .Name("Industry")
                      .DataValueField("ID")
                      .DataTextField("CodeName")
                     .HtmlAttributes(new { @class = "form-control" })
-                      .Events(e => e.DataBound("onBrandDataBound").Change("onBrandChange"))
+                      .Events(e => e.DataBound("onIndustryDataBound").Change("onIndustryChange"))
                        .Filter(FilterType.Contains)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetBrandToList", "Config")))
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
                             )
-
                     </div>
                 </div>
                 <br />
@@ -69,7 +68,7 @@
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetByParentIDToList", "Config").Data("filterConfig"))
 .Destroy(t => t.Action("Delete", "Config"))
-.Create(t => t.Action("CreateBrandSub", "Config").Data("filterConfigCreateBrand"))
+.Create(t => t.Action("CreateIndustrySub", "Config").Data("filterConfigCreateIndustry"))
 .Update(t => t.Action("Update", "Config"))
 )
 )
@@ -97,24 +96,24 @@
             $("#Config").data("kendoGrid").dataSource.read();
         }
     }
-    function onBrandDataBound() {
-        var control = $("#Brand").data("kendoDropDownList");
+    function onIndustryDataBound() {
+        var control = $("#Industry").data("kendoDropDownList");
         var controlLength = control.dataSource.data().length;
         if (controlLength > 0) {
             control.select(0);
             control.trigger("change");
         }
     }
-    function onBrandChange() {
+    function onIndustryChange() {
         $("#Config").data("kendoGrid").dataSource.read();
     }
     function filterConfig(e) {
-        var parentIDValue = $("#Brand").data("kendoDropDownList").value();
+        var parentIDValue = $("#Industry").data("kendoDropDownList").value();
         return { parentID: parentIDValue };
 
     }
-    function filterConfigCreateBrand(e) {
-        var parentIDValue = $("#Brand").data("kendoDropDownList").value();
+    function filterConfigCreateIndustry(e) {
+        var parentIDValue = $("#Industry").data("kendoDropDownList").value();
         return { parentID: parentIDValue };
 
     }

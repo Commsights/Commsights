@@ -26,7 +26,7 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.Brand.TextName).EditorTemplateName("Config_Brand").Title("Brand").Width(300);
+    columns.Bound(t => t.Industry.TextName).EditorTemplateName("Config_Industry").Title("Industry").Width(300);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
@@ -60,13 +60,13 @@
 .Model(model =>
 {
     model.Id(t => t.ID);
-    model.Field(t => t.Brand).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Field(t => t.Industry).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetDataTransferBrandByMembershipIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermission"))
+.Read(t => t.Action("GetDataTransferIndustryByMembershipIDAndIndustryToList", "MembershipPermission").Data("filterMembershipPermission"))
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
-.Create(t => t.Action("CreateDataTransferBrand", "MembershipPermission").Data("filterMembershipPermissionCreateBrand"))
-.Update(t => t.Action("UpdateDataTransfer", "MembershipPermission"))
+.Create(t => t.Action("CreateDataTransferIndustry", "MembershipPermission").Data("filterMembershipPermissionCreateIndustry"))
+.Update(t => t.Action("UpdateDataTransferIndustry", "MembershipPermission"))
 )
 )
             </div>
@@ -106,7 +106,7 @@
         var membershipIDValue = $("#Customer").data("kendoDropDownList").value();        
         return { membershipID: membershipIDValue };
     }
-    function filterMembershipPermissionCreateBrand(e) {
+    function filterMembershipPermissionCreateIndustry(e) {
         var membershipIDValue = $("#Customer").data("kendoDropDownList").value();
         return { membershipID: membershipIDValue };
     }

@@ -221,9 +221,9 @@ namespace Commsights.MVC.Controllers
             var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.AssessType).Where(item => item.ParentID == 0);
             return Json(data.ToDataSourceResult(request));
         }
-        public ActionResult GetBrandToList([DataSourceRequest] DataSourceRequest request)
+        public ActionResult GetIndustryToList([DataSourceRequest] DataSourceRequest request)
         {
-            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Brand).Where(item => item.ParentID == 0);
+            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Industry).Where(item => item.ParentID == 0);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetWebisteToList([DataSourceRequest] DataSourceRequest request)
@@ -395,11 +395,11 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
-        public IActionResult CreateBrand(Config model)
+        public IActionResult CreateIndustry(Config model)
         {
             Initialization(model);
             model.GroupName = AppGlobal.CRM;
-            model.Code = AppGlobal.Brand;
+            model.Code = AppGlobal.Industry;
             model.ParentID = 0;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
@@ -418,12 +418,12 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
-        public IActionResult CreateBrandSub(Config model, int parentID)
+        public IActionResult CreateIndustrySub(Config model, int parentID)
         {
             Initialization(model);
             model.ParentID = parentID;
             model.GroupName = AppGlobal.CRM;
-            model.Code = AppGlobal.Brand;
+            model.Code = AppGlobal.Industry;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;

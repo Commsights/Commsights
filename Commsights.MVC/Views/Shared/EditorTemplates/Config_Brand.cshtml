@@ -1,8 +1,0 @@
-
-@(Html.Kendo().DropDownListFor(t => t)
-                   .DataValueField("ID")
-                   .DataTextField("CodeName")
-                   .HtmlAttributes(new {data_bind= "value: Brand", @class = "form-control" })
-                    .Filter(FilterType.Contains)
-                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetBrandToList", "Config")))
-)

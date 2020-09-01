@@ -8,7 +8,53 @@
         <div class="row">
             <div class='col-md-6'>
                 <h3><b>Industry</b></h3>
-               
+                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.MembershipPermissionDataTransfer>()
+.Name("MembershipPermissionDataTransfer")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);    
+    
+})
+.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
+.ToolBar(toolBar => toolBar.Search())
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid" })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.ID);    
+})
+.Events(t => { t.RequestEnd("onGridRequestEnd"); })
+.Read(t => t.Action("GetFrequencyToList", "Config"))
+.Destroy(t => t.Action("Delete", "Config"))
+.Create(t => t.Action("CreateFrequency", "Config"))
+.Update(t => t.Action("Update", "Config"))
+)
+)
             </div>
             <div class='col-md-6'>
                 <h3><b>Product</b></h3>
