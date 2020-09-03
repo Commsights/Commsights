@@ -63,6 +63,7 @@ namespace Commsights.MVC.Controllers
                     {
                         if (model.Password != model001.Password)
                         {
+                            model.InitDefaultValue();
                             model.EncryptPassword();
                         }
                     }
@@ -163,7 +164,7 @@ namespace Commsights.MVC.Controllers
         [AcceptVerbs("Post")]
         public IActionResult SaveCompetitor(Membership model)
         {
-            model.ParentID = AppGlobal.ParentIDCompetitor;
+            //model.ParentID = AppGlobal.ParentIDCompetitor;
             model.Active = true;
             if (model.ID > 0)
             {
@@ -182,7 +183,7 @@ namespace Commsights.MVC.Controllers
         [AcceptVerbs("Post")]
         public IActionResult SaveCustomer(Membership model)
         {
-            model.ParentID = AppGlobal.ParentIDCustomer;
+            //model.ParentID = AppGlobal.ParentIDCustomer;
             model.Active = true;
             if (Request.Form.Files.Count > 0)
             {

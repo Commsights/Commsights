@@ -32,7 +32,7 @@ namespace Commsights.Data.Models
             }
         }
         public void EncryptPassword()
-        {
+        {            
             this.Password = SecurityHelper.Encrypt(this.Guicode, this.Password);
         }
         public void DecryptPassword()
