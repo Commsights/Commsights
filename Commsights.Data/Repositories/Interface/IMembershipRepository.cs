@@ -13,6 +13,7 @@ namespace Commsights.Data.Repositories
         public bool IsExistEmail(string email);
         public List<Membership> GetByCompanyToList();
         public List<Membership> GetCustomerToList();
+        public List<Membership> GetCompetitorToList();
         public List<Membership> GetEmployeeToList();
         public Membership GetByAccount(string account);
     }

@@ -17,11 +17,15 @@ namespace Commsights.Data.Repositories
         }
         public List<Membership> GetByCompanyToList()
         {
-            return _context.Membership.Where(item => item.ParentID == AppGlobal.ParentIDCustomer || item.ParentID == AppGlobal.ParentIDCompetitor).OrderBy(item => item.FullName).ToList();
+            return _context.Membership.Where(item => (item.ParentID == AppGlobal.ParentIDCustomer || item.ParentID == AppGlobal.ParentIDCompetitor) && (item.Active == true)).OrderBy(item => item.FullName).ToList();
         }
         public List<Membership> GetCustomerToList()
         {
-            return _context.Membership.Where(item => item.ParentID == AppGlobal.ParentIDCustomer).OrderBy(item => item.FullName).ToList();
+            return _context.Membership.Where(item => (item.ParentID == AppGlobal.ParentIDCustomer) && (item.Active == true)).OrderBy(item => item.FullName).ToList();
+        }
+        public List<Membership> GetCompetitorToList()
+        {
+            return _context.Membership.Where(item => (item.ParentID == AppGlobal.ParentIDCompetitor) && (item.Active == true)).OrderBy(item => item.FullName).ToList();
         }
         public List<Membership> GetEmployeeToList()
         {
@@ -47,7 +51,7 @@ namespace Commsights.Data.Repositories
         }
         public bool IsLoginByAccount(string account, string password)
         {
-            var membership = _context.Membership.FirstOrDefault(user => user.Email.Equals(account));           
+            var membership = _context.Membership.FirstOrDefault(user => user.Email.Equals(account));
             if (membership == null)
             {
                 membership = _context.Membership.FirstOrDefault(user => user.Phone.Equals(account));

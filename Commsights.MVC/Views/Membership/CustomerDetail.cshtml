@@ -13,7 +13,7 @@
                     @Html.HiddenFor(Model => Model.ID)
                     <div class="row">
                         <div class='col-md-10'>
-                        </div>                       
+                        </div>
                         <div class='col-md-1'>
                             <button style="width:100%;" type="submit" title="Save" class="btn btn-primary">
                                 <span class="fas fa-save"></span>
@@ -49,6 +49,16 @@
                             </div>
                         </div>
                         <div class="col-md-6">
+                            <div class='form-group'>
+                                <label for='Phone'>Category</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.ParentID)
+                                   .DataValueField("ID")
+                                   .DataTextField("CodeName")
+                                   .HtmlAttributes(new {@class = "form-control" })
+                                    .Filter(FilterType.Contains)
+                                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetMembershipTypeToList", "Config")))
+                                    )
+                            </div>
                             <div class='form-group'>
                                 <label for='Phone'>Phone</label>
                                 @(Html.TextBoxFor(Model => Model.Phone, new { placeholder = "Phone", @class = "form-control" }))
@@ -122,7 +132,7 @@
 .PageSize(1000)
 .Model(model =>
 {
-    model.Id(t => t.ID);    
+    model.Id(t => t.ID);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetMembershipContactToList", "MembershipPermission").Data("filterMembershipPermission"))

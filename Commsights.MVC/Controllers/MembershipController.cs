@@ -25,13 +25,13 @@ namespace Commsights.MVC.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IMembershipRepository _membershipRepository;
         private readonly IConfigRepository _configResposistory;
-        
+
         public MembershipController(IHostingEnvironment hostingEnvironment, IMembershipRepository membershipRepository, IConfigRepository configResposistory, ICompositeViewEngine viewEngine, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
             _hostingEnvironment = hostingEnvironment;
             _membershipRepository = membershipRepository;
             _configResposistory = configResposistory;
-            
+
         }
         private void Initialization(Membership model, int action)
         {
@@ -85,7 +85,16 @@ namespace Commsights.MVC.Controllers
                 membership = _membershipRepository.GetByID(ID);
             }
             return View(membership);
-        }       
+        }
+        public IActionResult CompetitorDetail(int ID)
+        {
+            Membership membership = new Membership();
+            if (ID > 0)
+            {
+                membership = _membershipRepository.GetByID(ID);
+            }
+            return View(membership);
+        }
         public IActionResult Employee()
         {
             return View();
@@ -133,7 +142,7 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetCompetitorToList([DataSourceRequest] DataSourceRequest request)
         {
-            var data = _membershipRepository.GetByParentIDToList(AppGlobal.ParentIDCompetitor);
+            var data = _membershipRepository.GetCompetitorToList();
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetEmployeeToList([DataSourceRequest] DataSourceRequest request)
@@ -272,10 +281,12 @@ namespace Commsights.MVC.Controllers
             return Json(note);
         }
 
-        public IActionResult Delete(int ID)
+        public IActionResult Delete(Membership model)
         {
+            model.Active = false;            
             string note = AppGlobal.InitString;
-            int result = _membershipRepository.Delete(ID);
+            model.Initialization(InitType.Update, RequestUserID);
+            int result = _membershipRepository.Update(model.ID, model);
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
