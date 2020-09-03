@@ -4,11 +4,14 @@
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Customer - Company by industry</h3>
+                <h3 class="card-title">Company - Company by industry</h3>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class='col-sm-4'>
+                    <div class='col-sm-1'>
+                        Industry
+                    </div>
+                    <div class='col-sm-6'>
                         @(Html.Kendo().DropDownList()
                      .Name("Industry")
                      .DataValueField("ID")

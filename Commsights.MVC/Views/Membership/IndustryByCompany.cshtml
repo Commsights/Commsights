@@ -4,10 +4,13 @@
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Customer - Industry by company</h3>
+                <h3 class="card-title">Company - Industry by company</h3>
             </div>
             <div class="card-body">
                 <div class="row">
+                    <div class='col-sm-1'>
+                        Company
+                    </div>
                     <div class='col-sm-6'>
                         @(Html.Kendo().DropDownList()
                      .Name("Customer")
@@ -16,7 +19,7 @@
                      .HtmlAttributes(new { @class = "form-control" })
                       .Events(e => e.DataBound("onCustomerDataBound").Change("onCustomerChange"))
                        .Filter(FilterType.Contains)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCustomerToList", "Membership")))
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCompetitorToList", "Membership")))
                             )
                     </div>
                 </div>

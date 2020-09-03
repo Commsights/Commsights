@@ -4,7 +4,7 @@
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Customer - Product name</h3>
+                <h3 class="card-title">Company - Product name</h3>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -19,10 +19,10 @@
                      .HtmlAttributes(new { style = "width:100%; font-size: 16px;" })
                       .Events(e => e.DataBound("onCustomerDataBound").Change("onCustomerChange"))
                        .Filter(FilterType.Contains)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCustomerToList", "Membership")))
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCompetitorToList", "Membership")))
                             )
                     </div>
-                    <div class='col-sm-1'>
+                    @*<div class='col-sm-1'>
                         Industry
                     </div>
                     <div class='col-sm-4'>
@@ -35,12 +35,12 @@
                        .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferIndustryByMembershipIDAndIndustryToList", "MembershipPermission").Data("filterIndustry")))
                             )
-                    </div>
-                    <div class='col-sm-1'>
+                    </div>*@
+                    @*<div class='col-sm-1'>
                         <button type="button" class="btn btn-success" onclick="onSearch()">
                             <span class="fas fa-search"></span>
                         </button>
-                    </div>
+                    </div>*@
                 </div>
                 <br />
                 @(Html.Kendo().Grid<Commsights.Data.Models.MembershipPermission>()
@@ -84,7 +84,7 @@
     model.Id(t => t.ID);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetByMembershipIDAndIndustryIDAndProductToList", "MembershipPermission").Data("filterProduct"))
+.Read(t => t.Action("GetByMembershipIDAndProductToList", "MembershipPermission").Data("filterProduct"))
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
 .Create(t => t.Action("CreateProduct", "MembershipPermission").Data("filterCreateProduct"))
 .Update(t => t.Action("Update", "MembershipPermission"))
@@ -121,32 +121,15 @@
         }
     }
     function onCustomerChange() {
-        $("#Industry").data("kendoDropDownList").dataSource.read();
-    }
-
-    function onIndustryDataBound() {
-        var control = $("#Industry").data("kendoDropDownList");
-        var controlLength = control.dataSource.data().length;
-        if (controlLength > 0) {
-            control.select(0);
-            control.trigger("change");
-        }
-    }
-    function onSearch() {
         $("#MembershipPermission").data("kendoGrid").dataSource.read();
-    }
-    function filterIndustry(e) {
-        var membershipIDValue = $("#Customer").data("kendoDropDownList").value();
+    }   
+    
+    function filterProduct(e) {
+        var membershipIDValue = $("#Customer").data("kendoDropDownList").value();    
         return { membershipID: membershipIDValue };
     }
-    function filterProduct(e) {
-        var membershipIDValue = $("#Customer").data("kendoDropDownList").value();
-        var industryIDValue = $("#Industry").data("kendoDropDownList").value();       
-        return { membershipID: membershipIDValue, industryID: industryIDValue };
-    }
     function filterCreateProduct(e) {
-        var membershipIDValue = $("#Customer").data("kendoDropDownList").value();
-        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
-        return { membershipID: membershipIDValue, industryID: industryIDValue };
+        var membershipIDValue = $("#Customer").data("kendoDropDownList").value();        
+        return { membershipID: membershipIDValue };
     }
 </script>
