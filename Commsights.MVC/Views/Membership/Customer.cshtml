@@ -19,7 +19,7 @@
 {
     columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
     columns.Template(@"<a href='/Membership/CustomerDetail/#=ID#' class='btn btn-success' style='color:white;'><i class='fas fa-edit'></i></a>").Width(70).HtmlAttributes(new { style = "text-align:center;" });
-    columns.Bound(t => t.FullName).Title("Full name").Width(300);
+    columns.Bound(t => t.Account).Title("Customer").Width(300);
     columns.Bound(t => t.Email).Title("Email").Width(200);
     columns.Bound(t => t.Phone).Title("Phone").Width(200);
     columns.Bound(t => t.ID).Title("ID").Width(50);

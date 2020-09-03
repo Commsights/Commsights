@@ -178,7 +178,7 @@ namespace Commsights.MVC.Controllers
                 model.Initialization(InitType.Insert, RequestUserID);
                 _membershipRepository.Create(model);
             }
-            return RedirectToAction("CompetitorDetail", new { ID = model.ID });
+            return RedirectToAction("CompanyDetail", new { ID = model.ID });
         }
         [AcceptVerbs("Post")]
         public IActionResult SaveCustomer(Membership model)
