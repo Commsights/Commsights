@@ -76,6 +76,11 @@ namespace Commsights.MVC.Controllers
             var data = _membershipPermissionRepository.GetDataTransferIndustryByMembershipIDAndCodeToList(membershipID, AppGlobal.Industry);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetDataTransferDailyReportSectionByMembershipIDAndDailyReportSectionToList([DataSourceRequest] DataSourceRequest request, int membershipID)
+        {
+            var data = _membershipPermissionRepository.GetDataTransferDailyReportSectionByMembershipIDAndCodeToList(membershipID, AppGlobal.DailyReportSection);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetDataTransferCompanyByMembershipIDAndCodeToList([DataSourceRequest] DataSourceRequest request, int membershipID)
         {
             var data = _membershipPermissionRepository.GetDataTransferCompanyByMembershipIDAndCodeToList(membershipID, AppGlobal.Competitor);
@@ -229,6 +234,28 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
+        public IActionResult CreateDataTransferDailyReportSection(MembershipPermissionDataTransfer model, int membershipID)
+        {
+            model.Code = AppGlobal.DailyReportSection;
+            model.MembershipID = membershipID;
+            model.CategoryID = model.DailyReportSection.ID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            if ((model.MembershipID > 0) && (model.CategoryID > 0))
+            {
+                result = _membershipPermissionRepository.Create(model);
+            }
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
         public IActionResult CreateDataTransferIndustryByParentID(MembershipPermissionDataTransfer model, int parentID)
         {
             model.Code = AppGlobal.Industry;
@@ -296,13 +323,16 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult CreateDataTransferMembership(MembershipPermissionDataTransfer model, int industryID)
         {
-            model.Code = AppGlobal.Brand;
+            model.Code = AppGlobal.Industry;
             model.IndustryID = industryID;
             model.MembershipID = model.Membership.ID;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
-            result = _membershipPermissionRepository.Create(model);
+            if ((model.MembershipID > 0) && (model.IndustryID > 0))
+            {
+                result = _membershipPermissionRepository.Create(model);
+            }
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
@@ -353,7 +383,32 @@ namespace Commsights.MVC.Controllers
             model.MembershipID = model.Membership.ID;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
-            int result = _membershipPermissionRepository.Update(model.ID, model);
+            int result = 0;
+            if ((model.MembershipID > 0) && (model.IndustryID > 0))
+            {
+                result = _membershipPermissionRepository.Update(model.ID, model);
+            }
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
+        public IActionResult UpdateDataTransferDailyReportSection(MembershipPermissionDataTransfer model)
+        {
+            Initialization();
+            model.CategoryID = model.DailyReportSection.ID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Update, RequestUserID);
+            int result = 0;
+            if ((model.MembershipID > 0) && (model.CategoryID > 0))
+            {
+                result = _membershipPermissionRepository.Update(model.ID, model);
+            }
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;

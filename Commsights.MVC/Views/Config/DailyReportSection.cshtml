@@ -1,27 +1,20 @@
-﻿@{ ViewData["Title"] = "Website category"; }
+﻿@{ ViewData["Title"] = "Daily Report Section"; }
 
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">System - Website category</h3>
+                <h3 class="card-title">System - Daily Report Section</h3>
             </div>
             <div class="card-body">
-                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ConfigDataTransfer>()
-.Name("ConfigDataTransfer")
+                @(Html.Kendo().Grid<Commsights.Data.Models.Config>()
+.Name("Config")
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.IsMenuLeft).Title("Is RSS").Width(100);
-    columns.Bound(t => t.Title).Title("Title").Width(300);
-    columns.Bound(t => t.URLFull).Title("URLFull").Width(300);
-    columns.Bound(t => t.Parent.TextName).EditorTemplateName("Config_WebsiteType").Title("Media type").Width(200);
-    columns.Bound(t => t.Country.TextName).EditorTemplateName("Config_Country").Title("Country").Width(200);
-    columns.Bound(t => t.Language.TextName).EditorTemplateName("Config_Language").Title("Language").Width(200);
-    columns.Bound(t => t.Frequency.TextName).EditorTemplateName("Config_Frequency").Title("Frequency").Width(200);
-    columns.Bound(t => t.BlackWhite).Title("BlackWhite").Width(200).HtmlAttributes(new { @class = "text-right" });
-    columns.Bound(t => t.Color).Title("Color").Width(200).HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.ID).Title("ID").Width(100);
+    columns.Bound(t => t.CodeName).Title("Name").Width(200);
+    columns.Bound(t => t.Note).Title("Note").Width(200);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
@@ -49,7 +42,7 @@
 .FileName("Config.pdf")
 )
 .HtmlAttributes(new { @class = "KendoGrid" })
-.Search(search => { search.Field(f => f.Title); search.Field(f => f.URLFull);})
+.Search(search => { search.Field(f => f.CodeName); search.Field(f => f.Note);})
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
@@ -57,17 +50,12 @@
 {
     model.Id(t => t.ID);
     model.Field(t => t.ID).Editable(false);
-    model.Field(t => t.Country).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
-    model.Field(t => t.Language).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
-    model.Field(t => t.Parent).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
-    model.Field(t => t.Frequency).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
-    model.Field(t => t.ColorType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetDataTransferWebsiteByGroupNameAndCodeAndActiveToList", "Config"))
+.Read(t => t.Action("GetDailyReportSectionToList", "Config"))
 .Destroy(t => t.Action("Delete", "Config"))
-.Create(t => t.Action("CreateWebisteDataTransfer", "Config"))
-.Update(t => t.Action("UpdateDataTransfer", "Config"))
+.Create(t => t.Action("CreateDailyReportSection", "Config"))
+.Update(t => t.Action("Update", "Config"))
 )
 )
             </div>
@@ -89,8 +77,7 @@
             var note = response.split('-')[1];
             var notification = $("#Notification").data("kendoNotification");
             notification.show(note, messageType);
-            $("#ConfigDataTransfer").data("kendoGrid").dataSource.read();
+            $("#Config").data("kendoGrid").dataSource.read();
         }
     }
-
 </script>

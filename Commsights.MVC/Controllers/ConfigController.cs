@@ -20,7 +20,7 @@ namespace Commsights.MVC.Controllers
     {
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IConfigRepository _configResposistory;
-       
+
         public ConfigController(IHostingEnvironment hostingEnvironment, IConfigRepository configResposistory, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
             _hostingEnvironment = hostingEnvironment;
@@ -78,7 +78,7 @@ namespace Commsights.MVC.Controllers
             if (model.Country != null)
             {
                 model.CountryID = model.Country.ID;
-            }           
+            }
             if (model.Language != null)
             {
                 model.LanguageID = model.Language.ID;
@@ -156,6 +156,14 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult DailyReportColumn()
+        {
+            return View();
+        }
+        public IActionResult DailyReportSection()
+        {
+            return View();
+        }
         public ActionResult GetAllToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _configResposistory.GetAllToList();
@@ -199,6 +207,16 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetWebsiteTypeToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.WebsiteType);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetDailyReportColumnToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.DailyReportColumn).Where(item => item.ParentID == 0).OrderBy(item => item.ID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetDailyReportSectionToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.DailyReportSection).Where(item => item.ParentID == 0);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetArticleTypeToList([DataSourceRequest] DataSourceRequest request)
@@ -377,6 +395,52 @@ namespace Commsights.MVC.Controllers
             Initialization(model);
             model.GroupName = AppGlobal.CRM;
             model.Code = AppGlobal.ArticleType;
+            model.ParentID = 0;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            if (_configResposistory.IsValidByGroupNameAndCodeAndCodeName(model.GroupName, model.Code, model.CodeName) == true)
+            {
+                result = _configResposistory.Create(model);
+            }
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateDailyReportSection(Config model)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.DailyReportSection;
+            model.ParentID = 0;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            if (_configResposistory.IsValidByGroupNameAndCodeAndCodeName(model.GroupName, model.Code, model.CodeName) == true)
+            {
+                result = _configResposistory.Create(model);
+            }
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateDailyReportColumn(Config model)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.DailyReportColumn;
             model.ParentID = 0;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
@@ -601,7 +665,7 @@ namespace Commsights.MVC.Controllers
         {
             Initialization(model);
             model.GroupName = AppGlobal.CRM;
-            model.Code = AppGlobal.PressList;               
+            model.Code = AppGlobal.PressList;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
@@ -659,7 +723,7 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
-        
+
         public ActionResult UploadPressList()
         {
             int result = 0;

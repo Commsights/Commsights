@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace Commsights.Data.Helpers
-{
+{    
     public class AppGlobal
     {
         #region Init
@@ -134,6 +134,22 @@ namespace Commsights.Data.Helpers
             {
                 var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                 return int.Parse(builder.Build().GetSection("AppSettings").GetSection("ParentIDEmployee").Value);
+            }
+        }
+        public static string DailyReportSection
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("DailyReportSection").Value;
+            }
+        }
+        public static string DailyReportColumn
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("DailyReportColumn").Value;
             }
         }
         public static string Industry
@@ -707,6 +723,15 @@ namespace Commsights.Data.Helpers
         }
         #endregion
         #region Functions
+        public static List<int> InitializationHourToList()
+        {
+            List<int> list = new List<int>();
+            for (int i = 1; i < 25; i++)
+            {
+                list.Add(i);
+            }
+            return list;
+        }
         public static string GetContentByURL(string url)
         {
             WebClient webClient = new WebClient();
@@ -830,7 +855,7 @@ namespace Commsights.Data.Helpers
             return content;
         }
         public static string RemoveHTMLTags(string content)
-        {                       
+        {
             Regex regex = new Regex("\\<[^\\>]*\\>");
             content = regex.Replace(content, String.Empty);
             content = content.Trim();
