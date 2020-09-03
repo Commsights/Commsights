@@ -6,7 +6,7 @@
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Customer - Customer detail</h3>
+                <h3 class="card-title">Customer detail</h3>
             </div>
             <div class="card-body">
                 <form asp-action="SaveCustomer" asp-controller="Membership">
@@ -89,10 +89,15 @@
                         </div>
                     </div>
                 </form>
-
-                <br />
+            </div>
+        </div>
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Contact</h3>
+            </div>
+            <div class="card-body">
                 @(Html.Kendo().Grid<Commsights.Data.Models.MembershipPermission>()
-.Name("MembershipPermission")
+.Name("MembershipPermissionContact")
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
@@ -134,11 +139,66 @@
 {
     model.Id(t => t.ID);
 })
-.Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetMembershipContactToList", "MembershipPermission").Data("filterMembershipPermission"))
+.Events(t => { t.RequestEnd("onGridRequestEndContact"); })
+.Read(t => t.Action("GetMembershipContactToList", "MembershipPermission").Data("filterMembershipPermissionContact"))
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
 .Create(t => t.Action("CreateContact", "MembershipPermission").Data("filterMembershipPermissionCreateContact"))
 .Update(t => t.Action("Update", "MembershipPermission"))
+)
+)
+            </div>
+        </div>
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Industry</h3>
+            </div>
+            <div class="card-body">
+                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.MembershipPermissionDataTransfer>()
+.Name("MembershipPermissionDataTransferIndustry")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
+    columns.Bound(t => t.Industry.TextName).EditorTemplateName("Config_Industry").Title("Industry").Width(300);
+})
+.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
+.ToolBar(toolBar => toolBar.Search())
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid" })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.ID);
+    model.Field(t => t.Industry).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+})
+.Events(t => { t.RequestEnd("onGridRequestEndIndustry"); })
+.Read(t => t.Action("GetDataTransferIndustryByMembershipIDAndIndustryToList", "MembershipPermission").Data("filterMembershipPermissionIndustry"))
+.Destroy(t => t.Action("Delete", "MembershipPermission"))
+.Create(t => t.Action("CreateDataTransferIndustry", "MembershipPermission").Data("filterMembershipPermissionCreateIndustry"))
+.Update(t => t.Action("UpdateDataTransferIndustry", "MembershipPermission"))
 )
 )
             </div>
@@ -156,22 +216,40 @@
 )
 
 <script>
-    function onGridRequestEnd(e) {
+    function onGridRequestEndContact(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
             var response = e.response;
             var messageType = response.split('-')[0];
             var note = response.split('-')[1];
             var notification = $("#Notification").data("kendoNotification");
             notification.show(note, messageType);
-            $("#MembershipPermission").data("kendoGrid").dataSource.read();
+            $("#MembershipPermissionContact").data("kendoGrid").dataSource.read();
         }
     }
-    function filterMembershipPermission(e) {
+    function filterMembershipPermissionContact(e) {
         var membershipIDValue = $("#ID").val();
         return { membershipID: membershipIDValue };
     }
     function filterMembershipPermissionCreateContact(e) {
-        var membershipIDValue = $("#Id").val();
+        var membershipIDValue = $("#ID").val();
+        return { membershipID: membershipIDValue };
+    }
+    function onGridRequestEndIndustry(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            var response = e.response;
+            var messageType = response.split('-')[0];
+            var note = response.split('-')[1];
+            var notification = $("#Notification").data("kendoNotification");
+            notification.show(note, messageType);
+            $("#MembershipPermissionDataTransferIndustry").data("kendoGrid").dataSource.read();
+        }
+    }    
+    function filterMembershipPermissionIndustry(e) {
+        var membershipIDValue = $("#ID").val();
+        return { membershipID: membershipIDValue };
+    }
+    function filterMembershipPermissionCreateIndustry(e) {
+        var membershipIDValue = $("#ID").val();
         return { membershipID: membershipIDValue };
     }
 </script>

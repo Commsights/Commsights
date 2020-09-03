@@ -1,15 +1,15 @@
-﻿@{ ViewData["Title"] = "Competitor category"; }
+﻿@{ ViewData["Title"] = "Company category"; }
 
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Customer - Competitor category</h3>
+                <h3 class="card-title">Customer - Company category</h3>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class='col-sm-1'>
-                        <a href="/Membership/CompetitorDetail/0" class="btn btn-success"><i class="fas fa-plus"></i></a>
+                        <a href="/Membership/CompanyDetail/0" class="btn btn-success"><i class="fas fa-plus"></i></a>
                     </div>
                 </div>
                 <br />
@@ -18,8 +18,8 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
-    columns.Template(@"<a href='/Membership/CompetitorDetail/#=ID#' class='btn btn-success' style='color:white;'><i class='fas fa-edit'></i></a>").Width(70).HtmlAttributes(new { style = "text-align:center;" });
-    columns.Bound(t => t.Account).Title("Competitor").Width(200);
+    columns.Template(@"<a href='/Membership/CompanyDetail/#=ID#' class='btn btn-success' style='color:white;'><i class='fas fa-edit'></i></a>").Width(70).HtmlAttributes(new { style = "text-align:center;" });
+    columns.Bound(t => t.Account).Title("Company").Width(200);
     columns.Bound(t => t.FullName).Title("Full name").Width(300);
     columns.Bound(t => t.ID).Title("ID").Width(50);
 })

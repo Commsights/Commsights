@@ -87,7 +87,7 @@ namespace Commsights.MVC.Controllers
             }
             return View(membership);
         }
-        public IActionResult CompetitorDetail(int ID)
+        public IActionResult CompanyDetail(int ID)
         {
             Membership membership = new Membership();
             if (ID > 0)
@@ -100,7 +100,7 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
-        public IActionResult Competitor()
+        public IActionResult Company()
         {
             return View();
         }
@@ -132,9 +132,9 @@ namespace Commsights.MVC.Controllers
         {
             return RedirectToAction("Customer");
         }
-        public ActionResult CompetitorCancel()
+        public ActionResult CompanyCancel()
         {
-            return RedirectToAction("Competitor");
+            return RedirectToAction("Company");
         }
         public ActionResult GetAllToList([DataSourceRequest] DataSourceRequest request)
         {
@@ -162,7 +162,7 @@ namespace Commsights.MVC.Controllers
             return Json(data.ToDataSourceResult(request));
         }
         [AcceptVerbs("Post")]
-        public IActionResult SaveCompetitor(Membership model)
+        public IActionResult SaveCompany(Membership model)
         {
             //model.ParentID = AppGlobal.ParentIDCompetitor;
             model.Active = true;
