@@ -12,7 +12,7 @@ namespace Commsights.Data.DataTransferObject
         public string CompanyName { get; set; }
         public string IndustryCompareName { get; set; }
         public string ProductSourceName { get; set; }
-        public string ProductCompareName { get; set; }
+        public string ProductCompareName { get; set; }      
         public ModelTemplate Industry { get; set; }
         public ModelTemplate Membership { get; set; }
         public ModelTemplate Company { get; set; }
@@ -20,7 +20,6 @@ namespace Commsights.Data.DataTransferObject
         public ModelTemplate Product { get; set; }
         public ModelTemplate ProductCompare { get; set; }
         public ModelTemplateIndustry Industry001 { get; set; }
-
-        public ModelTemplateIndustry IndustryCompare001 { get; set; }
+        public ModelTemplateIndustry IndustryCompare001 { get; set; }       
     }
 }

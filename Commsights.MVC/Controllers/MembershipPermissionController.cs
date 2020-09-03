@@ -28,7 +28,16 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
-        public IActionResult IndustryAndSegmentAndProduct(int ID)
+        public IActionResult Industry(int ID)
+        {
+            MembershipPermission model = new MembershipPermission();
+            if (ID > 0)
+            {
+                model = _membershipPermissionRepository.GetByID(ID);
+            }
+            return View(model);
+        }
+        public IActionResult Product(int ID)
         {
             MembershipPermission model = new MembershipPermission();
             if (ID > 0)
@@ -57,6 +66,11 @@ namespace Commsights.MVC.Controllers
             var data = _membershipPermissionRepository.GetDataTransferIndustryByParentIDAndCodeToList(parentID, AppGlobal.Industry);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetDataTransferProductByParentIDAndCodeToList([DataSourceRequest] DataSourceRequest request, int parentID)
+        {
+            var data = _membershipPermissionRepository.GetDataTransferProductByParentIDAndCodeToList(parentID, AppGlobal.Product);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetDataTransferIndustryByMembershipIDAndIndustryToList([DataSourceRequest] DataSourceRequest request, int membershipID)
         {
             var data = _membershipPermissionRepository.GetDataTransferIndustryByMembershipIDAndCodeToList(membershipID, AppGlobal.Industry);
@@ -80,6 +94,11 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetMembershipContactToList([DataSourceRequest] DataSourceRequest request, int membershipID)
         {
             var data = _membershipPermissionRepository.GetByMembershipIDAndCodeToList(membershipID, AppGlobal.Contact);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetMembershipProductToList([DataSourceRequest] DataSourceRequest request, int membershipID)
+        {
+            var data = _membershipPermissionRepository.GetByMembershipIDAndCodeToList(membershipID, AppGlobal.Product);
             return Json(data.ToDataSourceResult(request));
         }
         public IActionResult InitializationMenuPermission(int membershipID)
@@ -219,7 +238,33 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
-            result = _membershipPermissionRepository.Create(model);
+            if ((model.ParentID > 0) && (model.IndustryID > 0) && (model.IndustryCompareID > 0))
+            {
+                result = _membershipPermissionRepository.Create(model);
+            }
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateDataTransferProductByParentID(MembershipPermissionDataTransfer model, int parentID)
+        {
+            model.Code = AppGlobal.Product;
+            model.ParentID = parentID;
+            model.ProductID = model.Product.ID;
+            model.ProductCompareID = model.ProductCompare.ID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            if ((model.ParentID > 0) && (model.ProductID > 0) && (model.ProductCompareID > 0))
+            {
+                result = _membershipPermissionRepository.Create(model);
+            }
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
@@ -326,6 +371,50 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
             int result = _membershipPermissionRepository.Update(model.ID, model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
+        public IActionResult UpdateDataTransferIndustry001(MembershipPermissionDataTransfer model)
+        {
+            Initialization();
+            model.IndustryID = model.Industry001.IndustryID;
+            model.IndustryCompareID = model.IndustryCompare001.IndustryID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Update, RequestUserID);
+            int result = 0;
+            if ((model.ParentID > 0) && (model.IndustryID > 0) && (model.IndustryCompareID > 0))
+            {
+                result = _membershipPermissionRepository.Update(model.ID, model);
+            }
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
+        public IActionResult UpdateDataTransferProduct(MembershipPermissionDataTransfer model)
+        {
+            Initialization();
+            model.ProductID = model.Product.ID;
+            model.ProductCompareID = model.ProductCompare.ID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Update, RequestUserID);
+            int result = 0;
+            if ((model.ParentID > 0) && (model.ProductID > 0) && (model.ProductCompareID > 0))
+            {
+                result = _membershipPermissionRepository.Update(model.ID, model);
+            }
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;

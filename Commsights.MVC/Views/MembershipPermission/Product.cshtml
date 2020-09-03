@@ -1,22 +1,21 @@
-﻿@{ Layout = "~/Views/Shared/_LayoutWindow.cshtml"; ViewData["Title"] = "Industry and Product"; }
+﻿@{ Layout = "~/Views/Shared/_LayoutWindow.cshtml"; ViewData["Title"] = "Product"; }
 
 @model Commsights.Data.Models.MembershipPermission
 @Html.HiddenFor(Model => Model.ID)
 <div class="card card-primary card-outline">
     <div class="card-header">
-        <h5 class="card-title m-0">Industry and Product</h5>
+        <h5 class="card-title m-0">Product</h5>
     </div>
     <div class="card-body">
         <div class="row">
-            <div class='col-md-12'>
-                <h3><b>Industry</b></h3>
-                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.MembershipPermissionDataTransfer>()
-.Name("MembershipPermissionDataTransferIndustry")
+
+            @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.MembershipPermissionDataTransfer>()
+.Name("MembershipPermissionDataTransfer")
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.Industry001.TextName).EditorTemplateName("MembershipPermission_Customer_Industry").EditorViewData(new { CustomerID = Model.MembershipID, ValueBind = "value: Industry001" }).Title("Customer").Width(300);
-    columns.Bound(t => t.IndustryCompare001.TextName).EditorTemplateName("MembershipPermission_Compare_Industry").EditorViewData(new { CompareID = Model.CompanyID, ValueBind = "value: IndustryCompare001" }).Title("Compare").Width(300);
+    columns.Bound(t => t.Product.TextName).EditorTemplateName("MembershipPermission_Customer_Product").EditorViewData(new { CustomerID = Model.MembershipID, ValueBind = "value: Product" }).Title("Customer").Width(300);
+    columns.Bound(t => t.ProductCompare.TextName).EditorTemplateName("MembershipPermission_Compare_Product").EditorViewData(new { CompareID = Model.CompanyID, ValueBind = "value: ProductCompare" }).Title("Compare").Width(300);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
@@ -50,20 +49,17 @@
 .Model(model =>
 {
     model.Id(t => t.ID);
-    model.Field(t => t.Industry001).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplateIndustry());
-    model.Field(t => t.IndustryCompare001).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplateIndustry());
+    model.Field(t => t.Product).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Field(t => t.ProductCompare).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onMembershipPermissionIndustryGridRequestEnd"); })
-.Read(t => t.Action("GetDataTransferIndustryByParentIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermissionIndustry"))
+.Read(t => t.Action("GetDataTransferProductByParentIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermissionIndustry"))
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
-.Create(t => t.Action("CreateDataTransferIndustryByParentID", "MembershipPermission").Data("filterCreateDataTransferIndustryByParentID"))
+.Create(t => t.Action("CreateDataTransferProductByParentID", "MembershipPermission").Data("filterCreateDataTransferIndustryByParentID"))
+.Update(t => t.Action("UpdateDataTransferProduct", "MembershipPermission"))
 )
 )
-            </div>
-            <div class='col-md-12'>
-                <h3><b>Product</b></h3>
 
-            </div>
         </div>
     </div>
 </div>
@@ -82,7 +78,7 @@
             var note = response.split('-')[1];
             var notification = $("#Notification").data("kendoNotification");
             notification.show(note, messageType);
-            $("#MembershipPermissionDataTransferIndustry").data("kendoGrid").dataSource.read();
+            $("#MembershipPermissionDataTransfer").data("kendoGrid").dataSource.read();
         }
     }
     function filterMembershipPermissionIndustry(e) {

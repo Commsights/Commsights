@@ -116,6 +116,7 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+
         public List<MembershipPermissionDataTransfer> GetDataTransferIndustryByParentIDAndCodeToList(int parentID, string code)
         {
             List<MembershipPermissionDataTransfer> list = new List<MembershipPermissionDataTransfer>();
@@ -136,6 +137,30 @@ namespace Commsights.Data.Repositories
                     list[i].IndustryCompare001 = new ModelTemplateIndustry();
                     list[i].IndustryCompare001.IndustryID = list[i].IndustryCompareID;
                     list[i].IndustryCompare001.TextName = list[i].IndustryCompareName;
+                }
+            }
+            return list;
+        }
+        public List<MembershipPermissionDataTransfer> GetDataTransferProductByParentIDAndCodeToList(int parentID, string code)
+        {
+            List<MembershipPermissionDataTransfer> list = new List<MembershipPermissionDataTransfer>();
+            if (parentID > 0)
+            {
+                SqlParameter[] parameters =
+                      {
+                new SqlParameter("@ParentID",parentID),
+                new SqlParameter("@Code",code)
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectDataTransferProductByParentIDAndCode", parameters);
+                list = SQLHelper.ToList<MembershipPermissionDataTransfer>(dt);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    list[i].Product = new ModelTemplate();
+                    list[i].Product.ID = list[i].ProductID;
+                    list[i].Product.TextName = list[i].ProductSourceName;
+                    list[i].ProductCompare = new ModelTemplate();
+                    list[i].ProductCompare.ID = list[i].ProductCompareID;
+                    list[i].ProductCompare.TextName = list[i].ProductCompareName;
                 }
             }
             return list;

@@ -1,6 +1,6 @@
 
 @(Html.Kendo().DropDownListFor(t => t)
-                   .DataValueField("ID")
+                   .DataValueField("IndustryID")
                    .DataTextField("IndustryName")
                    .HtmlAttributes(new { data_bind = ViewData["ValueBind"], @class = "form-control" })
                     .Filter(FilterType.Contains)

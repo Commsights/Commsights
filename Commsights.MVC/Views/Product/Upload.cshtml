@@ -33,7 +33,7 @@
                            .DataTextField("CodeName")
                            .HtmlAttributes(new { style = "width:100%;" })
                           .Events(e => e.DataBound("onIndustryIDUploadScanDataBound"))
-                           .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetBrandToList", "Config")))
+                           .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
                                 )
                         </div>
                     </div>
@@ -77,7 +77,7 @@
                            .DataTextField("CodeName")
                            .HtmlAttributes(new { style = "width:100%;" })
                           .Events(e => e.DataBound("onIndustryIDUploadGoogleSearchDataBound"))
-                           .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetBrandToList", "Config")))
+                           .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
                                 )
                         </div>
                     </div>
@@ -121,7 +121,7 @@
                            .DataTextField("CodeName")
                            .HtmlAttributes(new { style = "width:100%;" })
                           .Events(e => e.DataBound("onIndustryIDUploadAndiSourceDataBound"))
-                           .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetBrandToList", "Config")))
+                           .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
                                 )
                         </div>
                     </div>
@@ -165,7 +165,7 @@
                            .DataTextField("CodeName")
                            .HtmlAttributes(new { style = "width:100%;" })
                           .Events(e => e.DataBound("onIndustryIDUploadYounetDataBound"))
-                           .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetBrandToList", "Config")))
+                           .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
                                 )
                         </div>
                     </div>
