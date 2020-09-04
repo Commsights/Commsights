@@ -37,6 +37,22 @@ namespace Commsights.MVC.Controllers
         }
         private void Initialization(Membership model, int action)
         {
+            if (!string.IsNullOrEmpty(model.ShortName))
+            {
+                model.ShortName = model.ShortName.Trim();
+            }
+            if (!string.IsNullOrEmpty(model.EnglishName))
+            {
+                model.EnglishName = model.EnglishName.Trim();
+            }
+            if (!string.IsNullOrEmpty(model.Address))
+            {
+                model.Address = model.Address.Trim();
+            }
+            if (!string.IsNullOrEmpty(model.Account))
+            {
+                model.Account = model.Account.Trim();
+            }
             if (!string.IsNullOrEmpty(model.FullName))
             {
                 model.FullName = model.FullName.Trim();
@@ -145,6 +161,14 @@ namespace Commsights.MVC.Controllers
         public ActionResult CompanyCancel()
         {
             return RedirectToAction("Company");
+        }
+        public ActionResult CompanyPlus()
+        {
+            return RedirectToAction("CompanyDetail", new { ID = 0 });
+        }
+        public ActionResult CustomerPlus()
+        {
+            return RedirectToAction("CustomerDetail", new { ID = 0 });
         }
         public ActionResult GetAllToList([DataSourceRequest] DataSourceRequest request)
         {

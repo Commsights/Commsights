@@ -15,7 +15,7 @@
                         @(Html.Kendo().DropDownList()
                      .Name("Customer")
                      .DataValueField("ID")
-                     .DataTextField("FullName")
+                     .DataTextField("Account")
                      .HtmlAttributes(new { style = "width:100%; font-size: 16px;" })
                       .Events(e => e.DataBound("onCustomerDataBound").Change("onCustomerChange"))
                        .Filter(FilterType.Contains)
