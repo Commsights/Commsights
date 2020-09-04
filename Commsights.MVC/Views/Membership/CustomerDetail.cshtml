@@ -277,9 +277,13 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/MembershipPermission/Industry/#=ID#"");' class='btn btn-success' style='color:white;'><i class='fas fa-list-ul'></i></a>").Title("Industry").Width(70).HtmlAttributes(new { style = "text-align:center;" });
+    //columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/MembershipPermission/Industry/#=ID#"");' class='btn btn-success' style='color:white;'><i class='fas fa-list-ul'></i></a>").Title("Industry").Width(70).HtmlAttributes(new { style = "text-align:center;" });
     columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/MembershipPermission/Product/#=ID#"");' class='btn btn-success' style='color:white;'><i class='fas fa-list-ul'></i></a>").Title("Product").Width(70).HtmlAttributes(new { style = "text-align:center;" });
-    columns.Bound(t => t.Company.TextName).EditorTemplateName("Membership_Company").Title("Competitor").Width(400);
+    columns.Bound(t => t.Company.TextName).EditorTemplateName("Membership_Company").Title("Competitor").Width(100);
+    columns.Bound(t => t.Industry.TextName).EditorTemplateName("Config_Industry").Title("Industry").Width(100);
+    columns.Bound(t => t.Segment.TextName).EditorTemplateName("Config_Segment").Title("Segment").Width(100);
+    //columns.Bound(t => t.Product.TextName).EditorTemplateName("MembershipPermission_Product").Title("Product").Width(100);
+    //columns.Bound(t => t.ProductCompare.TextName).EditorTemplateName("MembershipPermission_ProductCompare").Title("Compare").Width(100);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
@@ -314,12 +318,16 @@
 {
     model.Id(t => t.ID);
     model.Field(t => t.Company).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Field(t => t.Industry).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Field(t => t.Segment).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    //model.Field(t => t.Product).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    //model.Field(t => t.ProductCompare).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEndCompetitor"); })
-.Read(t => t.Action("GetDataTransferCompanyByMembershipIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermissionCompetitor"))
+.Read(t => t.Action("GetDataTransferCompanyByMembershipIDAndCompetitorToList", "MembershipPermission").Data("filterMembershipPermissionCompetitor"))
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
 .Create(t => t.Action("CreateDataTransferCompetitor", "MembershipPermission").Data("filterMembershipPermissionCreateCompetitor"))
-.Update(t => t.Action("UpdateDataTransferCompany", "MembershipPermission"))
+.Update(t => t.Action("UpdateDataTransferCompetitor", "MembershipPermission"))
 )
 )
             </div>

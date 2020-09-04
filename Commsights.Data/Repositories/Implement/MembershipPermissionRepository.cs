@@ -30,6 +30,10 @@ namespace Commsights.Data.Repositories
         {
             return _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.Code.Equals(code)).OrderBy(item => item.DateUpdated).ToList();
         }
+        public List<MembershipPermission> GetByCodeToList(string code)
+        {
+            return _context.MembershipPermission.Where(item => item.Code.Equals(code)).OrderBy(item => item.ProductName).ToList();
+        }
         public List<MembershipPermissionDataTransfer> GetDataTransferContactByMembershipIDAndCodeToList(int membershipID, string code)
         {
             List<MembershipPermissionDataTransfer> list = new List<MembershipPermissionDataTransfer>();
@@ -161,6 +165,12 @@ namespace Commsights.Data.Repositories
                     list[i].Company = new ModelTemplate();
                     list[i].Company.ID = list[i].CompanyID;
                     list[i].Company.TextName = list[i].CompanyName;
+                    list[i].Industry = new ModelTemplate();
+                    list[i].Industry.ID = list[i].IndustryID;
+                    list[i].Industry.TextName = list[i].IndustryName;
+                    list[i].Segment = new ModelTemplate();
+                    list[i].Segment.ID = list[i].SegmentID;
+                    list[i].Segment.TextName = list[i].SegmentName;
                 }
             }
             return list;

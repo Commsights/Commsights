@@ -359,22 +359,23 @@ namespace Commsights.MVC.Controllers
             model.Initialization(InitType.Update, RequestUserID);
             int result = 0;
             bool check = false;
-            Membership membership = _membershipRepository.GetByAccount(model.Account);
-            if (membership == null)
-            {
-                check = true;
-            }
-            else
-            {
-                if (membership.ID == model.ID)
-                {
-                    check = true;
-                }
-            }
-            if (check == true)
-            {
-                result = _membershipRepository.Update(model.ID, model);
-            }
+            //Membership membership = _membershipRepository.GetByAccount(model.Account);
+            //if (membership == null)
+            //{
+            //    check = true;
+            //}
+            //else
+            //{
+            //    if (membership.ID == model.ID)
+            //    {
+            //        check = true;
+            //    }
+            //}
+            //if (check == true)
+            //{
+            //    result = _membershipRepository.Update(model.ID, model);
+            //}
+            result = _membershipRepository.Update(model.ID, model);
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
@@ -391,7 +392,7 @@ namespace Commsights.MVC.Controllers
             model.Active = false;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
-            int result = _membershipRepository.Update(model.ID, model);
+            int result = _membershipRepository.Delete(model.ID);
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
