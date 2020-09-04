@@ -68,7 +68,7 @@
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetByParentIDToList", "Config").Data("filterConfig"))
 .Destroy(t => t.Action("Delete", "Config"))
-.Create(t => t.Action("CreateIndustrySub", "Config").Data("filterConfigCreateIndustry"))
+.Create(t => t.Action("CreateSegment", "Config").Data("filterConfigCreateSegment"))
 .Update(t => t.Action("Update", "Config"))
 )
 )
@@ -76,15 +76,11 @@
         </div>
     </div>
 </div>
-
-
-
 @(Html.Kendo().Notification()
     .Name("Notification")
     .Position(p => p.Pinned(true).Top(30).Right(30))
     .Width(400)
 )
-
 <script>
     function onGridRequestEnd(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
@@ -112,7 +108,7 @@
         return { parentID: parentIDValue };
 
     }
-    function filterConfigCreateIndustry(e) {
+    function filterConfigCreateSegment(e) {
         var parentIDValue = $("#Industry").data("kendoDropDownList").value();
         return { parentID: parentIDValue };
 

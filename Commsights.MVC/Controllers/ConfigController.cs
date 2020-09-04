@@ -239,6 +239,11 @@ namespace Commsights.MVC.Controllers
             var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.AssessType).Where(item => item.ParentID == 0);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetSegmentToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Segment);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetIndustryToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Industry).Where(item => item.ParentID == 0);
@@ -488,6 +493,29 @@ namespace Commsights.MVC.Controllers
             model.ParentID = parentID;
             model.GroupName = AppGlobal.CRM;
             model.Code = AppGlobal.Industry;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            if (_configResposistory.IsValidByGroupNameAndCodeAndCodeName(model.GroupName, model.Code, model.CodeName) == true)
+            {
+                result = _configResposistory.Create(model);
+            }
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateSegment(Config model, int parentID)
+        {
+            Initialization(model);
+            model.ParentID = parentID;
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.Segment;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;

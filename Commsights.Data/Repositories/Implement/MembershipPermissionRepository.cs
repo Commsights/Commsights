@@ -51,6 +51,27 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<MembershipPermissionDataTransfer> GetDataTransferSegmentByMembershipIDAndCodeToList(int membershipID, string code)
+        {
+            List<MembershipPermissionDataTransfer> list = new List<MembershipPermissionDataTransfer>();
+            if (membershipID > 0)
+            {
+                SqlParameter[] parameters =
+                      {
+                new SqlParameter("@MembershipID",membershipID),
+                new SqlParameter("@Code",code)
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectDataTransferSegmentByMembershipIDAndCode", parameters);
+                list = SQLHelper.ToList<MembershipPermissionDataTransfer>(dt);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    list[i].Segment = new ModelTemplate();
+                    list[i].Segment.ID = list[i].SegmentID;
+                    list[i].Segment.TextName = list[i].SegmentName;
+                }
+            }
+            return list;
+        }
         public List<MembershipPermissionDataTransfer> GetDataTransferDailyReportSectionByMembershipIDAndCodeToList(int membershipID, string code)
         {
             List<MembershipPermissionDataTransfer> list = new List<MembershipPermissionDataTransfer>();
@@ -63,12 +84,21 @@ namespace Commsights.Data.Repositories
             };
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectDataTransferDailyReportSectionByMembershipIDAndCode", parameters);
                 list = SQLHelper.ToList<MembershipPermissionDataTransfer>(dt);
-                for (int i = 0; i < list.Count; i++)
-                {
-                    list[i].DailyReportSection = new ModelTemplate();
-                    list[i].DailyReportSection.ID = list[i].CategoryID;
-                    list[i].DailyReportSection.TextName = list[i].DailyReportSectionName;
-                }
+            }
+            return list;
+        }
+        public List<MembershipPermissionDataTransfer> GetDataTransferDailyReportColumnByMembershipIDAndCodeToList(int membershipID, string code)
+        {
+            List<MembershipPermissionDataTransfer> list = new List<MembershipPermissionDataTransfer>();
+            if (membershipID > 0)
+            {
+                SqlParameter[] parameters =
+                      {
+                new SqlParameter("@MembershipID",membershipID),
+                new SqlParameter("@Code",code)
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectDataTransferDailyReportColumnByMembershipIDAndCode", parameters);
+                list = SQLHelper.ToList<MembershipPermissionDataTransfer>(dt);                
             }
             return list;
         }
@@ -230,6 +260,46 @@ namespace Commsights.Data.Repositories
                 return true;
             }
             return false;
+        }
+        public void InitializationDailyReportSection(int membershipID, string code, int requestUserID)
+        {
+            List<MembershipPermission> listMembershipPermission = _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.Code == code).ToList();
+            _context.MembershipPermission.RemoveRange(listMembershipPermission);            
+            List<Config> listConfig = _context.Config.Where(item => item.Code == code).ToList();
+            listMembershipPermission = new List<MembershipPermission>();
+            foreach (Config config in listConfig)
+            {
+                MembershipPermission model = new MembershipPermission();
+                model.MembershipID = membershipID;
+                model.Code = code;
+                model.CategoryID = config.ID;
+                model.Hour = AppGlobal.Hour;
+                model.Active = false;
+                model.Initialization(InitType.Insert, requestUserID);
+                listMembershipPermission.Add(model);
+            }
+            _context.MembershipPermission.AddRange(listMembershipPermission);
+            _context.SaveChangesAsync();
+        }
+        public void InitializationDailyReportColumn(int membershipID, string code, int requestUserID)
+        {
+            List<MembershipPermission> listMembershipPermission = _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.Code == code).ToList();
+            _context.MembershipPermission.RemoveRange(listMembershipPermission);
+            List<Config> listConfig = _context.Config.Where(item => item.Code == code).ToList();
+            listMembershipPermission = new List<MembershipPermission>();
+            foreach (Config config in listConfig)
+            {
+                MembershipPermission model = new MembershipPermission();
+                model.MembershipID = membershipID;
+                model.Code = code;
+                model.SortOrder = 0;
+                model.Active = false;                
+                model.CategoryID = config.ID;                                
+                model.Initialization(InitType.Insert, requestUserID);
+                listMembershipPermission.Add(model);
+            }
+            _context.MembershipPermission.AddRange(listMembershipPermission);
+            _context.SaveChangesAsync();
         }
     }
 }

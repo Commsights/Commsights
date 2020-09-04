@@ -10,6 +10,7 @@ namespace Commsights.Data.Models
         public bool? IsView { get; set; }
         public int? CategoryID { get; set; }
         public int? IndustryID { get; set; }
+        public int? SegmentID { get; set; }
         public int? ProductID { get; set; }
         public int? CompanyID { get; set; }
         public int? IndustryCompareID { get; set; }

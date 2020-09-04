@@ -128,6 +128,10 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult DailyReportColumnByCompany()
+        {
+            return View();
+        }
         public ActionResult CustomerCancel()
         {
             return RedirectToAction("Customer");
