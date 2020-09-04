@@ -81,6 +81,11 @@ namespace Commsights.MVC.Controllers
             var data = _membershipPermissionRepository.GetDataTransferSegmentByMembershipIDAndCodeToList(membershipID, AppGlobal.Product);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetDataTransferContactByMembershipIDAndContactToList([DataSourceRequest] DataSourceRequest request, int membershipID)
+        {
+            var data = _membershipPermissionRepository.GetDataTransferContactByMembershipIDAndCodeToList(membershipID, AppGlobal.Contact);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetDataTransferDailyReportSectionByMembershipIDAndDailyReportSectionToList([DataSourceRequest] DataSourceRequest request, int membershipID)
         {
             var data = _membershipPermissionRepository.GetDataTransferDailyReportSectionByMembershipIDAndCodeToList(membershipID, AppGlobal.DailyReportSection);
@@ -145,15 +150,15 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
             return Json(note);
         }
-        public IActionResult CreateContact(MembershipPermission model, int membershipID)
+        public IActionResult CreateDataTransferContact(MembershipPermissionDataTransfer model, int membershipID)
         {
             string note = AppGlobal.InitString;
             note = AppGlobal.Error + " - " + AppGlobal.CreateFail + ", " + AppGlobal.Error001;
             if (membershipID > 0)
             {
-                model.MembershipID = membershipID;
                 model.Code = AppGlobal.Contact;
-
+                model.MembershipID = membershipID;
+                model.CategoryID = model.ReportType.ID;
                 model.Initialization(InitType.Insert, RequestUserID);
                 int result = 0;
                 result = _membershipPermissionRepository.Create(model);
@@ -381,6 +386,27 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
             int result = _membershipPermissionRepository.Update(model.ID, model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
+        public IActionResult UpdateDataTransferContact(MembershipPermissionDataTransfer model)
+        {
+            Initialization();
+            model.CategoryID = model.ReportType.ID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Update, RequestUserID);
+            int result = 0;
+            if ((model.MembershipID > 0) && (model.CategoryID > 0))
+            {
+                result = _membershipPermissionRepository.Update(model.ID, model);
+            }
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;

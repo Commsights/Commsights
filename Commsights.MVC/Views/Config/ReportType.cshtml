@@ -1,36 +1,20 @@
-﻿@{ ViewData["Title"] = "Company by industry"; }
+﻿@{ ViewData["Title"] = "Report type"; }
 
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Company - Company by industry</h3>
+                <h3 class="card-title">System - Report type</h3>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class='col-sm-1'>
-                        Industry
-                    </div>
-                    <div class='col-sm-6'>
-                        @(Html.Kendo().DropDownList()
-                     .Name("Industry")
-                     .DataValueField("ID")
-                     .DataTextField("CodeName")
-                    .HtmlAttributes(new { @class = "form-control" })
-                      .Events(e => e.DataBound("onIndustryDataBound").Change("onIndustryChange"))
-                       .Filter(FilterType.Contains)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
-                            )
-                    </div>
-                </div>
-                <br />
-                @(Html.Kendo().Grid<Commsights.Data.Models.Membership>()
-.Name("Membership")
+                @(Html.Kendo().Grid<Commsights.Data.Models.Config>()
+.Name("Config")
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.Account).Title("Company").Width(300);
-    columns.Bound(t => t.FullName).Title("Full name").Width(300);
+    columns.Bound(t => t.ID).Title("ID").Width(100);
+    columns.Bound(t => t.CodeName).Title("Name").Width(200);
+    columns.Bound(t => t.Note).Title("Note").Width(200);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
@@ -58,18 +42,20 @@
 .FileName("Config.pdf")
 )
 .HtmlAttributes(new { @class = "KendoGrid" })
+.Search(search => { search.Field(f => f.CodeName); search.Field(f => f.Note);})
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
 .Model(model =>
 {
     model.Id(t => t.ID);
+    model.Field(t => t.ID).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetByIndustryIDToList", "Membership").Data("filterMembership"))
-.Destroy(t => t.Action("Delete", "Membership"))
-.Create(t => t.Action("CreateWithIndustryID", "Membership").Data("filterMembershipCreateWithIndustryID"))
-.Update(t => t.Action("Update", "Membership"))
+.Read(t => t.Action("GetReportTypeToList", "Config"))
+.Destroy(t => t.Action("Delete", "Config"))
+.Create(t => t.Action("CreateReportType", "Config"))
+.Update(t => t.Action("Update", "Config"))
 )
 )
             </div>
@@ -91,26 +77,7 @@
             var note = response.split('-')[1];
             var notification = $("#Notification").data("kendoNotification");
             notification.show(note, messageType);
-            $("#Membership").data("kendoGrid").dataSource.read();
+            $("#Config").data("kendoGrid").dataSource.read();
         }
-    }
-    function onIndustryDataBound() {
-        var control = $("#Industry").data("kendoDropDownList");
-        var controlLength = control.dataSource.data().length;
-        if (controlLength > 0) {
-            control.select(0);
-            control.trigger("change");
-        }
-    }
-    function onIndustryChange() {
-        $("#Membership").data("kendoGrid").dataSource.read();
-    }
-    function filterMembership(e) {
-        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
-        return { industryID: industryIDValue };
-    }
-    function filterMembershipCreateWithIndustryID(e) {
-        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
-        return { industryID: industryIDValue };
     }
 </script>

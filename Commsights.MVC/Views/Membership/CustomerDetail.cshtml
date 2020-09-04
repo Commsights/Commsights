@@ -96,11 +96,12 @@
                 <h3 class="card-title">Contact</h3>
             </div>
             <div class="card-body">
-                @(Html.Kendo().Grid<Commsights.Data.Models.MembershipPermission>()
-.Name("MembershipPermissionContact")
+                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.MembershipPermissionDataTransfer>()
+.Name("MembershipPermissionDataTransferContact")
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
+    columns.Bound(t => t.ReportType.TextName).EditorTemplateName("Config_ReportType").Title("Report").Width(200);
     columns.Bound(t => t.FullName).Title("Contact").Width(200);
     columns.Bound(t => t.Email).Title("Email").Width(200);
     columns.Bound(t => t.Phone).Title("Phone").Width(200);
@@ -138,12 +139,13 @@
 .Model(model =>
 {
     model.Id(t => t.ID);
+    model.Field(t => t.ReportType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEndContact"); })
-.Read(t => t.Action("GetMembershipContactToList", "MembershipPermission").Data("filterMembershipPermissionContact"))
+.Read(t => t.Action("GetDataTransferContactByMembershipIDAndContactToList", "MembershipPermission").Data("filterMembershipPermissionContact"))
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
-.Create(t => t.Action("CreateContact", "MembershipPermission").Data("filterMembershipPermissionCreateContact"))
-.Update(t => t.Action("Update", "MembershipPermission"))
+.Create(t => t.Action("CreateDataTransferContact", "MembershipPermission").Data("filterMembershipPermissionCreateContact"))
+.Update(t => t.Action("UpdateDataTransferContact", "MembershipPermission"))
 )
 )
             </div>
@@ -203,6 +205,7 @@
 )
             </div>
         </div>
+
         <div class="card card-primary">
             <div class="card-header">
                 <h3 class="card-title">Segment and Product</h3>
@@ -255,6 +258,63 @@
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
 .Create(t => t.Action("CreateDataTransferSegmentProduct", "MembershipPermission").Data("filterCreateProduct"))
 .Update(t => t.Action("UpdateDataTransferSegmentProduct", "MembershipPermission"))
+)
+)
+            </div>
+        </div>
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Competitor</h3>
+            </div>
+            <div class="card-body">
+                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.MembershipPermissionDataTransfer>()
+.Name("MembershipPermissionDataTransferCompetitor")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
+    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/MembershipPermission/Industry/#=ID#"");' class='btn btn-success' style='color:white;'><i class='fas fa-list-ul'></i></a>").Title("Industry").Width(70).HtmlAttributes(new { style = "text-align:center;" });
+    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/MembershipPermission/Product/#=ID#"");' class='btn btn-success' style='color:white;'><i class='fas fa-list-ul'></i></a>").Title("Product").Width(70).HtmlAttributes(new { style = "text-align:center;" });
+    columns.Bound(t => t.Company.TextName).EditorTemplateName("Membership_Company").Title("Competitor").Width(400);
+})
+.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
+.ToolBar(toolBar => toolBar.Search())
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid", @style = "height:300px;" })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.ID);
+    model.Field(t => t.Company).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+})
+.Events(t => { t.RequestEnd("onGridRequestEndCompetitor"); })
+.Read(t => t.Action("GetDataTransferCompanyByMembershipIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermissionCompetitor"))
+.Destroy(t => t.Action("Delete", "MembershipPermission"))
+.Create(t => t.Action("CreateDataTransferCompetitor", "MembershipPermission").Data("filterMembershipPermissionCreateCompetitor"))
+.Update(t => t.Action("UpdateDataTransferCompany", "MembershipPermission"))
 )
 )
             </div>
@@ -325,7 +385,7 @@
                 <h3 class="card-title">Daily report column</h3>
             </div>
             <div class="card-body">
-                <div class="row">                   
+                <div class="row">
                     <div class='col-sm-2'>
                         <button type="button" class="btn btn-primary" onclick="onInitializationDailyReportColumn()">
                             <span class="fas fa-sync-alt"></span>
@@ -383,63 +443,7 @@
 )
             </div>
         </div>
-        <div class="card card-primary">
-            <div class="card-header">
-                <h3 class="card-title">Competitor</h3>
-            </div>
-            <div class="card-body">
-                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.MembershipPermissionDataTransfer>()
-.Name("MembershipPermissionDataTransferCompetitor")
-.Columns(columns =>
-{
-    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/MembershipPermission/Industry/#=ID#"");' class='btn btn-success' style='color:white;'><i class='fas fa-list-ul'></i></a>").Title("Industry").Width(70).HtmlAttributes(new { style = "text-align:center;" });
-    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/MembershipPermission/Product/#=ID#"");' class='btn btn-success' style='color:white;'><i class='fas fa-list-ul'></i></a>").Title("Product").Width(70).HtmlAttributes(new { style = "text-align:center;" });
-    columns.Bound(t => t.Company.TextName).EditorTemplateName("Membership_Company").Title("Competitor").Width(400);
-})
-.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
-.ToolBar(toolBar => toolBar.Search())
-.Editable(editable => editable.Mode(GridEditMode.InLine))
-.Sortable()
-.Scrollable()
-.Reorderable(r => r.Columns(true))
-.Resizable(r => r.Columns(true))
-.Pageable(pageable => pageable
-.Refresh(true)
-.PageSizes(true)
-.ButtonCount(10))
-.Excel(excel => excel
-.FileName("Config.xlsx")
-.Filterable(true)
-.ProxyURL(Url.Action("ExportExcel", "Config"))
-)
-.Pdf(pdf => pdf
-.AllPages()
-.AvoidLinks()
-.PaperSize("A4")
-.Margin("2cm", "1cm", "1cm", "1cm")
-.Landscape()
-.RepeatHeaders()
-.FileName("Config.pdf")
-)
-.HtmlAttributes(new { @class = "KendoGrid", @style = "height:300px;" })
-.DataSource(dataSource => dataSource
-.Ajax()
-.PageSize(1000)
-.Model(model =>
-{
-    model.Id(t => t.ID);
-    model.Field(t => t.Company).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
-})
-.Events(t => { t.RequestEnd("onGridRequestEndCompetitor"); })
-.Read(t => t.Action("GetDataTransferCompanyByMembershipIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermissionCompetitor"))
-.Destroy(t => t.Action("Delete", "MembershipPermission"))
-.Create(t => t.Action("CreateDataTransferCompetitor", "MembershipPermission").Data("filterMembershipPermissionCreateCompetitor"))
-.Update(t => t.Action("UpdateDataTransferCompany", "MembershipPermission"))
-)
-)
-            </div>
-        </div>
+
     </div>
 </div>
 @(Html.Kendo().Notification()
@@ -456,7 +460,7 @@
             var note = response.split('-')[1];
             var notification = $("#Notification").data("kendoNotification");
             notification.show(note, messageType);
-            $("#MembershipPermissionContact").data("kendoGrid").dataSource.read();
+            $("#MembershipPermissionDataTransferContact").data("kendoGrid").dataSource.read();
         }
     }
     function filterMembershipPermissionContact(e) {

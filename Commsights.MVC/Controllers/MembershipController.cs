@@ -222,13 +222,32 @@ namespace Commsights.MVC.Controllers
             {
                 Initialization(model, 1);
                 model.Initialization(InitType.Update, RequestUserID);
-                _membershipRepository.Update(model.ID, model);
+                bool check = false;
+                Membership membership = _membershipRepository.GetByAccount(model.Account);
+                if (membership == null)
+                {
+                    check = true;
+                }
+                else
+                {
+                    if (membership.ID == model.ID)
+                    {
+                        check = true;
+                    }
+                }
+                if (check == true)
+                {
+                    _membershipRepository.Update(model.ID, model);
+                }
             }
             else
             {
                 Initialization(model, 0);
                 model.Initialization(InitType.Insert, RequestUserID);
-                _membershipRepository.Create(model);
+                if (_membershipRepository.IsExistAccount(model.Account) == false)
+                {
+                    _membershipRepository.Create(model);
+                }
             }
             return RedirectToAction("CustomerDetail", new { ID = model.ID });
         }
@@ -242,10 +261,7 @@ namespace Commsights.MVC.Controllers
             int result = 0;
             if (_membershipRepository.IsExistAccount(model.Account) == false)
             {
-                if (_membershipRepository.IsExistFullName(model.FullName) == false)
-                {
-                    result = _membershipRepository.Create(model);
-                }
+                result = _membershipRepository.Create(model);
             }
             if (result > 0)
             {
