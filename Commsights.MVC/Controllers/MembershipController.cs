@@ -65,6 +65,10 @@ namespace Commsights.MVC.Controllers
             {
                 model.Phone = model.Phone.Trim();
             }
+            if (string.IsNullOrEmpty(model.FullName))
+            {
+                model.FullName = model.Account;
+            }            
             if (string.IsNullOrEmpty(model.Password))
             {
                 model.Password = "0";
