@@ -384,6 +384,97 @@ namespace Commsights.MVC.Controllers
                     break;
             }
         }
+        public void InitializationProduct(Product product)
+        {
+            product.IndustryID = AppGlobal.IndustryID;
+            product.SegmentID = AppGlobal.IndustryID;
+            product.ProductID = AppGlobal.IndustryID;
+            product.CompanyID = AppGlobal.CompetitorID;
+            product.ArticleTypeID = AppGlobal.ArticleTypeID;
+            product.AssessID = AppGlobal.AssessID;
+            product.Initialization(InitType.Insert, RequestUserID);
+        }
+        public void FilterProduct(Product product)
+        {
+            List<Config> listIndustry = _configResposistory.GetByGroupNameAndCodeToList(AppGlobal.CRM, AppGlobal.Industry);
+            for (int i = 0; i < listIndustry.Count; i++)
+            {
+                bool check = false;
+                if (product.Title.Contains(listIndustry[i].Note.ToLower()))
+                {
+                    check = true;
+                }
+                if (product.Description.Contains(listIndustry[i].Note.ToLower()))
+                {
+                    check = true;
+                }
+                if (product.ContentMain.Contains(listIndustry[i].Note.ToLower()))
+                {
+                    check = true;
+                }
+                if (check == true)
+                {
+                    product.IndustryID = listIndustry[i].ID;
+                    i = listIndustry.Count;
+                }
+            }
+            List<Config> listSegment = _configResposistory.GetByGroupNameAndCodeToList(AppGlobal.CRM, AppGlobal.Segment);
+            for (int i = 0; i < listSegment.Count; i++)
+            {
+                bool check = false;
+                if (product.Title.Contains(listSegment[i].Note.ToLower()))
+                {
+                    check = true;
+                }
+                if (product.Description.Contains(listSegment[i].Note.ToLower()))
+                {
+                    check = true;
+                }
+                if (product.ContentMain.Contains(listSegment[i].Note.ToLower()))
+                {
+                    check = true;
+                }
+                if (check == true)
+                {
+                    product.SegmentID = listSegment[i].ID;
+                    i = listSegment.Count;
+                }
+            }
+            List<Membership> listCompany = _membershipRepository.GetByCompanyToList();
+            for (int i = 0; i < listCompany.Count; i++)
+            {
+                bool check = false;
+                if (product.Title.Contains(listCompany[i].Account.ToLower()))
+                {
+                    check = true;
+                }
+                if (product.Title.Contains(listCompany[i].FullName.ToLower()))
+                {
+                    check = true;
+                }
+                if (product.Description.Contains(listCompany[i].Account.ToLower()))
+                {
+                    check = true;
+                }
+                if (product.Description.Contains(listCompany[i].FullName.ToLower()))
+                {
+                    check = true;
+                }
+                if (product.ContentMain.Contains(listCompany[i].Account.ToLower()))
+                {
+                    check = true;
+                }
+                if (product.ContentMain.Contains(listCompany[i].FullName.ToLower()))
+                {
+                    check = true;
+                }
+                if (check == true)
+                {
+                    product.CompanyID = listCompany[i].ID;
+                    i = listCompany.Count;
+                }
+            }
+        }
         public void ParseRSS(List<Product> list, Config item)
         {
             XmlDocument rssXmlDoc = new XmlDocument();
@@ -393,11 +484,7 @@ namespace Commsights.MVC.Controllers
             foreach (XmlNode rssNode in rssNodes)
             {
                 Product product = new Product();
-                product.IndustryID = AppGlobal.IndustryIDUnknown;
-                product.CompanyID = AppGlobal.CompetitorID;
-                product.ArticleTypeID = AppGlobal.ArticleTypeID;
-                product.AssessID = AppGlobal.AssessID;
-                product.Initialization(InitType.Insert, RequestUserID);
+                this.InitializationProduct(product);
                 product.ParentID = item.ParentID;
                 product.CategoryId = item.ID;
                 XmlNode rssSubNode = rssNode.SelectSingleNode("title");
@@ -456,6 +543,7 @@ namespace Commsights.MVC.Controllers
                 if (_productRepository.IsValid(product.Urlcode) == true)
                 {
                     product.ContentMain = AppGlobal.GetContentByURL(product.Urlcode);
+                    this.FilterProduct(product);
                     list.Add(product);
                 }
             }

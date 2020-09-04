@@ -56,6 +56,11 @@ namespace Commsights.MVC.Controllers
             var data = _membershipPermissionRepository.GetDataTransferMembershipByIndustryIDAndCodeToList(industryID, AppGlobal.Industry);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetDataTransferMembershipBySegmentIDAndProductToList([DataSourceRequest] DataSourceRequest request, int segmentID)
+        {
+            var data = _membershipPermissionRepository.GetDataTransferMembershipBySegmentIDAndCodeToList(segmentID, AppGlobal.Product);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetDataTransferIndustryByParentIDToList([DataSourceRequest] DataSourceRequest request, int parentID)
         {
             var data = _membershipPermissionRepository.GetDataTransferIndustryByParentIDToList(parentID);
@@ -371,6 +376,28 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
+        public IActionResult CreateDataTransferMembershipSegment(MembershipPermissionDataTransfer model, int segmentID)
+        {
+            model.Code = AppGlobal.Product;
+            model.SegmentID = segmentID;
+            model.MembershipID = model.Membership.ID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            if ((model.MembershipID > 0) && (model.SegmentID > 0))
+            {
+                result = _membershipPermissionRepository.Create(model);
+            }
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
         public IActionResult UpdateDataTransfer(MembershipPermissionDataTransfer model)
         {
             Initialization();
@@ -455,6 +482,27 @@ namespace Commsights.MVC.Controllers
             model.Initialization(InitType.Update, RequestUserID);
             int result = 0;
             if ((model.MembershipID > 0) && (model.IndustryID > 0))
+            {
+                result = _membershipPermissionRepository.Update(model.ID, model);
+            }
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
+        public IActionResult UpdateDataTransferMembershipSegment(MembershipPermissionDataTransfer model)
+        {
+            Initialization();
+            model.MembershipID = model.Membership.ID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Update, RequestUserID);
+            int result = 0;
+            if ((model.MembershipID > 0) && (model.SegmentID > 0))
             {
                 result = _membershipPermissionRepository.Update(model.ID, model);
             }

@@ -28,6 +28,10 @@ namespace Commsights.MVC.Controllers
         }
         private void Initialization(Config model)
         {
+            if (string.IsNullOrEmpty(model.Note))
+            {
+                model.Note = "";
+            }
             if (!string.IsNullOrEmpty(model.Title))
             {
                 model.Title = model.Title.Trim();
@@ -820,6 +824,37 @@ namespace Commsights.MVC.Controllers
                                             if (workSheet != null)
                                             {
                                                 int totalRows = workSheet.Dimension.Rows;
+                                                //List<Config> list = _configResposistory.GetByGroupNameAndCodeAndActiveToList(AppGlobal.CRM, AppGlobal.Website, true);
+                                                //for (int i = 1; i <= totalRows; i++)
+                                                //{
+                                                //    Config model = new Config();
+                                                //    if (workSheet.Cells[i, 1].Value != null)
+                                                //    {
+                                                //        model.Title = workSheet.Cells[i, 1].Value.ToString().Trim();
+                                                //    }
+                                                //    if (workSheet.Cells[i, 2].Value != null)
+                                                //    {
+                                                //        model.Note = workSheet.Cells[i, 2].Value.ToString().Trim();
+                                                //        model.Note = model.Note.Replace(@",", "");
+                                                //        model.Note = model.Note.Replace(@".", "");
+                                                //        try
+                                                //        {
+                                                //            model.Color = int.Parse(model.Note);
+                                                //            foreach (Config item in list)
+                                                //            {
+                                                //                if (item.Title.ToLower() == model.Title.ToLower())
+                                                //                {
+                                                //                    item.Color = model.Color;
+                                                //                    _configResposistory.Update(item.ID, item);
+                                                //                }
+                                                //            }
+                                                //        }
+                                                //        catch
+                                                //        {
+                                                //        }
+                                                //    }
+                                                //}
+
                                                 List<Config> list = new List<Config>();
                                                 for (int i = 2; i <= totalRows; i++)
                                                 {

@@ -138,6 +138,10 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult CompanyBySegment()
+        {
+            return View();
+        }
         public IActionResult IndustryByCompany()
         {
             return View();

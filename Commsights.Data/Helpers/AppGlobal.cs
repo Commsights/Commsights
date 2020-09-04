@@ -40,12 +40,12 @@ namespace Commsights.Data.Helpers
                 return int.Parse(builder.Build().GetSection("AppSettings").GetSection("Hour").Value);
             }
         }
-        public static int IndustryIDUnknown
+        public static int IndustryID
         {
             get
             {
                 var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("IndustryIDUnknown").Value);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("IndustryID").Value);
             }
         }
         public static int CountryID
