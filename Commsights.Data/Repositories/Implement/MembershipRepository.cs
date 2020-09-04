@@ -2,6 +2,8 @@
 using Commsights.Data.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 
@@ -14,6 +16,21 @@ namespace Commsights.Data.Repositories
         public MembershipRepository(CommsightsContext context) : base(context)
         {
             _context = context;
+        }
+        public List<Membership> GetByIndustryIDToList(int industryID)
+        {
+            List<Membership> list = new List<Membership>();
+            if (industryID > 0)
+            {
+                SqlParameter[] parameters =
+                      {
+                new SqlParameter("@IndustryID",industryID)
+
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectByIndustryID", parameters);
+                list = SQLHelper.ToList<Membership>(dt);
+            }
+            return list;
         }
         public List<Membership> GetByCompanyToList()
         {
@@ -30,6 +47,24 @@ namespace Commsights.Data.Repositories
         public List<Membership> GetEmployeeToList()
         {
             return _context.Membership.Where(item => item.ParentID == AppGlobal.ParentIDEmployee).OrderBy(item => item.FullName).ToList();
+        }
+        public bool IsExistAccount(string account)
+        {
+            var membership = _context.Membership.FirstOrDefault(user => user.Account.Equals(account));
+            if (membership != null)
+            {
+                return true;
+            }
+            return false;
+        }
+        public bool IsExistFullName(string fullName)
+        {
+            var membership = _context.Membership.FirstOrDefault(user => user.FullName.Equals(fullName));
+            if (membership != null)
+            {
+                return true;
+            }
+            return false;
         }
         public bool IsExistEmail(string email)
         {

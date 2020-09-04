@@ -11,7 +11,10 @@ namespace Commsights.Data.Repositories
         public bool IsLoginByID(int ID, string password);
         public bool IsExistPhone(string phone);
         public bool IsExistEmail(string email);
+        public bool IsExistAccount(string account);
+        public bool IsExistFullName(string fullName);
         public List<Membership> GetByCompanyToList();
+        public List<Membership> GetByIndustryIDToList(int industryID);
         public List<Membership> GetCustomerToList();
         public List<Membership> GetCompetitorToList();
         public List<Membership> GetEmployeeToList();
