@@ -26,9 +26,10 @@ namespace Commsights.MVC.Controllers
         private readonly IProductRepository _productRepository;
         private readonly IConfigRepository _configResposistory;
         private readonly IMembershipRepository _membershipRepository;
+        private readonly IMembershipPermissionRepository _membershipPermissionRepository;
         private readonly IProductSearchRepository _productSearchRepository;
         private readonly IProductSearchPropertyRepository _productSearchPropertyRepository;
-        public ProductController(IHostingEnvironment hostingEnvironment, IProductRepository productRepository, IProductSearchRepository productSearchRepository, IProductSearchPropertyRepository productSearchPropertyRepository, IConfigRepository configResposistory, IMembershipRepository membershipRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
+        public ProductController(IHostingEnvironment hostingEnvironment, IProductRepository productRepository, IProductSearchRepository productSearchRepository, IProductSearchPropertyRepository productSearchPropertyRepository, IConfigRepository configResposistory, IMembershipRepository membershipRepository, IMembershipPermissionRepository membershipPermissionRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
             _hostingEnvironment = hostingEnvironment;
             _productRepository = productRepository;
@@ -36,6 +37,7 @@ namespace Commsights.MVC.Controllers
             _productSearchPropertyRepository = productSearchPropertyRepository;
             _configResposistory = configResposistory;
             _membershipRepository = membershipRepository;
+            _membershipPermissionRepository = membershipPermissionRepository;
         }
         private void Initialization(Product model)
         {
@@ -387,7 +389,7 @@ namespace Commsights.MVC.Controllers
         public void InitializationProduct(Product product)
         {
             product.IndustryID = AppGlobal.IndustryID;
-            product.SegmentID = AppGlobal.IndustryID;
+            product.SegmentID = AppGlobal.SegmentID;
             product.ProductID = AppGlobal.IndustryID;
             product.CompanyID = AppGlobal.CompetitorID;
             product.ArticleTypeID = AppGlobal.ArticleTypeID;
@@ -399,79 +401,101 @@ namespace Commsights.MVC.Controllers
             List<Config> listIndustry = _configResposistory.GetByGroupNameAndCodeToList(AppGlobal.CRM, AppGlobal.Industry);
             for (int i = 0; i < listIndustry.Count; i++)
             {
-                bool check = false;
-                if (product.Title.Contains(listIndustry[i].Note.ToLower()))
+                if (!string.IsNullOrEmpty(listIndustry[i].Note))
                 {
-                    check = true;
-                }
-                if (product.Description.Contains(listIndustry[i].Note.ToLower()))
-                {
-                    check = true;
-                }
-                if (product.ContentMain.Contains(listIndustry[i].Note.ToLower()))
-                {
-                    check = true;
-                }
-                if (check == true)
-                {
-                    product.IndustryID = listIndustry[i].ID;
-                    i = listIndustry.Count;
+                    bool check = false;
+                    if (product.Title.Contains(listIndustry[i].Note.ToLower()))
+                    {
+                        check = true;
+                    }
+                    if (product.Description.Contains(listIndustry[i].Note.ToLower()))
+                    {
+                        check = true;
+                    }
+                    if (product.ContentMain.Contains(listIndustry[i].Note.ToLower()))
+                    {
+                        check = true;
+                    }
+                    if (check == true)
+                    {
+                        product.IndustryID = listIndustry[i].ID;
+                        i = listIndustry.Count;
+                    }
                 }
             }
             List<Config> listSegment = _configResposistory.GetByGroupNameAndCodeToList(AppGlobal.CRM, AppGlobal.Segment);
             for (int i = 0; i < listSegment.Count; i++)
+            {                
+                if (!string.IsNullOrEmpty(listSegment[i].Note))
+                {
+                    bool check = false;
+                    if (product.Title.Contains(listSegment[i].Note.ToLower()))
+                    {
+                        check = true;
+                    }
+                    if (product.Description.Contains(listSegment[i].Note.ToLower()))
+                    {
+                        check = true;
+                    }
+                    if (product.ContentMain.Contains(listSegment[i].Note.ToLower()))
+                    {
+                        check = true;
+                    }
+                    if (check == true)
+                    {
+                        product.SegmentID = listSegment[i].ID;
+                        i = listSegment.Count;
+                    }
+                }                
+            }
+            List<MembershipPermission> listProduct = _membershipPermissionRepository.GetByCodeToList(AppGlobal.Product);
+            for (int i = 0; i < listProduct.Count; i++)
             {
-                bool check = false;
-                if (product.Title.Contains(listSegment[i].Note.ToLower()))
+                if (!string.IsNullOrEmpty(listProduct[i].ProductName))
                 {
-                    check = true;
-                }
-                if (product.Description.Contains(listSegment[i].Note.ToLower()))
-                {
-                    check = true;
-                }
-                if (product.ContentMain.Contains(listSegment[i].Note.ToLower()))
-                {
-                    check = true;
-                }
-                if (check == true)
-                {
-                    product.SegmentID = listSegment[i].ID;
-                    i = listSegment.Count;
+                    bool check = false;
+                    if (product.Title.Contains(listProduct[i].ProductName.ToLower()))
+                    {
+                        check = true;
+                    }
+                    if (product.Description.Contains(listProduct[i].ProductName.ToLower()))
+                    {
+                        check = true;
+                    }
+                    if (product.ContentMain.Contains(listProduct[i].ProductName.ToLower()))
+                    {
+                        check = true;
+                    }
+                    if (check == true)
+                    {
+                        product.ProductID = listProduct[i].ID;
+                        i = listProduct.Count;
+                    }
                 }
             }
             List<Membership> listCompany = _membershipRepository.GetByCompanyToList();
             for (int i = 0; i < listCompany.Count; i++)
             {
-                bool check = false;
-                if (product.Title.Contains(listCompany[i].Account.ToLower()))
+                if (!string.IsNullOrEmpty(listCompany[i].Account))
                 {
-                    check = true;
-                }
-                if (product.Title.Contains(listCompany[i].FullName.ToLower()))
-                {
-                    check = true;
-                }
-                if (product.Description.Contains(listCompany[i].Account.ToLower()))
-                {
-                    check = true;
-                }
-                if (product.Description.Contains(listCompany[i].FullName.ToLower()))
-                {
-                    check = true;
-                }
-                if (product.ContentMain.Contains(listCompany[i].Account.ToLower()))
-                {
-                    check = true;
-                }
-                if (product.ContentMain.Contains(listCompany[i].FullName.ToLower()))
-                {
-                    check = true;
-                }
-                if (check == true)
-                {
-                    product.CompanyID = listCompany[i].ID;
-                    i = listCompany.Count;
+                    bool check = false;
+                    if (product.Title.Contains(listCompany[i].Account.ToLower()))
+                    {
+                        check = true;
+                    }
+                    if (product.Description.Contains(listCompany[i].Account.ToLower()))
+                    {
+                        check = true;
+                    }
+                    if (product.ContentMain.Contains(listCompany[i].Account.ToLower()))
+                    {
+                        check = true;
+                    }
+                    if (check == true)
+                    {
+                        product.CompanyID = listCompany[i].ID;
+                        i = listCompany.Count;
+                    }
                 }
             }
         }
