@@ -17,6 +17,7 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using OfficeOpenXml;
 using Commsights.Data.DataTransferObject;
+using System.Diagnostics.Eventing.Reader;
 
 namespace Commsights.MVC.Controllers
 {
@@ -24,15 +25,17 @@ namespace Commsights.MVC.Controllers
     {
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IProductRepository _productRepository;
+        private readonly IProductPropertyRepository _productPropertyRepository;
         private readonly IConfigRepository _configResposistory;
         private readonly IMembershipRepository _membershipRepository;
         private readonly IMembershipPermissionRepository _membershipPermissionRepository;
         private readonly IProductSearchRepository _productSearchRepository;
         private readonly IProductSearchPropertyRepository _productSearchPropertyRepository;
-        public ProductController(IHostingEnvironment hostingEnvironment, IProductRepository productRepository, IProductSearchRepository productSearchRepository, IProductSearchPropertyRepository productSearchPropertyRepository, IConfigRepository configResposistory, IMembershipRepository membershipRepository, IMembershipPermissionRepository membershipPermissionRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
+        public ProductController(IHostingEnvironment hostingEnvironment, IProductRepository productRepository, IProductPropertyRepository productPropertyRepository, IProductSearchRepository productSearchRepository, IProductSearchPropertyRepository productSearchPropertyRepository, IConfigRepository configResposistory, IMembershipRepository membershipRepository, IMembershipPermissionRepository membershipPermissionRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
             _hostingEnvironment = hostingEnvironment;
             _productRepository = productRepository;
+            _productPropertyRepository = productPropertyRepository;
             _productSearchRepository = productSearchRepository;
             _productSearchPropertyRepository = productSearchPropertyRepository;
             _configResposistory = configResposistory;
@@ -394,107 +397,216 @@ namespace Commsights.MVC.Controllers
             product.CompanyID = AppGlobal.CompetitorID;
             product.ArticleTypeID = AppGlobal.ArticleTypeID;
             product.AssessID = AppGlobal.AssessID;
+            product.GUICode = AppGlobal.InitGuiCode;
             product.Initialization(InitType.Insert, RequestUserID);
         }
-        public void FilterProduct(Product product)
+        public void FilterProduct(Product product, List<ProductProperty> listProductProperty)
         {
-            List<Config> listIndustry = _configResposistory.GetByGroupNameAndCodeToList(AppGlobal.CRM, AppGlobal.Industry);
-            for (int i = 0; i < listIndustry.Count; i++)
-            {
-                if (!string.IsNullOrEmpty(listIndustry[i].Note))
-                {
-                    bool check = false;
-                    if (product.Title.Contains(listIndustry[i].Note.ToLower()))
-                    {
-                        check = true;
-                    }
-                    if (product.Description.Contains(listIndustry[i].Note.ToLower()))
-                    {
-                        check = true;
-                    }
-                    if (product.ContentMain.Contains(listIndustry[i].Note.ToLower()))
-                    {
-                        check = true;
-                    }
-                    if (check == true)
-                    {
-                        product.IndustryID = listIndustry[i].ID;
-                        i = listIndustry.Count;
-                    }
-                }
-            }
-            List<Config> listSegment = _configResposistory.GetByGroupNameAndCodeToList(AppGlobal.CRM, AppGlobal.Segment);
-            for (int i = 0; i < listSegment.Count; i++)
-            {                
-                if (!string.IsNullOrEmpty(listSegment[i].Note))
-                {
-                    bool check = false;
-                    if (product.Title.Contains(listSegment[i].Note.ToLower()))
-                    {
-                        check = true;
-                    }
-                    if (product.Description.Contains(listSegment[i].Note.ToLower()))
-                    {
-                        check = true;
-                    }
-                    if (product.ContentMain.Contains(listSegment[i].Note.ToLower()))
-                    {
-                        check = true;
-                    }
-                    if (check == true)
-                    {
-                        product.SegmentID = listSegment[i].ID;
-                        i = listSegment.Count;
-                    }
-                }                
-            }
+            int order = 0;
+            string keyword = "";
+            Config segment = new Config();
             List<MembershipPermission> listProduct = _membershipPermissionRepository.GetByCodeToList(AppGlobal.Product);
             for (int i = 0; i < listProduct.Count; i++)
             {
                 if (!string.IsNullOrEmpty(listProduct[i].ProductName))
                 {
+                    keyword = "" + listProduct[i].ProductName + "";
                     bool check = false;
-                    if (product.Title.Contains(listProduct[i].ProductName.ToLower()))
+                    if (product.Title.Contains(keyword))
                     {
-                        check = true;
+                        check = AppGlobal.CheckContentAndKeyword(product.Title, keyword);
                     }
-                    if (product.Description.Contains(listProduct[i].ProductName.ToLower()))
+                    if (product.Description.Contains(keyword))
                     {
-                        check = true;
+                        check = AppGlobal.CheckContentAndKeyword(product.Description, keyword);
                     }
-                    if (product.ContentMain.Contains(listProduct[i].ProductName.ToLower()))
+                    if (product.ContentMain.Contains(keyword))
                     {
-                        check = true;
+                        check = AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
                     }
                     if (check == true)
                     {
-                        product.ProductID = listProduct[i].ID;
-                        i = listProduct.Count;
+                        ProductProperty productProperty = new ProductProperty();
+                        productProperty.ParentID = 0;
+                        productProperty.GUICode = product.GUICode;
+                        productProperty.Code = AppGlobal.Product;
+                        segment = _configResposistory.GetByID(listProduct[i].SegmentID.Value);
+                        if (order == 0)
+                        {
+                            product.ProductID = listProduct[i].ID;
+                            product.SegmentID = listProduct[i].SegmentID;
+                            if (segment != null)
+                            {
+                                product.IndustryID = segment.ParentID;
+                            }
+                        }
+                        productProperty.ProductID = listProduct[i].ID;
+                        productProperty.SegmentID = listProduct[i].SegmentID;
+                        if (segment != null)
+                        {
+                            productProperty.IndustryID = segment.ParentID;
+                        }
+                        listProductProperty.Add(productProperty);
+                        order = order + 1;
                     }
                 }
             }
+            order = 0;
+            List<Config> listSegment = _configResposistory.GetByGroupNameAndCodeToList(AppGlobal.CRM, AppGlobal.Segment);
+            for (int i = 0; i < listSegment.Count; i++)
+            {
+                if (listSegment[i].ID != 3487)
+                {
+                    bool check = false;
+                    if (!string.IsNullOrEmpty(listSegment[i].Note))
+                    {
+                        keyword = "" + listSegment[i].Note + "";
+
+                        if (product.Title.Contains(keyword))
+                        {
+                            check = AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                        }
+                        if (product.Description.Contains(keyword))
+                        {
+                            check = AppGlobal.CheckContentAndKeyword(product.Description, keyword);
+                        }
+                        if (product.ContentMain.Contains(keyword))
+                        {
+                            check = AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
+                        }
+
+                    }
+                    if (!string.IsNullOrEmpty(listSegment[i].CodeName))
+                    {
+                        keyword = "" + listSegment[i].CodeName + "";
+                        if (product.Title.Contains(keyword))
+                        {
+                            check = AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                        }
+                        if (product.Description.Contains(keyword))
+                        {
+                            check = AppGlobal.CheckContentAndKeyword(product.Description, keyword);
+                        }
+                        if (product.ContentMain.Contains(keyword))
+                        {
+                            check = AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
+                        }
+                    }
+                    if (check == true)
+                    {
+                        ProductProperty productProperty = new ProductProperty();
+                        productProperty.ParentID = 0;
+                        productProperty.GUICode = product.GUICode;
+                        productProperty.Code = AppGlobal.Segment;
+                        segment = _configResposistory.GetByID(listSegment[i].ParentID.Value);
+                        if (order == 0)
+                        {
+                            product.SegmentID = listSegment[i].ID;
+                            if (segment != null)
+                            {
+                                product.IndustryID = segment.ParentID;
+                            }
+                        }
+                        productProperty.SegmentID = listSegment[i].ID;
+                        if (segment != null)
+                        {
+                            productProperty.IndustryID = segment.ParentID;
+                        }
+                        listProductProperty.Add(productProperty);
+                        order = order + 1;
+                    }
+                }
+            }
+            order = 0;
+            List<Config> listIndustry = _configResposistory.GetByGroupNameAndCodeToList(AppGlobal.CRM, AppGlobal.Industry);
+            for (int i = 0; i < listIndustry.Count; i++)
+            {
+                if (listIndustry[i].ID != 3483)
+                {
+                    bool check = false;
+                    if (!string.IsNullOrEmpty(listIndustry[i].Note))
+                    {
+                        keyword = "" + listIndustry[i].Note + "";
+
+                        if (product.Title.Contains(keyword))
+                        {
+                            check = AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                        }
+                        if (product.Description.Contains(keyword))
+                        {
+                            check = AppGlobal.CheckContentAndKeyword(product.Description, keyword);
+                        }
+                        if (product.ContentMain.Contains(keyword))
+                        {
+                            check = AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
+                        }
+
+                    }
+                    if (!string.IsNullOrEmpty(listIndustry[i].CodeName))
+                    {
+                        keyword = " " + listIndustry[i].CodeName + " ";
+                        if (product.Title.Contains(keyword))
+                        {
+                            check = AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                        }
+                        if (product.Description.Contains(keyword))
+                        {
+                            check = AppGlobal.CheckContentAndKeyword(product.Description, keyword);
+                        }
+                        if (product.ContentMain.Contains(keyword))
+                        {
+                            check = AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
+                        }
+                    }
+                    if (check == true)
+                    {
+                        ProductProperty productProperty = new ProductProperty();
+                        productProperty.ParentID = 0;
+                        productProperty.GUICode = product.GUICode;
+                        productProperty.Code = AppGlobal.Industry;
+                        if (order == 0)
+                        {
+                            product.IndustryID = listIndustry[i].ID;
+                        }
+                        productProperty.IndustryID = listIndustry[i].ID;
+                        listProductProperty.Add(productProperty);
+                        order = order + 1;
+                    }
+                }
+            }
+            order = 0;
             List<Membership> listCompany = _membershipRepository.GetByCompanyToList();
             for (int i = 0; i < listCompany.Count; i++)
             {
                 if (!string.IsNullOrEmpty(listCompany[i].Account))
                 {
+                    keyword = "" + listCompany[i].Account + "";
                     bool check = false;
-                    if (product.Title.Contains(listCompany[i].Account.ToLower()))
+                    if (product.Title.Contains(keyword))
                     {
-                        check = true;
+                        check = AppGlobal.CheckContentAndKeyword(product.Title, keyword);
                     }
-                    if (product.Description.Contains(listCompany[i].Account.ToLower()))
+                    if (product.Description.Contains(keyword))
                     {
-                        check = true;
+                        check = AppGlobal.CheckContentAndKeyword(product.Description, keyword);
                     }
-                    if (product.ContentMain.Contains(listCompany[i].Account.ToLower()))
+                    if (product.ContentMain.Contains(keyword))
                     {
-                        check = true;
+                        check = AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
                     }
                     if (check == true)
                     {
-                        product.CompanyID = listCompany[i].ID;
-                        i = listCompany.Count;
+                        ProductProperty productProperty = new ProductProperty();
+                        productProperty.ParentID = 0;
+                        productProperty.GUICode = product.GUICode;
+                        productProperty.Code = AppGlobal.Industry;
+                        if (order == 0)
+                        {
+                            product.CompanyID = listCompany[i].ID;
+                        }
+                        productProperty.CompanyID = listCompany[i].ID;
+                        listProductProperty.Add(productProperty);
+                        order = order + 1;
                     }
                 }
             }
@@ -567,7 +679,9 @@ namespace Commsights.MVC.Controllers
                 if (_productRepository.IsValid(product.Urlcode) == true)
                 {
                     product.ContentMain = AppGlobal.GetContentByURL(product.Urlcode);
-                    this.FilterProduct(product);
+                    List<ProductProperty> listProductProperty = new List<ProductProperty>();
+                    this.FilterProduct(product, listProductProperty);
+                    _productPropertyRepository.Range(listProductProperty);
                     list.Add(product);
                 }
             }
@@ -590,6 +704,7 @@ namespace Commsights.MVC.Controllers
                     if (list.Count > 0)
                     {
                         _productRepository.Range(list);
+                        _productPropertyRepository.UpdateItemsWithParentIDIsZero();
                     }
                 }
             }

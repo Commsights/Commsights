@@ -34,6 +34,7 @@ namespace Commsights.MVC
             services.AddTransient<IMembershipAccessHistoryRepository, MembershipAccessHistoryRepository>();
             services.AddTransient<IMembershipPermissionRepository, MembershipPermissionRepository>();
             services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddTransient<IProductPropertyRepository, ProductPropertyRepository>();
             services.AddTransient<IProductSearchRepository, ProductSearchRepository>();
             services.AddTransient<IProductSearchPropertyRepository, ProductSearchPropertyRepository>();
             services.AddTransient<IConfigRepository, ConfigRepository>();
