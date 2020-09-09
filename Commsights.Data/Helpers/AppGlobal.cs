@@ -809,14 +809,14 @@ namespace Commsights.Data.Helpers
                 if (content[index - 1].ToString() == " ")
                 {
                     check = true;
-                }
-                int index001 = index + keyword.Length;
-                if (index001 < content.Length - 1)
+                }                
+            }
+            int index001 = index + keyword.Length;
+            if (index001 < content.Length - 1)
+            {
+                if ((content[index001].ToString() != " ") || (content[index001].ToString() != ",") || (content[index001].ToString() != ".") || (content[index001].ToString() != ";"))
                 {
-                    if ((content[index001].ToString() != " ") || (content[index001].ToString() != ",") || (content[index001].ToString() != ".") || (content[index001].ToString() != ";"))
-                    {
-                        check = false;
-                    }
+                    check = false;
                 }
             }
             return check;

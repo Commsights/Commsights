@@ -224,7 +224,7 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetDailyReportColumnToList([DataSourceRequest] DataSourceRequest request)
         {
-            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.DailyReportColumn).Where(item => item.ParentID == 0).OrderBy(item => item.ID);
+            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.DailyReportColumn);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetDailyReportSectionToList([DataSourceRequest] DataSourceRequest request)
