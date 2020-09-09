@@ -14,6 +14,7 @@
     columns.Bound(t => t.ID).Title("ID").Width(50);
     columns.Bound(t => t.CodeName).Title("Name").Width(200);
     columns.Bound(t => t.Note).Title("Note").Width(200);
+    columns.Bound(t => t.SortOrder).Title("Sort order").Width(200);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
