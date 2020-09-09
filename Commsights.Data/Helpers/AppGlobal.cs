@@ -135,7 +135,7 @@ namespace Commsights.Data.Helpers
                 var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                 return int.Parse(builder.Build().GetSection("AppSettings").GetSection("TinSanPhamID").Value);
             }
-        }        
+        }
         public static int ArticleTypeID
         {
             get
@@ -813,7 +813,7 @@ namespace Commsights.Data.Helpers
                 int index001 = index + keyword.Length;
                 if (index001 < content.Length - 1)
                 {
-                    if (content[index001].ToString() != " ")
+                    if ((content[index001].ToString() != " ") || (content[index001].ToString() != ",") || (content[index001].ToString() != ".") || (content[index001].ToString() != ";"))
                     {
                         check = false;
                     }

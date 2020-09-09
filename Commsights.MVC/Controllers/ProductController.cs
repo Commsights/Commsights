@@ -690,17 +690,20 @@ namespace Commsights.MVC.Controllers
                 {
                     product.Author = product.Author.Trim();
                 }
-                if (_productRepository.IsValid(product.Urlcode) == true)
+                if ((product.DatePublish.Year > 2019) && (product.DatePublish.Month > 6))
                 {
-                    product.ContentMain = AppGlobal.GetContentByURL(product.Urlcode);
-                    List<ProductProperty> listProductProperty = new List<ProductProperty>();
-                    this.FilterProduct(product, listProductProperty);
-                    if (listProductProperty.Count > 0)
+                    if (_productRepository.IsValid(product.Urlcode) == true)
                     {
-                        _productPropertyRepository.Range(listProductProperty);
+                        product.ContentMain = AppGlobal.GetContentByURL(product.Urlcode);
+                        List<ProductProperty> listProductProperty = new List<ProductProperty>();
+                        this.FilterProduct(product, listProductProperty);
+                        if (listProductProperty.Count > 0)
+                        {
+                            _productPropertyRepository.Range(listProductProperty);
 
+                        }
+                        list.Add(product);
                     }
-                    list.Add(product);
                 }
             }
         }
