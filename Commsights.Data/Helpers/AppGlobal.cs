@@ -112,6 +112,30 @@ namespace Commsights.Data.Helpers
                 return int.Parse(builder.Build().GetSection("AppSettings").GetSection("ParentID").Value);
             }
         }
+        public static int TinDoanhNghiepID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("TinDoanhNghiepID").Value);
+            }
+        }
+        public static int TinNganhID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("TinNganhID").Value);
+            }
+        }
+        public static int TinSanPhamID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("TinSanPhamID").Value);
+            }
+        }        
         public static int ArticleTypeID
         {
             get
@@ -174,6 +198,14 @@ namespace Commsights.Data.Helpers
             {
                 var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                 return builder.Build().GetSection("AppSettings").GetSection("DailyReportColumn").Value;
+            }
+        }
+        public static string Company
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Company").Value;
             }
         }
         public static string Industry
@@ -807,6 +839,8 @@ namespace Commsights.Data.Helpers
                 if (content.Split('~').Length > 0)
                 {
                     content = content.Split('~')[1];
+                    content = content.Replace(@"<!--/.article-body-->", @"~");
+                    content = content.Split('~')[0];
                     content = content.Replace(@"<ul class=""list-news hidden"" data-campaign=""Box-Related"">", @"~");
                     content = content.Split('~')[0];
                     content = content.Replace(@"<div id=""box_tag"" class=""width_common mb30"">", @"~");

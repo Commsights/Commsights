@@ -392,9 +392,6 @@ namespace Commsights.MVC.Controllers
         public void InitializationProduct(Product product)
         {
             product.IndustryID = AppGlobal.IndustryID;
-            product.SegmentID = AppGlobal.SegmentID;
-            product.ProductID = AppGlobal.IndustryID;
-            product.CompanyID = AppGlobal.CompetitorID;
             product.ArticleTypeID = AppGlobal.ArticleTypeID;
             product.AssessID = AppGlobal.AssessID;
             product.GUICode = AppGlobal.InitGuiCode;
@@ -410,7 +407,7 @@ namespace Commsights.MVC.Controllers
             {
                 if (!string.IsNullOrEmpty(listProduct[i].ProductName))
                 {
-                    keyword = "" + listProduct[i].ProductName + "";
+                    keyword = listProduct[i].ProductName;
                     bool check = false;
                     if (product.Title.Contains(keyword))
                     {
@@ -427,6 +424,7 @@ namespace Commsights.MVC.Controllers
                     if (check == true)
                     {
                         ProductProperty productProperty = new ProductProperty();
+                        productProperty.Initialization(InitType.Insert, RequestUserID);
                         productProperty.ParentID = 0;
                         productProperty.GUICode = product.GUICode;
                         productProperty.Code = AppGlobal.Product;
@@ -460,7 +458,7 @@ namespace Commsights.MVC.Controllers
                     bool check = false;
                     if (!string.IsNullOrEmpty(listSegment[i].Note))
                     {
-                        keyword = "" + listSegment[i].Note + "";
+                        keyword = listSegment[i].Note;
 
                         if (product.Title.Contains(keyword))
                         {
@@ -478,7 +476,7 @@ namespace Commsights.MVC.Controllers
                     }
                     if (!string.IsNullOrEmpty(listSegment[i].CodeName))
                     {
-                        keyword = "" + listSegment[i].CodeName + "";
+                        keyword = listSegment[i].CodeName;
                         if (product.Title.Contains(keyword))
                         {
                             check = AppGlobal.CheckContentAndKeyword(product.Title, keyword);
@@ -495,6 +493,7 @@ namespace Commsights.MVC.Controllers
                     if (check == true)
                     {
                         ProductProperty productProperty = new ProductProperty();
+                        productProperty.Initialization(InitType.Insert, RequestUserID);
                         productProperty.ParentID = 0;
                         productProperty.GUICode = product.GUICode;
                         productProperty.Code = AppGlobal.Segment;
@@ -502,16 +501,11 @@ namespace Commsights.MVC.Controllers
                         if (order == 0)
                         {
                             product.SegmentID = listSegment[i].ID;
-                            if (segment != null)
-                            {
-                                product.IndustryID = segment.ParentID;
-                            }
+                            product.IndustryID = listSegment[i].ParentID;
+
                         }
                         productProperty.SegmentID = listSegment[i].ID;
-                        if (segment != null)
-                        {
-                            productProperty.IndustryID = segment.ParentID;
-                        }
+                        productProperty.IndustryID = listSegment[i].ParentID;
                         listProductProperty.Add(productProperty);
                         order = order + 1;
                     }
@@ -526,7 +520,7 @@ namespace Commsights.MVC.Controllers
                     bool check = false;
                     if (!string.IsNullOrEmpty(listIndustry[i].Note))
                     {
-                        keyword = "" + listIndustry[i].Note + "";
+                        keyword = listIndustry[i].Note;
 
                         if (product.Title.Contains(keyword))
                         {
@@ -544,7 +538,7 @@ namespace Commsights.MVC.Controllers
                     }
                     if (!string.IsNullOrEmpty(listIndustry[i].CodeName))
                     {
-                        keyword = " " + listIndustry[i].CodeName + " ";
+                        keyword = listIndustry[i].CodeName;
                         if (product.Title.Contains(keyword))
                         {
                             check = AppGlobal.CheckContentAndKeyword(product.Title, keyword);
@@ -561,6 +555,7 @@ namespace Commsights.MVC.Controllers
                     if (check == true)
                     {
                         ProductProperty productProperty = new ProductProperty();
+                        productProperty.Initialization(InitType.Insert, RequestUserID);
                         productProperty.ParentID = 0;
                         productProperty.GUICode = product.GUICode;
                         productProperty.Code = AppGlobal.Industry;
@@ -580,7 +575,7 @@ namespace Commsights.MVC.Controllers
             {
                 if (!string.IsNullOrEmpty(listCompany[i].Account))
                 {
-                    keyword = "" + listCompany[i].Account + "";
+                    keyword = listCompany[i].Account;
                     bool check = false;
                     if (product.Title.Contains(keyword))
                     {
@@ -597,9 +592,10 @@ namespace Commsights.MVC.Controllers
                     if (check == true)
                     {
                         ProductProperty productProperty = new ProductProperty();
+                        productProperty.Initialization(InitType.Insert, RequestUserID);
                         productProperty.ParentID = 0;
                         productProperty.GUICode = product.GUICode;
-                        productProperty.Code = AppGlobal.Industry;
+                        productProperty.Code = AppGlobal.Company;
                         if (order == 0)
                         {
                             product.CompanyID = listCompany[i].ID;
@@ -607,6 +603,24 @@ namespace Commsights.MVC.Controllers
                         productProperty.CompanyID = listCompany[i].ID;
                         listProductProperty.Add(productProperty);
                         order = order + 1;
+                    }
+                }
+            }
+            if (product.CompanyID > 0)
+            {
+                product.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
+            }
+            else
+            {
+                if (product.ProductID > 0)
+                {
+                    product.ArticleTypeID = AppGlobal.TinSanPhamID;
+                }
+                else
+                {
+                    if ((product.SegmentID > 0) || (product.IndustryID != AppGlobal.IndustryID))
+                    {
+                        product.ArticleTypeID = AppGlobal.TinNganhID;
                     }
                 }
             }
@@ -681,7 +695,11 @@ namespace Commsights.MVC.Controllers
                     product.ContentMain = AppGlobal.GetContentByURL(product.Urlcode);
                     List<ProductProperty> listProductProperty = new List<ProductProperty>();
                     this.FilterProduct(product, listProductProperty);
-                    _productPropertyRepository.Range(listProductProperty);
+                    if (listProductProperty.Count > 0)
+                    {
+                        _productPropertyRepository.Range(listProductProperty);
+
+                    }
                     list.Add(product);
                 }
             }
@@ -698,7 +716,7 @@ namespace Commsights.MVC.Controllers
                     {
                         this.ParseRSS(list, item);
                     }
-                    catch
+                    catch (Exception e)
                     {
                     }
                     if (list.Count > 0)
