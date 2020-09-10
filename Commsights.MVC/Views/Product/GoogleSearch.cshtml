@@ -19,7 +19,7 @@
     columns.Bound(t => t.Company.TextName).EditorTemplateName("Membership_Company").Title("Company").Width(200);
     columns.Bound(t => t.AssessType.TextName).EditorTemplateName("Config_AssessType").Title("Assess").Width(200);
     columns.Bound(t => t.Title).Title("Title").Width(300);
-    columns.Bound(t => t.Urlcode).Title("URL").Width(300);
+    columns.Bound(t => t.URLCode).Title("URL").Width(300);
     columns.Bound(t => t.Author).Title("Author").Width(300);
     columns.Bound(t => t.Description).Title("Description").Width(300);
     columns.Bound(t => t.ContentMain).Title("Content").Width(300);
@@ -51,7 +51,7 @@
 .FileName("Config.pdf")
 )
 .HtmlAttributes(new { @class = "KendoGrid" })
-.Search(search => { search.Field(f => f.Title); search.Field(f => f.Urlcode); search.Field(f => f.Description); })
+.Search(search => { search.Field(f => f.Title); search.Field(f => f.URLCode); search.Field(f => f.Description); })
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)

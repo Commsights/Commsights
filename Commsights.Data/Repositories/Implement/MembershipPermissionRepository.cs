@@ -34,6 +34,10 @@ namespace Commsights.Data.Repositories
         {
             return _context.MembershipPermission.Where(item => item.Code.Equals(code)).OrderBy(item => item.ProductName).ToList();
         }
+        public List<MembershipPermission> GetByProductCodeToList(string code)
+        {
+            return _context.MembershipPermission.Where(item => item.Code.Equals(code) && !string.IsNullOrEmpty(item.ProductName)).OrderBy(item => item.ProductName).ToList();
+        }
         public List<MembershipPermissionDataTransfer> GetDataTransferMembershipBySegmentIDAndCodeToList(int segmentID, string code)
         {
             List<MembershipPermissionDataTransfer> list = new List<MembershipPermissionDataTransfer>();
@@ -144,7 +148,7 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@Code",code)
             };
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectDataTransferDailyReportColumnByMembershipIDAndCode", parameters);
-                list = SQLHelper.ToList<MembershipPermissionDataTransfer>(dt);                
+                list = SQLHelper.ToList<MembershipPermissionDataTransfer>(dt);
             }
             return list;
         }
@@ -316,7 +320,7 @@ namespace Commsights.Data.Repositories
         public void InitializationDailyReportSection(int membershipID, string code, int requestUserID)
         {
             List<MembershipPermission> listMembershipPermission = _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.Code == code).ToList();
-            _context.MembershipPermission.RemoveRange(listMembershipPermission);            
+            _context.MembershipPermission.RemoveRange(listMembershipPermission);
             List<Config> listConfig = _context.Config.Where(item => item.Code == code).ToList();
             listMembershipPermission = new List<MembershipPermission>();
             foreach (Config config in listConfig)
@@ -345,8 +349,8 @@ namespace Commsights.Data.Repositories
                 model.MembershipID = membershipID;
                 model.Code = code;
                 model.SortOrder = 0;
-                model.Active = false;                
-                model.CategoryID = config.ID;                                
+                model.Active = false;
+                model.CategoryID = config.ID;
                 model.Initialization(InitType.Insert, requestUserID);
                 listMembershipPermission.Add(model);
             }

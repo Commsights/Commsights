@@ -128,7 +128,7 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetProductToList([DataSourceRequest] DataSourceRequest request)
         {
-            var data = _membershipPermissionRepository.GetByCodeToList(AppGlobal.Product);
+            var data = _membershipPermissionRepository.GetByProductCodeToList(AppGlobal.Product);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetMembershipProductToList([DataSourceRequest] DataSourceRequest request, int membershipID)

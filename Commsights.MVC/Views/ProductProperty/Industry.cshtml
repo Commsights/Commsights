@@ -1,0 +1,82 @@
+﻿@{ Layout = "~/Views/Shared/_LayoutWindow.cshtml"; ViewData["Title"] = "Product property"; }
+
+@model Commsights.Data.Models.Product
+
+@Html.HiddenFor(Model => Model.ID)
+
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h5 class="card-title m-0">Company list</h5>
+    </div>
+    <div class="card-body">
+        @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ProductPropertyPropertyDataTransfer>()
+.Name("ProductPropertyPropertyDataTransfer")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
+    columns.Bound(t => t.IndustryName).Title("Industry").Width(200);
+    columns.Bound(t => t.Point).Title("%").Width(100);
+})
+.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid" })
+.Search(search => { search.Field(f => f.IndustryName); })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.ID);
+    model.Field(t => t.CompanyName).Editable(false);
+})
+.Events(t => { t.RequestEnd("onGridRequestEnd"); })
+.Read(t => t.Action("GetDataTransferIndustryByParentIDToList", "ProductProperty").Data("filterProductProperty"))
+.Update(t => t.Action("Update", "ProductProperty"))
+)
+)
+    </div>
+</div>
+
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+<script>
+    function onGridRequestEnd(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            var response = e.response;
+            var messageType = response.split('-')[0];
+            var note = response.split('-')[1];
+            var notification = $("#Notification").data("kendoNotification");
+            notification.show(note, messageType);
+            $("#ProductPropertyPropertyDataTransfer").data("kendoGrid").dataSource.read();
+        }
+    }
+    function filterProductProperty(e) {
+        var parentIDValue = $("#ID").val();
+        return { parentID: parentIDValue };
+    }
+</script>

@@ -6,7 +6,7 @@ namespace Commsights.Data.Models
 {
     public partial class Membership : BaseModel
     {
-        public int? CategoryId { get; set; }
+        public int? CategoryID { get; set; }
         public string FullName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

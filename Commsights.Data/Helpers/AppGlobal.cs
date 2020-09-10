@@ -796,27 +796,27 @@ namespace Commsights.Data.Helpers
             }
             return list;
         }
-        public static bool CheckContentAndKeyword(string content, string keyword)
+        public static int CheckContentAndKeyword(string content, string keyword)
         {
-            bool check = false;
+            int check = 0;
             int index = content.IndexOf(keyword);
             if (index == 0)
             {
-                check = true;
+                check = 1;
             }
             else
             {
-                if (content[index - 1].ToString() == " ")
+                if ((content[index - 1].ToString() == " ") || (content[index - 1].ToString() == "(") || (content[index - 1].ToString() == "[") || (content[index - 1].ToString() == "{") || (content[index - 1].ToString() == "<"))
                 {
-                    check = true;
-                }                
+                    check = 1;
+                }
             }
             int index001 = index + keyword.Length;
             if (index001 < content.Length - 1)
             {
-                if ((content[index001].ToString() != " ") || (content[index001].ToString() != ",") || (content[index001].ToString() != ".") || (content[index001].ToString() != ";"))
+                if ((content[index001].ToString() != " ") && (content[index001].ToString() != ",") && (content[index001].ToString() != ".") && (content[index001].ToString() != ";") && (content[index001].ToString() != ")") && (content[index001].ToString() != "]") && (content[index001].ToString() != "}") && (content[index001].ToString() != ">"))
                 {
-                    check = false;
+                    check = 0;
                 }
             }
             return check;
@@ -1424,7 +1424,7 @@ namespace Commsights.Data.Helpers
             model.Author = "";
             WebClient webClient = new WebClient();
             webClient.Encoding = System.Text.Encoding.UTF8;
-            string html = webClient.DownloadString(model.Urlcode);
+            string html = webClient.DownloadString(model.URLCode);
             string title = html;
             title = title.Replace(@"</h1>", @"~");
             title = title.Split('~')[0];

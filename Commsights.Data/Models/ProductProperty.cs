@@ -12,6 +12,7 @@ namespace Commsights.Data.Models
         public int? IndustryID { get; set; }
         public int? SegmentID { get; set; }
         public int? ProductID { get; set; }
+        public decimal? Point { get; set; }
         public string GUICode { get; set; }
         public string Code { get; set; }
     }

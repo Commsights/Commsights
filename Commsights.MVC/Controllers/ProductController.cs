@@ -48,9 +48,9 @@ namespace Commsights.MVC.Controllers
             {
                 model.Title = model.Title.Trim();
             }
-            if (!string.IsNullOrEmpty(model.Urlcode))
+            if (!string.IsNullOrEmpty(model.URLCode))
             {
-                model.Urlcode = model.Urlcode.Trim();
+                model.URLCode = model.URLCode.Trim();
             }
             if (!string.IsNullOrEmpty(model.Description))
             {
@@ -63,9 +63,9 @@ namespace Commsights.MVC.Controllers
             {
                 model.Title = model.Title.Trim();
             }
-            if (!string.IsNullOrEmpty(model.Urlcode))
+            if (!string.IsNullOrEmpty(model.URLCode))
             {
-                model.Urlcode = model.Urlcode.Trim();
+                model.URLCode = model.URLCode.Trim();
             }
             if (!string.IsNullOrEmpty(model.Description))
             {
@@ -116,6 +116,24 @@ namespace Commsights.MVC.Controllers
             model.DatePublish = DateTime.Now;
             return View(model);
         }
+        public IActionResult ArticleByCompany()
+        {
+            BaseViewModel model = new BaseViewModel();
+            model.DatePublish = DateTime.Now;
+            return View(model);
+        }
+        public IActionResult ArticleByIndustry()
+        {
+            BaseViewModel model = new BaseViewModel();
+            model.DatePublish = DateTime.Now;
+            return View(model);
+        }
+        public IActionResult ArticleByProduct()
+        {
+            BaseViewModel model = new BaseViewModel();
+            model.DatePublish = DateTime.Now;
+            return View(model);
+        }
         public IActionResult GoogleSearch()
         {
             ProductSearch model = new ProductSearch();
@@ -138,9 +156,9 @@ namespace Commsights.MVC.Controllers
             }
             return View(model);
         }
-        public ActionResult GetByCategoryIDAndDatePublishToList([DataSourceRequest] DataSourceRequest request, int categoryID, DateTime datePublish)
+        public ActionResult GetByCategoryIDAndDatePublishToList([DataSourceRequest] DataSourceRequest request, int CategoryID, DateTime datePublish)
         {
-            var data = _productRepository.GetByCategoryIDAndDatePublishToList(categoryID, datePublish);
+            var data = _productRepository.GetByCategoryIDAndDatePublishToList(CategoryID, datePublish);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetBySearchToList([DataSourceRequest] DataSourceRequest request, string search)
@@ -163,6 +181,26 @@ namespace Commsights.MVC.Controllers
             var data = _productRepository.GetByDatePublishToList(datePublish);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetDataTransferByDatePublishToList([DataSourceRequest] DataSourceRequest request, DateTime datePublish)
+        {
+            var data = _productRepository.GetDataTransferByDatePublishToList(datePublish);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetDataTransferByDatePublishAndArticleTypeIDAndIndustryIDAndActionToList([DataSourceRequest] DataSourceRequest request, DateTime datePublish, int industryID, int action)
+        {
+            var data = _productRepository.GetDataTransferByDatePublishAndArticleTypeIDAndIndustryIDAndActionToList(datePublish, AppGlobal.TinNganhID, industryID, action);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetDataTransferByDatePublishAndArticleTypeIDAndProductIDAndActionToList([DataSourceRequest] DataSourceRequest request, DateTime datePublish, int productID, int action)
+        {
+            var data = _productRepository.GetDataTransferByDatePublishAndArticleTypeIDAndProductIDAndActionToList(datePublish, AppGlobal.TinSanPhamID, productID, action);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetDataTransferByDatePublishAndArticleTypeIDAndCompanyIDAndActionToList([DataSourceRequest] DataSourceRequest request, DateTime datePublish, int companyID, int action)
+        {
+            var data = _productRepository.GetDataTransferByDatePublishAndArticleTypeIDAndCompanyIDAndActionToList(datePublish, AppGlobal.TinDoanhNghiepID, companyID, action);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetByDateUpdatedToList([DataSourceRequest] DataSourceRequest request, DateTime dateUpdated)
         {
             var data = _productRepository.GetByDateUpdatedToList(dateUpdated);
@@ -179,7 +217,7 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
-            if (_productRepository.IsValid(model.Urlcode))
+            if (_productRepository.IsValid(model.URLCode))
             {
                 result = _productRepository.Create(model);
             }
@@ -244,7 +282,7 @@ namespace Commsights.MVC.Controllers
             string html = "";
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(product.Urlcode);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(product.URLCode);
                 using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 {
                     using (Stream stream = response.GetResponseStream())
@@ -361,7 +399,7 @@ namespace Commsights.MVC.Controllers
         }
         public void GetURL(Product product)
         {
-            string url = product.Urlcode;
+            string url = product.URLCode;
             string f0 = "";
             string f1 = "";
             switch (product.ParentID)
@@ -372,20 +410,20 @@ namespace Commsights.MVC.Controllers
                     f1 = f1.Replace(@".html", @".htm");
                     f1 = f1.Replace(@"n", @"");
                     url = url.Replace(f0, f1);
-                    product.Urlcode = url;
+                    product.URLCode = url;
                     break;
                 case 182:
                     url = "https://baobinhphuoc.com.vn/Content/" + url;
-                    product.Urlcode = url;
+                    product.URLCode = url;
                     break;
                 case 395:
                     url = url.Replace(@".vn", @".vn/");
-                    product.Urlcode = url;
+                    product.URLCode = url;
                     break;
                 case 506:
                     f0 = url.Split('=')[url.Split('=').Length - 1];
                     url = "https://danang.gov.vn/web/guest/chi-tiet?id=" + f0;
-                    product.Urlcode = url;
+                    product.URLCode = url;
                     break;
             }
         }
@@ -402,26 +440,26 @@ namespace Commsights.MVC.Controllers
             int order = 0;
             string keyword = "";
             Config segment = new Config();
-            List<MembershipPermission> listProduct = _membershipPermissionRepository.GetByCodeToList(AppGlobal.Product);
+            List<MembershipPermission> listProduct = _membershipPermissionRepository.GetByProductCodeToList(AppGlobal.Product);
             for (int i = 0; i < listProduct.Count; i++)
             {
                 if (!string.IsNullOrEmpty(listProduct[i].ProductName))
                 {
-                    keyword = listProduct[i].ProductName;
-                    bool check = false;
+                    keyword = listProduct[i].ProductName.Trim();
+                    int check = 0;
                     if (product.Title.Contains(keyword))
                     {
-                        check = AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                        check = check + AppGlobal.CheckContentAndKeyword(product.Title, keyword);
                     }
                     if (product.Description.Contains(keyword))
                     {
-                        check = AppGlobal.CheckContentAndKeyword(product.Description, keyword);
+                        check = check + AppGlobal.CheckContentAndKeyword(product.Description, keyword);
                     }
                     if (product.ContentMain.Contains(keyword))
                     {
-                        check = AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
+                        check = check + AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
                     }
-                    if (check == true)
+                    if (check > 0)
                     {
                         ProductProperty productProperty = new ProductProperty();
                         productProperty.Initialization(InitType.Insert, RequestUserID);
@@ -455,42 +493,42 @@ namespace Commsights.MVC.Controllers
             {
                 if (listSegment[i].ID != 3487)
                 {
-                    bool check = false;
+                    int check = 0;
                     if (!string.IsNullOrEmpty(listSegment[i].Note))
                     {
-                        keyword = listSegment[i].Note;
+                        keyword = listSegment[i].Note.Trim();
 
                         if (product.Title.Contains(keyword))
                         {
-                            check = AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                            check = check + AppGlobal.CheckContentAndKeyword(product.Title, keyword);
                         }
                         if (product.Description.Contains(keyword))
                         {
-                            check = AppGlobal.CheckContentAndKeyword(product.Description, keyword);
+                            check = check + AppGlobal.CheckContentAndKeyword(product.Description, keyword);
                         }
                         if (product.ContentMain.Contains(keyword))
                         {
-                            check = AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
+                            check = check + AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
                         }
 
                     }
                     if (!string.IsNullOrEmpty(listSegment[i].CodeName))
                     {
-                        keyword = listSegment[i].CodeName;
+                        keyword = listSegment[i].CodeName.Trim();
                         if (product.Title.Contains(keyword))
                         {
-                            check = AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                            check = check + AppGlobal.CheckContentAndKeyword(product.Title, keyword);
                         }
                         if (product.Description.Contains(keyword))
                         {
-                            check = AppGlobal.CheckContentAndKeyword(product.Description, keyword);
+                            check = check + AppGlobal.CheckContentAndKeyword(product.Description, keyword);
                         }
                         if (product.ContentMain.Contains(keyword))
                         {
-                            check = AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
+                            check = check + AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
                         }
                     }
-                    if (check == true)
+                    if (check > 0)
                     {
                         ProductProperty productProperty = new ProductProperty();
                         productProperty.Initialization(InitType.Insert, RequestUserID);
@@ -517,42 +555,42 @@ namespace Commsights.MVC.Controllers
             {
                 if (listIndustry[i].ID != 3483)
                 {
-                    bool check = false;
+                    int check = 0;
                     if (!string.IsNullOrEmpty(listIndustry[i].Note))
                     {
-                        keyword = listIndustry[i].Note;
+                        keyword = listIndustry[i].Note.Trim();
 
                         if (product.Title.Contains(keyword))
                         {
-                            check = AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                            check = check + AppGlobal.CheckContentAndKeyword(product.Title, keyword);
                         }
                         if (product.Description.Contains(keyword))
                         {
-                            check = AppGlobal.CheckContentAndKeyword(product.Description, keyword);
+                            check = check + AppGlobal.CheckContentAndKeyword(product.Description, keyword);
                         }
                         if (product.ContentMain.Contains(keyword))
                         {
-                            check = AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
+                            check = check + AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
                         }
 
                     }
                     if (!string.IsNullOrEmpty(listIndustry[i].CodeName))
                     {
-                        keyword = listIndustry[i].CodeName;
+                        keyword = listIndustry[i].CodeName.Trim();
                         if (product.Title.Contains(keyword))
                         {
-                            check = AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                            check = check + AppGlobal.CheckContentAndKeyword(product.Title, keyword);
                         }
                         if (product.Description.Contains(keyword))
                         {
-                            check = AppGlobal.CheckContentAndKeyword(product.Description, keyword);
+                            check = check + AppGlobal.CheckContentAndKeyword(product.Description, keyword);
                         }
                         if (product.ContentMain.Contains(keyword))
                         {
-                            check = AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
+                            check = check + AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
                         }
                     }
-                    if (check == true)
+                    if (check > 0)
                     {
                         ProductProperty productProperty = new ProductProperty();
                         productProperty.Initialization(InitType.Insert, RequestUserID);
@@ -575,21 +613,21 @@ namespace Commsights.MVC.Controllers
             {
                 if (!string.IsNullOrEmpty(listCompany[i].Account))
                 {
-                    keyword = listCompany[i].Account;
-                    bool check = false;
+                    keyword = listCompany[i].Account.Trim();                    
+                    int check = 0;
                     if (product.Title.Contains(keyword))
                     {
-                        check = AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                        check = check + AppGlobal.CheckContentAndKeyword(product.Title, keyword);
                     }
                     if (product.Description.Contains(keyword))
                     {
-                        check = AppGlobal.CheckContentAndKeyword(product.Description, keyword);
+                        check = check + AppGlobal.CheckContentAndKeyword(product.Description, keyword);
                     }
                     if (product.ContentMain.Contains(keyword))
                     {
-                        check = AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
+                        check = check + AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
                     }
-                    if (check == true)
+                    if (check > 0)
                     {
                         ProductProperty productProperty = new ProductProperty();
                         productProperty.Initialization(InitType.Insert, RequestUserID);
@@ -606,15 +644,15 @@ namespace Commsights.MVC.Controllers
                     }
                 }
             }
-            if (product.CompanyID > 0)
+            if (product.ProductID > 0)
             {
-                product.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
+                product.ArticleTypeID = AppGlobal.TinSanPhamID;
             }
             else
             {
-                if (product.ProductID > 0)
+                if (product.CompanyID > 0)
                 {
-                    product.ArticleTypeID = AppGlobal.TinSanPhamID;
+                    product.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
                 }
                 else
                 {
@@ -636,18 +674,18 @@ namespace Commsights.MVC.Controllers
                 Product product = new Product();
                 this.InitializationProduct(product);
                 product.ParentID = item.ParentID;
-                product.CategoryId = item.ID;
+                product.CategoryID = item.ID;
                 XmlNode rssSubNode = rssNode.SelectSingleNode("title");
                 product.Title = rssSubNode != null ? rssSubNode.InnerText : "";
                 product.MetaTitle = AppGlobal.SetName(product.Title);
                 product.MetaTitle = AppGlobal.SetName(product.Title);
                 rssSubNode = rssNode.SelectSingleNode("link");
-                product.Urlcode = rssSubNode != null ? rssSubNode.InnerText : "";
+                product.URLCode = rssSubNode != null ? rssSubNode.InnerText : "";
                 switch (product.ParentID)
                 {
                     case 301:
                         rssSubNode = rssNode.SelectSingleNode("id");
-                        product.Urlcode = rssSubNode != null ? rssSubNode.InnerText : "";
+                        product.URLCode = rssSubNode != null ? rssSubNode.InnerText : "";
                         break;
                 }
                 this.GetURL(product);
@@ -658,7 +696,7 @@ namespace Commsights.MVC.Controllers
                 {
                     case 301:
                         rssSubNode = rssNode.SelectSingleNode("id");
-                        product.Urlcode = rssSubNode != null ? rssSubNode.InnerText : "";
+                        product.URLCode = rssSubNode != null ? rssSubNode.InnerText : "";
                         rssSubNode = rssNode.SelectSingleNode("summary");
                         product.Description = rssSubNode != null ? rssSubNode.InnerText : "";
                         break;
@@ -682,9 +720,9 @@ namespace Commsights.MVC.Controllers
                     product.Description = AppGlobal.RemoveHTMLTags(product.Description);
                     product.Description = product.Description.Trim();
                 }
-                if (!string.IsNullOrEmpty(product.Urlcode))
+                if (!string.IsNullOrEmpty(product.URLCode))
                 {
-                    product.Urlcode = product.Urlcode.Trim();
+                    product.URLCode = product.URLCode.Trim();
                 }
                 if (!string.IsNullOrEmpty(product.Author))
                 {
@@ -692,9 +730,9 @@ namespace Commsights.MVC.Controllers
                 }
                 if ((product.DatePublish.Year > 2019) && (product.DatePublish.Month > 6))
                 {
-                    if (_productRepository.IsValid(product.Urlcode) == true)
+                    if (_productRepository.IsValid(product.URLCode) == true)
                     {
-                        product.ContentMain = AppGlobal.GetContentByURL(product.Urlcode);
+                        product.ContentMain = AppGlobal.GetContentByURL(product.URLCode);
                         List<ProductProperty> listProductProperty = new List<ProductProperty>();
                         this.FilterProduct(product, listProductProperty);
                         if (listProductProperty.Count > 0)
@@ -709,6 +747,14 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult ScanFull()
         {
+            //Product product = new Product();
+            //product.Title = "An Gia chi 1.200 tỷ cho dự án khu biệt lập đầu tiên";
+            //product.Description = "An Gia lần đầu triển khai dự án nhà thấp tầng với gần 400 căn nhà phố, căn hộ thương mại The Standard Central Park, tổng vốn đầu tư 1.200 tỷ đồng.";
+            //product.URLCode = "https://vnexpress.net/an-gia-chi-1-200-ty-cho-du-an-khu-biet-lap-dau-tien-4153105.html";
+            //product.ContentMain = AppGlobal.GetContentByURL(product.URLCode);
+            //List<ProductProperty> listProductProperty = new List<ProductProperty>();
+            //this.FilterProduct(product, listProductProperty);
+
             List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveAndIsMenuLeftToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, false, true);
             foreach (Config item in listConfig)
             {
@@ -813,7 +859,7 @@ namespace Commsights.MVC.Controllers
                                                         if (workSheet.Cells[i, 8].Value != null)
                                                         {
                                                             model.Title = workSheet.Cells[i, 8].Value.ToString().Trim();
-                                                            model.Urlcode = workSheet.Cells[i, 8].Hyperlink.AbsoluteUri.Trim();
+                                                            model.URLCode = workSheet.Cells[i, 8].Hyperlink.AbsoluteUri.Trim();
                                                         }
                                                         if (workSheet.Cells[i, 10].Value != null)
                                                         {
@@ -826,8 +872,8 @@ namespace Commsights.MVC.Controllers
                                                         if (workSheet.Cells[i, 12].Value != null)
                                                         {
                                                             string type = workSheet.Cells[i, 12].Value.ToString().Trim();
-                                                            //model.Urlcode = AppGlobal.URLScan.Replace(@"[FileName]", model.FileName);
-                                                            //model.Urlcode = model.Urlcode.Replace(@"[Type]", type);
+                                                            //model.URLCode = AppGlobal.URLScan.Replace(@"[FileName]", model.FileName);
+                                                            //model.URLCode = model.URLCode.Replace(@"[Type]", type);
                                                         }
                                                         if (workSheet.Cells[i, 22].Value != null)
                                                         {
@@ -926,10 +972,10 @@ namespace Commsights.MVC.Controllers
                                                             model.ParentID = parent.ID;
                                                         }
                                                         model.Initialization(InitType.Insert, RequestUserID);
-                                                        if (_productRepository.IsValid(model.Urlcode))
+                                                        if (_productRepository.IsValid(model.URLCode))
                                                         {
                                                             model.MetaTitle = AppGlobal.SetName(model.Title);
-                                                            model.CategoryId = model.ParentID;
+                                                            model.CategoryID = model.ParentID;
                                                             model.TitleEnglish = "";
                                                             model.Description = "";
                                                             _productRepository.Create(model);
@@ -1049,7 +1095,7 @@ namespace Commsights.MVC.Controllers
                                                     model.Initialization(InitType.Insert, RequestUserID);
                                                     model.DatePublish = DateTime.Now;
                                                     model.ParentID = AppGlobal.WebsiteID;
-                                                    model.CategoryId = AppGlobal.WebsiteID;
+                                                    model.CategoryID = AppGlobal.WebsiteID;
                                                     model.PriceUnitId = 0;
                                                     model.Liked = 0;
                                                     model.Comment = 0;
@@ -1083,11 +1129,11 @@ namespace Commsights.MVC.Controllers
                                                                 _configResposistory.Create(parent);
                                                             }
                                                             model.ParentID = parent.ID;
-                                                            model.CategoryId = parent.ID;
+                                                            model.CategoryID = parent.ID;
                                                         }
                                                         if (workSheet.Cells[i, 5].Value != null)
                                                         {
-                                                            model.Urlcode = workSheet.Cells[i, 5].Value.ToString().Trim();
+                                                            model.URLCode = workSheet.Cells[i, 5].Value.ToString().Trim();
                                                         }
                                                         if (workSheet.Cells[i, 6].Value != null)
                                                         {
@@ -1178,10 +1224,10 @@ namespace Commsights.MVC.Controllers
                                                             {
                                                             }
                                                         }
-                                                        if (_productRepository.IsValid(model.Urlcode))
+                                                        if (_productRepository.IsValid(model.URLCode))
                                                         {
                                                             model.MetaTitle = AppGlobal.SetName(model.Title);
-                                                            model.CategoryId = model.ParentID;
+                                                            model.CategoryID = model.ParentID;
                                                             model.TitleEnglish = "";
                                                             _productRepository.Create(model);
                                                         }
@@ -1292,7 +1338,7 @@ namespace Commsights.MVC.Controllers
                         {
                             html = html.Split('~')[1];
                             html = html.Split('"')[0];
-                            model.Urlcode = html.Trim();
+                            model.URLCode = html.Trim();
                         }
                     }
                 }
@@ -1355,7 +1401,7 @@ namespace Commsights.MVC.Controllers
                                                     model.Initialization(InitType.Insert, RequestUserID);
                                                     model.DatePublish = DateTime.Now;
                                                     model.ParentID = AppGlobal.WebsiteID;
-                                                    model.CategoryId = AppGlobal.WebsiteID;
+                                                    model.CategoryID = AppGlobal.WebsiteID;
                                                     try
                                                     {
                                                         string datePublish = "";
@@ -1491,15 +1537,15 @@ namespace Commsights.MVC.Controllers
                                                             model.Author = workSheet.Cells[i, 14].Value.ToString().Trim();
                                                         }
                                                         bool saveModel = true;
-                                                        saveModel = _productRepository.IsValid(model.Urlcode);
+                                                        saveModel = _productRepository.IsValid(model.URLCode);
                                                         if (model.IsVideo != null)
                                                         {
-                                                            saveModel = _productRepository.IsValidByFileNameAndDatePublish(model.Urlcode, model.DatePublish);
+                                                            saveModel = _productRepository.IsValidByFileNameAndDatePublish(model.URLCode, model.DatePublish);
                                                         }
                                                         if (saveModel)
                                                         {
                                                             model.MetaTitle = AppGlobal.SetName(model.Title);
-                                                            model.CategoryId = model.ParentID;
+                                                            model.CategoryID = model.ParentID;
                                                             model.TitleEnglish = "";
                                                             _productRepository.Create(model);
                                                         }
@@ -1507,7 +1553,7 @@ namespace Commsights.MVC.Controllers
                                                         {
                                                             if (listProductSearchProperty.Count > 0)
                                                             {
-                                                                model.Urlcode = "/Product/ViewContent/" + model.ID;
+                                                                model.URLCode = "/Product/ViewContent/" + model.ID;
                                                                 _productRepository.Update(model.ID, model);
                                                                 for (int j = 0; j < listProductSearchProperty.Count; j++)
                                                                 {
@@ -1613,7 +1659,7 @@ namespace Commsights.MVC.Controllers
                                                     model.Initialization(InitType.Insert, RequestUserID);
                                                     model.DatePublish = DateTime.Now;
                                                     model.ParentID = AppGlobal.WebsiteID;
-                                                    model.CategoryId = AppGlobal.WebsiteID;
+                                                    model.CategoryID = AppGlobal.WebsiteID;
                                                     model.ArticleTypeID = AppGlobal.ArticleTypeID;
                                                     model.CompanyID = AppGlobal.CompetitorID;
                                                     model.AssessID = AppGlobal.AssessID;
@@ -1704,20 +1750,20 @@ namespace Commsights.MVC.Controllers
                                                         if (workSheet.Cells[i, 5].Value != null)
                                                         {
                                                             model.Title = workSheet.Cells[i, 5].Value.ToString().Trim();
-                                                            model.Urlcode = workSheet.Cells[i, 5].Hyperlink.AbsoluteUri;
+                                                            model.URLCode = workSheet.Cells[i, 5].Hyperlink.AbsoluteUri;
 
 
                                                         }
                                                         if (workSheet.Cells[i, 6].Value != null)
                                                         {
-                                                            if (string.IsNullOrEmpty(model.Urlcode))
+                                                            if (string.IsNullOrEmpty(model.URLCode))
                                                             {
-                                                                model.Urlcode = workSheet.Cells[i, 6].Value.ToString().Trim();
+                                                                model.URLCode = workSheet.Cells[i, 6].Value.ToString().Trim();
                                                             }
                                                         }
-                                                        if (!string.IsNullOrEmpty(model.Urlcode))
+                                                        if (!string.IsNullOrEmpty(model.URLCode))
                                                         {
-                                                            model.FileName = AppGlobal.SetDomainByURL(model.Urlcode);
+                                                            model.FileName = AppGlobal.SetDomainByURL(model.URLCode);
                                                             Config website = _configResposistory.GetByGroupNameAndCodeAndTitle(AppGlobal.CRM, AppGlobal.Website, model.FileName);
                                                             if (website == null)
                                                             {
@@ -1731,11 +1777,11 @@ namespace Commsights.MVC.Controllers
                                                             model.ParentID = website.ID;
                                                         }
                                                         bool saveModel = true;
-                                                        saveModel = _productRepository.IsValid(model.Urlcode);
+                                                        saveModel = _productRepository.IsValid(model.URLCode);
                                                         if (saveModel)
                                                         {
                                                             model.MetaTitle = AppGlobal.SetName(model.Title);
-                                                            model.CategoryId = model.ParentID;
+                                                            model.CategoryID = model.ParentID;
                                                             _productRepository.Create(model);
                                                         }
                                                         if (model.ID > 0)

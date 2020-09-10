@@ -23,5 +23,50 @@ namespace Commsights.Data.Repositories
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyUpdateItemsWithParentIDIsZero");
             return result;
         }
+        public List<ProductPropertyPropertyDataTransfer> GetDataTransferCompanyByParentIDToList(int parentID)
+        {
+            List<ProductPropertyPropertyDataTransfer> list = new List<ProductPropertyPropertyDataTransfer>();
+            if (parentID > 0)
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ParentID",parentID),
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectDataTransferCompanyByParentID", parameters);
+                list = SQLHelper.ToList<ProductPropertyPropertyDataTransfer>(dt);
+            }
+
+            return list;
+        }
+        public List<ProductPropertyPropertyDataTransfer> GetDataTransferIndustryByParentIDToList(int parentID)
+        {
+            List<ProductPropertyPropertyDataTransfer> list = new List<ProductPropertyPropertyDataTransfer>();
+            if (parentID > 0)
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ParentID",parentID),
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectDataTransferIndustryByParentID", parameters);
+                list = SQLHelper.ToList<ProductPropertyPropertyDataTransfer>(dt);
+            }
+
+            return list;
+        }
+        public List<ProductPropertyPropertyDataTransfer> GetDataTransferProductByParentIDToList(int parentID)
+        {
+            List<ProductPropertyPropertyDataTransfer> list = new List<ProductPropertyPropertyDataTransfer>();
+            if (parentID > 0)
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ParentID",parentID),
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectDataTransferProductByParentID", parameters);
+                list = SQLHelper.ToList<ProductPropertyPropertyDataTransfer>(dt);
+            }
+
+            return list;
+        }
     }
 }

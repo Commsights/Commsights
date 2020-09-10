@@ -1,4 +1,4 @@
-﻿@{ ViewData["Title"] = "Article"; }
+﻿@{ ViewData["Title"] = "Article by company"; }
 
 @model Commsights.MVC.Models.BaseViewModel
 
@@ -6,19 +6,35 @@
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Data - Article</h3>
+                <h3 class="card-title">Data - Article by company</h3>
             </div>
             <div class="card-body">
+                <input type="hidden" id="Action" name="Action" value="0">
                 <div class="row">
                     <div class='col-sm-2'>
                         @(Html.Kendo().DatePickerFor(Model => Model.DatePublish)
                                      .Format("dd/MM/yyyy")
-                                     .HtmlAttributes(new { @class = "form-control", title = "Date publish" })
+                                     .HtmlAttributes(new { @class = "form-control text-right", title = "Date publish" })
                                      .DateInput()
                                 )
                     </div>
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" onclick="onSearch()">
+                            <span class="fa fa-search"></span>
+                        </button>
+                    </div>
+                    <div class='col-sm-5'>
+                        @(Html.Kendo().DropDownList()
+                     .Name("Company")
+                     .DataValueField("ID")
+                     .DataTextField("Account")
+                     .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByCompanyToList", "Membership")))
+                            )
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-success" onclick="onSearchCompany()">
                             <span class="fa fa-search"></span>
                         </button>
                     </div>
@@ -28,12 +44,16 @@
 .Name("ProductDataTransfer")
 .Columns(columns =>
 {
+    columns.Bound(t => t.Active).Title("Select").Width(200);
     columns.Bound(t => t.DatePublish).Title("Publish").Width(200);
     columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=URLCode#"");' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Title + URL").Width(600);
+    columns.Bound(t => t.CompanyName).Title("Company first").Width(200);
+    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/ProductProperty/Company/#=ID#"",400,400);' class='btn btn-success' style='color: white; cursor: pointer;'><i class='fas fa-list-ul'></i></a>").Title("List").Width(70).HtmlAttributes(new { style = "text-align:center;" });
     columns.Bound(t => t.ParentName).Title("Website").Width(200);
     columns.Bound(t => t.IndustryName).Title("Industry").Width(200);
     columns.Bound(t => t.ArticleTypeName).Title("Article type").Width(200);
     columns.Bound(t => t.AssessName).Title("Assess").Width(200);
+    columns.Bound(t => t.ID).Title("Assess").Width(100);
 })
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
@@ -60,7 +80,7 @@
 .FileName("Config.pdf")
 )
 .HtmlAttributes(new { @class = "KendoGrid" })
-.Search(search => { search.Field(f => f.Title); search.Field(f => f.URLCode); search.Field(f => f.ParentName); })
+.Search(search => { search.Field(f => f.Title); search.Field(f => f.URLCode); search.Field(f => f.ParentName); search.Field(f => f.IndustryName); search.Field(f => f.ArticleTypeName); search.Field(f => f.AssessName); })
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
@@ -69,16 +89,13 @@
     model.Id(t => t.ID);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetDataTransferByDatePublishToList", "Product").Data("filterProduct"))
+.Read(t => t.Action("GetDataTransferByDatePublishAndArticleTypeIDAndCompanyIDAndActionToList", "Product").Data("filterProduct"))
 )
 )
             </div>
         </div>
     </div>
 </div>
-
-
-
 @(Html.Kendo().Notification()
     .Name("Notification")
     .Position(p => p.Pinned(true).Top(30).Right(30))
@@ -97,10 +114,16 @@
     }
     function filterProduct(e) {
         var datePublishValue = toDate02($("#DatePublish").val());
-        return { datePublish: datePublishValue };
+        var companyIDValue = $("#Company").data("kendoDropDownList").value();
+        var actionValue = $("#Action").val();
+        return { datePublish: datePublishValue, companyID: companyIDValue, action: actionValue };
 
     }
     function onSearch() {
+        $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
+    }
+    function onSearchCompany() {
+        $("#Action").val('1');
         $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
     }
 </script>

@@ -11,6 +11,7 @@ namespace Commsights.Data.Repositories
         public List<MembershipPermission> GetByMembershipIDToList(int membershipID);
         public List<MembershipPermission> GetIndustryIDAndCodeToList(int industryID, string code);
         public List<MembershipPermission> GetByCodeToList(string code);
+        public List<MembershipPermission> GetByProductCodeToList(string code);
         public List<MembershipPermission> GetByMembershipIDAndCodeToList(int membershipID, string code);
         public List<MembershipPermission> GetByMembershipIDAndIndustryIDAndCodeToList(int membershipID, int industryID, string code);
         public List<MembershipPermissionDataTransfer> GetDataTransferIndustryByMembershipIDAndCodeToList(int membershipID, string code);

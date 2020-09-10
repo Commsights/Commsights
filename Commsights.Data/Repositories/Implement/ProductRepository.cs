@@ -18,9 +18,9 @@ namespace Commsights.Data.Repositories
         {
             _context = context;
         }
-        public List<Product> GetByCategoryIDAndDatePublishToList(int categoryID, DateTime datePublish)
+        public List<Product> GetByCategoryIDAndDatePublishToList(int CategoryID, DateTime datePublish)
         {
-            return _context.Product.Where(item => item.CategoryId == categoryID && item.DatePublish.Year == datePublish.Year && item.DatePublish.Month == datePublish.Month && item.DatePublish.Day == datePublish.Day).OrderByDescending(item => item.DateUpdated).ToList();
+            return _context.Product.Where(item => item.CategoryID == CategoryID && item.DatePublish.Year == datePublish.Year && item.DatePublish.Month == datePublish.Month && item.DatePublish.Day == datePublish.Day).OrderByDescending(item => item.DateUpdated).ToList();
         }
         public List<Product> GetByParentIDAndDatePublishToList(int parentID, DateTime datePublish)
         {
@@ -61,7 +61,7 @@ namespace Commsights.Data.Repositories
             Product item = null;
             if (!string.IsNullOrEmpty(url))
             {
-                item = _context.Set<Product>().FirstOrDefault(item => item.Urlcode.Equals(url));
+                item = _context.Set<Product>().FirstOrDefault(item => item.URLCode.Equals(url));
             }
             return item == null ? true : false;
         }
@@ -77,7 +77,7 @@ namespace Commsights.Data.Repositories
         public List<ProductDataTransfer> GetDataTransferByProductSearchIDToList(int productSearchID)
         {
             List<ProductDataTransfer> list = new List<ProductDataTransfer>();
-            if(productSearchID>0)
+            if (productSearchID > 0)
             {
                 SqlParameter[] parameters =
                        {
@@ -97,8 +97,164 @@ namespace Commsights.Data.Repositories
                     list[i].AssessType.ID = list[i].AssessID;
                     list[i].AssessType.TextName = list[i].AssessName;
                 }
-            }    
-            
+            }
+
+            return list;
+        }
+        public List<ProductDataTransfer> GetDataTransferByDatePublishToList(DateTime datePublish)
+        {
+            List<ProductDataTransfer> list = new List<ProductDataTransfer>();
+            if (datePublish != null)
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@DatePublish",datePublish),
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectDataTransferByDatePublish", parameters);
+                list = SQLHelper.ToList<ProductDataTransfer>(dt);
+            }
+
+            return list;
+        }
+        public List<ProductDataTransfer> GetDataTransferByDatePublishAndArticleTypeIDToList(DateTime datePublish, int articleTypeID)
+        {
+            List<ProductDataTransfer> list = new List<ProductDataTransfer>();
+            if ((datePublish != null) && (articleTypeID > 0))
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@DatePublish",datePublish),
+                new SqlParameter("@ArticleTypeID",articleTypeID)
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectDataTransferByDatePublishAndArticleTypeID", parameters);
+                list = SQLHelper.ToList<ProductDataTransfer>(dt);
+            }
+
+            return list;
+        }
+        public List<ProductDataTransfer> GetDataTransferCompanyByDatePublishAndArticleTypeIDToList(DateTime datePublish, int articleTypeID)
+        {
+            List<ProductDataTransfer> list = new List<ProductDataTransfer>();
+            if ((datePublish != null) && (articleTypeID > 0))
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@DatePublish",datePublish),
+                new SqlParameter("@ArticleTypeID",articleTypeID)
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectDataTransferCompanyByDatePublishAndArticleTypeID", parameters);
+                list = SQLHelper.ToList<ProductDataTransfer>(dt);
+            }
+
+            return list;
+        }
+        public List<ProductDataTransfer> GetDataTransferProductByDatePublishAndArticleTypeIDToList(DateTime datePublish, int articleTypeID)
+        {
+            List<ProductDataTransfer> list = new List<ProductDataTransfer>();
+            if ((datePublish != null) && (articleTypeID > 0))
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@DatePublish",datePublish),
+                new SqlParameter("@ArticleTypeID",articleTypeID)
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectDataTransferProductByDatePublishAndArticleTypeID", parameters);
+                list = SQLHelper.ToList<ProductDataTransfer>(dt);
+            }
+
+            return list;
+        }
+        public List<ProductDataTransfer> GetDataTransferByDatePublishAndArticleTypeIDAndCompanyIDToList(DateTime datePublish, int articleTypeID, int companyID)
+        {
+            List<ProductDataTransfer> list = new List<ProductDataTransfer>();
+            if ((datePublish != null) && (articleTypeID > 0) && (companyID > 0))
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@DatePublish",datePublish),
+                new SqlParameter("@ArticleTypeID",articleTypeID),
+                new SqlParameter("@CompanyID",companyID)
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectDataTransferByDatePublishAndArticleTypeIDAndCompanyID", parameters);
+                list = SQLHelper.ToList<ProductDataTransfer>(dt);
+            }
+
+            return list;
+        }
+        public List<ProductDataTransfer> GetDataTransferByDatePublishAndArticleTypeIDAndIndustryIDToList(DateTime datePublish, int articleTypeID, int industryID)
+        {
+            List<ProductDataTransfer> list = new List<ProductDataTransfer>();
+            if (datePublish != null)
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@DatePublish",datePublish),
+                new SqlParameter("@ArticleTypeID",articleTypeID),
+                new SqlParameter("@IndustryID",industryID)
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectDataTransferByDatePublishAndArticleTypeIDAndIndustryID", parameters);
+                list = SQLHelper.ToList<ProductDataTransfer>(dt);
+            }
+
+            return list;
+        }
+        public List<ProductDataTransfer> GetDataTransferByDatePublishAndArticleTypeIDAndProductIDToList(DateTime datePublish, int articleTypeID, int productID)
+        {
+            List<ProductDataTransfer> list = new List<ProductDataTransfer>();
+            if (datePublish != null)
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@DatePublish",datePublish),
+                new SqlParameter("@ArticleTypeID",articleTypeID),
+                new SqlParameter("@ProductID",productID)
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectDataTransferByDatePublishAndArticleTypeIDAndProductID", parameters);
+                list = SQLHelper.ToList<ProductDataTransfer>(dt);
+            }
+
+            return list;
+        }
+        public List<ProductDataTransfer> GetDataTransferByDatePublishAndArticleTypeIDAndIndustryIDAndActionToList(DateTime datePublish, int articleTypeID, int industryID, int action)
+        {
+            List<ProductDataTransfer> list = new List<ProductDataTransfer>();
+            switch (action)
+            {
+                case 0:
+                    list = GetDataTransferByDatePublishAndArticleTypeIDToList(datePublish, articleTypeID);
+                    break;
+                case 1:
+                    list = GetDataTransferByDatePublishAndArticleTypeIDAndIndustryIDToList(datePublish, articleTypeID, industryID);
+                    break;
+            }
+            return list;
+        }
+        public List<ProductDataTransfer> GetDataTransferByDatePublishAndArticleTypeIDAndProductIDAndActionToList(DateTime datePublish, int articleTypeID, int productID, int action)
+        {
+            List<ProductDataTransfer> list = new List<ProductDataTransfer>();
+            switch (action)
+            {
+                case 0:
+                    list = GetDataTransferProductByDatePublishAndArticleTypeIDToList(datePublish, articleTypeID);
+                    break;
+                case 1:
+                    list = GetDataTransferByDatePublishAndArticleTypeIDAndProductIDToList(datePublish, articleTypeID, productID);
+                    break;
+            }
+            return list;
+        }
+        public List<ProductDataTransfer> GetDataTransferByDatePublishAndArticleTypeIDAndCompanyIDAndActionToList(DateTime datePublish, int articleTypeID, int companyID, int action)
+        {
+            List<ProductDataTransfer> list = new List<ProductDataTransfer>();
+            switch (action)
+            {
+                case 0:
+                    list = GetDataTransferCompanyByDatePublishAndArticleTypeIDToList(datePublish, articleTypeID);
+                    break;
+                case 1:
+                    list = GetDataTransferByDatePublishAndArticleTypeIDAndCompanyIDToList(datePublish, articleTypeID, companyID);
+                    break;
+            }
             return list;
         }
     }

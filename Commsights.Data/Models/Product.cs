@@ -6,9 +6,9 @@ namespace Commsights.Data.Models
 {
     public partial class Product : BaseModel
     {
-        public int? CategoryId { get; set; }
+        public int? CategoryID { get; set; }
         public string Title { get; set; }
-        public string Urlcode { get; set; }
+        public string URLCode { get; set; }
         public string MetaTitle { get; set; }
         public string MetaKeyword { get; set; }
         public string MetaDescription { get; set; }
