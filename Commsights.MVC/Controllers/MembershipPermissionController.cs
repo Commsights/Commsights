@@ -335,9 +335,7 @@ namespace Commsights.MVC.Controllers
             model.MembershipID = membershipID;
             model.CompanyID = model.Company.ID;
             model.IndustryID = model.Industry.ID;
-            model.SegmentID = model.Segment.ID;
-            model.ProductID = model.Product.ID;
-            model.ProductCompareID = model.ProductCompare.ID;
+            model.SegmentID = model.Segment.ID;                        
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
             if ((model.MembershipID > 0) && (model.CompanyID > 0) && (model.IndustryID > 0) && (model.SegmentID > 0))

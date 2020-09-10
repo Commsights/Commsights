@@ -68,7 +68,7 @@ namespace Commsights.MVC.Controllers
             if (string.IsNullOrEmpty(model.FullName))
             {
                 model.FullName = model.Account;
-            }            
+            }
             if (string.IsNullOrEmpty(model.Password))
             {
                 model.Password = "0";
@@ -245,7 +245,7 @@ namespace Commsights.MVC.Controllers
                     var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.URLImagesCustomer, fileName);
                     using (var stream = new FileStream(physicalPath, FileMode.Create))
                     {
-                        file.CopyToAsync(stream);
+                        file.CopyTo(stream);
                         model.Avatar = fileName;
                     }
                 }
@@ -254,23 +254,25 @@ namespace Commsights.MVC.Controllers
             {
                 Initialization(model, 1);
                 model.Initialization(InitType.Update, RequestUserID);
-                bool check = false;
-                Membership membership = _membershipRepository.GetByAccount(model.Account);
-                if (membership == null)
-                {
-                    check = true;
-                }
-                else
-                {
-                    if (membership.ID == model.ID)
-                    {
-                        check = true;
-                    }
-                }
-                if (check == true)
-                {
-                    _membershipRepository.Update(model.ID, model);
-                }
+                
+                //bool check = false;
+                //int ID = _membershipRepository.IsByAccount(model.Account);
+                //if (ID == 0)
+                //{
+                //    check = true;
+                //}
+                //else
+                //{
+                //    if (model.ID == ID)
+                //    {
+                //        check = true;
+                //    }
+                //}
+                //if (check == true)
+                //{
+                //    _membershipRepository.Update(model.ID, model);
+                //}
+                _membershipRepository.Update(model.ID, model);
             }
             else
             {

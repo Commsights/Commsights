@@ -121,5 +121,14 @@ namespace Commsights.Data.Repositories
             }
             return membership;
         }
+        public int IsByAccount(string account)
+        {
+            int ID = 0;
+            if (!string.IsNullOrEmpty(account))
+            {
+                ID = _context.Membership.FirstOrDefault(item => item.Account.Equals(account)).ID;
+            }
+            return ID;
+        }
     }
 }
