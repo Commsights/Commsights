@@ -793,34 +793,34 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult ScanFull()
         {
-            Product product = new Product();
-            product.Title = "Vietcombank tăng tốc trên cuộc đua ngân hàng số";
-            product.Description = "Vietcombank đẩy mạnh số hóa hoạt động ngân hàng, ra mắt sản phẩm, dịch vụ mới trên nền tảng công nghệ, tăng trải nghiệm khách hàng.";
-            product.URLCode = "https://vnexpress.net/vietcombank-tang-toc-tren-cuoc-dua-ngan-hang-so-4159707.html";
-            product.ContentMain = AppGlobal.GetContentByURL(product.URLCode);
-            List<ProductProperty> listProductProperty = new List<ProductProperty>();
-            this.FilterProduct(product, listProductProperty);
+            //Product product = new Product();
+            //product.Title = "Vietcombank tăng tốc trên cuộc đua ngân hàng số";
+            //product.Description = "Vietcombank đẩy mạnh số hóa hoạt động ngân hàng, ra mắt sản phẩm, dịch vụ mới trên nền tảng công nghệ, tăng trải nghiệm khách hàng.";
+            //product.URLCode = "https://vnexpress.net/vietcombank-tang-toc-tren-cuoc-dua-ngan-hang-so-4159707.html";
+            //product.ContentMain = AppGlobal.GetContentByURL(product.URLCode);
+            //List<ProductProperty> listProductProperty = new List<ProductProperty>();
+            //this.FilterProduct(product, listProductProperty);
 
-            //List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveAndIsMenuLeftToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, false, true);
-            //foreach (Config item in listConfig)
-            //{
-            //    if (item.IsMenuLeft == true)
-            //    {
-            //        List<Product> list = new List<Product>();
-            //        try
-            //        {
-            //            this.ParseRSS(list, item);
-            //        }
-            //        catch (Exception e)
-            //        {
-            //        }
-            //        if (list.Count > 0)
-            //        {
-            //            _productRepository.Range(list);
-            //            _productPropertyRepository.UpdateItemsWithParentIDIsZero();
-            //        }
-            //    }
-            //}
+            List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveAndIsMenuLeftToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, false, true);
+            foreach (Config item in listConfig)
+            {
+                if (item.IsMenuLeft == true)
+                {
+                    List<Product> list = new List<Product>();
+                    try
+                    {
+                        this.ParseRSS(list, item);
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                    if (list.Count > 0)
+                    {
+                        _productRepository.Range(list);
+                        _productPropertyRepository.UpdateItemsWithParentIDIsZero();
+                    }
+                }
+            }
             string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
             return Json(note);
         }
