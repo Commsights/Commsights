@@ -34,7 +34,7 @@
                             )
                     </div>
                     <div class='col-sm-1'>
-                        <button type="button" class="btn btn-success" onclick="onSearchCompany()">
+                        <button type="button" class="btn btn-success" onclick="onSearchProduct()">
                             <span class="fa fa-search"></span>
                         </button>
                     </div>
@@ -128,9 +128,10 @@
 
     }
     function onSearch() {
+        $("#Action").val('0');
         $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
     }
-    function onSearchIndustry() {
+    function onSearchProduct() {
         $("#Action").val('1');
         $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
     }

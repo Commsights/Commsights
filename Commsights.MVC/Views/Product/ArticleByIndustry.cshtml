@@ -126,6 +126,7 @@
 
     }
     function onSearch() {
+        $("#Action").val('0');
         $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
     }
     function onSearchIndustry() {
