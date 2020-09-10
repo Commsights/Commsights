@@ -1,4 +1,4 @@
-﻿@{ Layout = "~/Views/Shared/_LayoutWindow.cshtml"; ViewData["Title"] = "Product property"; }
+﻿@{ Layout = "~/Views/Shared/_LayoutWindow.cshtml"; ViewData["Title"] = "Company list"; }
 
 @model Commsights.Data.Models.Product
 
@@ -15,7 +15,8 @@
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" });  }).Width(150);
     columns.Bound(t => t.CompanyName).Title("Company").Width(200);
-    columns.Bound(t => t.Point).Title("%").Width(100);
+    columns.Bound(t => t.AssessType.TextName).EditorTemplateName("Config_AssessType").Title("Assess").Width(200);
+    columns.Bound(t => t.Point).Title("%").Width(200);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .Editable(editable => editable.Mode(GridEditMode.InLine))
@@ -50,10 +51,11 @@
 {
     model.Id(t => t.ID);
     model.Field(t => t.CompanyName).Editable(false);
+    model.Field(t => t.AssessType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetDataTransferCompanyByParentIDToList", "ProductProperty").Data("filterProductProperty"))
-.Update(t => t.Action("Update", "ProductProperty"))
+.Update(t => t.Action("UpdateDataTransfer", "ProductProperty"))
 )
 )
     </div>

@@ -34,6 +34,12 @@ namespace Commsights.Data.Repositories
             };
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectDataTransferCompanyByParentID", parameters);
                 list = SQLHelper.ToList<ProductPropertyPropertyDataTransfer>(dt);
+                for (int i = 0; i < list.Count; i++)
+                {                    
+                    list[i].AssessType = new ModelTemplate();
+                    list[i].AssessType.ID = list[i].AssessID;
+                    list[i].AssessType.TextName = list[i].AssessName;
+                }
             }
 
             return list;
@@ -49,6 +55,12 @@ namespace Commsights.Data.Repositories
             };
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectDataTransferIndustryByParentID", parameters);
                 list = SQLHelper.ToList<ProductPropertyPropertyDataTransfer>(dt);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    list[i].AssessType = new ModelTemplate();
+                    list[i].AssessType.ID = list[i].AssessID;
+                    list[i].AssessType.TextName = list[i].AssessName;
+                }
             }
 
             return list;
@@ -64,6 +76,12 @@ namespace Commsights.Data.Repositories
             };
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectDataTransferProductByParentID", parameters);
                 list = SQLHelper.ToList<ProductPropertyPropertyDataTransfer>(dt);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    list[i].AssessType = new ModelTemplate();
+                    list[i].AssessType.ID = list[i].AssessID;
+                    list[i].AssessType.TextName = list[i].AssessName;
+                }
             }
 
             return list;

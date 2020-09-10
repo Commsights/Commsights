@@ -67,5 +67,26 @@ namespace Commsights.MVC.Controllers
             var data = _productPropertyRepository.GetDataTransferIndustryByParentIDToList(parentID);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetDataTransferProductByParentIDToList([DataSourceRequest] DataSourceRequest request, int parentID)
+        {
+            var data = _productPropertyRepository.GetDataTransferProductByParentIDToList(parentID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public IActionResult UpdateDataTransfer(ProductPropertyPropertyDataTransfer model)
+        {
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Update, RequestUserID);
+            model.AssessID = model.AssessType.ID;
+            int result = _productPropertyRepository.Update(model.ID, model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
     }
 }

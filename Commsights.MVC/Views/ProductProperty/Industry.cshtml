@@ -1,4 +1,4 @@
-﻿@{ Layout = "~/Views/Shared/_LayoutWindow.cshtml"; ViewData["Title"] = "Product property"; }
+﻿@{ Layout = "~/Views/Shared/_LayoutWindow.cshtml"; ViewData["Title"] = "Industry list"; }
 
 @model Commsights.Data.Models.Product
 
@@ -6,7 +6,7 @@
 
 <div class="card card-primary card-outline">
     <div class="card-header">
-        <h5 class="card-title m-0">Company list</h5>
+        <h5 class="card-title m-0">Industry list</h5>
     </div>
     <div class="card-body">
         @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ProductPropertyPropertyDataTransfer>()
@@ -15,7 +15,8 @@
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" });  }).Width(150);
     columns.Bound(t => t.IndustryName).Title("Industry").Width(200);
-    columns.Bound(t => t.Point).Title("%").Width(100);
+    columns.Bound(t => t.AssessType.TextName).EditorTemplateName("Config_AssessType").Title("Assess").Width(200);
+    columns.Bound(t => t.Point).Title("%").Width(200);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .Editable(editable => editable.Mode(GridEditMode.InLine))
@@ -49,11 +50,12 @@
 .Model(model =>
 {
     model.Id(t => t.ID);
-    model.Field(t => t.CompanyName).Editable(false);
+    model.Field(t => t.IndustryName).Editable(false);
+    model.Field(t => t.AssessType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetDataTransferIndustryByParentIDToList", "ProductProperty").Data("filterProductProperty"))
-.Update(t => t.Action("Update", "ProductProperty"))
+.Update(t => t.Action("UpdateDataTransfer", "ProductProperty"))
 )
 )
     </div>

@@ -799,16 +799,17 @@ namespace Commsights.Data.Helpers
         public static int CheckContentAndKeyword(string content, string keyword)
         {
             int check = 0;
+            int checkSub = 0;
             int index = content.IndexOf(keyword);
             if (index == 0)
             {
-                check = 1;
+                checkSub = checkSub + 1;
             }
             else
             {
                 if ((content[index - 1].ToString() == " ") || (content[index - 1].ToString() == "(") || (content[index - 1].ToString() == "[") || (content[index - 1].ToString() == "{") || (content[index - 1].ToString() == "<"))
                 {
-                    check = 1;
+                    checkSub = checkSub + 1;
                 }
             }
             int index001 = index + keyword.Length;
@@ -816,8 +817,15 @@ namespace Commsights.Data.Helpers
             {
                 if ((content[index001].ToString() != " ") && (content[index001].ToString() != ",") && (content[index001].ToString() != ".") && (content[index001].ToString() != ";") && (content[index001].ToString() != ")") && (content[index001].ToString() != "]") && (content[index001].ToString() != "}") && (content[index001].ToString() != ">"))
                 {
-                    check = 0;
                 }
+                else
+                {
+                    checkSub = checkSub + 1;
+                }
+            }
+            if (checkSub == 2)
+            {
+                check = 1;
             }
             return check;
         }

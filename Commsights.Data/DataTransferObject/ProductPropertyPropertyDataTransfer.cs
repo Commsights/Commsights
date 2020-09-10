@@ -15,6 +15,7 @@ namespace Commsights.Data.DataTransferObject
         public string IndustryName { get; set; }
         public string SegmentName { get; set; }
         public string ProductName { get; set; }
+        public ModelTemplate AssessType { get; set; }
 
     }
 }

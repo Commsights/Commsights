@@ -477,6 +477,7 @@ namespace Commsights.MVC.Controllers
                         ProductProperty productProperty = new ProductProperty();
                         productProperty.Initialization(InitType.Insert, RequestUserID);
                         productProperty.ParentID = 0;
+                        productProperty.AssessID = AppGlobal.AssessID;
                         productProperty.GUICode = product.GUICode;
                         productProperty.Code = AppGlobal.Product;
                         segment = _configResposistory.GetByID(listProduct[i].SegmentID.Value);
@@ -559,6 +560,7 @@ namespace Commsights.MVC.Controllers
                         ProductProperty productProperty = new ProductProperty();
                         productProperty.Initialization(InitType.Insert, RequestUserID);
                         productProperty.ParentID = 0;
+                        productProperty.AssessID = AppGlobal.AssessID;
                         productProperty.GUICode = product.GUICode;
                         productProperty.Code = AppGlobal.Segment;
                         segment = _configResposistory.GetByID(listSegment[i].ParentID.Value);
@@ -631,6 +633,7 @@ namespace Commsights.MVC.Controllers
                         ProductProperty productProperty = new ProductProperty();
                         productProperty.Initialization(InitType.Insert, RequestUserID);
                         productProperty.ParentID = 0;
+                        productProperty.AssessID = AppGlobal.AssessID;
                         productProperty.GUICode = product.GUICode;
                         productProperty.Code = AppGlobal.Industry;
                         if (order == 0)
@@ -674,6 +677,7 @@ namespace Commsights.MVC.Controllers
                         ProductProperty productProperty = new ProductProperty();
                         productProperty.Initialization(InitType.Insert, RequestUserID);
                         productProperty.ParentID = 0;
+                        productProperty.AssessID = AppGlobal.AssessID;
                         productProperty.GUICode = product.GUICode;
                         productProperty.Code = AppGlobal.Company;
                         if (order == 0)
@@ -794,9 +798,9 @@ namespace Commsights.MVC.Controllers
         public IActionResult ScanFull()
         {
             //Product product = new Product();
-            //product.Title = "Vietcombank tăng tốc trên cuộc đua ngân hàng số";
-            //product.Description = "Vietcombank đẩy mạnh số hóa hoạt động ngân hàng, ra mắt sản phẩm, dịch vụ mới trên nền tảng công nghệ, tăng trải nghiệm khách hàng.";
-            //product.URLCode = "https://vnexpress.net/vietcombank-tang-toc-tren-cuoc-dua-ngan-hang-so-4159707.html";
+            //product.Title = "Đại học Ngân hàng tăng điểm sàn thi THPT";
+            //product.Description = "Đại học Ngân hàng TP HCM nâng sàn ở chương trình đại trà, chính quy chất lượng cao 1-2 điểm; giảm điểm sàn đánh giá năng lực.";
+            //product.URLCode = "https://vnexpress.net/dai-hoc-ngan-hang-tang-diem-san-thi-thpt-4159752.html";
             //product.ContentMain = AppGlobal.GetContentByURL(product.URLCode);
             //List<ProductProperty> listProductProperty = new List<ProductProperty>();
             //this.FilterProduct(product, listProductProperty);
