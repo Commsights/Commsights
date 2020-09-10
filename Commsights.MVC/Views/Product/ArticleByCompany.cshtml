@@ -44,6 +44,7 @@
 .Name("ProductDataTransfer")
 .Columns(columns =>
 {
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); }).Width(150);
     columns.Bound(t => t.Active).Title("Select").Width(200);
     columns.Bound(t => t.DatePublish).Title("Publish").Width(200);
     columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=URLCode#"");' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Title + URL").Width(600);
@@ -80,13 +81,20 @@
 .FileName("Config.pdf")
 )
 .HtmlAttributes(new { @class = "KendoGrid" })
-.Search(search => { search.Field(f => f.Title); search.Field(f => f.URLCode); search.Field(f => f.ParentName); search.Field(f => f.IndustryName); search.Field(f => f.ArticleTypeName); search.Field(f => f.AssessName); })
+.Search(search => { search.Field(f => f.CompanyName); search.Field(f => f.Title); search.Field(f => f.URLCode); search.Field(f => f.ParentName); search.Field(f => f.IndustryName); search.Field(f => f.ArticleTypeName); search.Field(f => f.AssessName); })
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
 .Model(model =>
 {
     model.Id(t => t.ID);
+    model.Field(t => t.ID).Editable(false);
+    model.Field(t => t.DatePublish).Editable(false);
+    model.Field(t => t.CompanyName).Editable(false);
+    model.Field(t => t.ParentName).Editable(false);
+    model.Field(t => t.IndustryName).Editable(false);
+    model.Field(t => t.ArticleTypeName).Editable(false);
+    model.Field(t => t.AssessName).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetDataTransferByDatePublishAndArticleTypeIDAndCompanyIDAndActionToList", "Product").Data("filterProduct"))

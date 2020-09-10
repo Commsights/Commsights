@@ -439,6 +439,11 @@ namespace Commsights.MVC.Controllers
         {
             int order = 0;
             string keyword = "";
+            bool title = false;
+            int industryID = 0;
+            int segmentID = 0;
+            int productID = 0;
+            int companyID = 0;
             Config segment = new Config();
             List<MembershipPermission> listProduct = _membershipPermissionRepository.GetByProductCodeToList(AppGlobal.Product);
             for (int i = 0; i < listProduct.Count; i++)
@@ -450,6 +455,14 @@ namespace Commsights.MVC.Controllers
                     if (product.Title.Contains(keyword))
                     {
                         check = check + AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                        title = true;
+                        productID = listProduct[i].ID;
+                        segmentID = listProduct[i].SegmentID.Value;
+                        segment = _configResposistory.GetByID(listProduct[i].SegmentID.Value);
+                        if (segment != null)
+                        {
+                            industryID = segment.ParentID.Value;
+                        }
                     }
                     if (product.Description.Contains(keyword))
                     {
@@ -487,7 +500,14 @@ namespace Commsights.MVC.Controllers
                     }
                 }
             }
+            if (title == true)
+            {
+                product.ProductID = productID;
+                product.SegmentID = segmentID;
+                product.IndustryID = industryID;
+            }
             order = 0;
+            title = false;
             List<Config> listSegment = _configResposistory.GetByGroupNameAndCodeToList(AppGlobal.CRM, AppGlobal.Segment);
             for (int i = 0; i < listSegment.Count; i++)
             {
@@ -501,6 +521,9 @@ namespace Commsights.MVC.Controllers
                         if (product.Title.Contains(keyword))
                         {
                             check = check + AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                            title = true;
+                            segmentID = listSegment[i].ID;
+                            industryID = listSegment[i].ParentID.Value;
                         }
                         if (product.Description.Contains(keyword))
                         {
@@ -518,6 +541,9 @@ namespace Commsights.MVC.Controllers
                         if (product.Title.Contains(keyword))
                         {
                             check = check + AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                            title = true;
+                            segmentID = listSegment[i].ID;
+                            industryID = listSegment[i].ParentID.Value;
                         }
                         if (product.Description.Contains(keyword))
                         {
@@ -549,7 +575,13 @@ namespace Commsights.MVC.Controllers
                     }
                 }
             }
+            if (title == true)
+            {
+                product.SegmentID = segmentID;
+                product.IndustryID = industryID;
+            }
             order = 0;
+            title = false;
             List<Config> listIndustry = _configResposistory.GetByGroupNameAndCodeToList(AppGlobal.CRM, AppGlobal.Industry);
             for (int i = 0; i < listIndustry.Count; i++)
             {
@@ -563,6 +595,8 @@ namespace Commsights.MVC.Controllers
                         if (product.Title.Contains(keyword))
                         {
                             check = check + AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                            title = true;
+                            industryID = listIndustry[i].ID;
                         }
                         if (product.Description.Contains(keyword))
                         {
@@ -580,6 +614,8 @@ namespace Commsights.MVC.Controllers
                         if (product.Title.Contains(keyword))
                         {
                             check = check + AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                            title = true;
+                            industryID = listIndustry[i].ID;
                         }
                         if (product.Description.Contains(keyword))
                         {
@@ -607,17 +643,23 @@ namespace Commsights.MVC.Controllers
                     }
                 }
             }
+            if (title == true)
+            {
+                product.IndustryID = industryID;
+            }
             order = 0;
             List<Membership> listCompany = _membershipRepository.GetByCompanyToList();
             for (int i = 0; i < listCompany.Count; i++)
             {
                 if (!string.IsNullOrEmpty(listCompany[i].Account))
                 {
-                    keyword = listCompany[i].Account.Trim();                    
+                    keyword = listCompany[i].Account.Trim();
                     int check = 0;
                     if (product.Title.Contains(keyword))
                     {
                         check = check + AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                        title = true;
+                        companyID = listCompany[i].ID;
                     }
                     if (product.Description.Contains(keyword))
                     {
@@ -643,6 +685,10 @@ namespace Commsights.MVC.Controllers
                         order = order + 1;
                     }
                 }
+            }
+            if (title == true)
+            {
+                product.CompanyID = companyID;
             }
             if (product.ProductID > 0)
             {
@@ -747,34 +793,34 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult ScanFull()
         {
-            //Product product = new Product();
-            //product.Title = "An Gia chi 1.200 tỷ cho dự án khu biệt lập đầu tiên";
-            //product.Description = "An Gia lần đầu triển khai dự án nhà thấp tầng với gần 400 căn nhà phố, căn hộ thương mại The Standard Central Park, tổng vốn đầu tư 1.200 tỷ đồng.";
-            //product.URLCode = "https://vnexpress.net/an-gia-chi-1-200-ty-cho-du-an-khu-biet-lap-dau-tien-4153105.html";
-            //product.ContentMain = AppGlobal.GetContentByURL(product.URLCode);
-            //List<ProductProperty> listProductProperty = new List<ProductProperty>();
-            //this.FilterProduct(product, listProductProperty);
+            Product product = new Product();
+            product.Title = "Vietcombank tăng tốc trên cuộc đua ngân hàng số";
+            product.Description = "Vietcombank đẩy mạnh số hóa hoạt động ngân hàng, ra mắt sản phẩm, dịch vụ mới trên nền tảng công nghệ, tăng trải nghiệm khách hàng.";
+            product.URLCode = "https://vnexpress.net/vietcombank-tang-toc-tren-cuoc-dua-ngan-hang-so-4159707.html";
+            product.ContentMain = AppGlobal.GetContentByURL(product.URLCode);
+            List<ProductProperty> listProductProperty = new List<ProductProperty>();
+            this.FilterProduct(product, listProductProperty);
 
-            List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveAndIsMenuLeftToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, false, true);
-            foreach (Config item in listConfig)
-            {
-                if (item.IsMenuLeft == true)
-                {
-                    List<Product> list = new List<Product>();
-                    try
-                    {
-                        this.ParseRSS(list, item);
-                    }
-                    catch (Exception e)
-                    {
-                    }
-                    if (list.Count > 0)
-                    {
-                        _productRepository.Range(list);
-                        _productPropertyRepository.UpdateItemsWithParentIDIsZero();
-                    }
-                }
-            }
+            //List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveAndIsMenuLeftToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, false, true);
+            //foreach (Config item in listConfig)
+            //{
+            //    if (item.IsMenuLeft == true)
+            //    {
+            //        List<Product> list = new List<Product>();
+            //        try
+            //        {
+            //            this.ParseRSS(list, item);
+            //        }
+            //        catch (Exception e)
+            //        {
+            //        }
+            //        if (list.Count > 0)
+            //        {
+            //            _productRepository.Range(list);
+            //            _productPropertyRepository.UpdateItemsWithParentIDIsZero();
+            //        }
+            //    }
+            //}
             string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
             return Json(note);
         }

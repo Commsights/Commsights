@@ -48,6 +48,15 @@ namespace Commsights.MVC.Controllers
             }
             return View(model);
         }
+        public IActionResult Product(int ID)
+        {
+            Product model = new Product();
+            if (ID > 0)
+            {
+                model = _productRepository.GetByID(ID);
+            }
+            return View(model);
+        }
         public ActionResult GetDataTransferCompanyByParentIDToList([DataSourceRequest] DataSourceRequest request, int parentID)
         {
             var data = _productPropertyRepository.GetDataTransferCompanyByParentIDToList(parentID);
