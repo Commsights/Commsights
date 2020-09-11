@@ -818,7 +818,7 @@ namespace Commsights.MVC.Controllers
                 {
                     if (_productRepository.IsValid(product.URLCode) == true)
                     {
-                        product.ContentMain = AppGlobal.GetContentByURL(product.URLCode);
+                        product.ContentMain = AppGlobal.GetContentByURL(product.URLCode, product.ParentID.Value);
                         List<ProductProperty> listProductProperty = new List<ProductProperty>();
                         this.FilterProduct(product, listProductProperty);
                         if (listProductProperty.Count > 0)

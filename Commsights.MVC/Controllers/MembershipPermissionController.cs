@@ -125,6 +125,16 @@ namespace Commsights.MVC.Controllers
             var data = _membershipPermissionRepository.GetByMembershipIDAndCodeToList(membershipID, AppGlobal.File);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetByMembershipIDAndKeywordNegativeToList([DataSourceRequest] DataSourceRequest request, int membershipID)
+        {
+            var data = _membershipPermissionRepository.GetByMembershipIDAndCodeToList(membershipID, AppGlobal.KeywordNegative);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetByMembershipIDAndKeywordPositiveToList([DataSourceRequest] DataSourceRequest request, int membershipID)
+        {
+            var data = _membershipPermissionRepository.GetByMembershipIDAndCodeToList(membershipID, AppGlobal.KeywordPositive);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetIndustryIDAndCodeToList([DataSourceRequest] DataSourceRequest request, int industryID)
         {
             var data = _membershipPermissionRepository.GetIndustryIDAndCodeToList(industryID, AppGlobal.Industry);
@@ -237,6 +247,42 @@ namespace Commsights.MVC.Controllers
         {
             model.IndustryID = industryID;
             model.ProductID = 0;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _membershipPermissionRepository.Create(model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateKeywordPositive(MembershipPermission model, int membershipID)
+        {
+            model.MembershipID = membershipID;
+            model.Code = AppGlobal.KeywordPositive;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _membershipPermissionRepository.Create(model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateKeywordNegative(MembershipPermission model, int membershipID)
+        {
+            model.MembershipID = membershipID;
+            model.Code = AppGlobal.KeywordNegative;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;

@@ -58,7 +58,7 @@ namespace Commsights.Data.Repositories
         }
         public List<Config> GetByGroupNameAndCodeAndActiveAndIsMenuLeftToList(string groupName, string code, bool active, bool isMenuLeft)
         {
-            return _context.Config.Where(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.Active.Equals(active) && item.IsMenuLeft.Equals(isMenuLeft)).OrderBy(item => item.SortOrder).ToList();
+            return _context.Config.Where(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.Active.Equals(active) && item.IsMenuLeft.Equals(isMenuLeft)).OrderBy(item => item.ID).ToList();
         }
         public List<ConfigDataTransfer> GetDataTransferParentByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active)
         {
@@ -88,7 +88,7 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@Code",code),
                 new SqlParameter("@Active",active)
             };
-            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectDataTransferWebisteByGroupNameAndCode", parameters);
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectDataTransferWebisteByGroupNameAndCodeAndActive", parameters);
             list = SQLHelper.ToList<ConfigDataTransfer>(dt);
             for (int i = 0; i < list.Count; i++)
             {
