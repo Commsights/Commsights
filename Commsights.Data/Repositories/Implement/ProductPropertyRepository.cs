@@ -23,6 +23,42 @@ namespace Commsights.Data.Repositories
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyUpdateItemsWithParentIDIsZero");
             return result;
         }
+        public bool IsExistByGUICodeAndCodeAndCompanyID(string gUICode, string code, int companyID)
+        {
+            var model = _context.ProductProperty.FirstOrDefault(item => item.GUICode.Equals(gUICode) && item.Code.Equals(code) && item.CompanyID == companyID);
+            if (model != null)
+            {
+                return true;
+            }
+            return false;
+        }
+        public bool IsExistByGUICodeAndCodeAndIndustryID(string gUICode, string code, int industryID)
+        {
+            var model = _context.ProductProperty.FirstOrDefault(item => item.GUICode.Equals(gUICode) && item.Code.Equals(code) && item.IndustryID == industryID);
+            if (model != null)
+            {
+                return true;
+            }
+            return false;
+        }
+        public bool IsExistByGUICodeAndCodeAndIndustryIDAndSegmentID(string gUICode, string code, int industryID, int segmentID)
+        {
+            var model = _context.ProductProperty.FirstOrDefault(item => item.GUICode.Equals(gUICode) && item.Code.Equals(code) && item.IndustryID == industryID && item.SegmentID == segmentID);
+            if (model != null)
+            {
+                return true;
+            }
+            return false;
+        }
+        public bool IsExistByGUICodeAndCodeAndProductID(string gUICode, string code, int productID)
+        {
+            var model = _context.ProductProperty.FirstOrDefault(item => item.GUICode.Equals(gUICode) && item.Code.Equals(code) && item.ProductID == productID);
+            if (model != null)
+            {
+                return true;
+            }
+            return false;
+        }
         public List<ProductPropertyPropertyDataTransfer> GetDataTransferCompanyByParentIDToList(int parentID)
         {
             List<ProductPropertyPropertyDataTransfer> list = new List<ProductPropertyPropertyDataTransfer>();
@@ -35,7 +71,7 @@ namespace Commsights.Data.Repositories
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectDataTransferCompanyByParentID", parameters);
                 list = SQLHelper.ToList<ProductPropertyPropertyDataTransfer>(dt);
                 for (int i = 0; i < list.Count; i++)
-                {                    
+                {
                     list[i].AssessType = new ModelTemplate();
                     list[i].AssessType.ID = list[i].AssessID;
                     list[i].AssessType.TextName = list[i].AssessName;

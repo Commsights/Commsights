@@ -445,6 +445,10 @@ namespace Commsights.MVC.Controllers
             int productID = 0;
             int companyID = 0;
             Config segment = new Config();
+            List<int> listProductID = new List<int>();
+            List<int> listSegmentID = new List<int>();
+            List<int> listIndustryID = new List<int>();
+            List<int> listCompanyID = new List<int>();
             List<MembershipPermission> listProduct = _membershipPermissionRepository.GetByProductCodeToList(AppGlobal.Product);
             for (int i = 0; i < listProduct.Count; i++)
             {
@@ -463,6 +467,9 @@ namespace Commsights.MVC.Controllers
                         {
                             industryID = segment.ParentID.Value;
                         }
+                        listProductID.Add(productID);
+                        listSegmentID.Add(segmentID);
+                        listIndustryID.Add(industryID);
                     }
                     if (product.Description.Contains(keyword))
                     {
@@ -496,19 +503,26 @@ namespace Commsights.MVC.Controllers
                         {
                             productProperty.IndustryID = segment.ParentID;
                         }
-                        listProductProperty.Add(productProperty);
+                        if (_productPropertyRepository.IsExistByGUICodeAndCodeAndProductID(productProperty.GUICode, productProperty.Code, productProperty.ProductID.Value) == false)
+                        {
+                            listProductProperty.Add(productProperty);
+                        }
                         order = order + 1;
                     }
                 }
             }
             if (title == true)
             {
-                product.ProductID = productID;
-                product.SegmentID = segmentID;
-                product.IndustryID = industryID;
+                product.ProductID = listProductID[0];
+                product.SegmentID = listSegmentID[0];
+                product.IndustryID = listIndustryID[0];
             }
             order = 0;
             title = false;
+            listProductID = new List<int>();
+            listSegmentID = new List<int>();
+            listIndustryID = new List<int>();
+            listCompanyID = new List<int>();
             List<Config> listSegment = _configResposistory.GetByGroupNameAndCodeToList(AppGlobal.CRM, AppGlobal.Segment);
             for (int i = 0; i < listSegment.Count; i++)
             {
@@ -525,6 +539,8 @@ namespace Commsights.MVC.Controllers
                             title = true;
                             segmentID = listSegment[i].ID;
                             industryID = listSegment[i].ParentID.Value;
+                            listSegmentID.Add(segmentID);
+                            listIndustryID.Add(industryID);
                         }
                         if (product.Description.Contains(keyword))
                         {
@@ -572,18 +588,25 @@ namespace Commsights.MVC.Controllers
                         }
                         productProperty.SegmentID = listSegment[i].ID;
                         productProperty.IndustryID = listSegment[i].ParentID;
-                        listProductProperty.Add(productProperty);
+                        if (_productPropertyRepository.IsExistByGUICodeAndCodeAndIndustryIDAndSegmentID(productProperty.GUICode, productProperty.Code, productProperty.IndustryID.Value, productProperty.SegmentID.Value) == false)
+                        {
+                            listProductProperty.Add(productProperty);
+                        }
                         order = order + 1;
                     }
                 }
             }
             if (title == true)
             {
-                product.SegmentID = segmentID;
-                product.IndustryID = industryID;
+                product.SegmentID = listSegmentID[0];
+                product.IndustryID = listIndustryID[0];
             }
             order = 0;
             title = false;
+            listProductID = new List<int>();
+            listSegmentID = new List<int>();
+            listIndustryID = new List<int>();
+            listCompanyID = new List<int>();
             List<Config> listIndustry = _configResposistory.GetByGroupNameAndCodeToList(AppGlobal.CRM, AppGlobal.Industry);
             for (int i = 0; i < listIndustry.Count; i++)
             {
@@ -599,6 +622,7 @@ namespace Commsights.MVC.Controllers
                             check = check + AppGlobal.CheckContentAndKeyword(product.Title, keyword);
                             title = true;
                             industryID = listIndustry[i].ID;
+                            listIndustryID.Add(industryID);
                         }
                         if (product.Description.Contains(keyword))
                         {
@@ -641,16 +665,24 @@ namespace Commsights.MVC.Controllers
                             product.IndustryID = listIndustry[i].ID;
                         }
                         productProperty.IndustryID = listIndustry[i].ID;
-                        listProductProperty.Add(productProperty);
+                        if (_productPropertyRepository.IsExistByGUICodeAndCodeAndIndustryID(productProperty.GUICode, productProperty.Code, productProperty.IndustryID.Value) == false)
+                        {
+                            listProductProperty.Add(productProperty);
+                        }
                         order = order + 1;
                     }
                 }
             }
             if (title == true)
             {
-                product.IndustryID = industryID;
+                product.IndustryID = listIndustryID[0];
             }
             order = 0;
+            title = false;
+            listProductID = new List<int>();
+            listSegmentID = new List<int>();
+            listIndustryID = new List<int>();
+            listCompanyID = new List<int>();
             List<Membership> listCompany = _membershipRepository.GetByCompanyToList();
             for (int i = 0; i < listCompany.Count; i++)
             {
@@ -663,6 +695,7 @@ namespace Commsights.MVC.Controllers
                         check = check + AppGlobal.CheckContentAndKeyword(product.Title, keyword);
                         title = true;
                         companyID = listCompany[i].ID;
+                        listCompanyID.Add(companyID);
                     }
                     if (product.Description.Contains(keyword))
                     {
@@ -685,14 +718,17 @@ namespace Commsights.MVC.Controllers
                             product.CompanyID = listCompany[i].ID;
                         }
                         productProperty.CompanyID = listCompany[i].ID;
-                        listProductProperty.Add(productProperty);
+                        if (_productPropertyRepository.IsExistByGUICodeAndCodeAndCompanyID(productProperty.GUICode, productProperty.Code, productProperty.CompanyID.Value) == false)
+                        {
+                            listProductProperty.Add(productProperty);
+                        }
                         order = order + 1;
                     }
                 }
             }
             if (title == true)
             {
-                product.CompanyID = companyID;
+                product.CompanyID = listCompanyID[0];
             }
             if (product.ProductID > 0)
             {
