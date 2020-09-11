@@ -49,12 +49,12 @@
     columns.Bound(t => t.DatePublish).Title("Publish").Width(200);
     columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=URLCode#"");' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Title + URL").Width(600);
     columns.Bound(t => t.CompanyName).Title("Company first").Width(200);
-    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/ProductProperty/Company/#=ID#"",400,400);' class='btn btn-success' style='color: white; cursor: pointer;'><i class='fas fa-list-ul'></i></a>").Title("List").Width(70).HtmlAttributes(new { style = "text-align:center;" });
+    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/ProductProperty/Company/#=ID#"");' class='btn btn-success' style='color: white; cursor: pointer;'><i class='fas fa-list-ul'></i></a>").Title("List").Width(70).HtmlAttributes(new { style = "text-align:center;" });
     columns.Bound(t => t.ParentName).Title("Website").Width(200);
     columns.Bound(t => t.IndustryName).Title("Industry").Width(200);
     columns.Bound(t => t.ArticleTypeName).Title("Article type").Width(200);
     columns.Bound(t => t.AssessName).Title("Assess").Width(200);
-    columns.Bound(t => t.ID).Title("Assess").Width(100);
+    columns.Bound(t => t.ID).Title("ID").Width(100);
 })
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))

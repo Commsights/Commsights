@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Commsights.Data.DataTransferObject;
@@ -9,15 +10,18 @@ using Commsights.Data.Models;
 using Commsights.Data.Repositories;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Commsights.MVC.Controllers
 {
     public class MembershipPermissionController : BaseController
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IMembershipPermissionRepository _membershipPermissionRepository;
-        public MembershipPermissionController(IMembershipPermissionRepository membershipPermissionRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
+        public MembershipPermissionController(IHostingEnvironment hostingEnvironment, IMembershipPermissionRepository membershipPermissionRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
+            _hostingEnvironment = hostingEnvironment;
             _membershipPermissionRepository = membershipPermissionRepository;
         }
         private void Initialization()
@@ -114,6 +118,11 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetByMembershipIDAndProductToList([DataSourceRequest] DataSourceRequest request, int membershipID)
         {
             var data = _membershipPermissionRepository.GetByMembershipIDAndCodeToList(membershipID, AppGlobal.Product);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetByMembershipIDAndFileToList([DataSourceRequest] DataSourceRequest request, int membershipID)
+        {
+            var data = _membershipPermissionRepository.GetByMembershipIDAndCodeToList(membershipID, AppGlobal.File);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetIndustryIDAndCodeToList([DataSourceRequest] DataSourceRequest request, int industryID)
@@ -335,7 +344,7 @@ namespace Commsights.MVC.Controllers
             model.MembershipID = membershipID;
             model.CompanyID = model.Company.ID;
             model.IndustryID = model.Industry.ID;
-            model.SegmentID = model.Segment.ID;                        
+            model.SegmentID = model.Segment.ID;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
             if ((model.MembershipID > 0) && (model.CompanyID > 0) && (model.IndustryID > 0) && (model.SegmentID > 0))
@@ -631,6 +640,51 @@ namespace Commsights.MVC.Controllers
                 note = AppGlobal.Error + " - " + AppGlobal.DeleteFail;
             }
             return Json(note);
+        }
+        [AcceptVerbs("Post")]
+        public IActionResult SaveItems(MembershipPermission model)
+        {
+            try
+            {
+                if (Request.Form.Files.Count > 0)
+                {
+                    List<MembershipPermission> list = new List<MembershipPermission>();
+                    for (int i = 0; i < Request.Form.Files.Count; i++)
+                    {
+                        var file = Request.Form.Files[i];
+                        if (file != null)
+                        {
+                            string fileExtension = Path.GetExtension(file.FileName);
+                            string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                            if (!string.IsNullOrEmpty(model.FullName))
+                            {
+                                fileName = model.FullName;
+                            }
+                            fileName = AppGlobal.SetName(fileName);
+                            fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
+                            var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.URLImagesCustomer, fileName);
+                            using (var stream = new FileStream(physicalPath, FileMode.Create))
+                            {
+                                file.CopyTo(stream);
+                                MembershipPermission membershipPermission = new MembershipPermission();
+                                membershipPermission.Initialization(InitType.Insert, RequestUserID);
+                                membershipPermission.Code = AppGlobal.File;
+                                membershipPermission.MembershipID = model.MembershipID;
+                                membershipPermission.ProductName = model.ProductName;
+                                membershipPermission.Email = fileName;
+                                membershipPermission.Phone = fileExtension;
+                                list.Add(membershipPermission);
+                            }
+                        }
+                    }
+                    _membershipPermissionRepository.Range(list);
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+            return RedirectToAction("CustomerFiles", "Membership", new { ID = model.MembershipID });
         }
     }
 }

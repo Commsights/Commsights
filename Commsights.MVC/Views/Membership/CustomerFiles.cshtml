@@ -1,0 +1,125 @@
+﻿@{ ViewData["Title"] = "Client Retainer files"; }
+
+@model Commsights.Data.Models.MembershipPermission
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Client Retainer files</h3>
+            </div>
+            <div class="card-body">
+                <form asp-action="SaveItems" asp-controller="MembershipPermission">
+                    @Html.HiddenFor(Model => Model.MembershipID)
+                    @Html.HiddenFor(Model => Model.Code)
+                    <div class="row">
+                        <div class='col-md-11'>
+                        </div>
+                        <div class='col-md-1'>
+                            <button style="width:100%;" type="submit" title="Save" class="btn btn-primary">
+                                <span class="fas fa-save"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class='form-group'>
+                                <label for='Note'>Customer</label>
+                                @(Html.TextBoxFor(Model => Model.Note, new { placeholder = "Customer", @class = "form-control", @disabled = "disabled" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='FullName'>Title</label>
+                                @(Html.TextBoxFor(Model => Model.ProductName, new { placeholder = "Title", @class = "form-control" }))
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class='form-group'>
+                                <label for='FullName'>Full name</label>
+                                @(Html.TextBoxFor(Model => Model.FullName, new { placeholder = "Full name", @class = "form-control", @disabled = "disabled" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='Upload'>Select files</label>
+
+                                @(Html.Kendo().Upload()
+                              .Name("Upload")
+                              .HtmlAttributes(new { @class = "form-control" })
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <br />
+                @(Html.Kendo().Grid<Commsights.Data.Models.MembershipPermission>()
+.Name("MembershipPermission")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
+    columns.Bound(t => t.ID).Title("ID").Width(100);
+    columns.Bound(t => t.ProductName).Title("Title").Width(200);
+    columns.Bound(t => t.Phone).Title("Extension").Width(200);
+    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/Images/Customer/#=Email#"");' class='btn btn-success' style='color:white;'><i class='fas fa-paperclip'></i></a>").Title("File").Width(70).HtmlAttributes(new { style = "text-align:center;" });
+
+})
+.ToolBar(toolBar => toolBar.Search())
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid" })
+.Search(search => { search.Field(f => f.FullName); search.Field(f => f.Email); })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.ID);
+})
+.Events(t => { t.RequestEnd("onGridRequestEnd"); })
+.Read(t => t.Action("GetByMembershipIDAndFileToList", "MembershipPermission").Data("filterMembershipPermission"))
+.Destroy(t => t.Action("Delete", "MembershipPermission"))
+)
+)
+            </div>
+        </div>
+    </div>
+</div>
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+<script>
+    function onGridRequestEnd(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            var response = e.response;
+            var messageType = response.split('-')[0];
+            var note = response.split('-')[1];
+            var notification = $("#Notification").data("kendoNotification");
+            notification.show(note, messageType);
+            $("#MembershipPermission").data("kendoGrid").dataSource.read();
+        }
+    }
+    function filterMembershipPermission(e) {
+        var membershipIDValue = $("#MembershipID").val();
+        return { membershipID: membershipIDValue };
+    }
+</script>

@@ -100,6 +100,23 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult CustomerFiles(int ID)
+        {
+            MembershipPermission model = new MembershipPermission();
+            model.Code = AppGlobal.File;
+            model.MembershipID = ID;
+            Membership membership = new Membership();
+            if (ID > 0)
+            {
+                membership = _membershipRepository.GetByID(ID);
+                if (membership != null)
+                {
+                    model.Note = membership.Account;
+                    model.FullName = membership.FullName;
+                }
+            }
+            return View(model);
+        }
         public IActionResult CustomerDetail(int ID)
         {
             Membership membership = new Membership();
@@ -254,7 +271,7 @@ namespace Commsights.MVC.Controllers
             {
                 Initialization(model, 1);
                 model.Initialization(InitType.Update, RequestUserID);
-                
+
                 //bool check = false;
                 //int ID = _membershipRepository.IsByAccount(model.Account);
                 //if (ID == 0)
@@ -293,6 +310,7 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
+            model.Account = model.Account.Trim();
             if (_membershipRepository.IsExistAccount(model.Account) == false)
             {
                 result = _membershipRepository.Create(model);

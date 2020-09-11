@@ -80,6 +80,40 @@ namespace Commsights.MVC.Controllers
             int result = _productPropertyRepository.Update(model.ID, model);
             if (result > 0)
             {
+                Product product = _productRepository.GetByID(model.ParentID.Value);
+                if (product != null)
+                {
+                    switch (model.Code)
+                    {
+                        case "Industry":
+                            if (product.IndustryID == model.IndustryID)
+                            {
+                                product.AssessID = model.AssessID;
+                            }
+                            break;
+                        case "Product":
+                            if (product.ProductID == model.ProductID)
+                            {
+                                product.AssessID = model.AssessID;
+                            }
+                            break;
+                        case "Segment":
+                            if (product.SegmentID == model.SegmentID)
+                            {
+                                product.AssessID = model.AssessID;
+                            }
+                            break;
+                        case "Company":
+                            if (product.CompanyID == model.CompanyID)
+                            {
+                                product.AssessID = model.AssessID;
+                            }
+                            break;
+                    }
+                    product.Initialization(InitType.Update, RequestUserID);
+                    _productRepository.Update(product.ID, product);
+
+                }
                 note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
             }
             else

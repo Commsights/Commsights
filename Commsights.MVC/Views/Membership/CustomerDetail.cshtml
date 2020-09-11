@@ -12,7 +12,7 @@
                 <form asp-action="SaveCustomer" asp-controller="Membership">
                     @Html.HiddenFor(Model => Model.ID)
                     <div class="row">
-                        <div class='col-md-9'>
+                        <div class='col-md-8'>
                         </div>
                         <div class='col-md-1'>
                             <button style="width:100%;" type="submit" title="Save" class="btn btn-primary">
@@ -20,7 +20,12 @@
                             </button>
                         </div>
                         <div class='col-md-1'>
-                            <a asp-action="CustomerPlus" asp-controller="Membership" title="Company category" style="width:100%;" class="btn btn-success">
+                            <a asp-route-ID="@Model.ID" asp-action="CustomerFiles" asp-controller="Membership" title="Files" style="width:100%;" class="btn btn-success">
+                                <span class="fas fa-paperclip"></span>
+                            </a>
+                        </div>
+                        <div class='col-md-1'>
+                            <a asp-action="CustomerPlus" asp-controller="Membership" title="New page" style="width:100%;" class="btn btn-success">
                                 <span class="fas fa-plus"></span>
                             </a>
                         </div>
@@ -90,6 +95,23 @@
                                         </td>
                                     </tr>
                                 </table>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-12" style="min-width:1200px; width:100%;">
+                                @Html.TextAreaFor(Model => Model.Note)
+
+                                <script src="/ckeditor/ckeditor.js"></script>
+                                <script src="/ckeditor/adapters/jquery.js"></script>
+                                <script>
+                                    CKEDITOR.replace("Note", {
+                                        on: {
+                                            'instanceReady': function (evt) {
+                                                evt.editor.resize("100%", "600");
+                                            }
+                                        }
+                                    });
+                                </script>
                             </div>
                         </div>
                     </div>
@@ -457,7 +479,6 @@
 )
             </div>
         </div>
-
     </div>
 </div>
 @(Html.Kendo().Notification()
@@ -609,7 +630,11 @@
         return { membershipID: membershipIDValue };
     }
     function filterMembershipPermissionCreateCompetitor(e) {
-        var membershipIDValue = $("#ID").val();        
+        var membershipIDValue = $("#ID").val();
         return { membershipID: membershipIDValue };
     }
+    $(document).ready(() => {
+
+    })
+
 </script>

@@ -200,6 +200,14 @@ namespace Commsights.Data.Helpers
                 return builder.Build().GetSection("AppSettings").GetSection("DailyReportColumn").Value;
             }
         }
+        public static string File
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("File").Value;
+            }
+        }
         public static string Company
         {
             get
