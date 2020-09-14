@@ -1,0 +1,51 @@
+﻿@{ ViewData["Title"] = "Daily"; }
+
+@model Commsights.MVC.Models.BaseViewModel
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Report - Daily - Step 01: Choose and rate the article</h3>
+            </div>
+            <div class="card-body">                
+                <div class="row">
+                    <div class='col-sm-2'>
+                        @(Html.Kendo().DatePickerFor(Model => Model.DatePublish)
+                                     .Format("dd/MM/yyyy")
+                                     .HtmlAttributes(new { @class = "form-control text-right", title = "Date publish" })
+                                     .DateInput()
+                                )
+                    </div>                  
+                    <div class='col-sm-5'>
+                        @(Html.Kendo().DropDownList()
+                     .Name("Company")
+                     .DataValueField("ID")
+                     .DataTextField("Account")
+                     .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCustomerToList", "Membership")))
+                            )
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-success" onclick="onSearch()">
+                            <span class="fa fa-search"></span>
+                        </button>
+                    </div>
+                </div>
+                <br />
+                
+            </div>
+        </div>
+    </div>
+</div>
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+<script>    
+    function onSearch() {        
+        
+    }    
+</script>

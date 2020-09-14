@@ -879,7 +879,7 @@ namespace Commsights.Data.Helpers
                         break;
                     case 492:
                         content = content.Replace(@"</h1>", @"~");
-                        if (content.Split('~').Length > 0)
+                        if (content.Split('~').Length > 1)
                         {
                             content = content.Split('~')[2];
                         }

@@ -513,9 +513,12 @@ namespace Commsights.MVC.Controllers
             }
             if (title == true)
             {
-                product.ProductID = listProductID[0];
-                product.SegmentID = listSegmentID[0];
-                product.IndustryID = listIndustryID[0];
+                if (listProductID.Count > 0)
+                {
+                    product.ProductID = listProductID[0];
+                    product.SegmentID = listSegmentID[0];
+                    product.IndustryID = listIndustryID[0];
+                }
             }
             order = 0;
             title = false;
@@ -526,7 +529,7 @@ namespace Commsights.MVC.Controllers
             List<Config> listSegment = _configResposistory.GetByGroupNameAndCodeToList(AppGlobal.CRM, AppGlobal.Segment);
             for (int i = 0; i < listSegment.Count; i++)
             {
-                if (listSegment[i].ID != 3487)
+                if (listSegment[i].ID != AppGlobal.SegmentID)
                 {
                     int check = 0;
                     if (!string.IsNullOrEmpty(listSegment[i].Note))
@@ -598,8 +601,11 @@ namespace Commsights.MVC.Controllers
             }
             if (title == true)
             {
-                product.SegmentID = listSegmentID[0];
-                product.IndustryID = listIndustryID[0];
+                if (listSegmentID.Count > 0)
+                {
+                    product.SegmentID = listSegmentID[0];
+                    product.IndustryID = listIndustryID[0];
+                }
             }
             order = 0;
             title = false;
@@ -610,7 +616,7 @@ namespace Commsights.MVC.Controllers
             List<Config> listIndustry = _configResposistory.GetByGroupNameAndCodeToList(AppGlobal.CRM, AppGlobal.Industry);
             for (int i = 0; i < listIndustry.Count; i++)
             {
-                if (listIndustry[i].ID != 3483)
+                if (listIndustry[i].ID != AppGlobal.IndustryID)
                 {
                     int check = 0;
                     if (!string.IsNullOrEmpty(listIndustry[i].Note))
@@ -675,7 +681,10 @@ namespace Commsights.MVC.Controllers
             }
             if (title == true)
             {
-                product.IndustryID = listIndustryID[0];
+                if (listIndustryID.Count > 0)
+                {
+                    product.IndustryID = listIndustryID[0];
+                }
             }
             order = 0;
             title = false;
@@ -728,7 +737,10 @@ namespace Commsights.MVC.Controllers
             }
             if (title == true)
             {
-                product.CompanyID = listCompanyID[0];
+                if (listCompanyID.Count > 0)
+                {
+                    product.CompanyID = listCompanyID[0];
+                }
             }
             if (product.ProductID > 0)
             {
@@ -847,13 +859,13 @@ namespace Commsights.MVC.Controllers
                 if (item.IsMenuLeft == true)
                 {
                     List<Product> list = new List<Product>();
-                    try
-                    {
-                        this.ParseRSS(list, item);
-                    }
-                    catch (Exception e)
-                    {
-                    }
+                    //try
+                    //{
+                    this.ParseRSS(list, item);
+                    //}
+                    //catch (Exception e)
+                    //{
+                    //}
                     if (list.Count > 0)
                     {
                         _productRepository.Range(list);
