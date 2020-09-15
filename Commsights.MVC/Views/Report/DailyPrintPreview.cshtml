@@ -1,9 +1,8 @@
 ﻿@{ Layout = "~/Views/Shared/_LayoutWindowPrintPreview.cshtml"; ViewData["Title"] = "Report - Daily - Print preview"; }
 
 
-@model Commsights.Data.DataTransferObject.ProductSearchDataTransfer
-@Html.HiddenFor(Model => Model.ID)
-@Html.HiddenFor(Model => Model.Domain)
+@model Commsights.MVC.Models.ReportDailyViewModel
+@Html.HiddenFor(Model => Model.ProductSearchDataTransfer.ID)
 <div style="width:1400px; height:1000px; padding:40px; margin:auto; background-color:#ffffff; background-image:url('/images/Background_Logo_Opacity10_1400_1000.png');">
     <i></i>
     <br />
@@ -32,7 +31,7 @@
     </table>
     <div style="text-align:center; border-top-color:black;border-top-style:solid;border-top-width:1px; padding:10px; line-height:30px;position: relative;">
         <div>
-            <b style="font-size:24px; text-transform:uppercase;">@Model.Title</b>
+            <b style="font-size:24px; text-transform:uppercase;">@Model.ProductSearchDataTransfer.Title</b>
         </div>
     </div>
     <div>
@@ -42,44 +41,67 @@
                     Customer:
                 </td>
                 <td style="width:80%;">
-                    <h1>@Model.CompanyName</h1>
+                    <h1>@Model.ProductSearchDataTransfer.CompanyName</h1>
                 </td>
             </tr>
         </table>
         <hr />
-        @Model.Summary
+        @Model.ProductSearchDataTransfer.Summary
         <hr />
         <table class="border01" id="Data" cellspacing="4" style="background-color:#ffffff;">
             <thead>
                 <tr>
-                    <th style="text-align:center;"><a style='cursor:pointer; color:blue;'>No</a></th>
-                    <th style="text-align:center;"><a style='cursor:pointer; color:blue;'>Publish</a></th>
-                    <th style="text-align:center;"><a style='cursor:pointer; color:blue;'>Category</a></th>
-                    <th style="text-align:center;"><a style='cursor:pointer; color:blue;'>Industry</a></th>
-                    <th style="text-align:center;"><a style='cursor:pointer; color:blue;'>Company</a></th>
-                    <th style="text-align:center;"><a style='cursor:pointer; color:blue;'>Product</a></th>
-                    <th style="text-align:center;"><a style='cursor:pointer; color:blue;'>Sentiment</a></th>
-                    <th style="text-align:center;"><a style='cursor:pointer; color:blue;'>Headline (Vie)</a></th>
-                    <th style="text-align:center;"><a style='cursor:pointer; color:blue;'>Headline (Eng)</a></th>
-                    <th style="text-align:center;"><a style='cursor:pointer; color:blue;'>Media</a></th>
-                    <th style="text-align:center;"><a style='cursor:pointer; color:blue;'>Media type</a></th>
-                    <th style="text-align:center;"><a style='cursor:pointer; color:blue;'>Advert</a></th>
-                    <th style="text-align:center;"><a style='cursor:pointer; color:blue;'>Summary</a></th>
+                    <th style="text-align:center;"><a style='cursor:pointer;'>No</a></th>
+                    <th style="text-align:center;"><a style='cursor:pointer;'>Publish</a></th>
+                    <th style="text-align:center;"><a style='cursor:pointer;'>Category</a></th>
+                    <th style="text-align:center;"><a style='cursor:pointer;'>Industry</a></th>
+                    <th style="text-align:center;"><a style='cursor:pointer;'>Company</a></th>
+                    <th style="text-align:center;"><a style='cursor:pointer;'>Product</a></th>
+                    <th style="text-align:center;"><a style='cursor:pointer;'>Sentiment</a></th>
+                    <th style="text-align:center;"><a style='cursor:pointer;'>Headline (Vie)</a></th>
+                    <th style="text-align:center;"><a style='cursor:pointer;'>Headline (Eng)</a></th>
+                    <th style="text-align:center;"><a style='cursor:pointer;'>Media</a></th>
+                    <th style="text-align:center;"><a style='cursor:pointer;'>Media type</a></th>
+                    <th style="text-align:center;"><a style='cursor:pointer;'>Advert</a></th>
+                    <th style="text-align:center;"><a style='cursor:pointer;'>Summary</a></th>
                 </tr>
             </thead>
             <tbody>
-                @{ 
-                    List<Commsights.Data.DataTransferObject.ProductSearchPropertyDataTransfer> ListProductSearchPropertyDataTransfer = 
-                    foreach ()
+                @*@{
+                    if (Model.ListProductSearchPropertyDataTransfer.Count > 0)
                     {
-
+                        int no = 0;
+                        foreach (Commsights.Data.DataTransferObject.ProductSearchPropertyDataTransfer item in Model.ListProductSearchPropertyDataTransfer)
+                        {
+                            no = no + 1;
+                            if (no % 2 == 0)
+                            {
+                                <tr style='background-color:#ffffff;'>
+                            }
+                            else
+                            {
+                                <tr style='background-color:#f1f1f1;'>
+                            }
+                            <td style='text-align:center;'>@item.DatePublishString</td>
+                            <td style='text-align:center;'>@item.ArticleTypeName</td>
+                            <td style='text-align:center;'>@item.IndustryName</td>
+                            <td style='text-align:center;'>@item.CompanyName</td>
+                            <td style='text-align:center;'>@item.ProductName</td>
+                            <td style='text-align:center;'>@item.AssessName</td>
+                            <td style='text-align:center;'>@item.Title</td>
+                            <td style='text-align:center;'>@item.TitleEnglish</td>
+                            <td style='text-align:center;'>@item.Media</td>
+                            <td style='text-align:center;'>@item.MediaType</td>
+                            <td style='text-align:center;'>@item.AdvertisementValue</td>
+                            <td style='text-align:center;'>@item.Summary</td>
+                        }
                     }
-                }
+                }*@
             </tbody>
         </table>
-</div>    
+    </div>
 </div>
-<script>
+@*<script>
     $(document).ready(() => {
         $.ajax({
             type: 'GET',
@@ -137,7 +159,7 @@
                 html = $.parseHTML(html);
                 $("#DataMain").append(html);
             }
-        }).done(() => {         
+        }).done(() => {
         });
     });
-</script>
+</script>*@

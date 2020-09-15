@@ -56,17 +56,17 @@
                 html = html + '</tr>';
                 html = html + '</thead>';
                 html = html + '<tbody>';
-                var STT = 0;
+                var no = 0;
                 for (var index in ListProductSearchPropertyDataTransfer) {
                     $(ListProductSearchPropertyDataTransfer[index]).each(function (iRec, item) {                                                
-                        STT = STT + 1;
-                        if (STT % 2 == 0) {
+                        no = no + 1;
+                        if (no % 2 == 0) {
                             html = html + '<tr style="background-color:#ffffff;">';
                         }
                         else {
                             html = html + '<tr style="background-color:#f1f1f1;">';
                         }
-                        html = html + '<td class="text-center">' + STT + '</td>';
+                        html = html + '<td class="text-center">' + no + '</td>';
                         html = html + '<td class="text-center">' + item.DatePublishString + '</td>';
                         html = html + '<td class="text-center">' + item.ArticleTypeName + '</td>';
                         html = html + '<td class="text-center">' + item.IndustryName + '</td>';

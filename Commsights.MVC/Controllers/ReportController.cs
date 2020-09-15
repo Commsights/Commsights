@@ -51,10 +51,12 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult DailyPrintPreview(int ID)
         {
-            ProductSearchDataTransfer model = new ProductSearchDataTransfer();
+            ReportDailyViewModel model = new ReportDailyViewModel();
+            model.ListProductSearchPropertyDataTransfer = new List<ProductSearchPropertyDataTransfer>();
             if (ID > 0)
             {
-                model = _productSearchRepository.GetDataTransferByID(ID);
+                model.ProductSearchDataTransfer = _productSearchRepository.GetDataTransferByID(ID);
+                model.ListProductSearchPropertyDataTransfer = _productSearchPropertyRepository.ReportDaily02ByProductSearchIDAndActiveToList(ID, true);
             }
             return View(model);
         }

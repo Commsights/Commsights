@@ -10,7 +10,7 @@ namespace Commsights.MVC.Models
     public class ReportDailyViewModel
     {
         public ProductSearchDataTransfer ProductSearchDataTransfer { get; set; }
-        public IProductSearchPropertyRepository ProductSearchPropertyRepository { get; set; }
+        public List<ProductSearchPropertyDataTransfer> ListProductSearchPropertyDataTransfer { get; set; }       
 
     }
 }
