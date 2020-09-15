@@ -14,6 +14,6 @@ namespace Commsights.Data.Repositories
         public List<ProductSearchPropertyDataTransfer> GetDataTransferProductSearchByProductSearchIDToList(int productSearchID);
         public List<ProductSearchPropertyDataTransfer> GetDataTransferByParentIDToList(int parentID);
         public List<ProductSearchPropertyDataTransfer> ReportDaily02ByProductSearchIDToList(int productSearchID);
-        public List<ProductSearchPropertyDataTransfer> ReportDaily02ByProductSearchIDAndActiveToList(int productSearchID, bool active);
+        public List<ProductSearchPropertyDataTransfer> ReportDaily02ByProductSearchIDAndActiveToList(int productSearchID, bool active);        
     }
 }

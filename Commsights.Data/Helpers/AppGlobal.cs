@@ -25,6 +25,94 @@ namespace Commsights.Data.Helpers
         #endregion
 
         #region AppSettings 
+        public static string CompanyTitleEnglish
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("CompanyTitleEnglish").Value;
+            }
+        }
+        public static string TaxCode
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("TaxCode").Value;
+            }
+        }
+        public static string PhoneDisplay
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("PhoneDisplay").Value;
+            }
+        }
+        public static string PhoneReport
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("PhoneReport").Value;
+            }
+        }
+        public static string EmailReport
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("EmailReport").Value;
+            }
+        }
+        public static string AddressReport
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("AddressReport").Value;
+            }
+        }
+        public static string EmailReportURLFUll
+        {
+            get
+            {
+                string result = "https://mail.google.com/mail/u/0/?view=cm&fs=1&to="+ EmailReport + "&su=Hi_CommSights&body=https://www.commsights.com/&tf=1" + EmailReport;
+                return result;
+            }
+        }
+        public static string PhoneReportURLFUll
+        {
+            get
+            {
+                string result = "tel:" + PhoneReport;
+                return result;
+            }
+        }
+        public static string FacebookURLFUll
+        {
+            get
+            {
+                string result = "https://www.facebook.com/" + Facebook;
+                return result;
+            }
+        }
+        public static string GoogleMapURLFUll
+        {
+            get
+            {
+                string result = "https://www.google.com/maps/d/u/0/viewer?mid=" + GoogleMapID;
+                return result;
+            }
+        }
+        public static string GoogleMapID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("GoogleMapID").Value;
+            }
+        }
         public static string ReportDailyTitle
         {
             get
@@ -1248,7 +1336,7 @@ namespace Commsights.Data.Helpers
                     content = content.Replace(@"<div class=""ads-item lh0"" data-zone=""native_1"">", @"~");
                     content = content.Split('~')[0];
                     content = content.Replace(@"Mời quý độc giả theo dõi các chương trình đã phát sóng của Đài Truyền hình Việt Nam", @"~");
-                    content = content.Split('~')[0];                    
+                    content = content.Split('~')[0];
                 }
                 content = RemoveHTMLTags(content);
             }

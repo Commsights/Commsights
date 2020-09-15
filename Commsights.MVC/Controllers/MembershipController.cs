@@ -241,7 +241,10 @@ namespace Commsights.MVC.Controllers
             {
                 Initialization(model, 0);
                 model.Initialization(InitType.Insert, RequestUserID);
-                _membershipRepository.Create(model);
+                if (_membershipRepository.IsExistAccount(model.Account) == false)
+                {
+                    _membershipRepository.Create(model);
+                }
             }
             return RedirectToAction("CompanyDetail", new { ID = model.ID });
         }

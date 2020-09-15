@@ -1,0 +1,39 @@
+
+@page {
+    size: auto; /* auto is the initial value */
+    margin: 0mm; /* this affects the margin in the printer settings */
+}
+
+body {
+    margin: 0px; /* this affects the margin on the content before sending to printer */   
+}
+
+</style >
+<style >
+* {
+    -webkit-print-color-adjust: exact !important; /*Chrome, Safari */
+    color-adjust: exact !important; /*Firefox*/
+}
+
+.border, .border td, .border th {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.border {
+    border-collapse: collapse;
+}
+
+    .border th {
+        text-align: center;
+    }
+
+    .border td {
+        text-align: right;
+    }
+
+    .border .text {
+        text-align: left;
+    }
+
+

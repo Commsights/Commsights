@@ -13,7 +13,7 @@
                     @Html.HiddenFor(Model => Model.ID)
                     @Html.HiddenFor(Model => Model.CompanyID)
                     <div class="row">
-                        <div class='col-md-6'>
+                        <div class='col-md-7'>
                         </div>
                         <div class='col-md-2'>
                             <a asp-route-ID="@Model.ID" asp-action="Daily02" asp-controller="Report" title="Files" style="width:100%;" class="btn btn-info">
@@ -25,14 +25,14 @@
                                 <span class="fas fa-save"></span>
                             </button>
                         </div>
-                        <div class='col-md-1'>
+                        @*<div class='col-md-1'>
                             <a style="width:100%;" title="Send mail" class="btn btn-success">
                                 <span class="fas fa-envelope-open-text"></span>
                             </a>
-                        </div>
+                        </div>*@
                         <div class='col-md-1'>
-                            <a style="width:100%;" title="Print" class="btn btn-success">
-                                <span class="fas fa-file-powerpoint"></span>
+                            <a onclick="javascript:OpenWindowByURL('/Report/DailyPrintPreview/@Model.ID');" style="width:100%; color:white;" title="Print" class="btn btn-success">
+                                <span class="fas fa-print"></span>
                             </a>
                         </div>
                         <div class='col-md-1'>

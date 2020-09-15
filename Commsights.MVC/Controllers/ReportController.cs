@@ -45,9 +45,18 @@ namespace Commsights.MVC.Controllers
             ProductSearchDataTransfer model = new ProductSearchDataTransfer();
             if (ID > 0)
             {
-                model = _productSearchRepository.GetDataTransferByID(ID);                
-            }        
-            return View(model);            
+                model = _productSearchRepository.GetDataTransferByID(ID);
+            }
+            return View(model);
+        }
+        public IActionResult DailyPrintPreview(int ID)
+        {
+            ProductSearchDataTransfer model = new ProductSearchDataTransfer();
+            if (ID > 0)
+            {
+                model = _productSearchRepository.GetDataTransferByID(ID);
+            }
+            return View(model);
         }
         public IActionResult Daily()
         {
@@ -140,14 +149,19 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult ReportDaily02ByProductSearchIDAndActiveToList([DataSourceRequest] DataSourceRequest request, int productSearchID)
         {
-            
+
             var data = _productSearchPropertyRepository.ReportDaily02ByProductSearchIDAndActiveToList(productSearchID, true);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult ReportDaily02ByProductSearchIDAndActiveToListJSON(int productSearchID)
         {
-            List<ProductSearchPropertyDataTransfer> ListProductSearchPropertyDataTransfer = _productSearchPropertyRepository.ReportDaily02ByProductSearchIDAndActiveToList(productSearchID, true);            
+            List<ProductSearchPropertyDataTransfer> ListProductSearchPropertyDataTransfer = _productSearchPropertyRepository.ReportDaily02ByProductSearchIDAndActiveToList(productSearchID, true);
             return Json(ListProductSearchPropertyDataTransfer);
+        }
+        public List<ProductSearchPropertyDataTransfer> ReportDaily02ByProductSearchIDAndActiveToList001(int productSearchID)
+        {
+            List<ProductSearchPropertyDataTransfer> ListProductSearchPropertyDataTransfer = _productSearchPropertyRepository.ReportDaily02ByProductSearchIDAndActiveToList(productSearchID, true);
+            return ListProductSearchPropertyDataTransfer;
         }
     }
 }
