@@ -1,8 +1,11 @@
-﻿using Commsights.Data.Enum;
+﻿using Commsights.Data.DataTransferObject;
+using Commsights.Data.Enum;
 using Commsights.Data.Helpers;
 using Commsights.Data.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +18,41 @@ namespace Commsights.Data.Repositories
         public ProductSearchRepository(CommsightsContext context) : base(context)
         {
             _context = context;
+        }
+        public ProductSearchDataTransfer GetDataTransferByID(int ID)
+        {
+            ProductSearchDataTransfer model = new ProductSearchDataTransfer();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ID",ID),
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSearchDataTransferByID", parameters);
+                model = SQLHelper.ToList<ProductSearchDataTransfer>(dt).FirstOrDefault();
+            }
+            return model;
+        }
+        public List<ProductSearchDataTransfer> InitializationByDatePublishToList(DateTime datePublish)
+        {
+            List<ProductSearchDataTransfer> list = new List<ProductSearchDataTransfer>();
+            if (datePublish.Year > 2019)
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@DatePublish",datePublish),
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSearchInitializationByDatePublish", parameters);
+                list = SQLHelper.ToList<ProductSearchDataTransfer>(dt);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    list[i].Company = new ModelTemplate();
+                    list[i].Company.ID = list[i].CompanyID;
+                    list[i].Company.TextName = list[i].CompanyName;
+                }
+            }
+
+            return list;
         }
         public List<ProductSearch> GetByDateSearchBeginAndDateSearchEndToList(DateTime dateSearchBegin, DateTime dateSearchEnd)
         {

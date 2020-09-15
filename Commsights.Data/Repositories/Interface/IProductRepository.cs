@@ -8,6 +8,7 @@ namespace Commsights.Data.Repositories
 {
     public interface IProductRepository : IRepository<Product>
     {
+        public int AddRange(List<Product> list);
         public bool IsValid(string url);
         public bool IsValidByFileNameAndDatePublish(string fileName, DateTime datePublish);
         public List<Product> GetByCategoryIDAndDatePublishToList(int CategoryID, DateTime datePublish);
@@ -21,5 +22,6 @@ namespace Commsights.Data.Repositories
         public List<ProductDataTransfer> GetDataTransferByDatePublishAndArticleTypeIDAndProductIDAndActionToList(DateTime datePublish, int articleTypeID, int productID, int action);
         public List<ProductDataTransfer> GetDataTransferByDatePublishAndArticleTypeIDAndCompanyIDAndActionToList(DateTime datePublish, int articleTypeID, int companyID, int action);
         public List<Product> GetBySearchAndDatePublishBeginAndDatePublishEndToList(string search, DateTime datePublishBegin, DateTime datePublishEnd);
+        public List<ProductDataTransfer> ReportDailyByDatePublishAndCompanyIDToList(DateTime datePublish, int companyID);
     }
 }

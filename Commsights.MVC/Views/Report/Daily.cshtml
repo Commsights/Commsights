@@ -1,4 +1,4 @@
-﻿@{ ViewData["Title"] = "Daily"; }
+﻿@{ ViewData["Title"] = "Report - Daily - Step 01: Choose customer"; }
 
 @model Commsights.MVC.Models.BaseViewModel
 
@@ -6,9 +6,9 @@
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Report - Daily - Step 01: Choose and rate the article</h3>
+                <h3 class="card-title">Report - Daily - Step 01: Choose customer</h3>
             </div>
-            <div class="card-body">                
+            <div class="card-body">
                 <div class="row">
                     <div class='col-sm-2'>
                         @(Html.Kendo().DatePickerFor(Model => Model.DatePublish)
@@ -16,16 +16,6 @@
                                      .HtmlAttributes(new { @class = "form-control text-right", title = "Date publish" })
                                      .DateInput()
                                 )
-                    </div>                  
-                    <div class='col-sm-5'>
-                        @(Html.Kendo().DropDownList()
-                     .Name("Company")
-                     .DataValueField("ID")
-                     .DataTextField("Account")
-                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.Contains)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCustomerToList", "Membership")))
-                            )
                     </div>
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" onclick="onSearch()">
@@ -34,7 +24,54 @@
                     </div>
                 </div>
                 <br />
-                
+                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ProductSearchDataTransfer>()
+.Name("ProductSearch")
+.Columns(columns =>
+{
+    columns.Template(@"<a href='/Report/Daily02/#=ID#' class='btn btn-success' style='color:white;'><i class='fas fa-edit'></i></a>").Width(70).HtmlAttributes(new { style = "text-align:center;" });
+    columns.Bound(t => t.Title).Title("Title").Width(200);
+    columns.Bound(t => t.CompanyName).Title("Customer").Width(200);
+    columns.Bound(t => t.CompanyCount).Title("Company").Width(100).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.ProductCount).Title("Product").Width(100).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.IndustryCount).Title("Industry").Width(100).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.CompetitorCount).Title("Competitor").Width(100).HtmlAttributes(new { @class = "text-right" });
+})
+.ToolBar(toolBar => toolBar.Search())
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid" })
+.Search(search => { search.Field(f => f.SearchString); })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.ID);
+})
+.Read(t => t.Action("InitializationByDatePublishToList", "Report").Data("filterProductSearch"))
+)
+)
             </div>
         </div>
     </div>
@@ -44,8 +81,12 @@
     .Position(p => p.Pinned(true).Top(30).Right(30))
     .Width(400)
 )
-<script>    
-    function onSearch() {        
-        
-    }    
+<script>
+    function filterProductSearch(e) {
+        var datePublishValue = toDate02($("#DatePublish").val());        
+        return { datePublish: datePublishValue};
+    }
+    function onSearch() {
+        $("#ProductSearch").data("kendoGrid").dataSource.read();
+    }
 </script>

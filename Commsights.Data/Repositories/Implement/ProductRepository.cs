@@ -18,6 +18,35 @@ namespace Commsights.Data.Repositories
         {
             _context = context;
         }
+        public int AddRange(List<Product> list)
+        {
+            int result = 0;
+            try
+            {
+                _context.Set<Product>().AddRange(list);
+                result = _context.SaveChanges();
+            }
+            catch
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    Product product = list[i];
+                    product.ContentMain = "";
+                    if (IsValid(product.URLCode) == true)
+                    {
+                        _context.Set<Product>().Add(product);
+                        try
+                        {
+                            result = result + _context.SaveChanges();
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+            }
+            return result;
+        }
         public List<Product> GetByCategoryIDAndDatePublishToList(int CategoryID, DateTime datePublish)
         {
             return _context.Product.Where(item => item.CategoryID == CategoryID && item.DatePublish.Year == datePublish.Year && item.DatePublish.Month == datePublish.Month && item.DatePublish.Day == datePublish.Day).OrderByDescending(item => item.DateUpdated).ToList();
@@ -255,6 +284,28 @@ namespace Commsights.Data.Repositories
                     list = GetDataTransferByDatePublishAndArticleTypeIDAndCompanyIDToList(datePublish, articleTypeID, companyID);
                     break;
             }
+            return list;
+        }
+        public List<ProductDataTransfer> ReportDailyByDatePublishAndCompanyIDToList(DateTime datePublish, int companyID)
+        {
+            List<ProductDataTransfer> list = new List<ProductDataTransfer>();
+            if ((datePublish != null) && (companyID > 0))
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@DatePublish",datePublish),
+                new SqlParameter("@CompanyID",companyID)
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportDailyByDatePublishAndCompanyID", parameters);
+                list = SQLHelper.ToList<ProductDataTransfer>(dt);
+                for (int i = 0; i < list.Count; i++)
+                {                   
+                    list[i].AssessType = new ModelTemplate();
+                    list[i].AssessType.ID = list[i].AssessID;
+                    list[i].AssessType.TextName = list[i].AssessName;
+                }
+            }
+
             return list;
         }
     }

@@ -247,6 +247,23 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
+        public IActionResult UpdateReportDataTransfer(ProductDataTransfer model)
+        {
+            Initialization(model);
+            model.AssessID = model.AssessType.ID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Update, RequestUserID);
+            int result = _productRepository.Update(model.ID, model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
         public IActionResult Update(Product model)
         {
             Initialization(model);
@@ -462,6 +479,7 @@ namespace Commsights.MVC.Controllers
                         title = true;
                         productID = listProduct[i].ID;
                         segmentID = listProduct[i].SegmentID.Value;
+                        companyID = listProduct[i].MembershipID.Value;
                         segment = _configResposistory.GetByID(listProduct[i].SegmentID.Value);
                         if (segment != null)
                         {
@@ -470,6 +488,7 @@ namespace Commsights.MVC.Controllers
                         listProductID.Add(productID);
                         listSegmentID.Add(segmentID);
                         listIndustryID.Add(industryID);
+                        listCompanyID.Add(companyID);
                     }
                     if (product.Description.Contains(keyword))
                     {
@@ -516,8 +535,18 @@ namespace Commsights.MVC.Controllers
                 if (listProductID.Count > 0)
                 {
                     product.ProductID = listProductID[0];
+                }
+                if (listSegmentID.Count > 0)
+                {
                     product.SegmentID = listSegmentID[0];
+                }
+                if (listIndustryID.Count > 0)
+                {
                     product.IndustryID = listIndustryID[0];
+                }
+                if (listCompanyID.Count > 0)
+                {
+                    product.CompanyID = listCompanyID[0];
                 }
             }
             order = 0;
@@ -604,6 +633,9 @@ namespace Commsights.MVC.Controllers
                 if (listSegmentID.Count > 0)
                 {
                     product.SegmentID = listSegmentID[0];
+                }
+                if (listIndustryID.Count > 0)
+                {
                     product.IndustryID = listIndustryID[0];
                 }
             }
@@ -859,16 +891,16 @@ namespace Commsights.MVC.Controllers
                 if (item.IsMenuLeft == true)
                 {
                     List<Product> list = new List<Product>();
-                    //try
-                    //{
-                    this.ParseRSS(list, item);
-                    //}
-                    //catch (Exception e)
-                    //{
-                    //}
+                    try
+                    {
+                        this.ParseRSS(list, item);
+                    }
+                    catch (Exception e)
+                    {
+                    }
                     if (list.Count > 0)
                     {
-                        _productRepository.Range(list);
+                        _productRepository.AddRange(list);
                         _productPropertyRepository.UpdateItemsWithParentIDIsZero();
                     }
                 }
