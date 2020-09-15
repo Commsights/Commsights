@@ -59,5 +59,74 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public string InitializationByProductSearchIDAndRequestUserID(int productSearchID, int requestUserID)
+        {
+            string result = "0";
+            if (productSearchID > 0)
+            {
+                SqlParameter[] parameters =
+                           {
+                new SqlParameter("@ProductSearchID",productSearchID),
+                new SqlParameter("@RequestUserID",requestUserID)
+            };
+                result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductSearchPropertyInitializationByProductSearchIDAndRequestUserID", parameters);
+            }
+            return result;
+        }
+        public string UpdateByProductSearchIDAndRequestUserID(int productSearchID, int requestUserID)
+        {
+            string result = "0";
+            if (productSearchID > 0)
+            {
+                SqlParameter[] parameters =
+                           {
+                new SqlParameter("@ProductSearchID",productSearchID),
+                new SqlParameter("@RequestUserID",requestUserID)
+            };
+                result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductSearchPropertyUpdateByProductSearchIDAndRequestUserID", parameters);
+            }
+            return result;
+        }
+        public List<ProductSearchPropertyDataTransfer> ReportDaily02ByProductSearchIDToList(int productSearchID)
+        {
+            List<ProductSearchPropertyDataTransfer> list = new List<ProductSearchPropertyDataTransfer>();
+            if (productSearchID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ProductSearchID",productSearchID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportDaily02ByProductSearchID", parameters);
+                list = SQLHelper.ToList<ProductSearchPropertyDataTransfer>(dt);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    list[i].AssessType = new ModelTemplate();
+                    list[i].AssessType.ID = list[i].AssessID;
+                    list[i].AssessType.TextName = list[i].AssessName;
+                }
+            }
+            return list;
+        }
+        public List<ProductSearchPropertyDataTransfer> ReportDaily02ByProductSearchIDAndActiveToList(int productSearchID, bool active)
+        {
+            List<ProductSearchPropertyDataTransfer> list = new List<ProductSearchPropertyDataTransfer>();
+            if (productSearchID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ProductSearchID",productSearchID),
+                    new SqlParameter("@Active",active)
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportDaily02ByProductSearchIDAndActive", parameters);
+                list = SQLHelper.ToList<ProductSearchPropertyDataTransfer>(dt);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    list[i].AssessType = new ModelTemplate();
+                    list[i].AssessType.ID = list[i].AssessID;
+                    list[i].AssessType.TextName = list[i].AssessName;
+                }
+            }
+            return list;
+        }
     }
 }

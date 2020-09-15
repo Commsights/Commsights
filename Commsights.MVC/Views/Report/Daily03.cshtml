@@ -1,0 +1,213 @@
+﻿@{ ViewData["Title"] = "Report - Daily - Step 03: Complete"; }
+
+@model Commsights.Data.DataTransferObject.ProductSearchDataTransfer
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Report - Daily - Step 03: Complete</h3>
+            </div>
+            <div class="card-body">
+                <form asp-action="Save03" asp-controller="Report">
+                    @Html.HiddenFor(Model => Model.ID)
+                    @Html.HiddenFor(Model => Model.CompanyID)
+                    <div class="row">
+                        <div class='col-md-6'>
+                        </div>
+                        <div class='col-md-2'>
+                            <a asp-route-ID="@Model.ID" asp-action="Daily02" asp-controller="Report" title="Files" style="width:100%;" class="btn btn-info">
+                                <span class="fas fa-arrow-left"></span> Step 02
+                            </a>
+                        </div>
+                        <div class='col-md-1'>
+                            <button style="width:100%;" type="submit" title="Complete" class="btn btn-primary">
+                                <span class="fas fa-save"></span>
+                            </button>
+                        </div>
+                        <div class='col-md-1'>
+                            <a style="width:100%;" title="Send mail" class="btn btn-success">
+                                <span class="fas fa-envelope-open-text"></span>
+                            </a>
+                        </div>
+                        <div class='col-md-1'>
+                            <a style="width:100%;" title="Print" class="btn btn-success">
+                                <span class="fas fa-file-powerpoint"></span>
+                            </a>
+                        </div>
+                        <div class='col-md-1'>
+                            <a onclick="javascript:OpenWindowByURL('/Report/DataHTML/@Model.ID');" style="width:100%; color:white;" title="Excel" class="btn btn-success">
+                                <span class="fas fa-file-excel"></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class='form-group'>
+                                <label for='DateSearch'>Date</label>
+                                @(Html.TextBoxFor(Model => Model.DateSearch, "{0:dd/MM/yyyy}", new { placeholder = "Date",  @class = "form-control", @readonly = "readonly" }))
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class='form-group'>
+                                <label for='CompanyName'>Customer</label>
+                                @(Html.TextBoxFor(Model => Model.CompanyName, new { placeholder = "Customer", @class = "form-control", @readonly = "readonly" }))
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class='form-group'>
+                                <label for='Title'>Title</label>
+                                @(Html.TextBoxFor(Model => Model.Title, new { placeholder = "Title", @class = "form-control" }))
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-md-12" style="min-width:1200px; width:100%;">
+                            @Html.TextAreaFor(Model => Model.Summary)
+
+                            <script src="/ckeditor/ckeditor.js"></script>
+                            <script src="/ckeditor/adapters/jquery.js"></script>
+                            <script>
+                                CKEDITOR.replace("Summary", {
+                                    on: {
+                                        'instanceReady': function (evt) {
+                                            evt.editor.resize("100%", "400");
+                                        }
+                                    }
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Article</h3>
+            </div>
+            <div class="card-body">
+                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ProductSearchPropertyDataTransfer>()
+.Name("ProductSearchPropertyDataTransfer")
+.Columns(columns =>
+{
+    columns.Bound(t => t.DatePublish).Title("Publish").Width(200).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.ArticleTypeName).Title("Category").Width(200);
+    columns.Bound(t => t.IndustryName).Title("Industry").Width(200);
+    columns.Bound(t => t.CompanyName).Title("Company").Width(200);
+    columns.Bound(t => t.ProductName).Title("Product").Width(200);
+    columns.Bound(t => t.AssessName).Title("Sentiment").Width(200);
+    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=URLCode#"");' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(1000);
+    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=URLCode#"");' style='color: blue; cursor: pointer;'>#=TitleEnglish#</a>").Title("Headline (Eng)").Width(1000);
+    columns.Bound(t => t.Media).Title("Media").Width(200);
+    columns.Bound(t => t.MediaType).Title("Media type").Width(200);
+    columns.Bound(t => t.AdvertisementValue).Title("Advert").Width(100).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.Summary).Title("Summary").Width(200);
+})
+.ToolBar(toolBar => toolBar.Search())
+//.ToolBar(toolBar => toolBar.Excel().Text("&nbsp;").HtmlAttributes(new { style = "border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; width:50px; padding-left:28px;" }))
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Article.xlsx")
+.Filterable(true)
+.AllPages(true)
+
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Article.pdf")
+)
+.Events(e=>e.ExcelExport("exportGridWithTemplatesContent"))
+.HtmlAttributes(new { @class = "KendoGrid" })
+.Search(search => { search.Field(f => f.IndustryName); search.Field(f => f.CompanyName); search.Field(f => f.ProductName); search.Field(f => f.Media); search.Field(f => f.MediaType); search.Field(f => f.ArticleTypeName); search.Field(f => f.AssessName); search.Field(f => f.Title); search.Field(f => f.URLCode); })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.ID);
+
+})
+.Read(t => t.Action("ReportDaily02ByProductSearchIDAndActiveToList", "Report").Data("filterProductSearchPropertyDataTransfer"))
+
+.Update(t => t.Action("UpdateReportDataTransfer", "ProductSearchProperty"))))
+            </div>
+        </div>
+    </div>
+</div>
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+<script>
+    function filterProductSearchPropertyDataTransfer(e) {
+        var productSearchIDValue = $("#ID").val();
+        return { productSearchID: productSearchIDValue };
+    }
+    function exportGridWithTemplatesContent(e) {
+        var data = e.data;
+        var gridColumns = e.sender.columns;
+        var sheet = e.workbook.sheets[0];
+        var visibleGridColumns = [];
+        var columnTemplates = [];
+        var dataItem;
+        // Create element to generate templates in.
+        var elem = document.createElement('div');
+
+        // Get a list of visible columns
+        for (var i = 0; i < gridColumns.length; i++) {
+            if (!gridColumns[i].hidden) {
+                visibleGridColumns.push(gridColumns[i]);
+            }
+        }
+
+        // Create a collection of the column templates, together with the current column index
+        for (var i = 0; i < visibleGridColumns.length; i++) {
+            if (visibleGridColumns[i].template) {
+                columnTemplates.push({ cellIndex: i, template: kendo.template(visibleGridColumns[i].template) });
+            }
+        }
+
+        // Traverse all exported rows.
+        for (var i = 1; i < sheet.rows.length; i++) {
+            var row = sheet.rows[i];
+            // Traverse the column templates and apply them for each row at the stored column position.
+
+            // Get the data item corresponding to the current row.
+            var dataItem = data[i - 1];
+            for (var j = 0; j < columnTemplates.length; j++) {
+                var columnTemplate = columnTemplates[j];
+                // Generate the template content for the current cell.
+                elem.innerHTML = columnTemplate.template(dataItem);
+                if (row.cells[columnTemplate.cellIndex] != undefined)
+                    // Output the text content of the templated cell into the exported cell.
+                    row.cells[columnTemplate.cellIndex].value = elem.textContent || elem.innerText || "";
+            }
+        }
+    }
+    function exportToExcel(e) {
+        var sheet = e.workbook.sheets[0];
+        for (var i = 0; i < sheet.columns.length; i++) {
+            sheet.columns[i].width = 50; //This is width of the column in the excel file
+        }
+        for (var i = 1; i < sheet.rows.length; i++) {
+            var row = sheet.rows[i];
+            row.cells[1].value = row.cells[1].value ? "Yes" : "No";
+            row.cells[2].value = row.cells[2].value ? "Yes" : "No";
+            row.cells[3].value = row.cells[3].value ? "Yes" : "No";
+        }
+    }
+</script>

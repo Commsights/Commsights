@@ -86,6 +86,23 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
+        public IActionResult UpdateReportDataTransfer(ProductSearchPropertyDataTransfer model)
+        {
+            Initialization(model);            
+            model.AssessID = model.AssessType.ID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Update, RequestUserID);
+            int result = _productSearchPropertyRepository.Update(model.ID, model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
         public IActionResult Delete(int ID)
         {
             string note = AppGlobal.InitString;

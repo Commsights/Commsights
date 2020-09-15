@@ -1,0 +1,64 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"] - @Commsights.Data.Helpers.AppGlobal.CMSTitle</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="description" content="@Commsights.Data.Helpers.AppGlobal.CMSTitle">
+    <meta name="keywords" content="@Commsights.Data.Helpers.AppGlobal.CMSTitle">
+    <meta name="author" content="@Commsights.Data.Helpers.AppGlobal.Title">
+    <link rel="apple-touch-icon" href="@Commsights.Data.Helpers.AppGlobal.LogoURLFull">
+    <link rel="shortcut icon" type="image/x-icon" href="@Commsights.Data.Helpers.AppGlobal.LogoURLFull">
+
+    <link rel="stylesheet" href="/AdminLTE_3_0_5/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/AdminLTE_3_0_5/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="/css/site001.css">
+    <link href="https://kendo.cdn.telerik.com/2020.2.617/styles/kendo.bootstrap-v4.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://kendo.cdn.telerik.com/2020.2.617/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2020.2.617/js/jszip.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2020.2.617/js/kendo.all.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2020.2.617/js/kendo.aspnetmvc.min.js"></script>
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <script>
+        function BeginRequestHandler() {
+            Slider();
+        }
+        function EndRequestHandler() {
+            $('#Dim').css("display", "none");
+            $('#BackGround').fadeTo("fast", 2);
+        }
+        function Slider() {
+            $('#Dim').css("display", "");
+            $('#Dim').css("z-index", "10");
+            $('#Dim').css("position", "absolute");
+            $('#Dim').css("top", ($(window).height() - $('#Dim').height()) / 2 + $(window).scrollTop() + "px");
+            $('#Dim').css("left", ($(window).width() - $('#Dim').width()) / 2 + $(window).scrollLeft() + "px");
+            $('#BackGround').fadeTo("fast", 0.5);
+            $('#Dim').focus();
+        }
+    </script>
+</head>
+<body id="BackGround" class="hold-transition layout-top-nav">
+    <div id="Dim" style="display: none;">
+        <div class="msgbox">
+            <img src="@Commsights.Data.Helpers.AppGlobal.LoadingURLFull" alt="Processing, please wait!"
+                 title="Processing, please wait!" width="200px" height="200px" />
+        </div>
+    </div>
+    <div class="wrapper">
+        <div class="content-wrapper">
+            <div class="content">
+                @RenderBody()
+            </div>
+
+        </div>
+    </div>
+    <script src="/AdminLTE_3_0_5/dist/js/adminlte.min.js"></script>
+    <script src="/AdminLTE_3_0_5/dist/js/demo.js"></script>
+    <script src="/js/site.js"></script>
+</body>
+</html>

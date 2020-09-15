@@ -17,3 +17,27 @@ input[type="checkbox"] {
         height: 450px;
     } 
 }
+.border01 a {
+    font-size: 16px;
+}
+
+.border01, .border01 td, .border01 th {
+    border: 1px solid #000000;
+    padding: 5px;
+}
+
+.border01 {
+    border-collapse: collapse;
+    font-size: 16px;
+}
+
+    .border01 th {
+        text-align: center;
+    }
+
+    .border01 td {
+    }
+
+    .border01 .text {
+        text-align: left;
+    }

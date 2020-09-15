@@ -503,6 +503,7 @@ namespace Commsights.MVC.Controllers
                         ProductProperty productProperty = new ProductProperty();
                         productProperty.Initialization(InitType.Insert, RequestUserID);
                         productProperty.ParentID = 0;
+                        productProperty.ArticleTypeID = AppGlobal.TinSanPhamID;
                         productProperty.AssessID = AppGlobal.AssessID;
                         productProperty.GUICode = product.GUICode;
                         productProperty.Code = AppGlobal.Product;
@@ -608,6 +609,7 @@ namespace Commsights.MVC.Controllers
                         ProductProperty productProperty = new ProductProperty();
                         productProperty.Initialization(InitType.Insert, RequestUserID);
                         productProperty.ParentID = 0;
+                        productProperty.ArticleTypeID = AppGlobal.TinNganhID;
                         productProperty.AssessID = AppGlobal.AssessID;
                         productProperty.GUICode = product.GUICode;
                         productProperty.Code = AppGlobal.Segment;
@@ -695,6 +697,7 @@ namespace Commsights.MVC.Controllers
                         ProductProperty productProperty = new ProductProperty();
                         productProperty.Initialization(InitType.Insert, RequestUserID);
                         productProperty.ParentID = 0;
+                        productProperty.ArticleTypeID = AppGlobal.TinNganhID;
                         productProperty.AssessID = AppGlobal.AssessID;
                         productProperty.GUICode = product.GUICode;
                         productProperty.Code = AppGlobal.Industry;
@@ -751,6 +754,7 @@ namespace Commsights.MVC.Controllers
                         ProductProperty productProperty = new ProductProperty();
                         productProperty.Initialization(InitType.Insert, RequestUserID);
                         productProperty.ParentID = 0;
+                        productProperty.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
                         productProperty.AssessID = AppGlobal.AssessID;
                         productProperty.GUICode = product.GUICode;
                         productProperty.Code = AppGlobal.Company;

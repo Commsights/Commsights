@@ -1,0 +1,99 @@
+﻿@{ Layout = "~/Views/Shared/_LayoutWindow100.cshtml"; ViewData["Title"] = "Report - Daily - Data"; }
+
+
+@model Commsights.Data.DataTransferObject.ProductSearchDataTransfer
+@Html.HiddenFor(Model => Model.ID)
+@Html.HiddenFor(Model => Model.Domain)
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h5 class="card-title m-0">Article</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class='col-md-10'>
+            </div>
+            <div class='col-md-2'>
+                <a id="btnExportExcel" style="width:100%; color:white;" title="Excel" class="btn btn-success">
+                    <span class="fas fa-file-excel"></span> Excel
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div id="DataMain"></div>
+        </div>
+    </div>
+</div>
+<script src="/js/mustache.min.js"></script>
+<script src="/js/FileSaver.min.js"></script>
+<script src="/js/excel-gen.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+<script>
+    $(document).ready(() => {
+        $.ajax({
+            type: 'GET',
+            url: "@Url.Action("ReportDaily02ByProductSearchIDAndActiveToListJSON", "Report")",
+            data: {
+                productSearchID: $('#ID').val(),
+            },
+            success: function (ListProductSearchPropertyDataTransfer) {
+
+                var html = '<table class="border01" id="Data" cellspacing="4" style="background-color:#ffffff;">';
+                html = html + '<thead>';
+                html = html + '<tr>';
+                html = html + "<th class='text-primary text-center'><a style='cursor:pointer;'>No</a></th>";
+                html = html + "<th class='text-primary text-center'><a style='cursor:pointer;'>Publish</a></th>";
+                html = html + "<th class='text-primary text-center'><a style='cursor:pointer;'>Category</a></th>";
+                html = html + "<th class='text-primary text-center'><a style='cursor:pointer;'>Industry</a></th>";
+                html = html + "<th class='text-primary text-center'><a style='cursor:pointer;'>Company</a></th>";
+                html = html + "<th class='text-primary text-center'><a style='cursor:pointer;'>Product</a></th>";
+                html = html + "<th class='text-primary text-center'><a style='cursor:pointer;'>Sentiment</a></th>";
+                html = html + "<th class='text-primary text-center'><a style='cursor:pointer;'>Headline (Vie)</a></th>";
+                html = html + "<th class='text-primary text-center'><a style='cursor:pointer;'>Headline (Eng)</a></th>";
+                html = html + "<th class='text-primary text-center'><a style='cursor:pointer;'>Media</a></th>";
+                html = html + "<th class='text-primary text-center'><a style='cursor:pointer;'>Media type</a></th>";
+                html = html + "<th class='text-primary text-center'><a style='cursor:pointer;'>Advert</a></th>";
+                html = html + "<th class='text-primary text-center'><a style='cursor:pointer;'>Summary</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var STT = 0;
+                for (var index in ListProductSearchPropertyDataTransfer) {
+                    $(ListProductSearchPropertyDataTransfer[index]).each(function (iRec, item) {                                                
+                        STT = STT + 1;
+                        if (STT % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                        }
+                        html = html + '<td class="text-center">' + STT + '</td>';
+                        html = html + '<td class="text-center">' + item.DatePublishString + '</td>';
+                        html = html + '<td class="text-center">' + item.ArticleTypeName + '</td>';
+                        html = html + '<td class="text-center">' + item.IndustryName + '</td>';
+                        html = html + '<td class="text-center">' + item.CompanyName + '</td>';
+                        html = html + '<td class="text-center">' + item.ProductName + '</td>';
+                        html = html + '<td class="text-center">' + item.AssessName + '</td>';
+                        html = html + '<td><a style="color:blue; cursor:pointer;" href="' + item.URLCode + '" title="' + item.URLCode + '">' + item.Title + '</a></td>';
+                        html = html + '<td><a style="color:blue; cursor:pointer;" href="' + item.URLCode + '" title="' + item.URLCode + '">' + item.TitleEnglish + '</a></td>';
+                        html = html + '<td class="text-center">' + item.Media + '</td>';
+                        html = html + '<td class="text-center">' + item.MediaType + '</td>';
+                        html = html + '<td class="text-center">' + item.AdvertisementValue + '</td>';
+                        html = html + '<td class="text-center">' + item.Summary + '</td>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                $("#DataMain").append(html);
+            }
+        }).done(() => {
+            excel = new ExcelGen({
+                "src_id": "Data",
+                "show_header": true
+            });
+            $("#btnExportExcel").click(() => {
+                excel.generate('Article');
+            });
+        });
+    });    
+</script>
