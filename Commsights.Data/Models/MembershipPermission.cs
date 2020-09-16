@@ -16,8 +16,9 @@ namespace Commsights.Data.Models
         public int? IndustryCompareID { get; set; }
         public int? ProductCompareID { get; set; }
         public int? SortOrder { get; set; }
-        public int? Hour { get; set; }
-        public int? Minute { get; set; }
+        public decimal? Hour { get; set; }
+        public decimal? Minute { get; set; }
+        public decimal? Second { get; set; }
         public string ProductName { get; set; }
         public string Code { get; set; }
         public string FullName { get; set; }
