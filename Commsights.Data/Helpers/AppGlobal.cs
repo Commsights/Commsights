@@ -77,7 +77,7 @@ namespace Commsights.Data.Helpers
         {
             get
             {
-                string result = "https://mail.google.com/mail/u/0/?view=cm&fs=1&to="+ EmailReport + "&su=Hi_CommSights&body=https://www.commsights.com/&tf=1" + EmailReport;
+                string result = "https://mail.google.com/mail/u/0/?view=cm&fs=1&to=" + EmailReport + "&su=Hi_CommSights&body=https://www.commsights.com/&tf=1" + EmailReport;
                 return result;
             }
         }
@@ -1440,6 +1440,29 @@ namespace Commsights.Data.Helpers
             content = content.Replace(@"/>", @"");
             content = content.Replace(@"content=""", @"");
             return content;
+        }
+        public static List<string> SetEmailContact(string content)
+        {
+            List<string> list = new List<string>();
+            foreach (string contact in content.Split(';'))
+            {
+                string email = "";
+                if (contact.Split('<').Length > 1)
+                {
+                    email = contact.Split('<')[1];
+                    email = email.Replace(@">", @"");
+
+                }
+                else
+                {
+                    email = contact.Trim();
+                }
+                if (!string.IsNullOrEmpty(email))
+                {
+                    list.Add(email);
+                }
+            }
+            return list;
         }
         public static string RemoveHTMLTags(string content)
         {

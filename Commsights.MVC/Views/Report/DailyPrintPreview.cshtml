@@ -1,4 +1,8 @@
-﻿@{ Layout = "~/Views/Shared/_LayoutWindowPrintPreview.cshtml"; ViewData["Title"] = "Report - Daily - Print preview"; }
+﻿@{ Layout = "~/Views/Shared/_LayoutWindowPrintPreview.cshtml"; 
+
+ViewData["Title"] = "" + Model.CompanyName + " - " + Model.Title; 
+
+}
 
 
 @model Commsights.Data.DataTransferObject.ProductSearchDataTransfer
@@ -18,7 +22,7 @@
                 <div style="text-align: right; font-size:14px;">
                     Tax code: @Commsights.Data.Helpers.AppGlobal.TaxCode
                     <br />
-                    Phone: <a target="_blank" href="@Commsights.Data.Helpers.AppGlobal.PhoneReportURLFUll" title="@Commsights.Data.Helpers.AppGlobal.PhoneReport">@Commsights.Data.Helpers.AppGlobal.PhoneReport</a>
+                    Phone: <a target="_blank" href="@Commsights.Data.Helpers.AppGlobal.PhoneReportURLFUll" title="@Commsights.Data.Helpers.AppGlobal.PhoneReport">@Commsights.Data.Helpers.AppGlobal.PhoneDisplay</a>
                     <br />
                     Email: <a target="_blank" href="@Commsights.Data.Helpers.AppGlobal.EmailReportURLFUll" title="@Commsights.Data.Helpers.AppGlobal.EmailReport">@Commsights.Data.Helpers.AppGlobal.EmailReport</a>
                     <br />
@@ -26,7 +30,9 @@
                     <br />
                     Address: <a target="_blank" href="@Commsights.Data.Helpers.AppGlobal.GoogleMapURLFUll" title="@Commsights.Data.Helpers.AppGlobal.AddressReport">@Commsights.Data.Helpers.AppGlobal.AddressReport</a>
                     <br />
-                    Print: @DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")
+                    Preview: @DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")
+                    <br />
+                    Layout: Landscape
                 </div>
             </td>
         </tr>

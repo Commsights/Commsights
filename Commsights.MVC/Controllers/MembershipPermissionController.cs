@@ -181,16 +181,28 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult CreateDataTransferContact(MembershipPermissionDataTransfer model, int membershipID)
         {
+            int result = 0;
             string note = AppGlobal.InitString;
             note = AppGlobal.Error + " - " + AppGlobal.CreateFail + ", " + AppGlobal.Error001;
             if (membershipID > 0)
             {
-                model.Code = AppGlobal.Contact;
-                model.MembershipID = membershipID;
-                model.CategoryID = model.ReportType.ID;
-                model.Initialization(InitType.Insert, RequestUserID);
-                int result = 0;
-                result = _membershipPermissionRepository.Create(model);
+                List<string> listEmail = AppGlobal.SetEmailContact(model.Email);
+                if (listEmail.Count == 0)
+                {
+                    listEmail.Add(model.Email);
+                }
+                foreach (string email in listEmail)
+                {
+                    MembershipPermission membershipPermission = new MembershipPermission();
+                    membershipPermission.Code = AppGlobal.Contact;
+                    membershipPermission.MembershipID = membershipID;
+                    membershipPermission.CategoryID = model.ReportType.ID;
+                    membershipPermission.FullName = model.FullName;
+                    membershipPermission.Email = email;
+                    membershipPermission.Phone = model.Phone;
+                    membershipPermission.Initialization(InitType.Insert, RequestUserID);
+                    result = result + _membershipPermissionRepository.Create(membershipPermission);
+                }
                 if (result > 0)
                 {
                     note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
