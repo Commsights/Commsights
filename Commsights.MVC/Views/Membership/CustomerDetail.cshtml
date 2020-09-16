@@ -84,13 +84,13 @@
                             <div class='form-group'>
                                 <table>
                                     <tr>
-                                        <td style="width:50%;" valign="top">
+                                        <td style="width:70%;" valign="top">
                                             @(Html.Kendo().Upload()
                               .Name("Upload")
                               .HtmlAttributes(new { @class = "form-control" })
                                 )
                                         </td>
-                                        <td style="width:50%;" valign="top">
+                                        <td style="width:30%;" valign="top">
                                             <img src="@Url.Content(Commsights.Data.Helpers.AppGlobal.Domain+Commsights.Data.Helpers.AppGlobal.URLImagesCustomer + "/" + Model.Avatar)" alt="@Url.Content(Model.Avatar)" class="img-thumbnail" />
                                         </td>
                                     </tr>
@@ -484,7 +484,9 @@
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); }).Width(150);
     columns.Bound(t => t.DailyReportSectionName).Title("Daily report section").Width(200);
     columns.Bound(t => t.Active).Title("Select").Width(100);
-    columns.Bound(t => t.Hour).Title("Hour").Width(100);
+    columns.Bound(t => t.Hour).Title("01").Width(200);
+    columns.Bound(t => t.Minute).Title("02").Width(200);
+    columns.Bound(t => t.SortOrder).Title("03").Width(200);
 })
 .Editable(editable => editable.Mode(GridEditMode.InLine))
 .Sortable()

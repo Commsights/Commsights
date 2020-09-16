@@ -50,7 +50,7 @@
 .FileName("Config.pdf")
 )
 .HtmlAttributes(new { @class = "KendoGrid" })
-.Search(search => { search.Field(f => f.FullName); search.Field(f => f.Email); search.Field(f => f.Phone); })
+.Search(search => { search.Field(f => f.Account); search.Field(f => f.FullName); search.Field(f => f.Email); search.Field(f => f.Phone); })
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)

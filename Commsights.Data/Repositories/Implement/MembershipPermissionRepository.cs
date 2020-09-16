@@ -330,6 +330,8 @@ namespace Commsights.Data.Repositories
                 model.Code = code;
                 model.CategoryID = config.ID;
                 model.Hour = AppGlobal.Hour;
+                model.Minute = -1;
+                model.SortOrder = -1;
                 model.Active = false;
                 model.Initialization(InitType.Insert, requestUserID);
                 listMembershipPermission.Add(model);
