@@ -20,12 +20,36 @@ namespace Commsights.MVC.Controllers
 {
     public class DashbroadController : BaseController
     {
-        public DashbroadController(IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
+        private readonly IDashbroadRepository _dashbroadRepository;
+        public DashbroadController(IDashbroadRepository dashbroadRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
+            _dashbroadRepository = dashbroadRepository;
         }
         public IActionResult Overview()
         {
-            return View();
+            DashbroadDataTransfer model = _dashbroadRepository.Overview();
+            model.DatePublish = DateTime.Now;
+            return View(model);
+        }
+        public ActionResult CustomerAndArticleCompanyCountToList()
+        {
+            List<DashbroadDataTransfer> list = _dashbroadRepository.CustomerAndArticleCompanyCountToList();
+            return Json(list);
+        }
+        public ActionResult CustomerAndArticleCompanyCountByDatePublishToList()
+        {
+            List<DashbroadDataTransfer> list = _dashbroadRepository.CustomerAndArticleCompanyCountByDatePublishToList(DateTime.Now);
+            return Json(list);
+        }
+        public ActionResult ProductAndArticleProductCountByDatePublishToList()
+        {
+            List<DashbroadDataTransfer> list = _dashbroadRepository.ProductAndArticleProductCountByDatePublishToList(DateTime.Now);
+            return Json(list);
+        }
+        public ActionResult IndustryAndArticleIndustryCountByDatePublishToList()
+        {
+            List<DashbroadDataTransfer> list = _dashbroadRepository.IndustryAndArticleIndustryCountByDatePublishToList(DateTime.Now);
+            return Json(list);
         }
     }
 }

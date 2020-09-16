@@ -319,9 +319,9 @@ namespace Commsights.Data.Repositories
         }
         public void InitializationDailyReportSection(int membershipID, string code, int requestUserID)
         {
-            List<MembershipPermission> listMembershipPermission = _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.Code == code).ToList();
+            List<MembershipPermission> listMembershipPermission = _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.Code.Equals(code)).ToList();
             _context.MembershipPermission.RemoveRange(listMembershipPermission);
-            List<Config> listConfig = _context.Config.Where(item => item.Code == code).ToList();
+            List<Config> listConfig = _context.Config.Where(item => item.Code.Equals(code)).ToList();
             listMembershipPermission = new List<MembershipPermission>();
             foreach (Config config in listConfig)
             {
@@ -341,9 +341,9 @@ namespace Commsights.Data.Repositories
         }
         public void InitializationDailyReportColumn(int membershipID, string code, int requestUserID)
         {
-            List<MembershipPermission> listMembershipPermission = _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.Code == code).ToList();
+            List<MembershipPermission> listMembershipPermission = _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.Code.Equals(code)).ToList();
             _context.MembershipPermission.RemoveRange(listMembershipPermission);
-            List<Config> listConfig = _context.Config.Where(item => item.Code == code).ToList();
+            List<Config> listConfig = _context.Config.Where(item => item.GroupName.Equals(AppGlobal.CRM) && item.Code.Equals(code)).ToList();
             listMembershipPermission = new List<MembershipPermission>();
             foreach (Config config in listConfig)
             {
@@ -352,7 +352,9 @@ namespace Commsights.Data.Repositories
                 model.Code = code;
                 model.SortOrder = 0;
                 model.Active = false;
-                model.CategoryID = config.ID;
+                model.CategoryID = config.ID;                
+                model.Email = config.CodeName;
+                model.Phone = config.Note;
                 model.Initialization(InitType.Insert, requestUserID);
                 listMembershipPermission.Add(model);
             }

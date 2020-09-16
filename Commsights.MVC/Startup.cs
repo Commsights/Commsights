@@ -38,7 +38,8 @@ namespace Commsights.MVC
             services.AddTransient<IProductSearchRepository, ProductSearchRepository>();
             services.AddTransient<IProductSearchPropertyRepository, ProductSearchPropertyRepository>();
             services.AddTransient<IConfigRepository, ConfigRepository>();
-
+            services.AddTransient<IDashbroadRepository, DashbroadRepository>();
+            services.AddTransient<IReportRepository, ReportRepository>();
             services.AddControllersWithViews();
 
             // Add Kendo UI services to the services container

@@ -1,3 +1,109 @@
 ﻿@{ ViewData["Title"] = "Overview"; }
 
+@model Commsights.Data.DataTransferObject.DashbroadDataTransfer
+
+<div class="row">
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3>@Model.CustomerCount</h3>
+                <p>Customer</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <a asp-action="Customer" asp-controller="Membership" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3>@Model.ArticleCompanyCount</h3>
+                <p>Article company</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-newspaper"></i>
+            </div>
+            <a asp-action="ArticleByCompany" asp-controller="Product" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3 style="color:#ffffff;">@Model.ArticleProductCount</h3>
+                <p style="color:#ffffff;">Article product</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-newspaper"></i>
+            </div>
+            <a asp-action="ArticleByProduct" asp-controller="Product" class="small-box-footer" style="color:#ffffff;"><span style="color:#ffffff;">More info</span> <i class="fas fa-arrow-circle-right" style="color:#ffffff;"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>@Model.ArticleIndustryCount</h3>
+                <p>Article industry</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-newspaper"></i>
+            </div>
+            <a asp-action="ArticleByIndustry" asp-controller="Product" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <section class="col-lg-12 connectedSortable">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-chart-bar mr-1"></i>
+                    Customer article - @Model.DatePublish.Month/@Model.DatePublish.Year
+                </h3>
+                <div class="card-tools">
+                    <ul class="nav nav-pills ml-auto">
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body">
+                @(Html.Kendo().Chart<Commsights.Data.DataTransferObject.DashbroadDataTransfer>()
+.Name("ChartBarDashbroadDataTransferCustomer")
+.Theme("Material")
+.Title("Customer article")
+  .HtmlAttributes(new { style = "min-height:400px;" })
+   .Legend(legend => legend
+       .Position(ChartLegendPosition.Bottom)
+   )
+   .ChartArea(chartArea => chartArea
+      .Background("#ffffff")
+  )
+.DataSource(dataSource => dataSource.Read(t => t.Action("CustomerAndArticleCompanyCountByDatePublishToList", "Dashbroad")))
+.Series(series =>
+{
+    series.Column(model => model.ArticleCompanyCount).Name("Article").Axis("Article").Color("#04b7c7");
+})
+   .CategoryAxis(axis => axis
+      .Name("CompanyName")
+      .Title("Customer")
+       .Categories(model => model.CompanyName)
+   )
+
+    .ValueAxis(axis => axis
+       .Numeric()
+       .Color("#04b7c7")
+       .Name("Article")
+       .Title("Article")
+   )
+   .Tooltip(tooltip => tooltip
+       .Visible(true)
+       .Format("{0:N0} article")
+   )
+            )
+            </div>
+        </div>
+    </section>
+</div>
+
+
 

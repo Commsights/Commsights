@@ -20,14 +20,14 @@ namespace Commsights.MVC.Controllers
 {
     public class ReportController : BaseController
     {
+        private readonly IReportRepository _reportRepository;
         private readonly IProductSearchRepository _productSearchRepository;
-        private readonly IProductSearchPropertyRepository _productSearchPropertyRepository;
-        private readonly IProductRepository _productRepository;
-        public ReportController(IProductRepository productRepository, IProductSearchRepository productSearchRepository, IProductSearchPropertyRepository productSearchPropertyRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
+        private readonly IProductSearchPropertyRepository _productSearchPropertyRepository;        
+        public ReportController(IReportRepository reportRepository, IProductSearchRepository productSearchRepository, IProductSearchPropertyRepository productSearchPropertyRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
+            _reportRepository = reportRepository;
             _productSearchRepository = productSearchRepository;
             _productSearchPropertyRepository = productSearchPropertyRepository;
-            _productRepository = productRepository;
         }
         private void Initialization(ProductSearchDataTransfer model)
         {
@@ -70,7 +70,7 @@ namespace Commsights.MVC.Controllers
             if (ID > 0)
             {
                 model = _productSearchRepository.GetDataTransferByID(ID);
-                _productSearchPropertyRepository.InitializationByProductSearchIDAndRequestUserID(ID, RequestUserID);
+                _reportRepository.InitializationByProductSearchIDAndRequestUserID(ID, RequestUserID);
             }
             model.IsCompanyAll = false;
             model.IsProductAll = false;
@@ -119,43 +119,42 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult InitializationByDatePublishToList([DataSourceRequest] DataSourceRequest request, DateTime datePublish)
         {
-            var data = _productSearchRepository.InitializationByDatePublishToList(datePublish);
+            var data = _reportRepository.InitializationByDatePublishToList(datePublish);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult ReportDailyByDatePublishAndCompanyIDToList([DataSourceRequest] DataSourceRequest request, DateTime datePublish, int companyID)
         {
-            var data = _productRepository.ReportDailyByDatePublishAndCompanyIDToList(datePublish, companyID);
+            var data = _reportRepository.ReportDailyByDatePublishAndCompanyIDToList(datePublish, companyID);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult ReportDailyProductByDatePublishAndCompanyIDToList([DataSourceRequest] DataSourceRequest request, DateTime datePublish, int companyID)
         {
-            var data = _productRepository.ReportDailyProductByDatePublishAndCompanyIDToList(datePublish, companyID);
+            var data = _reportRepository.ReportDailyProductByDatePublishAndCompanyIDToList(datePublish, companyID);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult ReportDailyIndustryByDatePublishAndCompanyIDToList([DataSourceRequest] DataSourceRequest request, DateTime datePublish, int companyID)
         {
-            var data = _productRepository.ReportDailyIndustryByDatePublishAndCompanyIDToList(datePublish, companyID);
+            var data = _reportRepository.ReportDailyIndustryByDatePublishAndCompanyIDToList(datePublish, companyID);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult ReportDailyCompetitorByDatePublishAndCompanyIDToList([DataSourceRequest] DataSourceRequest request, DateTime datePublish, int companyID)
         {
-            var data = _productRepository.ReportDailyCompetitorByDatePublishAndCompanyIDToList(datePublish, companyID);
+            var data = _reportRepository.ReportDailyCompetitorByDatePublishAndCompanyIDToList(datePublish, companyID);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult ReportDaily02ByProductSearchIDToList([DataSourceRequest] DataSourceRequest request, int productSearchID)
         {
-            var data = _productSearchPropertyRepository.ReportDaily02ByProductSearchIDToList(productSearchID);
+            var data = _reportRepository.ReportDaily02ByProductSearchIDToList(productSearchID);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult ReportDaily02ByProductSearchIDAndActiveToList([DataSourceRequest] DataSourceRequest request, int productSearchID)
         {
-
-            var data = _productSearchPropertyRepository.ReportDaily02ByProductSearchIDAndActiveToList(productSearchID, true);
+            var data = _reportRepository.ReportDaily02ByProductSearchIDAndActiveToList(productSearchID, true);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult ReportDaily02ByProductSearchIDAndActiveToListJSON(int productSearchID)
         {
-            List<ProductSearchPropertyDataTransfer> ListProductSearchPropertyDataTransfer = _productSearchPropertyRepository.ReportDaily02ByProductSearchIDAndActiveToList(productSearchID, true);
+            List<ProductSearchPropertyDataTransfer> ListProductSearchPropertyDataTransfer = _reportRepository.ReportDaily02ByProductSearchIDAndActiveToList(productSearchID, true);
             return Json(ListProductSearchPropertyDataTransfer);
         }       
     }

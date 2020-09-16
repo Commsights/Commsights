@@ -547,8 +547,8 @@
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); }).Width(150);
     columns.Bound(t => t.Active).Title("Select").Width(100);
     columns.Bound(t => t.SortOrder).Title("Sort").Width(200);
-    columns.Bound(t => t.DailyReportColumnName).Title("Daily report column").Width(200);
-    columns.Bound(t => t.DailyReportColumnNote).Title("Vietnamese").Width(200);
+    columns.Bound(t => t.Email).Title("Daily report column").Width(200);
+    columns.Bound(t => t.Phone).Title("Vietnamese").Width(200);
 })
 .Editable(editable => editable.Mode(GridEditMode.InLine))
 .Sortable()
@@ -579,9 +579,7 @@
 .PageSize(1000)
 .Model(model =>
 {
-    model.Id(t => t.ID);
-    model.Field(t => t.DailyReportColumnName).Editable(false);
-    model.Field(t => t.DailyReportColumnNote).Editable(false);
+    model.Id(t => t.ID);    
 })
 .Events(t => { t.RequestEnd("onGridRequestEndDailyReportColumn"); })
 .Read(t => t.Action("GetDataTransferDailyReportColumnByMembershipIDAndDailyReportColumnToList", "MembershipPermission").Data("filterMembershipPermissionDailyReportColumn"))
