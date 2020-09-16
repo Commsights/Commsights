@@ -5,7 +5,7 @@
 }
 
 body {
-    margin: 0px; /* this affects the margin on the content before sending to printer */   
+    margin: 0px; /* this affects the margin on the content before sending to printer */
 }
 
 </style >
@@ -16,8 +16,10 @@ body {
 }
 
 .border, .border td, .border th {
-    border: 1px solid black;
-    padding: 5px;
+    border-color: #000000;
+    border-style: solid;
+    border-width: 1px;
+    padding: 10px;
 }
 
 .border {
@@ -35,5 +37,3 @@ body {
     .border .text {
         text-align: left;
     }
-
-

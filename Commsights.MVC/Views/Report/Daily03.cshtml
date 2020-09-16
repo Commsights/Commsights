@@ -12,6 +12,10 @@
                 <form asp-action="Save03" asp-controller="Report">
                     @Html.HiddenFor(Model => Model.ID)
                     @Html.HiddenFor(Model => Model.CompanyID)
+                    @Html.HiddenFor(Model => Model.DateCreated)
+                    @Html.HiddenFor(Model => Model.DateSearch)
+                    @Html.HiddenFor(Model => Model.DatePublishBegin)
+                    @Html.HiddenFor(Model => Model.DatePublishEnd)
                     <div class="row">
                         <div class='col-md-7'>
                         </div>
@@ -26,10 +30,10 @@
                             </button>
                         </div>
                         @*<div class='col-md-1'>
-                            <a style="width:100%;" title="Send mail" class="btn btn-success">
-                                <span class="fas fa-envelope-open-text"></span>
-                            </a>
-                        </div>*@
+                <a style="width:100%;" title="Send mail" class="btn btn-success">
+                    <span class="fas fa-envelope-open-text"></span>
+                </a>
+            </div>*@
                         <div class='col-md-1'>
                             <a onclick="javascript:OpenWindowByURL('/Report/DailyPrintPreview/@Model.ID');" style="width:100%; color:white;" title="Print" class="btn btn-success">
                                 <span class="fas fa-print"></span>
@@ -58,6 +62,32 @@
                             <div class='form-group'>
                                 <label for='Title'>Title</label>
                                 @(Html.TextBoxFor(Model => Model.Title, new { placeholder = "Title", @class = "form-control" }))
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class='form-group'>
+                                <label for='CompanyCount'>Article company</label>
+                                @(Html.TextBoxFor(Model => Model.CompanyCount, new { placeholder = "Article company", @class = "form-control", @readonly = "readonly" }))
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class='form-group'>
+                                <label for='IndustryCount'>Article industry</label>
+                                @(Html.TextBoxFor(Model => Model.IndustryCount, new { placeholder = "Article industry", @class = "form-control", @readonly = "readonly" }))
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class='form-group'>
+                                <label for='ProductCount'>Article product</label>
+                                @(Html.TextBoxFor(Model => Model.ProductCount, new { placeholder = "Article product", @class = "form-control", @readonly = "readonly" }))
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class='form-group'>
+                                <label for='CompetitorCount'>Article competitor</label>
+                                @(Html.TextBoxFor(Model => Model.CompetitorCount, new { placeholder = "Article competitor", @class = "form-control", @readonly = "readonly" }))
                             </div>
                         </div>
                     </div>

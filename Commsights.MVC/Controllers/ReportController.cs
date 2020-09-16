@@ -51,12 +51,10 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult DailyPrintPreview(int ID)
         {
-            ReportDailyViewModel model = new ReportDailyViewModel();
-            model.ListProductSearchPropertyDataTransfer = new List<ProductSearchPropertyDataTransfer>();
+            ProductSearchDataTransfer model = new ProductSearchDataTransfer();            
             if (ID > 0)
             {
-                model.ProductSearchDataTransfer = _productSearchRepository.GetDataTransferByID(ID);
-                model.ListProductSearchPropertyDataTransfer = _productSearchPropertyRepository.ReportDaily02ByProductSearchIDAndActiveToList(ID, true);
+                model = _productSearchRepository.GetDataTransferByID(ID);                
             }
             return View(model);
         }
@@ -159,11 +157,6 @@ namespace Commsights.MVC.Controllers
         {
             List<ProductSearchPropertyDataTransfer> ListProductSearchPropertyDataTransfer = _productSearchPropertyRepository.ReportDaily02ByProductSearchIDAndActiveToList(productSearchID, true);
             return Json(ListProductSearchPropertyDataTransfer);
-        }
-        public List<ProductSearchPropertyDataTransfer> ReportDaily02ByProductSearchIDAndActiveToList001(int productSearchID)
-        {
-            List<ProductSearchPropertyDataTransfer> ListProductSearchPropertyDataTransfer = _productSearchPropertyRepository.ReportDaily02ByProductSearchIDAndActiveToList(productSearchID, true);
-            return ListProductSearchPropertyDataTransfer;
-        }
+        }       
     }
 }
