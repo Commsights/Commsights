@@ -148,11 +148,11 @@ namespace Commsights.MVC.Controllers
         {
             ProductViewContentViewModel model = new ProductViewContentViewModel();
             model.Product = new Product();
-            model.ListProductSearchProperty = new List<ProductSearchProperty>();
+            model.ListProductProperty = new List<ProductProperty>();
             if (ID > 0)
             {
                 model.Product = _productRepository.GetByID(ID);
-                model.ListProductSearchProperty = _productSearchPropertyRepository.GetByProductIDToList(ID);
+                model.ListProductProperty = _productPropertyRepository.GetByParentIDAndCodeToList(ID, AppGlobal.URLCode);
             }
             return View(model);
         }
@@ -810,6 +810,7 @@ namespace Commsights.MVC.Controllers
                 this.InitializationProduct(product);
                 product.ParentID = item.ParentID;
                 product.CategoryID = item.ID;
+                product.Source = "Auto";
                 XmlNode rssSubNode = rssNode.SelectSingleNode("title");
                 product.Title = rssSubNode != null ? rssSubNode.InnerText : "";
                 product.MetaTitle = AppGlobal.SetName(product.Title);

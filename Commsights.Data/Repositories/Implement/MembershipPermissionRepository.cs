@@ -101,6 +101,28 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<MembershipPermissionDataTransfer> GetDataTransferIndustryByMembershipIDAndCodeAndActiveToList(int membershipID, string code, bool active)
+        {
+            List<MembershipPermissionDataTransfer> list = new List<MembershipPermissionDataTransfer>();
+            if (membershipID > 0)
+            {
+                SqlParameter[] parameters =
+                      {
+                new SqlParameter("@MembershipID",membershipID),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@Active",active)
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectDataTransferIndustryByMembershipIDAndCodeAndActive", parameters);
+                list = SQLHelper.ToList<MembershipPermissionDataTransfer>(dt);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    list[i].Industry = new ModelTemplate();
+                    list[i].Industry.ID = list[i].IndustryID;
+                    list[i].Industry.TextName = list[i].IndustryName;
+                }
+            }
+            return list;
+        }
         public List<MembershipPermissionDataTransfer> GetDataTransferSegmentByMembershipIDAndCodeToList(int membershipID, string code)
         {
             List<MembershipPermissionDataTransfer> list = new List<MembershipPermissionDataTransfer>();
@@ -352,7 +374,7 @@ namespace Commsights.Data.Repositories
                 model.Code = code;
                 model.SortOrder = 0;
                 model.Active = false;
-                model.CategoryID = config.ID;                
+                model.CategoryID = config.ID;
                 model.Email = config.CodeName;
                 model.Phone = config.Note;
                 model.Initialization(InitType.Insert, requestUserID);

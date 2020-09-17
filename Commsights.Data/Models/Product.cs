@@ -36,6 +36,7 @@ namespace Commsights.Data.Models
         public int? SegmentID { get; set; }
         public int? ProductID { get; set; }
         public string GUICode { get; set; }
+        public string Source { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]

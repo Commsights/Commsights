@@ -336,6 +336,10 @@ namespace Commsights.MVC.Controllers
             int result = 0;
             if ((model.MembershipID > 0) && (model.IndustryID > 0))
             {
+                if (_membershipPermissionRepository.GetDataTransferIndustryByMembershipIDAndCodeToList(membershipID, AppGlobal.Industry).Count == 0)
+                {
+                    model.Active = true;
+                }
                 result = _membershipPermissionRepository.Create(model);
             }
             if (result > 0)

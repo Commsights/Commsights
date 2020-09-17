@@ -1,4 +1,5 @@
-﻿using Commsights.Data.Models;
+﻿using Commsights.Data.Enum;
+using Commsights.Data.Models;
 using Commsights.Data.Repositories;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +26,14 @@ namespace Commsights.Data.Helpers
         #endregion
 
         #region AppSettings 
+        public static string URLCode
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("URLCode").Value;
+            }
+        }
         public static string CompanyTitleEnglish
         {
             get
@@ -1575,6 +1584,74 @@ namespace Commsights.Data.Helpers
             fileNameReturn = fileNameReturn.Replace("đ", "d");
             fileNameReturn = fileNameReturn.Replace("--", "-");
             return fileNameReturn;
+        }
+        public static void GetURLByURLAndi(Product model, List<ProductProperty> listProductProperty, int RequestUserID)
+        {
+            string html = "";
+            try
+            {
+                WebClient webClient = new WebClient();
+                webClient.Encoding = System.Text.Encoding.UTF8;
+                html = webClient.DownloadString(model.ImageThumbnail);
+                if (html.Contains(@"andi.vn"))
+                {
+                    model.IsVideo = false;
+                    string content = html;
+                    if (content.Contains(@"onclick=""showVideo('"))
+                    {
+                        content = content.Replace(@"onclick=""showVideo('", @"~");
+                        if (content.Split('~').Length > 1)
+                        {
+                            content = content.Split('~')[1];
+                            content = content.Replace(@"'", @"~");
+                            content = content.Split('~')[0];
+                            model.Image = "http://video.andi.vn/" + content;
+                            model.IsVideo = true;
+                        }
+                    }
+                    html = html.Replace(@"<div style=""text-align:center;"">", @"~");
+                    if (html.Split('~').Length > 1)
+                    {
+                        html = html.Split('~')[1];
+                        html = html.Replace(@"</div>", @"~");
+                        html = html.Split('~')[0];
+                        html = html.Replace(@"src='", @"~");
+                        html = html.Replace(@"'", @"~");
+                        foreach (string url in html.Split('~'))
+                        {
+                            if (url.Contains(@"http://"))
+                            {
+                                ProductProperty productProperty = new ProductProperty();
+                                productProperty.GUICode = model.GUICode;
+                                productProperty.Code = AppGlobal.URLCode;
+                                productProperty.Note = url;
+                                productProperty.ParentID = 0;
+                                productProperty.Initialization(InitType.Insert, RequestUserID);
+                                listProductProperty.Add(productProperty);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+
+                    html = html.Replace(@"rel=""canonical""", @"~");
+                    if (html.Split('~').Length > 1)
+                    {
+                        html = html.Split('~')[1];
+                        html = html.Replace(@"href=""", @"~");
+                        if (html.Split('~').Length > 1)
+                        {
+                            html = html.Split('~')[1];
+                            html = html.Split('"')[0];
+                            model.URLCode = html.Trim();
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
         }
         #endregion
     }

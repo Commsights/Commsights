@@ -13,6 +13,9 @@ namespace Commsights.MVC.Models
         public int IndustryIDUploadAndiSource { get; set; }
         public int IndustryIDUploadYounet { get; set; }
         public DateTime DatePublish { get; set; }
-
+        public bool IsIndustryIDUploadScan { get; set; }
+        public bool IsIndustryIDUploadGoogleSearch { get; set; }
+        public bool IsIndustryIDUploadAndiSource { get; set; }
+        public bool IsIndustryIDUploadYounet { get; set; }
     }
 }

@@ -10,6 +10,7 @@ namespace Commsights.MVC.Models
     {
         public Product Product { get; set; }
         public List<ProductSearchProperty> ListProductSearchProperty { get; set; }
+        public List<ProductProperty> ListProductProperty { get; set; }
 
     }
 }

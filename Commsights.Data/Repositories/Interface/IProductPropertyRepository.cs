@@ -16,5 +16,6 @@ namespace Commsights.Data.Repositories
         public List<ProductPropertyDataTransfer> GetDataTransferCompanyByParentIDToList(int parentID);
         public List<ProductPropertyDataTransfer> GetDataTransferIndustryByParentIDToList(int parentID);
         public List<ProductPropertyDataTransfer> GetDataTransferProductByParentIDToList(int parentID);
+        public List<ProductProperty> GetByParentIDAndCodeToList(int parentID, string code);
     }
 }
