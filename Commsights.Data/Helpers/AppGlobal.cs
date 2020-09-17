@@ -1337,6 +1337,8 @@ namespace Commsights.Data.Helpers
                     content = content.Split('~')[0];
                     content = content.Replace(@"Mời quý độc giả theo dõi các chương trình đã phát sóng của Đài Truyền hình Việt Nam", @"~");
                     content = content.Split('~')[0];
+                    content = content.Replace(@"<div class=""like-share""><div class=""like"">", @"~");
+                    content = content.Split('~')[0];
                 }
                 content = RemoveHTMLTags(content);
             }

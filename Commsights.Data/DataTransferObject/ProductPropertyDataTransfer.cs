@@ -6,7 +6,7 @@ using Commsights.Data.Models;
 
 namespace Commsights.Data.DataTransferObject
 {
-    public class ProductPropertyPropertyDataTransfer : ProductProperty
+    public class ProductPropertyDataTransfer : ProductProperty
     {        
         public string ArticleTypeName { get; set; }
         public string AssessName { get; set; }

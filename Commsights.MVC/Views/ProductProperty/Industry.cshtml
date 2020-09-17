@@ -9,8 +9,8 @@
         <h5 class="card-title m-0">Industry list</h5>
     </div>
     <div class="card-body">
-        @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ProductPropertyPropertyDataTransfer>()
-.Name("ProductPropertyPropertyDataTransfer")
+        @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ProductPropertyDataTransfer>()
+.Name("ProductPropertyDataTransfer")
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); }).Width(150);
@@ -75,7 +75,7 @@
             var note = response.split('-')[1];
             var notification = $("#Notification").data("kendoNotification");
             notification.show(note, messageType);
-            $("#ProductPropertyPropertyDataTransfer").data("kendoGrid").dataSource.read();
+            $("#ProductPropertyDataTransfer").data("kendoGrid").dataSource.read();
         }
     }
     function filterProductProperty(e) {

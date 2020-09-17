@@ -519,6 +519,7 @@ namespace Commsights.MVC.Controllers
                         }
                         productProperty.ProductID = listProduct[i].ID;
                         productProperty.SegmentID = listProduct[i].SegmentID;
+                        productProperty.CompanyID = listProduct[i].MembershipID;
                         if (segment != null)
                         {
                             productProperty.IndustryID = segment.ParentID;

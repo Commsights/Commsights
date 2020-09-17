@@ -38,6 +38,11 @@
                             <span class="fa fa-search"></span>
                         </button>
                     </div>
+                    <div class='col-md-1'>                       
+                        <button type="button" class="btn btn-success" onclick="onExportExcelArticleProduct()">
+                            <span class="fa fa-file-excel"></span>
+                        </button>
+                    </div>
                 </div>
                 <br />
                 @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ProductDataTransfer>()
@@ -46,7 +51,7 @@
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); }).Width(150);
     columns.Bound(t => t.Active).Title("Select").Width(100);
-    columns.Bound(t => t.DatePublish).Title("Publish").Width(200);
+    columns.Bound(t => t.DatePublish).Title("Publish").Width(200).HtmlAttributes(new { @class = "text-right" });
     columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=URLCode#"");' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Title + URL").Width(600);
     columns.Bound(t => t.ProductName).Title("Product first").Width(200);
     columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/ProductProperty/Product/#=ID#"");' class='btn btn-success' style='color: white; cursor: pointer;'><i class='fas fa-list-ul'></i></a>").Title("List").Width(70).HtmlAttributes(new { style = "text-align:center;" });
@@ -134,5 +139,15 @@
     function onSearchProduct() {
         $("#Action").val('1');
         $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
+    }
+    function onExportExcelArticleProduct() {
+        BeginRequestHandler();
+        var datePublishValue = toDate02($("#DatePublish").val());
+        var yearValue = datePublishValue.split('/')[0];
+        var monthValue = datePublishValue.split('/')[1];
+        var dayValue = datePublishValue.split('/')[2];
+        var url = "/Report/ExportExcelArticleProduct?year=" + yearValue + "&month=" + monthValue + "&day=" + dayValue;        
+        location.replace(url);
+        EndRequestHandler();
     }
 </script>

@@ -4,13 +4,15 @@
 @model Commsights.Data.DataTransferObject.ProductSearchDataTransfer
 @Html.HiddenFor(Model => Model.ID)
 @Html.HiddenFor(Model => Model.Domain)
-<div class="card card-primary card-outline">
-    <div class="card-header">
-        <h5 class="card-title m-0">Article</h5>
-    </div>
+<div class="card card-primary card-outline">    
     <div class="card-body">
         <div class="row">
-            <div class='col-md-10'>
+            <div class='col-md-8'>
+            </div>
+            <div class='col-md-2'>
+                <a asp-route-ID="@Model.ID" asp-action="ExportExcel" asp-controller="Report" title="Excel" style="width:100%;" class="btn btn-info">
+                    <span class="fas fa-file-excel"></span> Excel
+                </a>
             </div>
             <div class='col-md-2'>
                 <a id="btnExportExcel" style="width:100%; color:white;" title="Excel" class="btn btn-success">
@@ -51,7 +53,7 @@
                 html = html + "<th class='text-center'><a style='cursor:pointer;'>Headline (Eng)</a></th>";
                 html = html + "<th class='text-center'><a style='cursor:pointer;'>Media</a></th>";
                 html = html + "<th class='text-center'><a style='cursor:pointer;'>Media type</a></th>";
-                html = html + "<th class='text-center'><a style='cursor:pointer;'>Advert</a></th>";
+                html = html + "<th class='text-center'><a style='cursor:pointer;'>Ad value</a></th>";
                 html = html + "<th class='text-center'><a style='cursor:pointer;'>Summary</a></th>";
                 html = html + '</tr>';
                 html = html + '</thead>';
@@ -77,7 +79,7 @@
                         html = html + '<td><a style="color:blue; cursor:pointer;" href="' + item.URLCode + '" title="' + item.URLCode + '">' + item.TitleEnglish + '</a></td>';
                         html = html + '<td class="text-center">' + item.Media + '</td>';
                         html = html + '<td class="text-center">' + item.MediaType + '</td>';
-                        html = html + '<td class="text-center">' + item.AdvertisementValue + '</td>';
+                        html = html + '<td class="text-center">' + item.AdvertisementValueString + '</td>';
                         html = html + '<td class="text-center">' + item.Summary + '</td>';
                     });
                 }

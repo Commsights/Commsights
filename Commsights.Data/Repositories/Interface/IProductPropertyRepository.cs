@@ -13,8 +13,8 @@ namespace Commsights.Data.Repositories
         public bool IsExistByGUICodeAndCodeAndIndustryID(string gUICode, string code, int industryID);
         public bool IsExistByGUICodeAndCodeAndIndustryIDAndSegmentID(string gUICode, string code, int industryID, int segmentID);
         public bool IsExistByGUICodeAndCodeAndProductID(string gUICode, string code, int productID);
-        public List<ProductPropertyPropertyDataTransfer> GetDataTransferCompanyByParentIDToList(int parentID);
-        public List<ProductPropertyPropertyDataTransfer> GetDataTransferIndustryByParentIDToList(int parentID);
-        public List<ProductPropertyPropertyDataTransfer> GetDataTransferProductByParentIDToList(int parentID);
+        public List<ProductPropertyDataTransfer> GetDataTransferCompanyByParentIDToList(int parentID);
+        public List<ProductPropertyDataTransfer> GetDataTransferIndustryByParentIDToList(int parentID);
+        public List<ProductPropertyDataTransfer> GetDataTransferProductByParentIDToList(int parentID);
     }
 }

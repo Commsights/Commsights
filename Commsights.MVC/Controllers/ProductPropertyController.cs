@@ -72,7 +72,7 @@ namespace Commsights.MVC.Controllers
             var data = _productPropertyRepository.GetDataTransferProductByParentIDToList(parentID);
             return Json(data.ToDataSourceResult(request));
         }
-        public IActionResult UpdateDataTransfer(ProductPropertyPropertyDataTransfer model)
+        public IActionResult UpdateDataTransfer(ProductPropertyDataTransfer model)
         {
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);

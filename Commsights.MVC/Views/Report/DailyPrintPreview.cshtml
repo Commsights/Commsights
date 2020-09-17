@@ -43,7 +43,7 @@ ViewData["Title"] = "" + Model.CompanyName + " - " + Model.Title;
         </div>
     </div>
     <div>
-        <table cellspacing="10" width="100%">
+        @*<table cellspacing="10" width="100%">
             <tr>
                 <td style="width:10%;">
                     Article company:
@@ -70,9 +70,7 @@ ViewData["Title"] = "" + Model.CompanyName + " - " + Model.Title;
                     <h3>@Model.CompetitorCount</h3>
                 </td>
             </tr>
-        </table>
-        <table cellspacing="10" width="100%">
-        </table>
+        </table>*@      
         <b>I - HIGHLIGHT NEWS OF THE DAY</b>
         @Html.Raw(Model.Summary)
         <br />
@@ -105,7 +103,7 @@ ViewData["Title"] = "" + Model.CompanyName + " - " + Model.Title;
                 html = html + "<th style='text-align:center;'><a style='cursor:pointer;'>Headline (Eng)</a></th>";
                 html = html + "<th style='text-align:center;'><a style='cursor:pointer;'>Media</a></th>";
                 html = html + "<th style='text-align:center;'><a style='cursor:pointer;'>Media type</a></th>";
-                html = html + "<th style='text-align:center;'><a style='cursor:pointer;'>Advert</a></th>";
+                html = html + "<th style='text-align:center;'><a style='cursor:pointer;'>Ad value</a></th>";
                 //html = html + "<th style='text-align:center;'><a style='cursor:pointer;'>Summary</a></th>";
                 html = html + '</tr>';
                 html = html + '</thead>';

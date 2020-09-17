@@ -36,6 +36,15 @@ namespace Commsights.Data.DataTransferObject
         public string ProductName { get; set; }
         public string IndustryName { get; set; }
         public int? AdvertisementValue { get; set; }
+        public string AdvertisementValueString
+        {
+            get
+            {
+                string result = "";
+                result = AdvertisementValue.Value.ToString("N0");
+                return result;
+            }
+        }
         public ModelTemplate ArticleType { get; set; }
         public ModelTemplate Company { get; set; }
         public ModelTemplate AssessType { get; set; }

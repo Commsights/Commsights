@@ -81,7 +81,7 @@
 .DataSource(dataSource => dataSource.Read(t => t.Action("CustomerAndArticleCountByDatePublishToList", "Dashbroad")))
 .Series(series =>
 {
-    series.Column(model => model.ArticleCount).Name("Company").Axis("Article").Color("#04b7c7");    
+    series.Column(model => model.ArticleCount).Name("Customer").Axis("Article").Color("#04b7c7");    
     series.Column(model => model.ArticleCompetitorCount).Name("Competitor").Axis("Article").Color("#04c76e");
 })
    .CategoryAxis(axis => axis
@@ -171,24 +171,7 @@
         </div>
     </section>
 </div>
-<div class="row">
-    <section class="col-lg-6 connectedSortable">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fas fa-map-marked-alt mr-1"></i>
-                    Google map
-                </h3>
-                <div class="card-tools">
-                    <ul class="nav nav-pills ml-auto">
-                    </ul>
-                </div>
-            </div>
-            <div class="card-body">
-                <iframe src="https://www.google.com/maps/d/embed?mid=1zFznrghuESixW6PNjPHFeRobVtb13k8-" width="100%" height="500"></iframe>
-            </div>
-        </div>
-    </section>
+<div class="row">    
     <section class="col-lg-6 connectedSortable">
         <div class="card">
             <div class="card-header">
@@ -201,10 +184,57 @@
                     </ul>
                 </div>
             </div>
-            <div class="card-body">            
-                
+            <div class="card-body">
+                <div id="DataMain"></div>
             </div>
         </div>
     </section>
 </div>
+<script>
+    $(document).ready(() => {
+        $.ajax({
+            type: 'GET',
+            url: "@Url.Action("CustomerAndArticleCountByDatePublishToList", "Dashbroad")",
+            data: {                
+            },
+            success: function (ListDashbroadDataTransfer) {
 
+                var html = '<table class="border01" id="Data" cellspacing="4" style="background-color:#ffffff; width:100%;">';
+                html = html + '<thead>';
+                html = html + '<tr>';
+                html = html + "<th class='text-center'><a style='cursor:pointer;'>No</a></th>";
+                html = html + "<th class='text-center'><a style='cursor:pointer;'>Customer</a></th>";
+                html = html + "<th class='text-center'><a style='cursor:pointer;'>Article company</a></th>";
+                html = html + "<th class='text-center'><a style='cursor:pointer;'>Article product</a></th>";
+                html = html + "<th class='text-center'><a style='cursor:pointer;'>Article industry</a></th>";
+                html = html + "<th class='text-center'><a style='cursor:pointer;'>Article competitor</a></th>";                
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                for (var index in ListDashbroadDataTransfer) {
+                    $(ListDashbroadDataTransfer[index]).each(function (iRec, item) {
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                        }
+                        html = html + '<td class="text-center">' + no + '</td>';
+                        html = html + '<td class="text-left"><b>' + item.CompanyName + '</b></td>';
+                        html = html + '<td class="text-right">' + item.ArticleCompanyCount + '</td>';
+                        html = html + '<td class="text-right">' + item.ArticleProductCount + '</td>';
+                        html = html + '<td class="text-right">' + item.ArticleIndustryCount + '</td>';
+                        html = html + '<td class="text-right">' + item.ArticleCompetitorCount + '</td>';                      
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                $("#DataMain").append(html);
+            }
+        }).done(() => {          
+        });
+    });
+</script>

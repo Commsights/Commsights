@@ -59,9 +59,9 @@ namespace Commsights.Data.Repositories
             }
             return false;
         }
-        public List<ProductPropertyPropertyDataTransfer> GetDataTransferCompanyByParentIDToList(int parentID)
+        public List<ProductPropertyDataTransfer> GetDataTransferCompanyByParentIDToList(int parentID)
         {
-            List<ProductPropertyPropertyDataTransfer> list = new List<ProductPropertyPropertyDataTransfer>();
+            List<ProductPropertyDataTransfer> list = new List<ProductPropertyDataTransfer>();
             if (parentID > 0)
             {
                 SqlParameter[] parameters =
@@ -69,7 +69,7 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@ParentID",parentID),
             };
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectDataTransferCompanyByParentID", parameters);
-                list = SQLHelper.ToList<ProductPropertyPropertyDataTransfer>(dt);
+                list = SQLHelper.ToList<ProductPropertyDataTransfer>(dt);
                 for (int i = 0; i < list.Count; i++)
                 {
                     list[i].AssessType = new ModelTemplate();
@@ -80,9 +80,9 @@ namespace Commsights.Data.Repositories
 
             return list;
         }
-        public List<ProductPropertyPropertyDataTransfer> GetDataTransferIndustryByParentIDToList(int parentID)
+        public List<ProductPropertyDataTransfer> GetDataTransferIndustryByParentIDToList(int parentID)
         {
-            List<ProductPropertyPropertyDataTransfer> list = new List<ProductPropertyPropertyDataTransfer>();
+            List<ProductPropertyDataTransfer> list = new List<ProductPropertyDataTransfer>();
             if (parentID > 0)
             {
                 SqlParameter[] parameters =
@@ -90,7 +90,7 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@ParentID",parentID),
             };
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectDataTransferIndustryByParentID", parameters);
-                list = SQLHelper.ToList<ProductPropertyPropertyDataTransfer>(dt);
+                list = SQLHelper.ToList<ProductPropertyDataTransfer>(dt);
                 for (int i = 0; i < list.Count; i++)
                 {
                     list[i].AssessType = new ModelTemplate();
@@ -101,9 +101,9 @@ namespace Commsights.Data.Repositories
 
             return list;
         }
-        public List<ProductPropertyPropertyDataTransfer> GetDataTransferProductByParentIDToList(int parentID)
+        public List<ProductPropertyDataTransfer> GetDataTransferProductByParentIDToList(int parentID)
         {
-            List<ProductPropertyPropertyDataTransfer> list = new List<ProductPropertyPropertyDataTransfer>();
+            List<ProductPropertyDataTransfer> list = new List<ProductPropertyDataTransfer>();
             if (parentID > 0)
             {
                 SqlParameter[] parameters =
@@ -111,7 +111,7 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@ParentID",parentID),
             };
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectDataTransferProductByParentID", parameters);
-                list = SQLHelper.ToList<ProductPropertyPropertyDataTransfer>(dt);
+                list = SQLHelper.ToList<ProductPropertyDataTransfer>(dt);
                 for (int i = 0; i < list.Count; i++)
                 {
                     list[i].AssessType = new ModelTemplate();

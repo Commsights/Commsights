@@ -13,7 +13,7 @@
                     @Html.HiddenFor(Model => Model.ID)
                     @Html.HiddenFor(Model => Model.CompanyID)
                     <div class="row">
-                        <div class='col-md-8'>
+                        <div class='col-md-7'>
                         </div>
                         <div class='col-md-2'>
                             <a asp-action="Daily" asp-controller="Report" title="Files" style="width:100%;" class="btn btn-info">
@@ -24,6 +24,11 @@
                             <button style="width:100%;" type="submit" title="Step 03" class="btn btn-info">
                                 <span class="fas fa-arrow-right"></span> Step 03
                             </button>
+                        </div>
+                        <div class='col-md-1'>
+                            <a asp-route-ID="@Model.ID" asp-action="ExportExcelReportDaily" asp-controller="Report" title="Excel" style="width:100%;" class="btn btn-success">
+                                <span class="fas fa-file-excel"></span>
+                            </a>
                         </div>
                     </div>
                     <div class="row">
@@ -96,15 +101,15 @@
     columns.Bound(t => t.AssessType.TextName).EditorTemplateName("Config_AssessType").Title("Sentiment").Width(200);
     columns.Bound(t => t.Point).Title("Point").Width(200).HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(200);
+    columns.Bound(t => t.DatePublish).Title("Publish").Width(200).HtmlAttributes(new { @class = "text-right" });
+    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=URLCode#"");' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(1000);
     columns.Bound(t => t.ArticleTypeName).Title("Article").Width(200);
     columns.Bound(t => t.IndustryName).Title("Industry").Width(200);
     columns.Bound(t => t.CompanyName).Title("Company").Width(200);
-    columns.Bound(t => t.ProductName).Title("Product").Width(200);
-    columns.Bound(t => t.DatePublish).Title("Publish").Width(200).HtmlAttributes(new { @class = "text-right" });
-    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=URLCode#"");' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(1000);
+    columns.Bound(t => t.ProductName).Title("Product").Width(200);    
     columns.Bound(t => t.Media).Title("Media").Width(200);
     columns.Bound(t => t.MediaType).Title("Media type").Width(200);
-    columns.Bound(t => t.AdvertisementValue).Title("Advert").Width(100).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.AdvertisementValue).Title("Ad value").Width(100).HtmlAttributes(new { @class = "text-right" });
 })
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))

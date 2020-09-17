@@ -8,6 +8,35 @@ namespace Commsights.Data.DataTransferObject
 {
     public class ProductDataTransfer : Product
     {
+        public string DatePublishString
+        {
+            get
+            {
+                string result = "";
+                if (DatePublish != null)
+                {
+                    result = DatePublish.ToString("dd/MM/yyyy");
+                }
+                return result;
+            }
+        }
+        public int? AdvertisementValue { get; set; }
+        public string AdvertisementValueString
+        {
+            get
+            {
+                string result = "";
+                if (AdvertisementValue != null)
+                {
+                    result = AdvertisementValue.Value.ToString("N0");
+                }
+                return result;
+            }
+        }
+        public string Media { get; set; }
+        public string MediaType { get; set; }
+        public string Summary { get; set; }
+        public int Point { get; set; }
         public string ArticleTypeName { get; set; }
         public string AssessName { get; set; }
         public string CompanyName { get; set; }
