@@ -117,5 +117,19 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<DashbroadDataTransfer> CustomerAndArticleCountByDatePublishToList(DateTime datePublish)
+        {
+            List<DashbroadDataTransfer> list = new List<DashbroadDataTransfer>();
+            if (datePublish.Year > 2019)
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@DatePublish",datePublish)
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_DashbroadCustomerAndArticleCountByDatePublish", parameters);
+                list = SQLHelper.ToList<DashbroadDataTransfer>(dt);
+            }
+            return list;
+        }
     }
 }

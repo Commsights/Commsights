@@ -51,5 +51,15 @@ namespace Commsights.MVC.Controllers
             List<DashbroadDataTransfer> list = _dashbroadRepository.IndustryAndArticleIndustryCountByDatePublishToList(DateTime.Now);
             return Json(list);
         }
+        public ActionResult IndustryCustomerAndArticleIndustryCountByDatePublishToList()
+        {
+            List<DashbroadDataTransfer> list = _dashbroadRepository.IndustryCustomerAndArticleIndustryCountByDatePublishToList(DateTime.Now);
+            return Json(list);
+        }
+        public ActionResult CustomerAndArticleCountByDatePublishToList()
+        {
+            List<DashbroadDataTransfer> list = _dashbroadRepository.CustomerAndArticleCountByDatePublishToList(DateTime.Now);
+            return Json(list);
+        }
     }
 }

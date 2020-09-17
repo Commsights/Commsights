@@ -16,7 +16,6 @@ namespace Commsights.Data.Repositories
         public List<DashbroadDataTransfer> IndustryCustomerAndArticleIndustryCountByDatePublishToList(DateTime datePublish);
         public List<DashbroadDataTransfer> ProductAndArticleProductCountByDatePublishToList(DateTime datePublish);
         public List<DashbroadDataTransfer> ProductCustomerAndArticleProductCountByDatePublishToList(DateTime datePublish);
-
-
+        public List<DashbroadDataTransfer> CustomerAndArticleCountByDatePublishToList(DateTime datePublish);
     }
 }

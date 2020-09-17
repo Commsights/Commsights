@@ -249,7 +249,7 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetAssessTypeToList([DataSourceRequest] DataSourceRequest request)
         {
-            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.AssessType).Where(item => item.ParentID == 0);
+            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.AssessType);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetSegmentToList([DataSourceRequest] DataSourceRequest request)
