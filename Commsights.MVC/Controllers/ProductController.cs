@@ -870,7 +870,7 @@ namespace Commsights.MVC.Controllers
                     {
                         product.ContentMain = AppGlobal.GetContentByURL(product.URLCode, product.ParentID.Value);
                         List<ProductProperty> listProductProperty = new List<ProductProperty>();
-                        this.FilterProduct(product, listProductProperty);
+                        _productRepository.FilterProduct(product, listProductProperty, RequestUserID);
                         if (listProductProperty.Count > 0)
                         {
                             _productPropertyRepository.Range(listProductProperty);

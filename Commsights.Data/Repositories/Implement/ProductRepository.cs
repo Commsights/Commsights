@@ -1,4 +1,5 @@
 ﻿using Commsights.Data.DataTransferObject;
+using Commsights.Data.Enum;
 using Commsights.Data.Helpers;
 using Commsights.Data.Models;
 using System;
@@ -14,9 +15,18 @@ namespace Commsights.Data.Repositories
     public class ProductRepository : Repository<Product>, IProductRepository
     {
         private readonly CommsightsContext _context;
-        public ProductRepository(CommsightsContext context) : base(context)
+        private readonly IMembershipPermissionRepository _membershipPermissionRepository;
+        private readonly IConfigRepository _configResposistory;
+        private readonly IProductPropertyRepository _productPropertyRepository;
+        private readonly IMembershipRepository _membershipRepository;
+
+        public ProductRepository(CommsightsContext context, IMembershipRepository membershipRepository, IMembershipPermissionRepository membershipPermissionRepository, IConfigRepository configResposistory, IProductPropertyRepository productPropertyRepository) : base(context)
         {
             _context = context;
+            _membershipPermissionRepository = membershipPermissionRepository;
+            _configResposistory = configResposistory;
+            _productPropertyRepository = productPropertyRepository;
+            _membershipRepository = membershipRepository;
         }
         public int AddRange(List<Product> list)
         {
@@ -299,7 +309,7 @@ namespace Commsights.Data.Repositories
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportDailyByDatePublishAndCompanyID", parameters);
                 list = SQLHelper.ToList<ProductDataTransfer>(dt);
                 for (int i = 0; i < list.Count; i++)
-                {                   
+                {
                     list[i].AssessType = new ModelTemplate();
                     list[i].AssessType.ID = list[i].AssessID;
                     list[i].AssessType.TextName = list[i].AssessName;
@@ -369,6 +379,352 @@ namespace Commsights.Data.Repositories
                 }
             }
             return list;
+        }
+        public void FilterProduct(Product product, List<ProductProperty> listProductProperty, int RequestUserID)
+        {
+            int order = 0;
+            string keyword = "";
+            bool title = false;
+            int industryID = 0;
+            int segmentID = 0;
+            int productID = 0;
+            int companyID = 0;
+            Config segment = new Config();
+            List<int> listProductID = new List<int>();
+            List<int> listSegmentID = new List<int>();
+            List<int> listIndustryID = new List<int>();
+            List<int> listCompanyID = new List<int>();
+            List<MembershipPermission> listProduct = _membershipPermissionRepository.GetByProductCodeToList(AppGlobal.Product);
+            for (int i = 0; i < listProduct.Count; i++)
+            {
+                if (!string.IsNullOrEmpty(listProduct[i].ProductName))
+                {
+                    keyword = listProduct[i].ProductName.Trim();
+                    int check = 0;
+                    if (product.Title.Contains(keyword))
+                    {
+                        check = check + AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                        title = true;
+                        productID = listProduct[i].ID;
+                        segmentID = listProduct[i].SegmentID.Value;
+                        companyID = listProduct[i].MembershipID.Value;
+                        segment = _configResposistory.GetByID(listProduct[i].SegmentID.Value);
+                        if (segment != null)
+                        {
+                            industryID = segment.ParentID.Value;
+                        }
+                        listProductID.Add(productID);
+                        listSegmentID.Add(segmentID);
+                        listIndustryID.Add(industryID);
+                        listCompanyID.Add(companyID);
+                    }
+                    if (product.Description.Contains(keyword))
+                    {
+                        check = check + AppGlobal.CheckContentAndKeyword(product.Description, keyword);
+                    }
+                    if (product.ContentMain.Contains(keyword))
+                    {
+                        check = check + AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
+                    }
+                    if (check > 0)
+                    {
+                        ProductProperty productProperty = new ProductProperty();
+                        productProperty.Initialization(InitType.Insert, RequestUserID);
+                        productProperty.ParentID = 0;
+                        productProperty.ArticleTypeID = AppGlobal.TinSanPhamID;
+                        productProperty.AssessID = AppGlobal.AssessID;
+                        productProperty.GUICode = product.GUICode;
+                        productProperty.Code = AppGlobal.Product;
+                        segment = _configResposistory.GetByID(listProduct[i].SegmentID.Value);
+                        if (order == 0)
+                        {
+                            product.ProductID = listProduct[i].ID;
+                            product.SegmentID = listProduct[i].SegmentID;
+                            if (segment != null)
+                            {
+                                product.IndustryID = segment.ParentID;
+                            }
+                        }
+                        productProperty.ProductID = listProduct[i].ID;
+                        productProperty.SegmentID = listProduct[i].SegmentID;
+                        productProperty.CompanyID = listProduct[i].MembershipID;
+                        if (segment != null)
+                        {
+                            productProperty.IndustryID = segment.ParentID;
+                        }
+                        if (_productPropertyRepository.IsExistByGUICodeAndCodeAndProductID(productProperty.GUICode, productProperty.Code, productProperty.ProductID.Value) == false)
+                        {
+                            listProductProperty.Add(productProperty);
+                        }
+                        order = order + 1;
+                    }
+                }
+            }
+            if (title == true)
+            {
+                if (listProductID.Count > 0)
+                {
+                    product.ProductID = listProductID[0];
+                }
+                if (listSegmentID.Count > 0)
+                {
+                    product.SegmentID = listSegmentID[0];
+                }
+                if (listIndustryID.Count > 0)
+                {
+                    product.IndustryID = listIndustryID[0];
+                }
+                if (listCompanyID.Count > 0)
+                {
+                    product.CompanyID = listCompanyID[0];
+                }
+            }
+            order = 0;
+            title = false;
+            listProductID = new List<int>();
+            listSegmentID = new List<int>();
+            listIndustryID = new List<int>();
+            listCompanyID = new List<int>();
+            List<Config> listSegment = _configResposistory.GetByGroupNameAndCodeToList(AppGlobal.CRM, AppGlobal.Segment);
+            for (int i = 0; i < listSegment.Count; i++)
+            {
+                if (listSegment[i].ID != AppGlobal.SegmentID)
+                {
+                    int check = 0;
+                    if (!string.IsNullOrEmpty(listSegment[i].Note))
+                    {
+                        keyword = listSegment[i].Note.Trim();
+
+                        if (product.Title.Contains(keyword))
+                        {
+                            check = check + AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                            title = true;
+                            segmentID = listSegment[i].ID;
+                            industryID = listSegment[i].ParentID.Value;
+                            listSegmentID.Add(segmentID);
+                            listIndustryID.Add(industryID);
+                        }
+                        if (product.Description.Contains(keyword))
+                        {
+                            check = check + AppGlobal.CheckContentAndKeyword(product.Description, keyword);
+                        }
+                        if (product.ContentMain.Contains(keyword))
+                        {
+                            check = check + AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
+                        }
+
+                    }
+                    if (!string.IsNullOrEmpty(listSegment[i].CodeName))
+                    {
+                        keyword = listSegment[i].CodeName.Trim();
+                        if (product.Title.Contains(keyword))
+                        {
+                            check = check + AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                            title = true;
+                            segmentID = listSegment[i].ID;
+                            industryID = listSegment[i].ParentID.Value;
+                        }
+                        if (product.Description.Contains(keyword))
+                        {
+                            check = check + AppGlobal.CheckContentAndKeyword(product.Description, keyword);
+                        }
+                        if (product.ContentMain.Contains(keyword))
+                        {
+                            check = check + AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
+                        }
+                    }
+                    if (check > 0)
+                    {
+                        ProductProperty productProperty = new ProductProperty();
+                        productProperty.Initialization(InitType.Insert, RequestUserID);
+                        productProperty.ParentID = 0;
+                        productProperty.ArticleTypeID = AppGlobal.TinNganhID;
+                        productProperty.AssessID = AppGlobal.AssessID;
+                        productProperty.GUICode = product.GUICode;
+                        productProperty.Code = AppGlobal.Segment;
+                        segment = _configResposistory.GetByID(listSegment[i].ParentID.Value);
+                        if (order == 0)
+                        {
+                            product.SegmentID = listSegment[i].ID;
+                            product.IndustryID = listSegment[i].ParentID;
+
+                        }
+                        productProperty.SegmentID = listSegment[i].ID;
+                        productProperty.IndustryID = listSegment[i].ParentID;
+                        if (_productPropertyRepository.IsExistByGUICodeAndCodeAndIndustryIDAndSegmentID(productProperty.GUICode, productProperty.Code, productProperty.IndustryID.Value, productProperty.SegmentID.Value) == false)
+                        {
+                            listProductProperty.Add(productProperty);
+                        }
+                        order = order + 1;
+                    }
+                }
+            }
+            if (title == true)
+            {
+                if (listSegmentID.Count > 0)
+                {
+                    product.SegmentID = listSegmentID[0];
+                }
+                if (listIndustryID.Count > 0)
+                {
+                    product.IndustryID = listIndustryID[0];
+                }
+            }
+            order = 0;
+            title = false;
+            listProductID = new List<int>();
+            listSegmentID = new List<int>();
+            listIndustryID = new List<int>();
+            listCompanyID = new List<int>();
+            List<Config> listIndustry = _configResposistory.GetByGroupNameAndCodeToList(AppGlobal.CRM, AppGlobal.Industry);
+            for (int i = 0; i < listIndustry.Count; i++)
+            {
+                if (listIndustry[i].ID != AppGlobal.IndustryID)
+                {
+                    int check = 0;
+                    if (!string.IsNullOrEmpty(listIndustry[i].Note))
+                    {
+                        keyword = listIndustry[i].Note.Trim();
+
+                        if (product.Title.Contains(keyword))
+                        {
+                            check = check + AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                            title = true;
+                            industryID = listIndustry[i].ID;
+                            listIndustryID.Add(industryID);
+                        }
+                        if (product.Description.Contains(keyword))
+                        {
+                            check = check + AppGlobal.CheckContentAndKeyword(product.Description, keyword);
+                        }
+                        if (product.ContentMain.Contains(keyword))
+                        {
+                            check = check + AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
+                        }
+
+                    }
+                    if (!string.IsNullOrEmpty(listIndustry[i].CodeName))
+                    {
+                        keyword = listIndustry[i].CodeName.Trim();
+                        if (product.Title.Contains(keyword))
+                        {
+                            check = check + AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                            title = true;
+                            industryID = listIndustry[i].ID;
+                        }
+                        if (product.Description.Contains(keyword))
+                        {
+                            check = check + AppGlobal.CheckContentAndKeyword(product.Description, keyword);
+                        }
+                        if (product.ContentMain.Contains(keyword))
+                        {
+                            check = check + AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
+                        }
+                    }
+                    if (check > 0)
+                    {
+                        ProductProperty productProperty = new ProductProperty();
+                        productProperty.Initialization(InitType.Insert, RequestUserID);
+                        productProperty.ParentID = 0;
+                        productProperty.ArticleTypeID = AppGlobal.TinNganhID;
+                        productProperty.AssessID = AppGlobal.AssessID;
+                        productProperty.GUICode = product.GUICode;
+                        productProperty.Code = AppGlobal.Industry;
+                        if (order == 0)
+                        {
+                            product.IndustryID = listIndustry[i].ID;
+                        }
+                        productProperty.IndustryID = listIndustry[i].ID;
+                        if (_productPropertyRepository.IsExistByGUICodeAndCodeAndIndustryID(productProperty.GUICode, productProperty.Code, productProperty.IndustryID.Value) == false)
+                        {
+                            listProductProperty.Add(productProperty);
+                        }
+                        order = order + 1;
+                    }
+                }
+            }
+            if (title == true)
+            {
+                if (listIndustryID.Count > 0)
+                {
+                    product.IndustryID = listIndustryID[0];
+                }
+            }
+            order = 0;
+            title = false;
+            listProductID = new List<int>();
+            listSegmentID = new List<int>();
+            listIndustryID = new List<int>();
+            listCompanyID = new List<int>();
+            List<Membership> listCompany = _membershipRepository.GetByCompanyToList();
+            for (int i = 0; i < listCompany.Count; i++)
+            {
+                if (!string.IsNullOrEmpty(listCompany[i].Account))
+                {
+                    keyword = listCompany[i].Account.Trim();
+                    int check = 0;
+                    if (product.Title.Contains(keyword))
+                    {
+                        check = check + AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                        title = true;
+                        companyID = listCompany[i].ID;
+                        listCompanyID.Add(companyID);
+                    }
+                    if (product.Description.Contains(keyword))
+                    {
+                        check = check + AppGlobal.CheckContentAndKeyword(product.Description, keyword);
+                    }
+                    if (product.ContentMain.Contains(keyword))
+                    {
+                        check = check + AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
+                    }
+                    if (check > 0)
+                    {
+                        ProductProperty productProperty = new ProductProperty();
+                        productProperty.Initialization(InitType.Insert, RequestUserID);
+                        productProperty.ParentID = 0;
+                        productProperty.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
+                        productProperty.AssessID = AppGlobal.AssessID;
+                        productProperty.GUICode = product.GUICode;
+                        productProperty.Code = AppGlobal.Company;
+                        if (order == 0)
+                        {
+                            product.CompanyID = listCompany[i].ID;
+                        }
+                        productProperty.CompanyID = listCompany[i].ID;
+                        if (_productPropertyRepository.IsExistByGUICodeAndCodeAndCompanyID(productProperty.GUICode, productProperty.Code, productProperty.CompanyID.Value) == false)
+                        {
+                            listProductProperty.Add(productProperty);
+                        }
+                        order = order + 1;
+                    }
+                }
+            }
+            if (title == true)
+            {
+                if (listCompanyID.Count > 0)
+                {
+                    product.CompanyID = listCompanyID[0];
+                }
+            }
+            if (product.ProductID > 0)
+            {
+                product.ArticleTypeID = AppGlobal.TinSanPhamID;
+            }
+            else
+            {
+                if (product.CompanyID > 0)
+                {
+                    product.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
+                }
+                else
+                {
+                    if ((product.SegmentID > 0) || (product.IndustryID != AppGlobal.IndustryID))
+                    {
+                        product.ArticleTypeID = AppGlobal.TinNganhID;
+                    }
+                }
+            }
         }
     }
 }

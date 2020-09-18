@@ -832,8 +832,6 @@ namespace Commsights.MVC.Controllers
             string excelName = @"ArticleIndustry_" + datePublish.ToString("yyyyMMdd") + "_" + AppGlobal.DateTimeCode + ".xlsx";
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
         }
-
-
         public ActionResult UploadScan(Commsights.MVC.Models.BaseViewModel baseViewModel)
         {
             int result = 0;
@@ -894,6 +892,8 @@ namespace Commsights.MVC.Controllers
                                                             ProductProperty productProperty = new ProductProperty();
                                                             productProperty.GUICode = model.GUICode;
                                                             productProperty.IndustryID = model.IndustryID;
+                                                            productProperty.ArticleTypeID = model.ArticleTypeID;
+                                                            productProperty.AssessID = model.AssessID;
                                                             productProperty.ParentID = 0;
                                                             productProperty.Code = AppGlobal.Industry;
                                                             productProperty.Initialization(InitType.Insert, RequestUserID);
@@ -948,6 +948,7 @@ namespace Commsights.MVC.Controllers
                                                                     productProperty.ParentID = 0;
                                                                     productProperty.GUICode = model.GUICode;
                                                                     productProperty.CompanyID = membership.ID;
+                                                                    productProperty.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
                                                                     productProperty.AssessID = AppGlobal.AssessID;
                                                                     productProperty.Code = AppGlobal.Company;
                                                                     productProperty.Initialization(InitType.Insert, RequestUserID);
@@ -1117,7 +1118,6 @@ namespace Commsights.MVC.Controllers
             }
             return RedirectToAction(action, controller);
         }
-
         public ActionResult UploadAndiSource(Commsights.MVC.Models.BaseViewModel baseViewModel)
         {
             int result = 0;
@@ -1154,8 +1154,8 @@ namespace Commsights.MVC.Controllers
                                             if (workSheet != null)
                                             {
 
-                                                int totalRows = workSheet.Dimension.Rows;                                              
-                                                for (int i = 6; i <= totalRows; i++)
+                                                int totalRows = workSheet.Dimension.Rows;
+                                                for (int i = 2; i <= totalRows; i++)
                                                 {
                                                     List<ProductProperty> listProductProperty = new List<ProductProperty>();
                                                     Membership membership = new Membership();
@@ -1173,11 +1173,13 @@ namespace Commsights.MVC.Controllers
                                                         ProductProperty productProperty = new ProductProperty();
                                                         productProperty.GUICode = model.GUICode;
                                                         productProperty.IndustryID = model.IndustryID;
+                                                        productProperty.ArticleTypeID = model.ArticleTypeID;
+                                                        productProperty.AssessID = model.AssessID;
                                                         productProperty.ParentID = 0;
                                                         productProperty.Code = AppGlobal.Industry;
                                                         productProperty.Initialization(InitType.Insert, RequestUserID);
                                                         _productPropertyRepository.Create(productProperty);
-                                                    }    
+                                                    }
                                                     model.Initialization(InitType.Insert, RequestUserID);
                                                     model.DatePublish = DateTime.Now;
                                                     model.ParentID = AppGlobal.WebsiteID;
@@ -1235,7 +1237,7 @@ namespace Commsights.MVC.Controllers
                                                                 membership.Initialization(InitType.Insert, RequestUserID);
                                                                 _membershipRepository.Create(membership);
                                                             }
-                                                            if(membership.ParentID == AppGlobal.ParentIDCustomer)
+                                                            if (membership.ParentID == AppGlobal.ParentIDCustomer)
                                                             {
                                                                 model.CompanyID = membership.ParentID;
                                                                 model.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
@@ -1246,7 +1248,7 @@ namespace Commsights.MVC.Controllers
                                                                 productProperty.Code = AppGlobal.Company;
                                                                 productProperty.Initialization(InitType.Insert, RequestUserID);
                                                                 _productPropertyRepository.Create(productProperty);
-                                                            }    
+                                                            }
                                                         }
                                                         if (workSheet.Cells[i, 5].Value != null)
                                                         {
@@ -1343,10 +1345,10 @@ namespace Commsights.MVC.Controllers
                                                             _productRepository.Create(model);
                                                         }
                                                         if (model.ID > 0)
-                                                        {                                                            
+                                                        {
                                                             if (listProductProperty.Count > 0)
                                                             {
-                                                                model.URLCode = "/Product/ViewContent/" + model.ID;
+                                                                model.URLCode = AppGlobal.DomainMain + "Product/ViewContent/" + model.ID;
                                                                 _productRepository.Update(model.ID, model);
                                                                 for (int j = 0; j < listProductProperty.Count; j++)
                                                                 {
@@ -1381,5 +1383,229 @@ namespace Commsights.MVC.Controllers
             }
             return RedirectToAction(action, controller);
         }
+
+        public ActionResult UploadYounet(Commsights.MVC.Models.BaseViewModel baseViewModel)
+        {
+            int result = 0;
+            string action = "Upload";
+            string controller = "Report";
+            try
+            {
+                if (Request.Form.Files.Count > 0)
+                {
+                    var file = Request.Form.Files[0];
+                    if (file == null || file.Length == 0)
+                    {
+                    }
+                    if (file != null)
+                    {
+                        string fileExtension = Path.GetExtension(file.FileName);
+                        string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                        fileName = "Younet";
+                        fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
+                        var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.FTPUploadExcel, fileName);
+                        using (var stream = new FileStream(physicalPath, FileMode.Create))
+                        {
+                            file.CopyTo(stream);
+                            FileInfo fileLocation = new FileInfo(physicalPath);
+                            if (fileLocation.Length > 0)
+                            {
+                                if ((fileExtension == ".xlsx") || (fileExtension == ".xls"))
+                                {
+                                    using (ExcelPackage package = new ExcelPackage(stream))
+                                    {
+                                        if (package.Workbook.Worksheets.Count > 0)
+                                        {
+                                            ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
+                                            if (workSheet != null)
+                                            {
+                                                int totalRows = workSheet.Dimension.Rows;                                               
+                                                for (int i = 2; i <= totalRows; i++)
+                                                {
+                                                    Product model = new Product();
+                                                    model.Source = "Younet";
+                                                    model.ArticleTypeID = AppGlobal.ArticleTypeID;
+                                                    model.AssessID = AppGlobal.AssessID;
+                                                    model.IndustryID = baseViewModel.IndustryIDUploadYounet;
+                                                    model.Initialization(InitType.Insert, RequestUserID);
+                                                    model.DatePublish = DateTime.Now;
+                                                    model.ParentID = AppGlobal.WebsiteID;
+                                                    model.CategoryID = AppGlobal.WebsiteID;
+                                                    model.PriceUnitId = 0;
+                                                    model.Liked = 0;
+                                                    model.Comment = 0;
+                                                    model.Share = 0;
+                                                    model.Reach = 0;
+                                                    try
+                                                    {
+                                                        string source = "";
+                                                        string datePublish = "";
+                                                        string timePublish = "";
+                                                        string assessString = "";
+                                                        if (workSheet.Cells[i, 1].Value != null)
+                                                        {
+                                                            model.Tags = workSheet.Cells[i, 1].Value.ToString().Trim();
+                                                        }
+                                                        if (workSheet.Cells[i, 3].Value != null)
+                                                        {
+                                                            source = workSheet.Cells[i, 3].Value.ToString().Trim();
+                                                            Config parent = _configResposistory.GetByGroupNameAndCodeAndTitle(AppGlobal.CRM, AppGlobal.Website, source);
+                                                            if (parent == null)
+                                                            {
+                                                                parent = _configResposistory.GetByGroupNameAndCodeAndTitle(AppGlobal.CRM, AppGlobal.PressList, source);
+                                                            }
+                                                            if (parent == null)
+                                                            {
+                                                                parent = new Config();
+                                                                parent.ParentID = AppGlobal.ParentID;
+                                                                parent.CodeName = source;
+                                                                parent.Title = source;
+                                                                parent.URLFull = source;
+                                                                _configResposistory.Create(parent);
+                                                            }
+                                                            model.ParentID = parent.ID;
+                                                            model.CategoryID = parent.ID;
+                                                        }
+                                                        if (workSheet.Cells[i, 5].Value != null)
+                                                        {
+                                                            model.URLCode = workSheet.Cells[i, 5].Value.ToString().Trim();
+                                                        }
+                                                        if (workSheet.Cells[i, 6].Value != null)
+                                                        {
+                                                            assessString = workSheet.Cells[i, 6].Value.ToString().Trim();
+                                                            Config assess = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.AssessType, assessString);
+                                                            if (assess == null)
+                                                            {
+                                                                assess = new Config();
+                                                                assess.CodeName = source;
+                                                                _configResposistory.Create(assess);
+                                                            }
+                                                            model.AssessID = assess.ID;
+                                                        }
+                                                        if (workSheet.Cells[i, 10].Value != null)
+                                                        {
+                                                            model.Author = workSheet.Cells[i, 10].Value.ToString().Trim();
+                                                        }
+                                                        if (workSheet.Cells[i, 14].Value != null)
+                                                        {
+                                                            model.Title = workSheet.Cells[i, 14].Value.ToString().Trim();
+                                                        }
+                                                        if (workSheet.Cells[i, 15].Value != null)
+                                                        {
+                                                            model.ContentMain = workSheet.Cells[i, 15].Value.ToString().Trim();
+                                                        }
+                                                        if (workSheet.Cells[i, 16].Value != null)
+                                                        {
+                                                            datePublish = workSheet.Cells[i, 16].Value.ToString().Trim();
+                                                        }
+                                                        if (workSheet.Cells[i, 17].Value != null)
+                                                        {
+                                                            timePublish = workSheet.Cells[i, 17].Value.ToString().Trim();
+                                                        }
+                                                        if (workSheet.Cells[i, 19].Value != null)
+                                                        {
+                                                            try
+                                                            {
+                                                                model.Liked = int.Parse(workSheet.Cells[i, 19].Value.ToString().Trim());
+                                                            }
+                                                            catch
+                                                            {
+                                                            }
+                                                        }
+                                                        if (workSheet.Cells[i, 20].Value != null)
+                                                        {
+                                                            try
+                                                            {
+                                                                model.Comment = int.Parse(workSheet.Cells[i, 20].Value.ToString().Trim());
+                                                            }
+                                                            catch
+                                                            {
+                                                            }
+                                                        }
+                                                        if (workSheet.Cells[i, 21].Value != null)
+                                                        {
+                                                            try
+                                                            {
+                                                                model.Share = int.Parse(workSheet.Cells[i, 21].Value.ToString().Trim());
+                                                            }
+                                                            catch
+                                                            {
+                                                            }
+                                                        }
+                                                        if (workSheet.Cells[i, 22].Value != null)
+                                                        {
+                                                            try
+                                                            {
+                                                                model.Reach = int.Parse(workSheet.Cells[i, 22].Value.ToString().Trim());
+                                                            }
+                                                            catch
+                                                            {
+                                                            }
+                                                        }
+                                                        try
+                                                        {
+                                                            int year = int.Parse(datePublish.Split('/')[2]);
+                                                            int month = int.Parse(datePublish.Split('/')[1]);
+                                                            int day = int.Parse(datePublish.Split('/')[0]);
+                                                            int hour = int.Parse(timePublish.Split(':')[0]);
+                                                            int minutes = int.Parse(timePublish.Split(':')[1]);
+                                                            int second = 0;
+                                                            model.DatePublish = new DateTime(year, month, day, hour, minutes, second);
+                                                        }
+                                                        catch
+                                                        {
+                                                            try
+                                                            {
+                                                                DateTime DateTimeStandard = new DateTime(1899, 12, 30);
+                                                                model.DatePublish = DateTimeStandard.AddDays(int.Parse(datePublish));
+                                                            }
+                                                            catch
+                                                            {
+                                                            }
+                                                        }
+                                                        if (_productRepository.IsValid(model.URLCode))
+                                                        {
+
+                                                            model.MetaTitle = AppGlobal.SetName(model.Title);
+                                                            model.CategoryID = model.ParentID;
+                                                            model.TitleEnglish = "";
+                                                            _productRepository.Create(model);
+                                                        }
+                                                        if (model.ID > 0)
+                                                        {
+                                                            //ProductProperty productProperty = new ProductProperty();
+                                                            //productProperty.ParentID = model.ID;
+                                                            //productProperty.GUICode = model.GUICode;
+                                                            //productProperty.ArticleTypeID = AppGlobal.TinNganhID;
+                                                            //productProperty.AssessID = AppGlobal.AssessID;
+                                                            //productProperty.Code = AppGlobal.Industry;
+                                                            //productProperty.Initialization(InitType.Insert, RequestUserID);
+                                                            //_productPropertyRepository.Create(productProperty);                                                            
+                                                        }
+                                                        result = model.ID;
+                                                    }
+                                                    catch
+                                                    {
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+            if (result > 0)
+            {
+                action = "Daily";
+                controller = "Report";
+            }
+            return RedirectToAction(action, controller, new { ID = result });
+        }        
     }
 }
