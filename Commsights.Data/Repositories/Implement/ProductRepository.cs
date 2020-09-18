@@ -105,7 +105,7 @@ namespace Commsights.Data.Repositories
             else
             {
                 item = new Product();
-            }    
+            }
             return item == null ? true : false;
         }
         public bool IsValidByFileNameAndDatePublish(string fileName, DateTime datePublish)
@@ -116,6 +116,20 @@ namespace Commsights.Data.Repositories
                 item = _context.Set<Product>().FirstOrDefault(item => item.FileName.Equals(fileName) && item.DatePublish.Equals(datePublish));
             }
             return item == null ? true : false;
+        }
+        public Product GetByURLCode(string uRLCode)
+        {
+            Product product = new Product();
+            if (!string.IsNullOrEmpty(uRLCode))
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@URLCode",uRLCode),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectByURLCode", parameters);
+                product = SQLHelper.ToList<ProductDataTransfer>(dt).FirstOrDefault();
+            }
+            return product;
         }
         public List<ProductDataTransfer> GetDataTransferByProductSearchIDToList(int productSearchID)
         {

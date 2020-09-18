@@ -17,5 +17,9 @@ namespace Commsights.MVC.Models
         public bool IsIndustryIDUploadGoogleSearch { get; set; }
         public bool IsIndustryIDUploadAndiSource { get; set; }
         public bool IsIndustryIDUploadYounet { get; set; }
+        public bool IsUploadScanOverride { get; set; }
+        public bool IsUploadGoogleSearchOverride { get; set; }
+        public bool IsUploadAndiSourceOverride { get; set; }
+        public bool IsUploadYounetOverride { get; set; }
     }
 }

@@ -146,6 +146,30 @@ namespace Commsights.Data.Helpers
                 return int.Parse(builder.Build().GetSection("AppSettings").GetSection("Hour").Value);
             }
         }
+        public static int PositiveID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("PositiveID").Value);
+            }
+        }
+        public static int NeutralID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("NeutralID").Value);
+            }
+        }
+        public static int NegativeID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("NegativeID").Value);
+            }
+        }
         public static int IndustryID
         {
             get

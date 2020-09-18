@@ -38,9 +38,15 @@
                         </div>
                     </div>
                     <div class="col-md-12">
-                        <div class='form-group'>                            
+                        <div class='form-group'>
                             @(Html.CheckBoxFor(Model => Model.IsIndustryIDUploadScan))
                             <label for='IsIndustryIDUploadScan'>Not select industry</label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class='form-group'>
+                            @(Html.CheckBoxFor(Model => Model.IsUploadScanOverride))
+                            <label for='IsIndustryIDUploadScan'>Override</label>
                         </div>
                     </div>
                     <div class='col-sm-12'>
@@ -93,6 +99,12 @@
                             <label for='IsIndustryIDUploadScan'>Not select industry</label>
                         </div>
                     </div>
+                    <div class="col-md-12">
+                        <div class='form-group'>
+                            @(Html.CheckBoxFor(Model => Model.IsUploadGoogleSearchOverride))
+                            <label for='IsIndustryIDUploadScan'>Override</label>
+                        </div>
+                    </div>
                     <div class='col-sm-12'>
                         <div class='form-group'>
                             <label for='Upload'></label>
@@ -143,6 +155,12 @@
                             <label for='IsIndustryIDUploadScan'>Not select industry</label>
                         </div>
                     </div>
+                    <div class="col-md-12">
+                        <div class='form-group'>
+                            @(Html.CheckBoxFor(Model => Model.IsUploadAndiSourceOverride))
+                            <label for='IsIndustryIDUploadScan'>Override</label>
+                        </div>
+                    </div>
                     <div class='col-sm-12'>
                         <div class='form-group'>
                             <label for='Upload'></label>
@@ -191,6 +209,12 @@
                         <div class='form-group'>
                             @(Html.CheckBoxFor(Model => Model.IsIndustryIDUploadYounet))
                             <label for='IsIndustryIDUploadScan'>Not select industry</label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class='form-group'>
+                            @(Html.CheckBoxFor(Model => Model.IsIndustryIDUploadYounet))
+                            <label for='IsIndustryIDUploadScan'>Override</label>
                         </div>
                     </div>
                     <div class='col-sm-12'>

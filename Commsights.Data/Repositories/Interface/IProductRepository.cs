@@ -8,7 +8,7 @@ namespace Commsights.Data.Repositories
 {
     public interface IProductRepository : IRepository<Product>
     {
-
+        public Product GetByURLCode(string uRLCode);
         public void FilterProduct(Product product, List<ProductProperty> listProductProperty, int RequestUserID);
         public int AddRange(List<Product> list);
         public bool IsValid(string url);
