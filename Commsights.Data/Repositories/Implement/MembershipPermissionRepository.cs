@@ -38,6 +38,10 @@ namespace Commsights.Data.Repositories
         {
             return _context.MembershipPermission.Where(item => item.Code.Equals(code) && !string.IsNullOrEmpty(item.ProductName)).OrderBy(item => item.ProductName).ToList();
         }
+        public MembershipPermission GetByProductName(string productName)
+        {
+            return _context.MembershipPermission.FirstOrDefault(item => item.ProductName.Equals(productName));
+        }
         public List<MembershipPermissionDataTransfer> GetDataTransferMembershipBySegmentIDAndCodeToList(int segmentID, string code)
         {
             List<MembershipPermissionDataTransfer> list = new List<MembershipPermissionDataTransfer>();

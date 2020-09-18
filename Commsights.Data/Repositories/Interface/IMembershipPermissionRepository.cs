@@ -8,6 +8,7 @@ namespace Commsights.Data.Repositories
 {
     public interface IMembershipPermissionRepository : IRepository<MembershipPermission>
     {
+        public MembershipPermission GetByProductName(string productName);
         public List<MembershipPermission> GetByMembershipIDToList(int membershipID);
         public List<MembershipPermission> GetIndustryIDAndCodeToList(int industryID, string code);
         public List<MembershipPermission> GetByCodeToList(string code);

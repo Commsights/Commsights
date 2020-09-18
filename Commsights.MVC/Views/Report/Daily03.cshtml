@@ -58,10 +58,17 @@
                                 @(Html.TextBoxFor(Model => Model.CompanyName, new { placeholder = "Customer", @class = "form-control", @readonly = "readonly" }))
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <div class='form-group'>
                                 <label for='Title'>Title</label>
                                 @(Html.TextBoxFor(Model => Model.Title, new { placeholder = "Title", @class = "form-control" }))
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class='form-group'>
+                                <div style="margin-top:33px;"></div>
+                                @(Html.CheckBoxFor(Model => Model.Active.Value))
+                                <label for='Active'>Complete</label>
                             </div>
                         </div>
                     </div>
@@ -184,5 +191,5 @@
     function filterProductSearchPropertyDataTransfer(e) {
         var productSearchIDValue = $("#ID").val();
         return { productSearchID: productSearchIDValue };
-    }    
+    }
 </script>

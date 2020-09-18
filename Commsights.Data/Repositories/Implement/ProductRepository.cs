@@ -102,6 +102,10 @@ namespace Commsights.Data.Repositories
             {
                 item = _context.Set<Product>().FirstOrDefault(item => item.URLCode.Equals(url));
             }
+            else
+            {
+                item = new Product();
+            }    
             return item == null ? true : false;
         }
         public bool IsValidByFileNameAndDatePublish(string fileName, DateTime datePublish)
@@ -662,6 +666,10 @@ namespace Commsights.Data.Repositories
                 if (!string.IsNullOrEmpty(listCompany[i].Account))
                 {
                     keyword = listCompany[i].Account.Trim();
+                    if ((keyword == "Tiki") || (keyword == "Lazada"))
+                    {
+
+                    }
                     int check = 0;
                     if (product.Title.Contains(keyword))
                     {

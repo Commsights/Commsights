@@ -935,7 +935,7 @@ namespace Commsights.Data.Helpers
             return list;
         }
         public static int CheckContentAndKeyword(string content, string keyword)
-        {
+        {            
             int check = 0;
             int checkSub = 0;
             int index = content.IndexOf(keyword);
@@ -945,15 +945,17 @@ namespace Commsights.Data.Helpers
             }
             else
             {
-                if ((content[index - 1].ToString() == " ") || (content[index - 1].ToString() == "(") || (content[index - 1].ToString() == "[") || (content[index - 1].ToString() == "{") || (content[index - 1].ToString() == "<"))
+                string word01 = content[index - 1].ToString();
+                if ((word01 == " ") || (word01 == "(") || (word01 == "[") || (word01 == "{") || (word01 == "<"))
                 {
                     checkSub = checkSub + 1;
                 }
             }
             int index001 = index + keyword.Length;
-            if (index001 < content.Length - 1)
+            if (index001 < content.Length)
             {
-                if ((content[index001].ToString() != " ") && (content[index001].ToString() != ",") && (content[index001].ToString() != ".") && (content[index001].ToString() != ";") && (content[index001].ToString() != ")") && (content[index001].ToString() != "]") && (content[index001].ToString() != "}") && (content[index001].ToString() != ">"))
+                string word02 = content[index001].ToString();
+                if ((word02 != " ") && (word02 != ",") && (word02 != ".") && (word02 != ";") && (word02 != ")") && (word02 != "]") && (word02 != "}") && (word02 != ">"))
                 {
                 }
                 else
@@ -1661,7 +1663,156 @@ namespace Commsights.Data.Helpers
             {
             }
         }
-
+        public void GetAuthorFromURL(Product product)
+        {
+            string html = "";
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(product.URLCode);
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    using (Stream stream = response.GetResponseStream())
+                    {
+                        using (StreamReader reader = new StreamReader(stream))
+                        {
+                            html = reader.ReadToEnd();
+                        }
+                        string author = html;
+                        switch (product.ParentID)
+                        {
+                            case 1:
+                                author = author.Replace(@"</article>", @"~");
+                                author = author.Split('~')[0];
+                                author = author.Replace(@"</h1>", @"~");
+                                if (author.Split('~').Length > 1)
+                                {
+                                    author = author.Split('~')[1];
+                                    author = author.Replace(@"<p class=""Normal"" style=""text-align:right;"">", @"~");
+                                    author = author.Split('~')[author.Split('~').Length - 1];
+                                    author = AppGlobal.RemoveHTMLTags(author);
+                                }
+                                break;
+                            case 5:
+                                author = author.Replace(@"<script type=""application/ld+json"">", @"~");
+                                author = author.Split('~')[0];
+                                author = author.Replace(@"dable:author", @"~");
+                                if (author.Split('~').Length > 1)
+                                {
+                                    author = author.Split('~')[1];
+                                    author = AppGlobal.SetContent(author);
+                                    author = author.Replace(@"""", @"");
+                                }
+                                break;
+                            case 6:
+                                author = author.Replace(@"<div class=""tagandnetwork"" id=""tagandnetwork"">", @"~");
+                                author = author.Split('~')[0];
+                                author = author.Replace(@"<div class=""author"">", @"~");
+                                if (author.Split('~').Length > 1)
+                                {
+                                    author = author.Split('~')[1];
+                                    author = AppGlobal.RemoveHTMLTags(author);
+                                }
+                                break;
+                            case 8:
+                                author = author.Replace(@"<div class=""inner-article"">", @"~");
+                                author = author.Split('~')[0];
+                                author = author.Replace(@"<div class=""VnnAdsPos clearfix"" data-pos=""vt_article_bottom"">", @"~");
+                                author = author.Split('~')[0];
+                                author = author.Replace(@"<div class=""bold ArticleLead"">", @"~");
+                                if (author.Split('~').Length > 1)
+                                {
+                                    author = author.Split('~')[1];
+                                    author = author.Replace(@"<span class=""bold"">", @"~");
+                                    author = author.Split('~')[author.Split('~').Length - 1];
+                                    author = author.Replace(@"<p align=""justify"">", @"~");
+                                    author = author.Split('~')[author.Split('~').Length - 1];
+                                    author = author.Replace(@"</table>", @"~");
+                                    author = author.Split('~')[author.Split('~').Length - 1];
+                                    author = AppGlobal.RemoveHTMLTags(author);
+                                }
+                                break;
+                            case 263:
+                                author = author.Replace(@"<time class=""op-published""", @"~");
+                                author = author.Split('~')[0];
+                                author = author.Replace(@"<b  data-field=""author"" >", @"~");
+                                if (author.Split('~').Length > 1)
+                                {
+                                    author = author.Split('~')[1];
+                                    author = AppGlobal.RemoveHTMLTags(author);
+                                    author = author.Replace(@"|", @"");
+                                }
+                                break;
+                            case 278:
+                                author = author.Replace(@"<div class=""inner-article"">", @"~");
+                                author = author.Split('~')[0];
+                                author = author.Replace(@"<strong>", @"~");
+                                if (author.Split('~').Length > 1)
+                                {
+                                    author = author.Split('~')[author.Split('~').Length - 1];
+                                    author = AppGlobal.RemoveHTMLTags(author);
+                                }
+                                break;
+                            case 294:
+                                author = author.Replace(@"<span class=""afcba-source"">", @"~");
+                                author = author.Split('~')[0];
+                                author = author.Replace(@"data-role=""author"">", @"~");
+                                if (author.Split('~').Length > 1)
+                                {
+                                    author = author.Split('~')[author.Split('~').Length - 1];
+                                    author = AppGlobal.RemoveHTMLTags(author);
+                                    author = author.Replace(@",", @"");
+                                }
+                                break;
+                            case 295:
+                                author = author.Replace(@"<div class=""soucre_news"">", @"~");
+                                author = author.Split('~')[0];
+                                author = author.Replace(@"<p style=""text-align: right;"">", @"~");
+                                if (author.Split('~').Length > 1)
+                                {
+                                    author = author.Split('~')[author.Split('~').Length - 1];
+                                    author = AppGlobal.RemoveHTMLTags(author);
+                                }
+                                break;
+                        }
+                        author = author.Trim();
+                        product.Author = author;
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
+        public static void GetURL(Product product)
+        {
+            string url = product.URLCode;
+            string f0 = "";
+            string f1 = "";
+            switch (product.ParentID)
+            {
+                case 295:
+                    f0 = url.Split('-')[url.Split('-').Length - 1];
+                    f1 = f0;
+                    f1 = f1.Replace(@".html", @".htm");
+                    f1 = f1.Replace(@"n", @"");
+                    url = url.Replace(f0, f1);
+                    product.URLCode = url;
+                    break;
+                case 182:
+                    url = "https://baobinhphuoc.com.vn/Content/" + url;
+                    product.URLCode = url;
+                    break;
+                case 395:
+                    url = url.Replace(@".vn", @".vn/");
+                    product.URLCode = url;
+                    break;
+                case 506:
+                    f0 = url.Split('=')[url.Split('=').Length - 1];
+                    url = "https://danang.gov.vn/web/guest/chi-tiet?id=" + f0;
+                    product.URLCode = url;
+                    break;
+            }
+        }
         #endregion
     }
 }

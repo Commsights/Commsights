@@ -39,7 +39,7 @@ namespace Commsights.Data.Repositories
                        {
                 new SqlParameter("@DatePublish",datePublish),
             };
-                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSearchInitializationByDatePublish", parameters);
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportDailyInitializationByDatePublish", parameters);
                 list = SQLHelper.ToList<ProductSearchDataTransfer>(dt);
                 for (int i = 0; i < list.Count; i++)
                 {
