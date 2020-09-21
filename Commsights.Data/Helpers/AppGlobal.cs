@@ -146,6 +146,30 @@ namespace Commsights.Data.Helpers
                 return int.Parse(builder.Build().GetSection("AppSettings").GetSection("Hour").Value);
             }
         }
+        public static int DailyReportDataID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DailyReportDataID").Value);
+            }
+        }
+        public static int DailyReportSummaryID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DailyReportSummaryID").Value);
+            }
+        }
+        public static int DailyReportExtraID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DailyReportExtraID").Value);
+            }
+        }
         public static int PositiveID
         {
             get
@@ -242,6 +266,22 @@ namespace Commsights.Data.Helpers
                 return int.Parse(builder.Build().GetSection("AppSettings").GetSection("ParentID").Value);
             }
         }
+        public static int CompanyFeatureID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("CompanyFeatureID").Value);
+            }
+        }
+        public static int CompanyMentionID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("CompanyMentionID").Value);
+            }
+        }
         public static int TinDoanhNghiepID
         {
             get
@@ -304,6 +344,14 @@ namespace Commsights.Data.Helpers
             {
                 var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                 return int.Parse(builder.Build().GetSection("AppSettings").GetSection("ParentIDEmployee").Value);
+            }
+        }
+        public static string Channel
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Channel").Value;
             }
         }
         public static string KeywordNegative
@@ -1504,7 +1552,19 @@ namespace Commsights.Data.Helpers
                 }
                 if (!string.IsNullOrEmpty(email))
                 {
-                    list.Add(email);
+                    list.Add(email.Trim());
+                }
+            }
+            return list;
+        }
+        public static List<string> SetContentByDauChamPhay(string content)
+        {
+            List<string> list = new List<string>();
+            foreach (string item in content.Split(';'))
+            {      
+                if (!string.IsNullOrEmpty(item))
+                {
+                    list.Add(item.Trim());
                 }
             }
             return list;

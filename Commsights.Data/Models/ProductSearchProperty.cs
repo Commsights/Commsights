@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Commsights.Data.Models
 {
     public partial class ProductSearchProperty : BaseModel
-    {       
+    {
         public string Summary { get; set; }
         public int? ProductSearchID { get; set; }
         public int? ProductID { get; set; }
@@ -16,5 +16,8 @@ namespace Commsights.Data.Models
         public int? SegmentID { get; set; }
         public int? ProductID001 { get; set; }
         public decimal? Point { get; set; }
+        public int? CategoryID { get; set; }
+        public bool? IsSummary { get; set; }
+        public int? SortOrder { get; set; }
     }
 }

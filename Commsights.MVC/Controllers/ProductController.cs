@@ -294,8 +294,8 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
-        
-        
+
+
         public void InitializationProduct(Product product)
         {
             product.IndustryID = AppGlobal.IndustryID;
@@ -303,7 +303,7 @@ namespace Commsights.MVC.Controllers
             product.AssessID = AppGlobal.AssessID;
             product.GUICode = AppGlobal.InitGuiCode;
             product.Initialization(InitType.Insert, RequestUserID);
-        }        
+        }
         public void ParseRSS(List<Product> list, Config item)
         {
             XmlDocument rssXmlDoc = new XmlDocument();
@@ -746,8 +746,7 @@ namespace Commsights.MVC.Controllers
                                                     {
                                                         string source = "";
                                                         string datePublish = "";
-                                                        string timePublish = "";
-                                                        string assessString = "";
+                                                        string timePublish = "";                                                        
                                                         if (workSheet.Cells[i, 1].Value != null)
                                                         {
                                                             model.Tags = workSheet.Cells[i, 1].Value.ToString().Trim();
@@ -778,15 +777,28 @@ namespace Commsights.MVC.Controllers
                                                         }
                                                         if (workSheet.Cells[i, 6].Value != null)
                                                         {
-                                                            assessString = workSheet.Cells[i, 6].Value.ToString().Trim();
-                                                            Config assess = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.AssessType, assessString);
-                                                            if (assess == null)
+                                                            Config assess = new Config();
+                                                            string assessName = workSheet.Cells[i, 6].Value.ToString().Trim();
+                                                            try
                                                             {
-                                                                assess = new Config();
-                                                                assess.CodeName = source;
-                                                                _configResposistory.Create(assess);
+                                                                int parentID = int.Parse(assessName);
+                                                                assess = _configResposistory.GetByGroupNameAndCodeAndParentID(AppGlobal.CRM, AppGlobal.AssessType, parentID);
                                                             }
-                                                            model.PriceUnitId = assess.ID;
+                                                            catch
+                                                            {
+                                                                assess = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.AssessType, assessName);
+                                                                if (assess == null)
+                                                                {
+                                                                    assess = new Config();
+                                                                    assess.CodeName = assessName;
+                                                                    assess.Initialization(InitType.Insert, RequestUserID);
+                                                                    _configResposistory.Create(assess);
+                                                                }
+                                                            }
+                                                            if (assess != null)
+                                                            {
+                                                                model.AssessID = assess.ID;
+                                                            }
                                                         }
                                                         if (workSheet.Cells[i, 14].Value != null)
                                                         {
@@ -1247,7 +1259,6 @@ namespace Commsights.MVC.Controllers
             }
             return RedirectToAction(action, controller, new { ID = result });
         }
-
         public ActionResult UploadGoogleSearch(Commsights.MVC.Models.BaseViewModel baseViewModel)
         {
             int result = 0;
@@ -1377,16 +1388,28 @@ namespace Commsights.MVC.Controllers
                                                         }
                                                         if (workSheet.Cells[i, 4].Value != null)
                                                         {
+                                                            Config assess = new Config();
                                                             string assessName = workSheet.Cells[i, 4].Value.ToString().Trim();
-                                                            Config assess = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.AssessType, assessName);
-                                                            if (assess == null)
+                                                            try
                                                             {
-                                                                assess = new Config();
-                                                                assess.CodeName = assessName;
-                                                                assess.Initialization(InitType.Insert, RequestUserID);
-                                                                _configResposistory.Create(assess);
+                                                                int parentID = int.Parse(assessName);
+                                                                assess = _configResposistory.GetByGroupNameAndCodeAndParentID(AppGlobal.CRM, AppGlobal.AssessType, parentID);
                                                             }
-                                                            model.AssessID = assess.ID;
+                                                            catch
+                                                            {
+                                                                assess = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.AssessType, assessName);
+                                                                if (assess == null)
+                                                                {
+                                                                    assess = new Config();
+                                                                    assess.CodeName = assessName;
+                                                                    assess.Initialization(InitType.Insert, RequestUserID);
+                                                                    _configResposistory.Create(assess);
+                                                                }
+                                                            }
+                                                            if (assess != null)
+                                                            {
+                                                                model.AssessID = assess.ID;
+                                                            }
                                                         }
                                                         if (workSheet.Cells[i, 5].Value != null)
                                                         {
@@ -1462,6 +1485,6 @@ namespace Commsights.MVC.Controllers
                 controller = "ProductSearch";
             }
             return RedirectToAction(action, controller, new { ID = result });
-        }
+        }       
     }
 }

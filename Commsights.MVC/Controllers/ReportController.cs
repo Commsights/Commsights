@@ -1116,31 +1116,22 @@ namespace Commsights.MVC.Controllers
                                                             if (!string.IsNullOrEmpty(model.URLCode))
                                                             {
                                                                 Product product = _productRepository.GetByURLCode(model.URLCode);
-                                                                if (product.ID > 0)
+                                                                if (product == null)
                                                                 {
-                                                                    if (baseViewModel.IsUploadScanOverride == true)
-                                                                    {
-                                                                        //product.GUICode = model.GUICode;
-                                                                        //product.Description = model.Description;
-                                                                        //product.MetaTitle = model.MetaTitle;
-                                                                        //product.CategoryID = model.CategoryID;
-                                                                        //product.TitleEnglish = model.TitleEnglish;
-                                                                        //product.Source = model.Source;
-                                                                        //product.ParentID = model.ParentID;
-                                                                        //product.Page = model.Page;
-                                                                        //product.FileName = model.FileName;
-                                                                        //product.Title = model.Title;
-                                                                        //product.CompanyID = model.CompanyID;
-                                                                        //product.IndustryID = model.IndustryID;
-                                                                        model.ID = product.ID;
-                                                                        model.DateCreated = product.DateCreated;
-                                                                        model.Initialization(InitType.Update, RequestUserID);
-                                                                        _productRepository.Update(model.ID, model);
-                                                                    }
+                                                                    _productRepository.Create(model);
                                                                 }
                                                                 else
                                                                 {
-                                                                    _productRepository.Create(model);
+                                                                    if (product.ID > 0)
+                                                                    {
+                                                                        if (baseViewModel.IsUploadScanOverride == true)
+                                                                        {
+                                                                            model.ID = product.ID;
+                                                                            model.DateCreated = product.DateCreated;
+                                                                            model.Initialization(InitType.Update, RequestUserID);
+                                                                            _productRepository.Update(model.ID, model);
+                                                                        }
+                                                                    }
                                                                 }
                                                                 if (model.ID > 0)
                                                                 {
@@ -1391,30 +1382,7 @@ namespace Commsights.MVC.Controllers
                                                         if (!string.IsNullOrEmpty(model.URLCode))
                                                         {
                                                             Product product = _productRepository.GetByURLCode(model.URLCode);
-                                                            if (product.ID > 0)
-                                                            {
-                                                                if (baseViewModel.IsUploadAndiSourceOverride == true)
-                                                                {
-                                                                    //product.GUICode = model.GUICode;
-                                                                    //product.Description = model.Description;
-                                                                    //product.MetaTitle = model.MetaTitle;
-                                                                    //product.CategoryID = model.CategoryID;
-                                                                    //product.TitleEnglish = model.TitleEnglish;
-                                                                    //product.Source = model.Source;
-                                                                    //product.ParentID = model.ParentID;
-                                                                    //product.Page = model.Page;
-                                                                    //product.FileName = model.FileName;
-                                                                    //product.Title = model.Title;
-                                                                    //product.CompanyID = model.CompanyID;
-                                                                    //product.IndustryID = model.IndustryID;
-
-                                                                    model.ID = product.ID;
-                                                                    model.DateCreated = product.DateCreated;
-                                                                    model.Initialization(InitType.Update, RequestUserID);
-                                                                    _productRepository.Update(model.ID, model);
-                                                                }
-                                                            }
-                                                            else
+                                                            if (product == null)
                                                             {
                                                                 bool saveModel = true;
                                                                 saveModel = _productRepository.IsValid(model.URLCode);
@@ -1425,7 +1393,20 @@ namespace Commsights.MVC.Controllers
                                                                 if (saveModel)
                                                                 {
                                                                     _productRepository.Create(model);
-                                                                }                                                               
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                if (product.ID > 0)
+                                                                {
+                                                                    if (baseViewModel.IsUploadAndiSourceOverride == true)
+                                                                    {
+                                                                        model.ID = product.ID;
+                                                                        model.DateCreated = product.DateCreated;
+                                                                        model.Initialization(InitType.Update, RequestUserID);
+                                                                        _productRepository.Update(model.ID, model);
+                                                                    }
+                                                                }
                                                             }
                                                             if (model.ID > 0)
                                                             {
@@ -1679,39 +1660,22 @@ namespace Commsights.MVC.Controllers
                                                             List<ProductProperty> listProductProperty = new List<ProductProperty>();
                                                             _productRepository.FilterProduct(model, listProductProperty, RequestUserID);
                                                             Product product = _productRepository.GetByURLCode(model.URLCode);
-                                                            if (product.ID > 0)
+                                                            if (product == null)
                                                             {
-                                                                if (baseViewModel.IsUploadAndiSourceOverride == true)
-                                                                {
-                                                                    //product.ArticleTypeID = model.ArticleTypeID;
-                                                                    //product.AssessID = model.AssessID;
-                                                                    //product.GUICode = model.GUICode;
-                                                                    //product.Description = model.Description;
-                                                                    //product.MetaTitle = model.MetaTitle;
-                                                                    //product.CategoryID = model.CategoryID;
-                                                                    //product.TitleEnglish = model.TitleEnglish;
-                                                                    //product.Source = model.Source;
-                                                                    //product.ParentID = model.ParentID;
-                                                                    //product.Page = model.Page;
-                                                                    //product.FileName = model.FileName;
-                                                                    //product.Title = model.Title;
-                                                                    //product.CompanyID = model.CompanyID;
-                                                                    //product.IndustryID = model.IndustryID;
-                                                                    //product.Author = model.Author;
-                                                                    //product.Liked = model.Liked;
-                                                                    //product.Comment = model.Comment;
-                                                                    //product.Share = model.Share;
-                                                                    //product.Reach = model.Reach;
-                                                                    //product.Tags = model.Tags;
-                                                                    model.ID = product.ID;
-                                                                    model.DateCreated = product.DateCreated;
-                                                                    model.Initialization(InitType.Update, RequestUserID);
-                                                                    _productRepository.Update(model.ID, model);
-                                                                }
+                                                                _productRepository.Create(model);
                                                             }
                                                             else
                                                             {
-                                                                _productRepository.Create(model);                                                                
+                                                                if (product.ID > 0)
+                                                                {
+                                                                    if (baseViewModel.IsUploadAndiSourceOverride == true)
+                                                                    {
+                                                                        model.ID = product.ID;
+                                                                        model.DateCreated = product.DateCreated;
+                                                                        model.Initialization(InitType.Update, RequestUserID);
+                                                                        _productRepository.Update(model.ID, model);
+                                                                    }
+                                                                }
                                                             }
                                                             if (model.ID > 0)
                                                             {
@@ -1931,19 +1895,23 @@ namespace Commsights.MVC.Controllers
                                                             List<ProductProperty> listProductProperty = new List<ProductProperty>();
                                                             _productRepository.FilterProduct(model, listProductProperty, RequestUserID);
                                                             Product product = _productRepository.GetByURLCode(model.URLCode);
-                                                            if (product.ID > 0)
+                                                            if (product == null)
                                                             {
-                                                                if (baseViewModel.IsUploadGoogleSearchOverride == true)
-                                                                {
-                                                                    model.ID = product.ID;
-                                                                    model.DateCreated = product.DateCreated;
-                                                                    model.Initialization(InitType.Update, RequestUserID);
-                                                                    _productRepository.Update(model.ID, model);
-                                                                }
+                                                                _productRepository.Create(model);
                                                             }
                                                             else
-                                                            {                                                               
-                                                                _productRepository.Create(model);
+                                                            {
+                                                                if (product.ID > 0)
+                                                                {
+                                                                    if (baseViewModel.IsUploadGoogleSearchOverride == true)
+                                                                    {
+                                                                        model.ID = product.ID;
+                                                                        model.DateCreated = product.DateCreated;
+                                                                        model.Initialization(InitType.Update, RequestUserID);
+                                                                        _productRepository.Update(model.ID, model);
+                                                                    }
+                                                                }
+
                                                             }
                                                             if (model.ID > 0)
                                                             {
@@ -1955,6 +1923,271 @@ namespace Commsights.MVC.Controllers
                                                                     }
                                                                     _productPropertyRepository.Range(listProductProperty);
                                                                 }
+                                                                result = result + 1;
+                                                            }
+                                                        }
+                                                    }
+                                                    catch
+                                                    {
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+            if (result > 0)
+            {
+                action = "Daily";
+                controller = "Report";
+            }
+            return RedirectToAction(action, controller);
+        }
+        public ActionResult UploadGoogleSearch001(Commsights.MVC.Models.BaseViewModel baseViewModel)
+        {
+            int result = 0;
+            string action = "Upload";
+            string controller = "Report";
+            try
+            {
+                if (Request.Form.Files.Count > 0)
+                {
+                    var file = Request.Form.Files[0];
+                    if (file == null || file.Length == 0)
+                    {
+                    }
+                    if (file != null)
+                    {
+                        string fileExtension = Path.GetExtension(file.FileName);
+                        string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                        fileName = "GoogleSearch001";
+                        fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
+                        var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.FTPUploadExcel, fileName);
+                        using (var stream = new FileStream(physicalPath, FileMode.Create))
+                        {
+                            file.CopyTo(stream);
+                            FileInfo fileLocation = new FileInfo(physicalPath);
+                            if (fileLocation.Length > 0)
+                            {
+                                if ((fileExtension == ".xlsx") || (fileExtension == ".xls"))
+                                {
+                                    using (ExcelPackage package = new ExcelPackage(stream))
+                                    {
+                                        if (package.Workbook.Worksheets.Count > 0)
+                                        {
+                                            ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
+                                            if (workSheet != null)
+                                            {
+                                                int totalRows = workSheet.Dimension.Rows;
+                                                for (int i = 2; i <= totalRows; i++)
+                                                {
+                                                    Product model = new Product();
+
+                                                    model.Initialization(InitType.Insert, RequestUserID);
+                                                    model.DatePublish = DateTime.Now;
+                                                    model.ParentID = AppGlobal.WebsiteID;
+                                                    model.CategoryID = AppGlobal.WebsiteID;
+                                                    model.ArticleTypeID = AppGlobal.ArticleTypeID;
+                                                    model.CompanyID = AppGlobal.CompetitorID;
+                                                    model.AssessID = AppGlobal.AssessID;
+                                                    model.IndustryID = baseViewModel.IndustryIDUploadGoogleSearch001;
+                                                    int point = 0;
+                                                    if (baseViewModel.IsIndustryIDUploadGoogleSearch001 == true)
+                                                    {
+                                                        model.IndustryID = AppGlobal.IndustryID;
+                                                    }
+                                                    try
+                                                    {
+                                                        string datePublish = "";
+                                                        if (workSheet.Cells[i, 1].Value != null)
+                                                        {
+                                                            datePublish = workSheet.Cells[i, 1].Value.ToString().Trim();
+                                                            try
+                                                            {
+                                                                model.DatePublish = DateTime.Parse(datePublish);
+                                                            }
+                                                            catch
+                                                            {
+                                                                try
+                                                                {
+                                                                    int year = int.Parse(datePublish.Split('/')[2]);
+                                                                    int month = int.Parse(datePublish.Split('/')[0]);
+                                                                    int day = int.Parse(datePublish.Split('/')[1]);
+                                                                    model.DatePublish = new DateTime(year, month, day, 0, 0, 0);
+                                                                }
+                                                                catch
+                                                                {
+                                                                    try
+                                                                    {
+                                                                        int year = int.Parse(datePublish.Split('/')[2]);
+                                                                        int month = int.Parse(datePublish.Split('/')[1]);
+                                                                        int day = int.Parse(datePublish.Split('/')[0]);
+                                                                        model.DatePublish = new DateTime(year, month, day, 0, 0, 0);
+                                                                    }
+                                                                    catch
+                                                                    {
+                                                                        try
+                                                                        {
+                                                                            DateTime DateTimeStandard = new DateTime(1899, 12, 30);
+                                                                            model.DatePublish = DateTimeStandard.AddDays(int.Parse(datePublish));
+                                                                        }
+                                                                        catch
+                                                                        {
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        if (workSheet.Cells[i, 2].Value != null)
+                                                        {
+                                                            string companyName = workSheet.Cells[i, 2].Value.ToString().Trim();
+                                                            Membership company = _membershipRepository.GetByAccount(companyName);
+                                                            if (company == null)
+                                                            {
+                                                                company = new Membership();
+                                                                company.Account = companyName;
+                                                                company.FullName = companyName;
+                                                                company.ParentID = AppGlobal.ParentIDCustomer;
+                                                                company.Initialization(InitType.Insert, RequestUserID);
+                                                                _membershipRepository.Create(company);
+                                                            }
+                                                            model.CompanyID = company.ID;
+                                                        }
+                                                        if (workSheet.Cells[i, 3].Value != null)
+                                                        {
+                                                            string pointName = workSheet.Cells[i, 3].Value.ToString().Trim();
+                                                            pointName = pointName.Replace(@"%", @"");
+                                                            try
+                                                            {
+                                                                point = int.Parse(pointName);
+                                                            }
+                                                            catch
+                                                            {
+                                                            }
+                                                        }
+                                                        if (workSheet.Cells[i, 4].Value != null)
+                                                        {
+                                                            string articleType = workSheet.Cells[i, 4].Value.ToString().Trim();
+                                                            articleType = articleType.ToLower();
+                                                            switch (articleType)
+                                                            {
+                                                                case "0":
+                                                                    model.ArticleTypeID = AppGlobal.CompanyFeatureID;
+                                                                    break;
+                                                                case "1":
+                                                                    model.ArticleTypeID = AppGlobal.CompanyMentionID;
+                                                                    break;
+                                                                case "feature":
+                                                                    model.ArticleTypeID = AppGlobal.CompanyFeatureID;
+                                                                    break;
+                                                                case "mention":
+                                                                    model.ArticleTypeID = AppGlobal.CompanyMentionID;
+                                                                    break;
+                                                            }
+                                                        }
+                                                        if (workSheet.Cells[i, 5].Value != null)
+                                                        {
+                                                            string assessString = workSheet.Cells[i, 5].Value.ToString().Trim();
+                                                            switch (assessString)
+                                                            {
+                                                                case "-1":
+                                                                    model.AssessID = AppGlobal.NegativeID;
+                                                                    break;
+                                                                case "0":
+                                                                    model.AssessID = AppGlobal.NeutralID;
+                                                                    break;
+                                                                case "1":
+                                                                    model.AssessID = AppGlobal.PositiveID;
+                                                                    break;
+                                                                default:
+                                                                    Config assess = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.AssessType, assessString);
+                                                                    if (assess == null)
+                                                                    {
+                                                                        assess = new Config();
+                                                                        assess.CodeName = assessString;
+                                                                        assess.Initialization(InitType.Insert, RequestUserID);
+                                                                        _configResposistory.Create(assess);
+                                                                    }
+                                                                    model.AssessID = assess.ID;
+                                                                    break;
+                                                            }
+                                                        }
+                                                        if (workSheet.Cells[i, 6].Value != null)
+                                                        {
+                                                            model.Title = workSheet.Cells[i, 6].Value.ToString().Trim();
+                                                        }
+                                                        if (workSheet.Cells[i, 7].Value != null)
+                                                        {
+                                                            model.Title = workSheet.Cells[i, 7].Value.ToString().Trim();
+                                                        }
+                                                        if (workSheet.Cells[i, 8].Value != null)
+                                                        {
+                                                            model.URLCode = workSheet.Cells[i, 8].Value.ToString().Trim();
+                                                        }
+                                                        if (workSheet.Cells[i, 9].Value != null)
+                                                        {
+                                                            model.ContentMain = workSheet.Cells[i, 9].Value.ToString().Trim();
+                                                        }
+                                                        if (!string.IsNullOrEmpty(model.URLCode))
+                                                        {
+                                                            model.Source = "Google";
+                                                            model.GUICode = AppGlobal.InitGuiCode;
+                                                            model.Description = "";
+                                                            model.MetaTitle = AppGlobal.SetName(model.Title);
+                                                            string source = AppGlobal.SetDomainByURL(model.URLCode);
+                                                            Config parent = _configResposistory.GetByGroupNameAndCodeAndTitle(AppGlobal.CRM, AppGlobal.Website, source);
+                                                            if (parent == null)
+                                                            {
+                                                                parent = _configResposistory.GetByGroupNameAndCodeAndTitle(AppGlobal.CRM, AppGlobal.PressList, source);
+                                                            }
+                                                            if (parent == null)
+                                                            {
+                                                                parent = new Config();
+                                                                parent.Initialization(InitType.Insert, RequestUserID);
+                                                                parent.ParentID = AppGlobal.ParentID;
+                                                                parent.CodeName = source;
+                                                                parent.Title = source;
+                                                                parent.URLFull = source;
+                                                                _configResposistory.Create(parent);
+                                                            }
+                                                            model.ParentID = parent.ID;
+                                                            model.CategoryID = parent.ID;
+                                                            Product product = _productRepository.GetByURLCode(model.URLCode);
+                                                            if (product == null)
+                                                            {
+                                                                _productRepository.Create(model);
+                                                            }
+                                                            else
+                                                            {
+                                                                if (product.ID > 0)
+                                                                {
+                                                                    if (baseViewModel.IsIndustryIDUploadGoogleSearch001 == true)
+                                                                    {
+                                                                        model.ID = product.ID;
+                                                                        model.DateCreated = product.DateCreated;
+                                                                        model.Initialization(InitType.Update, RequestUserID);
+                                                                        _productRepository.Update(model.ID, model);
+                                                                    }
+                                                                }
+                                                            }
+                                                            if (model.ID > 0)
+                                                            {
+                                                                List<ProductProperty> listProductProperty = new List<ProductProperty>();
+                                                                ProductProperty productProperty = new ProductProperty();
+                                                                productProperty.Code = AppGlobal.Company;
+                                                                productProperty.ProductID = model.ID;
+                                                                productProperty.CompanyID = model.CompanyID;
+                                                                productProperty.ArticleTypeID = model.ArticleTypeID;
+                                                                productProperty.AssessID = model.AssessID;
+                                                                productProperty.Point = point;
+                                                                _productPropertyRepository.Create(productProperty);
                                                                 result = result + 1;
                                                             }
                                                         }

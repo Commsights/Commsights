@@ -4,7 +4,7 @@
 @model Commsights.MVC.Models.BaseViewModel
 
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="card card-primary">
             <div class="card-header">
                 <h3 class="card-title">Upload - Excel Scan</h3>
@@ -52,7 +52,7 @@
                     <div class='col-sm-12'>
                         <div class='form-group'>
                             <label for='Upload'></label>
-                            <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload Scan</button>
+                            <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload</button>
                         </div>
                     </div>
                 </form>
@@ -60,63 +60,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card card-primary">
-            <div class="card-header">
-                <h3 class="card-title">Upload - Excel Google search</h3>
-            </div>
-            <div class="card-body">
-                <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadGoogleSearch", "Report")'>
-                    <div class='col-sm-12'>
-                        <div class='form-group'>
-                            <label for='Download'>Step 01: File excel template: </label>
-                            <a href="@Commsights.Data.Helpers.AppGlobal.URLDownloadExcel/Google.xlsx" target="_blank">Download</a>
-                        </div>
-                    </div>
-                    <div class='col-sm-12'>
-                        <div class='form-group'>
-                            <label for='Ten'>Step 02: Select the excel file include data: </label>
-                            @(Html.Kendo().Upload()
-                                  .Name("UploadGoogleSearch")
-                            )
-                        </div>
-                    </div>
-                    <div class='col-sm-12'>
-                        <div class='form-group'>
-                            <label for='IndustryID'>Step 03: Select Industry: </label>
-                            @(Html.Kendo().DropDownListFor(Model => Model.IndustryIDUploadGoogleSearch)
-                           .DataValueField("ID")
-                           .DataTextField("CodeName")
-                           .HtmlAttributes(new { style = "width:100%;" })
-                          .Events(e => e.DataBound("onIndustryIDUploadGoogleSearchDataBound"))
-                           .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
-                                )
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class='form-group'>
-                            @(Html.CheckBoxFor(Model => Model.IsIndustryIDUploadGoogleSearch))
-                            <label for='IsIndustryIDUploadScan'>Not select industry</label>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class='form-group'>
-                            @(Html.CheckBoxFor(Model => Model.IsUploadGoogleSearchOverride))
-                            <label for='IsIndustryIDUploadScan'>Override</label>
-                        </div>
-                    </div>
-                    <div class='col-sm-12'>
-                        <div class='form-group'>
-                            <label for='Upload'></label>
-                            <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload GoogleSearch</button>
-                        </div>
-                    </div>
-                </form>
-
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="card card-primary">
             <div class="card-header">
                 <h3 class="card-title">Upload - Excel Andi source</h3>
@@ -164,7 +108,7 @@
                     <div class='col-sm-12'>
                         <div class='form-group'>
                             <label for='Upload'></label>
-                            <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload Andi source</button>
+                            <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload</button>
                         </div>
                     </div>
                 </form>
@@ -172,7 +116,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="card card-primary">
             <div class="card-header">
                 <h3 class="card-title">Upload - Excel Younet</h3>
@@ -220,7 +164,119 @@
                     <div class='col-sm-12'>
                         <div class='form-group'>
                             <label for='Upload'></label>
-                            <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload Younet</button>
+                            <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Upload - Excel Google search</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadGoogleSearch", "Report")'>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='Download'>Step 01: File excel template: </label>
+                            <a href="@Commsights.Data.Helpers.AppGlobal.URLDownloadExcel/Google.xlsx" target="_blank">Download</a>
+                        </div>
+                    </div>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='Ten'>Step 02: Select the excel file include data: </label>
+                            @(Html.Kendo().Upload()
+                                  .Name("UploadGoogleSearch")
+                            )
+                        </div>
+                    </div>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='IndustryID'>Step 03: Select Industry: </label>
+                            @(Html.Kendo().DropDownListFor(Model => Model.IndustryIDUploadGoogleSearch)
+                           .DataValueField("ID")
+                           .DataTextField("CodeName")
+                           .HtmlAttributes(new { style = "width:100%;" })
+                          .Events(e => e.DataBound("onIndustryIDUploadGoogleSearchDataBound"))
+                           .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
+                                )
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class='form-group'>
+                            @(Html.CheckBoxFor(Model => Model.IsIndustryIDUploadGoogleSearch))
+                            <label for='IsIndustryIDUploadScan'>Not select industry</label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class='form-group'>
+                            @(Html.CheckBoxFor(Model => Model.IsUploadGoogleSearchOverride))
+                            <label for='IsIndustryIDUploadScan'>Override</label>
+                        </div>
+                    </div>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='Upload'></label>
+                            <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Upload - Excel Google search format</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadGoogleSearch001", "Report")'>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='Download'>Step 01: File excel template: </label>
+                            <a href="@Commsights.Data.Helpers.AppGlobal.URLDownloadExcel/Google001.xlsx" target="_blank">Download</a>
+                        </div>
+                    </div>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='Ten'>Step 02: Select the excel file include data: </label>
+                            @(Html.Kendo().Upload()
+                                  .Name("UploadGoogleSearch001")
+                            )
+                        </div>
+                    </div>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='IndustryID'>Step 03: Select Industry: </label>
+                            @(Html.Kendo().DropDownListFor(Model => Model.IndustryIDUploadGoogleSearch001)
+                           .DataValueField("ID")
+                           .DataTextField("CodeName")
+                           .HtmlAttributes(new { style = "width:100%;" })
+                          .Events(e => e.DataBound("onIndustryIDUploadGoogleSearch001DataBound"))
+                           .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
+                                )
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class='form-group'>
+                            @(Html.CheckBoxFor(Model => Model.IsIndustryIDUploadGoogleSearch001))
+                            <label for='IsIndustryIDUploadScan'>Not select industry</label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class='form-group'>
+                            @(Html.CheckBoxFor(Model => Model.IsUploadGoogleSearch001Override))
+                            <label for='IsIndustryIDUploadScan'>Override</label>
+                        </div>
+                    </div>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='Upload'></label>
+                            <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload</button>
                         </div>
                     </div>
                 </form>
@@ -256,6 +312,13 @@
     }
     function onIndustryIDUploadGoogleSearchDataBound() {
         var control = $("#IndustryIDUploadGoogleSearch").data("kendoDropDownList");
+        var controlLength = control.dataSource.data().length;
+        if (controlLength > 0) {
+            control.select(0);
+        }
+    }
+    function onIndustryIDUploadGoogleSearch001DataBound() {
+        var control = $("#IndustryIDUploadGoogleSearch001").data("kendoDropDownList");
         var controlLength = control.dataSource.data().length;
         if (controlLength > 0) {
             control.select(0);

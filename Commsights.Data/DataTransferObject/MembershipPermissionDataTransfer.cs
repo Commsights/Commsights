@@ -18,6 +18,7 @@ namespace Commsights.Data.DataTransferObject
         public string DailyReportColumnName { get; set; }
         public string DailyReportColumnNote { get; set; }
         public string ReportTypeName { get; set; }
+        public string ChannelName { get; set; }
         public ModelTemplate Industry { get; set; }
         public ModelTemplate Segment { get; set; }
         public ModelTemplate Membership { get; set; }
@@ -25,7 +26,7 @@ namespace Commsights.Data.DataTransferObject
         public ModelTemplate IndustryCompare { get; set; }
         public ModelTemplate Product { get; set; }
         public ModelTemplate ProductCompare { get; set; }
-        public ModelTemplate ReportType { get; set; }
+        public ModelTemplate ReportType { get; set; }        
         public ModelTemplateIndustry Industry001 { get; set; }
         public ModelTemplateIndustry IndustryCompare001 { get; set; }
     }

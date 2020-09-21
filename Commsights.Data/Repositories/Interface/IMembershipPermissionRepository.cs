@@ -19,6 +19,7 @@ namespace Commsights.Data.Repositories
         public List<MembershipPermissionDataTransfer> GetDataTransferIndustryByMembershipIDAndCodeAndActiveToList(int membershipID, string code, bool active);
         public List<MembershipPermissionDataTransfer> GetDataTransferSegmentByMembershipIDAndCodeToList(int membershipID, string code);
         public List<MembershipPermissionDataTransfer> GetDataTransferContactByMembershipIDAndCodeToList(int membershipID, string code);
+
         public List<MembershipPermissionDataTransfer> GetDataTransferCompanyByMembershipIDAndCodeToList(int membershipID, string code);
         public List<MembershipPermissionDataTransfer> GetDataTransferMembershipByIndustryIDAndCodeToList(int industryID, string code);
         public List<MembershipPermissionDataTransfer> GetDataTransferMembershipBySegmentIDAndCodeToList(int segmentID, string code);
@@ -27,9 +28,20 @@ namespace Commsights.Data.Repositories
         public List<MembershipPermissionDataTransfer> GetDataTransferIndustryByParentIDToList(int parentID);
         public List<MembershipPermissionDataTransfer> GetDataTransferIndustryByParentIDAndCodeToList(int parentID, string code);
         public List<MembershipPermissionDataTransfer> GetDataTransferProductByParentIDAndCodeToList(int parentID, string code);
+
+        public List<MembershipPermissionDataTransfer> GetDataTransferContactByMembershipIDAndIndustryIDAndCodeToList(int membershipID, int industryID, string code);
+        public List<MembershipPermissionDataTransfer> GetDataTransferSegmentByMembershipIDAndIndustryIDAndCodeToList(int membershipID, int industryID, string code);
+        public List<MembershipPermissionDataTransfer> GetDataTransferCompanyByMembershipIDAndIndustryIDAndCodeToList(int membershipID, int industryID, string code);
+        public List<MembershipPermission> GetByMembershipIDAndIndustryIDAndCode001ToList(int membershipID, int industryID, string code);
+        public List<MembershipPermissionDataTransfer> GetDataTransferDailyReportSectionByMembershipIDAndIndustryIDAndCodeToList(int membershipID, int industryID, string code);
+        public List<MembershipPermissionDataTransfer> GetDataTransferDailyReportColumnByMembershipIDAndIndustryIDAndCodeToList(int membershipID, int industryID, string code);
         public void InitializationMenuPermission(int membershipID, int requestUserID);
         public void SaveAllMenuPermission(int membershipID, bool isAll, int requestUserID);
         public void InitializationDailyReportSection(int membershipID, string code, int requestUserID);
         public void InitializationDailyReportColumn(int membershipID, string code, int requestUserID);
+        public void InitializationChannel(int membershipID, string code, int requestUserID);
+        public void InitializationDailyReportSectionByMembershipIDAndIndustryID(int membershipID, int industryID, string code, int requestUserID);
+        public void InitializationDailyReportColumnByMembershipIDAndIndustryID(int membershipID, int industryID, string code, int requestUserID);
+        public void InitializationChannelByMembershipIDAndIndustryID(int membershipID, int industryID, string code, int requestUserID);
     }
 }

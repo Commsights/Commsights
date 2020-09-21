@@ -54,6 +54,10 @@
                                 @(Html.TextBoxFor(Model => Model.EnglishName, new { placeholder = "English name", @class = "form-control" }))
                             </div>
                             <div class='form-group'>
+                                <label for='Phone'>Phone</label>
+                                @(Html.TextBoxFor(Model => Model.Phone, new { placeholder = "Phone", @class = "form-control" }))
+                            </div>
+                            <div class='form-group'>
                                 <label for='Address'>Address</label>
                                 @(Html.TextBoxFor(Model => Model.Address, new { placeholder = "Address", @class = "form-control" }))
                             </div>
@@ -70,8 +74,12 @@
                                     )
                             </div>
                             <div class='form-group'>
-                                <label for='Phone'>Phone</label>
-                                @(Html.TextBoxFor(Model => Model.Phone, new { placeholder = "Phone", @class = "form-control" }))
+                                <label for='DateBegin'>Ngày bắt đầu</label>
+                                @(Html.TextBoxFor(Model => Model.DateBegin, "{0:MM/dd/yyyy}", new { placeholder = "Ngày bắt đầu", @class = "form-control", style = "text-align:right;" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='DateEnd'>Ngày kết thúc</label>
+                                @(Html.TextBoxFor(Model => Model.DateEnd, "{0:MM/dd/yyyy}", new { placeholder = "Ngày kết thúc", @class = "form-control", style = "text-align:right;" }))
                             </div>
                             <div class='form-group'>
                                 <label for='Email'>Email</label>
@@ -97,84 +105,25 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="row mt-1">
-                            <div class="col-md-12" style="min-width:1200px; width:100%;">
-                                @Html.TextAreaFor(Model => Model.Note)
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-md-12" style="width:100%;">
+                            @Html.TextAreaFor(Model => Model.Note)
 
-                                <script src="/ckeditor/ckeditor.js"></script>
-                                <script src="/ckeditor/adapters/jquery.js"></script>
-                                <script>
-                                    CKEDITOR.replace("Note", {
-                                        on: {
-                                            'instanceReady': function (evt) {
-                                                evt.editor.resize("100%", "600");
-                                            }
+                            <script src="/ckeditor/ckeditor.js"></script>
+                            <script src="/ckeditor/adapters/jquery.js"></script>
+                            <script>
+                                CKEDITOR.replace("Note", {
+                                    on: {
+                                        'instanceReady': function (evt) {
+                                            evt.editor.resize("100%", "600");
                                         }
-                                    });
-                                </script>
-                            </div>
+                                    }
+                                });
+                            </script>
                         </div>
                     </div>
                 </form>
-            </div>
-        </div>
-        <div class="card card-primary">
-            <div class="card-header">
-                <h3 class="card-title">Contact</h3>
-            </div>
-            <div class="card-body">
-                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.MembershipPermissionDataTransfer>()
-.Name("MembershipPermissionDataTransferContact")
-.Columns(columns =>
-{
-    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.ReportType.TextName).EditorTemplateName("Config_ReportType").Title("Report").Width(200);
-    columns.Bound(t => t.FullName).Title("Contact").Width(200);
-    columns.Bound(t => t.Email).Title("Email").Width(200);
-    columns.Bound(t => t.Phone).Title("Phone").Width(200);
-})
-.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
-.ToolBar(toolBar => toolBar.Search())
-.Editable(editable => editable.Mode(GridEditMode.InLine))
-.Sortable()
-.Scrollable()
-.Reorderable(r => r.Columns(true))
-.Resizable(r => r.Columns(true))
-.Pageable(pageable => pageable
-.Refresh(true)
-.PageSizes(true)
-.ButtonCount(10))
-.Excel(excel => excel
-.FileName("Config.xlsx")
-.Filterable(true)
-.ProxyURL(Url.Action("ExportExcel", "Config"))
-)
-.Pdf(pdf => pdf
-.AllPages()
-.AvoidLinks()
-.PaperSize("A4")
-.Margin("2cm", "1cm", "1cm", "1cm")
-.Landscape()
-.RepeatHeaders()
-.FileName("Config.pdf")
-)
-.HtmlAttributes(new { @class = "KendoGrid" })
-.Search(search => { search.Field(f => f.FullName); search.Field(f => f.Email); search.Field(f => f.Phone); })
-.DataSource(dataSource => dataSource
-.Ajax()
-.PageSize(1000)
-.Model(model =>
-{
-    model.Id(t => t.ID);
-    model.Field(t => t.ReportType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
-})
-.Events(t => { t.RequestEnd("onGridRequestEndContact"); })
-.Read(t => t.Action("GetDataTransferContactByMembershipIDAndContactToList", "MembershipPermission").Data("filterMembershipPermissionContact"))
-.Destroy(t => t.Action("Delete", "MembershipPermission"))
-.Create(t => t.Action("CreateDataTransferContact", "MembershipPermission").Data("filterMembershipPermissionCreateContact"))
-.Update(t => t.Action("UpdateDataTransferContact", "MembershipPermission"))
-)
-)
             </div>
         </div>
         <div class="card card-primary">
@@ -215,7 +164,7 @@
 .RepeatHeaders()
 .FileName("Config.pdf")
 )
-.HtmlAttributes(new { @class = "KendoGrid", @style = "height:300px;" })
+.HtmlAttributes(new { @class = "KendoGrid" })
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
@@ -227,8 +176,89 @@
 .Events(t => { t.RequestEnd("onGridRequestEndIndustry"); })
 .Read(t => t.Action("GetDataTransferIndustryByMembershipIDAndIndustryToList", "MembershipPermission").Data("filterMembershipPermissionIndustry"))
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
-.Create(t => t.Action("CreateDataTransferIndustry", "MembershipPermission").Data("filterMembershipPermissionCreateIndustry"))
+.Create(t => t.Action("CreateDataTransferIndustry", "MembershipPermission").Data("filterMembershipPermissionIndustry"))
 .Update(t => t.Action("UpdateDataTransferIndustry", "MembershipPermission"))
+)
+)
+            </div>
+        </div>
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Email</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class='col-sm-1'>
+                       Industry
+                    </div>
+                    <div class='col-sm-4'>
+                        @(Html.Kendo().DropDownList()
+                     .Name("Industry")
+                     .DataValueField("IndustryID")
+                     .DataTextField("IndustryName")
+                    .HtmlAttributes(new { @class = "form-control" })
+                      .Events(e => e.DataBound("onIndustryDataBound"))
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferIndustryByMembershipIDAndIndustryToList", "MembershipPermission").Data("filterMembershipPermissionIndustry")))
+                            )
+                    </div>
+                    <div class='col-sm-1'>
+                        <button style="width:100%;" title="Search" class="btn btn-success" onclick="onSearchIndustry()">
+                            <span class="fas fa-search"></span>
+                        </button>
+                    </div>
+                </div>
+                <br />
+                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.MembershipPermissionDataTransfer>()
+.Name("MembershipPermissionDataTransferContact")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
+    columns.Bound(t => t.ReportType.TextName).EditorTemplateName("Config_ReportType").Title("Report").Width(200);
+    columns.Bound(t => t.Email).Title("Email").Width(200);
+    columns.Bound(t => t.FullName).Title("Contact").Width(200);
+    columns.Bound(t => t.Phone).Title("Phone").Width(200);
+})
+.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
+.ToolBar(toolBar => toolBar.Search())
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid" })
+.Search(search => { search.Field(f => f.FullName); search.Field(f => f.Email); search.Field(f => f.Phone); })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.ID);
+    model.Field(t => t.ReportType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+})
+.Events(t => { t.RequestEnd("onGridRequestEndContact"); })
+.Read(t => t.Action("GetDataTransferContactByMembershipIDAndIndustryIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
+.Destroy(t => t.Action("Delete", "MembershipPermission"))
+.Create(t => t.Action("CreateDataTransferContact", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
+.Update(t => t.Action("UpdateDataTransferContact", "MembershipPermission"))
 )
 )
             </div>
@@ -271,7 +301,7 @@
 .RepeatHeaders()
 .FileName("Config.pdf")
 )
-.HtmlAttributes(new { @class = "KendoGrid", @style = "height:300px;" })
+.HtmlAttributes(new { @class = "KendoGrid" })
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
@@ -281,9 +311,9 @@
     model.Field(t => t.Segment).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEndProduct"); })
-.Read(t => t.Action("GetDataTransferSegmentByMembershipIDAndProductToList", "MembershipPermission").Data("filterProduct"))
+.Read(t => t.Action("GetDataTransferSegmentByMembershipIDAndIndustryIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
-.Create(t => t.Action("CreateDataTransferSegmentProduct", "MembershipPermission").Data("filterCreateProduct"))
+.Create(t => t.Action("CreateDataTransferSegmentProduct", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
 .Update(t => t.Action("UpdateDataTransferSegmentProduct", "MembershipPermission"))
 )
 )
@@ -291,7 +321,7 @@
         </div>
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Competitor, partner, branch</h3>
+                <h3 class="card-title">Competitor - Partner - Branch</h3>
             </div>
             <div class="card-body">
                 @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.MembershipPermissionDataTransfer>()
@@ -299,14 +329,10 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    //columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/MembershipPermission/Industry/#=ID#"");' class='btn btn-success' style='color:white;'><i class='fas fa-list-ul'></i></a>").Title("Industry").Width(70).HtmlAttributes(new { style = "text-align:center;" });
     columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/MembershipPermission/Product/#=ID#"");' class='btn btn-success' style='color:white;'><i class='fas fa-list-ul'></i></a>").Title("Product").Width(70).HtmlAttributes(new { style = "text-align:center;" });
-    columns.Bound(t => t.Company.TextName).EditorTemplateName("Membership_Company").Title("Competitor").Width(150);
-    columns.Bound(t => t.Industry.TextName).EditorTemplateName("Config_Industry").Title("Industry").Width(150);
+    columns.Bound(t => t.Company.TextName).EditorTemplateName("Membership_Company").Title("Competitor - Partner - Branch").Width(150);    
     columns.Bound(t => t.Segment.TextName).EditorTemplateName("Config_Segment").Title("Segment").Width(150);
     columns.Bound(t => t.SortOrder).Title("Sort").Width(200);
-    //columns.Bound(t => t.Product.TextName).EditorTemplateName("MembershipPermission_Product").Title("Product").Width(100);
-    //columns.Bound(t => t.ProductCompare.TextName).EditorTemplateName("MembershipPermission_ProductCompare").Title("Compare").Width(100);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
@@ -333,7 +359,7 @@
 .RepeatHeaders()
 .FileName("Config.pdf")
 )
-.HtmlAttributes(new { @class = "KendoGrid", @style = "height:300px;" })
+.HtmlAttributes(new { @class = "KendoGrid" })
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
@@ -343,13 +369,11 @@
     model.Field(t => t.Company).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
     model.Field(t => t.Industry).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
     model.Field(t => t.Segment).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
-    //model.Field(t => t.Product).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
-    //model.Field(t => t.ProductCompare).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEndCompetitor"); })
-.Read(t => t.Action("GetDataTransferCompanyByMembershipIDAndCompetitorToList", "MembershipPermission").Data("filterMembershipPermissionCompetitor"))
+.Read(t => t.Action("GetDataTransferCompanyByMembershipIDAndIndustryIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
-.Create(t => t.Action("CreateDataTransferCompetitor", "MembershipPermission").Data("filterMembershipPermissionCreateCompetitor"))
+.Create(t => t.Action("CreateDataTransferCompetitor", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
 .Update(t => t.Action("UpdateDataTransferCompetitor", "MembershipPermission"))
 )
 )
@@ -357,7 +381,7 @@
         </div>
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Key word Positive</h3>
+                <h3 class="card-title">Keyword Positive</h3>
             </div>
             <div class="card-body">
                 @(Html.Kendo().Grid<Commsights.Data.Models.MembershipPermission>()
@@ -392,7 +416,7 @@
 .RepeatHeaders()
 .FileName("Config.pdf")
 )
-.HtmlAttributes(new { @class = "KendoGrid", @style = "height:300px;" })
+.HtmlAttributes(new { @class = "KendoGrid" })
 .Search(search => { search.Field(f => f.ProductName); })
 .DataSource(dataSource => dataSource
 .Ajax()
@@ -402,9 +426,9 @@
     model.Id(t => t.ID);
 })
 .Events(t => { t.RequestEnd("onGridRequestEndKeywordPositive"); })
-.Read(t => t.Action("GetByMembershipIDAndKeywordPositiveToList", "MembershipPermission").Data("filterMembershipPermissionKeywordPositive"))
+.Read(t => t.Action("GetByMembershipIDAndIndustryIDAndKeywordPositiveToList", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
-.Create(t => t.Action("CreateKeywordPositive", "MembershipPermission").Data("filterMembershipPermissionCreateKeywordPositive"))
+.Create(t => t.Action("CreateKeywordPositive", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
 .Update(t => t.Action("Update", "MembershipPermission"))
 )
 )
@@ -412,7 +436,7 @@
         </div>
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Key word Negative</h3>
+                <h3 class="card-title">Keyword Negative</h3>
             </div>
             <div class="card-body">
                 @(Html.Kendo().Grid<Commsights.Data.Models.MembershipPermission>()
@@ -447,7 +471,7 @@
 .RepeatHeaders()
 .FileName("Config.pdf")
 )
-.HtmlAttributes(new { @class = "KendoGrid", @style = "height:300px;" })
+.HtmlAttributes(new { @class = "KendoGrid" })
 .Search(search => { search.Field(f => f.ProductName); })
 .DataSource(dataSource => dataSource
 .Ajax()
@@ -457,9 +481,9 @@
     model.Id(t => t.ID);
 })
 .Events(t => { t.RequestEnd("onGridRequestEndKeywordNegative"); })
-.Read(t => t.Action("GetByMembershipIDAndKeywordNegativeToList", "MembershipPermission").Data("filterMembershipPermissionKeywordNegative"))
+.Read(t => t.Action("GetByMembershipIDAndIndustryIDAndKeywordNegativeToList", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
-.Create(t => t.Action("CreateKeywordNegative", "MembershipPermission").Data("filterMembershipPermissionCreateKeywordNegative"))
+.Create(t => t.Action("CreateKeywordNegative", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
 .Update(t => t.Action("Update", "MembershipPermission"))
 )
 )
@@ -522,7 +546,7 @@
     model.Field(t => t.DailyReportSectionName).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEndDailyReportSection"); })
-.Read(t => t.Action("GetDataTransferDailyReportSectionByMembershipIDAndDailyReportSectionToList", "MembershipPermission").Data("filterMembershipPermissionDailyReportSection"))
+.Read(t => t.Action("GetDataTransferDailyReportSectionByMembershipIDAndIndustryIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
 .Update(t => t.Action("UpdateDataTransferDailyReportSectionOrColumn", "MembershipPermission"))
 )
 )
@@ -548,7 +572,8 @@
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); }).Width(150);
     columns.Bound(t => t.Active).Title("Select").Width(100);
     columns.Bound(t => t.SortOrder).Title("Sort").Width(200);
-    columns.Bound(t => t.Email).Title("Daily report column").Width(200);
+    columns.Bound(t => t.FullName).Title("Upload").Width(200);
+    columns.Bound(t => t.Email).Title("English").Width(200);
     columns.Bound(t => t.Phone).Title("Vietnamese").Width(200);
 })
 .Editable(editable => editable.Mode(GridEditMode.InLine))
@@ -580,11 +605,71 @@
 .PageSize(1000)
 .Model(model =>
 {
-    model.Id(t => t.ID);    
+    model.Id(t => t.ID);
 })
 .Events(t => { t.RequestEnd("onGridRequestEndDailyReportColumn"); })
-.Read(t => t.Action("GetDataTransferDailyReportColumnByMembershipIDAndDailyReportColumnToList", "MembershipPermission").Data("filterMembershipPermissionDailyReportColumn"))
+.Read(t => t.Action("GetDataTransferDailyReportColumnByMembershipIDAndIndustryIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
 .Update(t => t.Action("UpdateDataTransferDailyReportSectionOrColumn", "MembershipPermission"))
+)
+)
+            </div>
+        </div>
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Channel</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class='col-sm-2'>
+                        <button type="button" class="btn btn-primary" onclick="onInitializationChannel()">
+                            <span class="fas fa-sync-alt"></span>
+                        </button>
+                    </div>
+                </div>
+                <br />
+                @(Html.Kendo().Grid<Commsights.Data.Models.MembershipPermission>()
+.Name("MembershipPermissionChannel")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); }).Width(150);
+    columns.Bound(t => t.Email).Title("Channel").Width(200);
+    columns.Bound(t => t.Active).Title("Select").Width(100);
+})
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid" })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.ID);
+    model.Field(t => t.Email).Editable(false);
+})
+.Events(t => { t.RequestEnd("onGridRequestEndChannel"); })
+.Read(t => t.Action("GetByMembershipIDAndIndustryIDAndChannelToList", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
+.Update(t => t.Action("Update", "MembershipPermission"))
 )
 )
             </div>
@@ -598,23 +683,26 @@
 )
 
 <script>
-    function onGridRequestEndContact(e) {
-        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
-            var response = e.response;
-            var messageType = response.split('-')[0];
-            var note = response.split('-')[1];
-            var notification = $("#Notification").data("kendoNotification");
-            notification.show(note, messageType);
-            $("#MembershipPermissionDataTransferContact").data("kendoGrid").dataSource.read();
+    //Indusstry DropDownList
+    function onIndustryDataBound() {
+        var control = $("#Industry").data("kendoDropDownList");
+        var controlLength = control.dataSource.data().length;
+        if (controlLength > 0) {
+            control.select(0);
+            onSearchIndustry();
         }
     }
-    function filterMembershipPermissionContact(e) {
-        var membershipIDValue = $("#ID").val();
-        return { membershipID: membershipIDValue };
-    }
-    function filterMembershipPermissionCreateContact(e) {
-        var membershipIDValue = $("#ID").val();
-        return { membershipID: membershipIDValue };
+    function onSearchIndustry() {
+        BeginRequestHandler();
+        $("#MembershipPermissionChannel").data("kendoGrid").dataSource.read();
+        $("#MembershipPermissionDataTransferContact").data("kendoGrid").dataSource.read();
+        $("#MembershipPermissionDataTransferDailyReportColumn").data("kendoGrid").dataSource.read();
+        $("#MembershipPermissionDataTransferDailyReportSection").data("kendoGrid").dataSource.read();
+        $("#MembershipPermissionDataTransferProduct").data("kendoGrid").dataSource.read();
+        $("#MembershipPermissionKeywordPositive").data("kendoGrid").dataSource.read();
+        $("#MembershipPermissionKeywordNegative").data("kendoGrid").dataSource.read();
+        $("#MembershipPermissionDataTransferCompetitor").data("kendoGrid").dataSource.read();
+        EndRequestHandler();
     }
     function onGridRequestEndIndustry(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
@@ -629,11 +717,19 @@
     function filterMembershipPermissionIndustry(e) {
         var membershipIDValue = $("#ID").val();
         return { membershipID: membershipIDValue };
-    }
-    function filterMembershipPermissionCreateIndustry(e) {
-        var membershipIDValue = $("#ID").val();
-        return { membershipID: membershipIDValue };
-    }
+    }    
+    //Contact
+    function onGridRequestEndContact(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            var response = e.response;
+            var messageType = response.split('-')[0];
+            var note = response.split('-')[1];
+            var notification = $("#Notification").data("kendoNotification");
+            notification.show(note, messageType);
+            $("#MembershipPermissionDataTransferContact").data("kendoGrid").dataSource.read();
+        }
+    }    
+    
     function onGridRequestEndProduct(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
             var response = e.response;
@@ -644,14 +740,7 @@
             $("#MembershipPermissionDataTransferProduct").data("kendoGrid").dataSource.read();
         }
     }
-    function filterProduct(e) {
-        var membershipIDValue = $("#ID").val();
-        return { membershipID: membershipIDValue };
-    }
-    function filterCreateProduct(e) {
-        var membershipIDValue = $("#ID").val();
-        return { membershipID: membershipIDValue };
-    }
+    
     //DailyReportSection
     function onGridRequestEndDailyReportSection(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
@@ -662,11 +751,7 @@
             notification.show(note, messageType);
             $("#MembershipPermissionDataTransferDailyReportSection").data("kendoGrid").dataSource.read();
         }
-    }
-    function filterMembershipPermissionDailyReportSection(e) {
-        var membershipIDValue = $("#ID").val();
-        return { membershipID: membershipIDValue };
-    }
+    }   
     function onInitializationDailyReportSection() {
         BeginRequestHandler();
         var membershipIDValue = $("#ID").val();
@@ -674,8 +759,8 @@
             {
                 type: "POST",
                 datatype: "JSON",
-                url: '@Url.Action("InitializationDailyReportSection", "MembershipPermission")',
-                data: { membershipID: membershipIDValue },
+                url: '@Url.Action("InitializationDailyReportSectionByMembershipIDAndIndustryID", "MembershipPermission")',
+                data: { membershipID: membershipIDValue, industryID: industryIDValue },
                 success: function (result) {
                     EndRequestHandler();
                     $("#MembershipPermissionDataTransferDailyReportSection").data("kendoGrid").dataSource.read();
@@ -699,22 +784,53 @@
             $("#MembershipPermissionDataTransferDailyReportColumn").data("kendoGrid").dataSource.read();
         }
     }
-    function filterMembershipPermissionDailyReportColumn(e) {
-        var membershipIDValue = $("#ID").val();
-        return { membershipID: membershipIDValue };
-    }
+  
     function onInitializationDailyReportColumn() {
+        BeginRequestHandler();
+        var membershipIDValue = $("#ID").val();
+        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
+        $.ajax(
+            {
+                type: "POST",
+                datatype: "JSON",
+                url: '@Url.Action("InitializationDailyReportColumnByMembershipIDAndIndustryID", "MembershipPermission")',
+                data: { membershipID: membershipIDValue, industryID: industryIDValue },
+                success: function (result) {
+                    EndRequestHandler();
+                    $("#MembershipPermissionDataTransferDailyReportColumn").data("kendoGrid").dataSource.read();
+                    var messageType = result.split('-')[0];
+                    var note = result.split('-')[1];
+                    var notification = $("#Notification").data("kendoNotification");
+                    notification.show(note, messageType);
+                },
+                error: function (jqXHR, exception) { },
+                complete: function () { },
+            });
+    }
+     //Channel
+    function onGridRequestEndChannel(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            var response = e.response;
+            var messageType = response.split('-')[0];
+            var note = response.split('-')[1];
+            var notification = $("#Notification").data("kendoNotification");
+            notification.show(note, messageType);
+            $("#MembershipPermissionChannel").data("kendoGrid").dataSource.read();
+        }
+    }
+   
+    function onInitializationChannel() {
         BeginRequestHandler();
         var membershipIDValue = $("#ID").val();
         $.ajax(
             {
                 type: "POST",
                 datatype: "JSON",
-                url: '@Url.Action("InitializationDailyReportColumn", "MembershipPermission")',
-                data: { membershipID: membershipIDValue },
+                url: '@Url.Action("InitializationChannelByMembershipIDAndIndustryID", "MembershipPermission")',
+                data: { membershipID: membershipIDValue, industryID: industryIDValue },
                 success: function (result) {
                     EndRequestHandler();
-                    $("#MembershipPermissionDataTransferDailyReportColumn").data("kendoGrid").dataSource.read();
+                    $("#MembershipPermissionChannel").data("kendoGrid").dataSource.read();
                     var messageType = result.split('-')[0];
                     var note = result.split('-')[1];
                     var notification = $("#Notification").data("kendoNotification");
@@ -735,17 +851,7 @@
             $("#MembershipPermissionDataTransferCompetitor").data("kendoGrid").dataSource.read();
         }
     }
-    function filterMembershipPermissionCompetitor(e) {
-        var membershipIDValue = $("#ID").val();
-        return { membershipID: membershipIDValue };
-    }
-    function filterMembershipPermissionCreateCompetitor(e) {
-        var membershipIDValue = $("#ID").val();
-        return { membershipID: membershipIDValue };
-    }
-    $(document).ready(() => {
-
-    })
+    
     //Keyword Negative
     function onGridRequestEndKeywordNegative(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
@@ -757,14 +863,7 @@
             $("#MembershipPermissionKeywordNegative").data("kendoGrid").dataSource.read();
         }
     }
-    function filterMembershipPermissionKeywordNegative(e) {
-        var membershipIDValue = $("#ID").val();
-        return { membershipID: membershipIDValue };
-    }
-    function filterMembershipPermissionCreateKeywordNegative(e) {
-        var membershipIDValue = $("#ID").val();
-        return { membershipID: membershipIDValue };
-    }
+    
     //Keyword Positive
     function onGridRequestEndKeywordPositive(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
@@ -776,12 +875,11 @@
             $("#MembershipPermissionKeywordPositive").data("kendoGrid").dataSource.read();
         }
     }
-    function filterMembershipPermissionKeywordPositive(e) {
+    
+    function filterMembershipPermissionByMembershipIDAndIndustryID(e) {
         var membershipIDValue = $("#ID").val();
-        return { membershipID: membershipIDValue };
+        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
+        return { membershipID: membershipIDValue, industryID: industryIDValue };
     }
-    function filterMembershipPermissionCreateKeywordPositive(e) {
-        var membershipIDValue = $("#ID").val();
-        return { membershipID: membershipIDValue };
-    }
+   
 </script>

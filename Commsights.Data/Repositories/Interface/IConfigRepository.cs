@@ -13,6 +13,7 @@ namespace Commsights.Data.Repositories
         public bool IsValidByGroupNameAndCodeAndCodeName(string groupName, string code, string codeName);
         public Config GetByGroupNameAndCodeAndCodeName(string groupName, string code, string codeName);
         public Config GetByGroupNameAndCodeAndTitle(string groupName, string code, string title);
+        public Config GetByGroupNameAndCodeAndParentID(string groupName, string code, int parentID);
         public List<Config> GetByCodeToList(string code);
         public List<Config> GetByGroupNameAndCodeToList(string groupName, string code);
         public List<Config> GetByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active);

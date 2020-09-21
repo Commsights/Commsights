@@ -6,6 +6,8 @@ namespace Commsights.Data.Models
 {
     public partial class Membership : BaseModel
     {
+        public DateTime? DateBegin { get; set; }
+        public DateTime? DateEnd { get; set; }
         public int? CategoryID { get; set; }
         public string FullName { get; set; }
         public string FirstName { get; set; }

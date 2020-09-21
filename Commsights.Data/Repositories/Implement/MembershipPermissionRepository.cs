@@ -30,6 +30,10 @@ namespace Commsights.Data.Repositories
         {
             return _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.Code.Equals(code)).OrderBy(item => item.DateUpdated).ToList();
         }
+        public List<MembershipPermission> GetByMembershipIDAndIndustryIDAndCode001ToList(int membershipID, int industryID, string code)
+        {
+            return _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.IndustryID == industryID && item.Code.Equals(code)).OrderBy(item => item.DateUpdated).ToList();
+        }
         public List<MembershipPermission> GetByCodeToList(string code)
         {
             return _context.MembershipPermission.Where(item => item.Code.Equals(code)).OrderBy(item => item.ProductName).ToList();
@@ -74,6 +78,28 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@Code",code)
             };
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectDataTransferContactByMembershipIDAndCode", parameters);
+                list = SQLHelper.ToList<MembershipPermissionDataTransfer>(dt);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    list[i].ReportType = new ModelTemplate();
+                    list[i].ReportType.ID = list[i].CategoryID;
+                    list[i].ReportType.TextName = list[i].ReportTypeName;
+                }
+            }
+            return list;
+        }
+        public List<MembershipPermissionDataTransfer> GetDataTransferContactByMembershipIDAndIndustryIDAndCodeToList(int membershipID, int industryID, string code)
+        {
+            List<MembershipPermissionDataTransfer> list = new List<MembershipPermissionDataTransfer>();
+            if ((membershipID > 0) && (industryID > 0) && (!string.IsNullOrEmpty(code)))
+            {
+                SqlParameter[] parameters =
+                      {
+                new SqlParameter("@MembershipID",membershipID),
+                 new SqlParameter("@IndustryID",industryID),
+                new SqlParameter("@Code",code)
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectDataTransferContactByMembershipIDAndIndustryIDAndCode", parameters);
                 list = SQLHelper.ToList<MembershipPermissionDataTransfer>(dt);
                 for (int i = 0; i < list.Count; i++)
                 {
@@ -148,6 +174,28 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<MembershipPermissionDataTransfer> GetDataTransferSegmentByMembershipIDAndIndustryIDAndCodeToList(int membershipID, int industryID, string code)
+        {
+            List<MembershipPermissionDataTransfer> list = new List<MembershipPermissionDataTransfer>();
+            if ((membershipID > 0) && (industryID > 0) && (!string.IsNullOrEmpty(code)))
+            {
+                SqlParameter[] parameters =
+                      {
+                new SqlParameter("@MembershipID",membershipID),
+                new SqlParameter("@IndustryID",industryID),
+                new SqlParameter("@Code",code)
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectDataTransferSegmentByMembershipIDAndIndustryIDAndCode", parameters);
+                list = SQLHelper.ToList<MembershipPermissionDataTransfer>(dt);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    list[i].Segment = new ModelTemplate();
+                    list[i].Segment.ID = list[i].SegmentID;
+                    list[i].Segment.TextName = list[i].SegmentName;
+                }
+            }
+            return list;
+        }
         public List<MembershipPermissionDataTransfer> GetDataTransferDailyReportSectionByMembershipIDAndCodeToList(int membershipID, string code)
         {
             List<MembershipPermissionDataTransfer> list = new List<MembershipPermissionDataTransfer>();
@@ -163,6 +211,22 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<MembershipPermissionDataTransfer> GetDataTransferDailyReportSectionByMembershipIDAndIndustryIDAndCodeToList(int membershipID, int industryID, string code)
+        {
+            List<MembershipPermissionDataTransfer> list = new List<MembershipPermissionDataTransfer>();
+            if ((membershipID > 0) && (industryID > 0) && (!string.IsNullOrEmpty(code)))
+            {
+                SqlParameter[] parameters =
+                      {
+                new SqlParameter("@MembershipID",membershipID),
+                new SqlParameter("@IndustryID",industryID),
+                new SqlParameter("@Code",code)
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectDataTransferDailyReportSectionByMembershipIDAndIndustryIDAndCode", parameters);
+                list = SQLHelper.ToList<MembershipPermissionDataTransfer>(dt);
+            }
+            return list;
+        }
         public List<MembershipPermissionDataTransfer> GetDataTransferDailyReportColumnByMembershipIDAndCodeToList(int membershipID, string code)
         {
             List<MembershipPermissionDataTransfer> list = new List<MembershipPermissionDataTransfer>();
@@ -174,6 +238,22 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@Code",code)
             };
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectDataTransferDailyReportColumnByMembershipIDAndCode", parameters);
+                list = SQLHelper.ToList<MembershipPermissionDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<MembershipPermissionDataTransfer> GetDataTransferDailyReportColumnByMembershipIDAndIndustryIDAndCodeToList(int membershipID, int industryID, string code)
+        {
+            List<MembershipPermissionDataTransfer> list = new List<MembershipPermissionDataTransfer>();
+            if ((membershipID > 0) && (industryID > 0) && (!string.IsNullOrEmpty(code)))
+            {
+                SqlParameter[] parameters =
+                      {
+                new SqlParameter("@MembershipID",membershipID),
+                new SqlParameter("@IndustryID",industryID),
+                new SqlParameter("@Code",code)
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectDataTransferDailyReportColumnByMembershipIDAndIndustryIDAndCode", parameters);
                 list = SQLHelper.ToList<MembershipPermissionDataTransfer>(dt);
             }
             return list;
@@ -210,6 +290,34 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@Code",code)
             };
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectDataTransferCompanyByMembershipIDAndCode", parameters);
+                list = SQLHelper.ToList<MembershipPermissionDataTransfer>(dt);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    list[i].Company = new ModelTemplate();
+                    list[i].Company.ID = list[i].CompanyID;
+                    list[i].Company.TextName = list[i].CompanyName;
+                    list[i].Industry = new ModelTemplate();
+                    list[i].Industry.ID = list[i].IndustryID;
+                    list[i].Industry.TextName = list[i].IndustryName;
+                    list[i].Segment = new ModelTemplate();
+                    list[i].Segment.ID = list[i].SegmentID;
+                    list[i].Segment.TextName = list[i].SegmentName;
+                }
+            }
+            return list;
+        }
+        public List<MembershipPermissionDataTransfer> GetDataTransferCompanyByMembershipIDAndIndustryIDAndCodeToList(int membershipID, int industryID, string code)
+        {
+            List<MembershipPermissionDataTransfer> list = new List<MembershipPermissionDataTransfer>();
+            if ((membershipID > 0) && (membershipID > 0) && (!string.IsNullOrEmpty(code)))
+            {
+                SqlParameter[] parameters =
+                      {
+                new SqlParameter("@MembershipID",membershipID),
+                new SqlParameter("@IndustryID",industryID),
+                new SqlParameter("@Code",code)
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectDataTransferCompanyByMembershipIDAndIndustryIDAndCode", parameters);
                 list = SQLHelper.ToList<MembershipPermissionDataTransfer>(dt);
                 for (int i = 0; i < list.Count; i++)
                 {
@@ -359,6 +467,33 @@ namespace Commsights.Data.Repositories
                 model.Minute = -1;
                 model.SortOrder = -1;
                 model.Active = false;
+                model.Email = config.CodeName;
+                model.Phone = config.Note;
+                model.Initialization(InitType.Insert, requestUserID);
+                listMembershipPermission.Add(model);
+            }
+            _context.MembershipPermission.AddRange(listMembershipPermission);
+            _context.SaveChangesAsync();
+        }
+        public void InitializationDailyReportSectionByMembershipIDAndIndustryID(int membershipID, int industryID, string code, int requestUserID)
+        {
+            List<MembershipPermission> listMembershipPermission = _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.IndustryID == industryID && item.Code.Equals(code)).ToList();
+            _context.MembershipPermission.RemoveRange(listMembershipPermission);
+            List<Config> listConfig = _context.Config.Where(item => item.Code.Equals(code)).ToList();
+            listMembershipPermission = new List<MembershipPermission>();
+            foreach (Config config in listConfig)
+            {
+                MembershipPermission model = new MembershipPermission();
+                model.MembershipID = membershipID;
+                model.IndustryID = industryID;
+                model.Code = code;
+                model.CategoryID = config.ID;
+                model.Hour = AppGlobal.Hour;
+                model.Minute = -1;
+                model.SortOrder = -1;
+                model.Active = false;
+                model.Email = config.CodeName;
+                model.Phone = config.Note;
                 model.Initialization(InitType.Insert, requestUserID);
                 listMembershipPermission.Add(model);
             }
@@ -379,6 +514,75 @@ namespace Commsights.Data.Repositories
                 model.SortOrder = 0;
                 model.Active = false;
                 model.CategoryID = config.ID;
+                model.Email = config.CodeName;
+                model.Phone = config.Note;
+                model.Initialization(InitType.Insert, requestUserID);
+                listMembershipPermission.Add(model);
+            }
+            _context.MembershipPermission.AddRange(listMembershipPermission);
+            _context.SaveChangesAsync();
+        }
+        public void InitializationDailyReportColumnByMembershipIDAndIndustryID(int membershipID, int industryID, string code, int requestUserID)
+        {
+            List<MembershipPermission> listMembershipPermission = _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.IndustryID == industryID && item.Code.Equals(code)).ToList();
+            _context.MembershipPermission.RemoveRange(listMembershipPermission);
+            List<Config> listConfig = _context.Config.Where(item => item.GroupName.Equals(AppGlobal.CRM) && item.Code.Equals(code)).ToList();
+            listMembershipPermission = new List<MembershipPermission>();
+            foreach (Config config in listConfig)
+            {
+                MembershipPermission model = new MembershipPermission();
+                model.MembershipID = membershipID;
+                model.IndustryID = industryID;
+                model.Code = code;
+                model.SortOrder = 0;
+                model.Active = false;
+                model.CategoryID = config.ID;
+                model.Email = config.CodeName;
+                model.Phone = config.Note;
+                model.Initialization(InitType.Insert, requestUserID);
+                listMembershipPermission.Add(model);
+            }
+            _context.MembershipPermission.AddRange(listMembershipPermission);
+            _context.SaveChangesAsync();
+        }
+        public void InitializationChannel(int membershipID, string code, int requestUserID)
+        {
+            List<MembershipPermission> listMembershipPermission = _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.Code.Equals(code)).ToList();
+            _context.MembershipPermission.RemoveRange(listMembershipPermission);
+            List<Config> listConfig = _context.Config.Where(item => item.GroupName.Equals(AppGlobal.CRM) && item.Code.Equals(code)).ToList();
+            listMembershipPermission = new List<MembershipPermission>();
+            foreach (Config config in listConfig)
+            {
+                MembershipPermission model = new MembershipPermission();
+                model.MembershipID = membershipID;
+                model.Code = code;
+                model.SortOrder = 0;
+                model.Active = false;
+                model.CategoryID = config.ID;
+                model.Email = config.CodeName;
+                model.Phone = config.Note;
+                model.Initialization(InitType.Insert, requestUserID);
+                listMembershipPermission.Add(model);
+            }
+            _context.MembershipPermission.AddRange(listMembershipPermission);
+            _context.SaveChangesAsync();
+        }
+        public void InitializationChannelByMembershipIDAndIndustryID(int membershipID, int industryID, string code, int requestUserID)
+        {
+            List<MembershipPermission> listMembershipPermission = _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.IndustryID == industryID && item.Code.Equals(code)).ToList();
+            _context.MembershipPermission.RemoveRange(listMembershipPermission);
+            List<Config> listConfig = _context.Config.Where(item => item.GroupName.Equals(AppGlobal.CRM) && item.Code.Equals(code)).ToList();
+            listMembershipPermission = new List<MembershipPermission>();
+            foreach (Config config in listConfig)
+            {
+                MembershipPermission model = new MembershipPermission();
+                model.MembershipID = membershipID;
+                model.IndustryID = industryID;
+                model.Code = code;
+                model.SortOrder = 0;
+                model.Active = false;
+                model.CategoryID = config.ID;
+                model.FullName = config.CodeName;
                 model.Email = config.CodeName;
                 model.Phone = config.Note;
                 model.Initialization(InitType.Insert, requestUserID);
