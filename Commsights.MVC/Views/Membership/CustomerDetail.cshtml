@@ -182,9 +182,10 @@
 )
             </div>
         </div>
+        <hr />
         <div class="row">
             <div class='col-sm-2'> 
-                Industry apply all
+                <b>Industry apply all</b>
             </div>
             <div class='col-sm-4'>
                 @(Html.Kendo().DropDownList()
@@ -203,7 +204,7 @@
                 </button>
             </div>
         </div>
-        <br />
+        <hr />
         <div class="card card-primary">
             <div class="card-header">
                 <h3 class="card-title">Email</h3>
@@ -713,6 +714,7 @@
             var notification = $("#Notification").data("kendoNotification");
             notification.show(note, messageType);
             $("#MembershipPermissionDataTransferIndustry").data("kendoGrid").dataSource.read();
+            $("#Industry").data("kendoDropDownList").dataSource.read();
         }
     }
     function filterMembershipPermissionIndustry(e) {
