@@ -755,6 +755,7 @@
     function onInitializationDailyReportSection() {
         BeginRequestHandler();
         var membershipIDValue = $("#ID").val();
+        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
         $.ajax(
             {
                 type: "POST",
@@ -822,6 +823,7 @@
     function onInitializationChannel() {
         BeginRequestHandler();
         var membershipIDValue = $("#ID").val();
+        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
         $.ajax(
             {
                 type: "POST",
