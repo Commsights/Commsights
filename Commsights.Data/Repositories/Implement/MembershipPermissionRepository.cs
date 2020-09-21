@@ -224,6 +224,12 @@ namespace Commsights.Data.Repositories
             };
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectDataTransferDailyReportSectionByMembershipIDAndIndustryIDAndCode", parameters);
                 list = SQLHelper.ToList<MembershipPermissionDataTransfer>(dt);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    list[i].Language = new ModelTemplate();
+                    list[i].Language.ID = list[i].LanguageID;
+                    list[i].Language.TextName = list[i].LanguageName;
+                }
             }
             return list;
         }
@@ -512,6 +518,7 @@ namespace Commsights.Data.Repositories
             foreach (Config config in listConfig)
             {
                 MembershipPermission model = new MembershipPermission();
+                model.LanguageID = AppGlobal.LanguageID;
                 model.MembershipID = membershipID;
                 model.Code = code;
                 model.SortOrder = 0;

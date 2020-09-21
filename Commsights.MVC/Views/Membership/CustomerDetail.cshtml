@@ -74,12 +74,12 @@
                                     )
                             </div>
                             <div class='form-group'>
-                                <label for='DateBegin'>Ngày bắt đầu</label>
-                                @(Html.TextBoxFor(Model => Model.DateBegin, "{0:MM/dd/yyyy}", new { placeholder = "Ngày bắt đầu", @class = "form-control", style = "text-align:right;" }))
+                                <label for='DateBegin'>Date begin</label>
+                                @(Html.TextBoxFor(Model => Model.DateBegin, "{0:MM/dd/yyyy}", new { placeholder = "Date begin (Month/Day/Year - MM/dd/yyyy)", @class = "form-control", style = "text-align:right;" }))
                             </div>
                             <div class='form-group'>
-                                <label for='DateEnd'>Ngày kết thúc</label>
-                                @(Html.TextBoxFor(Model => Model.DateEnd, "{0:MM/dd/yyyy}", new { placeholder = "Ngày kết thúc", @class = "form-control", style = "text-align:right;" }))
+                                <label for='DateEnd'>Date end</label>
+                                @(Html.TextBoxFor(Model => Model.DateEnd, "{0:MM/dd/yyyy}", new { placeholder = "Date end (Month/Day/Year - MM/dd/yyyy)", @class = "form-control", style = "text-align:right;" }))
                             </div>
                             <div class='form-group'>
                                 <label for='Email'>Email</label>
@@ -510,6 +510,7 @@
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); }).Width(150);
     columns.Bound(t => t.DailyReportSectionName).Title("Daily report section").Width(200);
+    columns.Bound(t => t.Language.TextName).EditorTemplateName("Config_Language").Title("Language").Width(200);
     columns.Bound(t => t.Active).Title("Select").Width(100);
     columns.Bound(t => t.Hour).Title("01").Width(200);
     columns.Bound(t => t.Minute).Title("02").Width(200);
@@ -546,10 +547,11 @@
 {
     model.Id(t => t.ID);
     model.Field(t => t.DailyReportSectionName).Editable(false);
+                model.Field(t => t.Language).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEndDailyReportSection"); })
 .Read(t => t.Action("GetDataTransferDailyReportSectionByMembershipIDAndIndustryIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
-.Update(t => t.Action("UpdateDataTransferDailyReportSectionOrColumn", "MembershipPermission"))
+.Update(t => t.Action("UpdateDataTransferDailyReportSection", "MembershipPermission"))
 )
 )
             </div>

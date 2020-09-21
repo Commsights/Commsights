@@ -691,6 +691,27 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
+        public IActionResult UpdateDataTransferDailyReportSection(MembershipPermissionDataTransfer model)
+        {
+            Initialization();
+            string note = AppGlobal.InitString;
+            model.LanguageID = model.Language.ID;
+            model.Initialization(InitType.Update, RequestUserID);
+            int result = 0;
+            if ((model.MembershipID > 0) && (model.CategoryID > 0))
+            {
+                result = _membershipPermissionRepository.Update(model.ID, model);
+            }
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
         public IActionResult UpdateDataTransferDailyReportSectionOrColumn(MembershipPermissionDataTransfer model)
         {
             Initialization();
