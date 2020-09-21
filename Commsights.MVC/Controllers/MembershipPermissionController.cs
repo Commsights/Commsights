@@ -211,7 +211,7 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult InitializationDailyReportSectionByMembershipIDAndIndustryID(int membershipID, int industryID)
         {
-            _membershipPermissionRepository.InitializationDailyReportSectionByMembershipIDAndIndustryID(membershipID, industryID, AppGlobal.DailyReportColumn, RequestUserID);
+            _membershipPermissionRepository.InitializationDailyReportSectionByMembershipIDAndIndustryID(membershipID, industryID, AppGlobal.DailyReportSection, RequestUserID);
             string note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
             return Json(note);
         }
@@ -223,7 +223,7 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult InitializationChannelByMembershipIDAndIndustryID(int membershipID, int industryID)
         {
-            _membershipPermissionRepository.InitializationChannelByMembershipIDAndIndustryID(membershipID, industryID, AppGlobal.DailyReportColumn, RequestUserID);
+            _membershipPermissionRepository.InitializationChannelByMembershipIDAndIndustryID(membershipID, industryID, AppGlobal.WebsiteType, RequestUserID);
             string note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
             return Json(note);
         }

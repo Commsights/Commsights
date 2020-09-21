@@ -182,17 +182,12 @@
 )
             </div>
         </div>
-        <div class="card card-primary">
-            <div class="card-header">
-                <h3 class="card-title">Email</h3>
+        <div class="row">
+            <div class='col-sm-2'> 
+                Industry apply all
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class='col-sm-1'>
-                       Industry
-                    </div>
-                    <div class='col-sm-4'>
-                        @(Html.Kendo().DropDownList()
+            <div class='col-sm-4'>
+                @(Html.Kendo().DropDownList()
                      .Name("Industry")
                      .DataValueField("IndustryID")
                      .DataTextField("IndustryName")
@@ -201,14 +196,20 @@
                        .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferIndustryByMembershipIDAndIndustryToList", "MembershipPermission").Data("filterMembershipPermissionIndustry")))
                             )
-                    </div>
-                    <div class='col-sm-1'>
-                        <button style="width:100%;" title="Search" class="btn btn-success" onclick="onSearchIndustry()">
-                            <span class="fas fa-search"></span>
-                        </button>
-                    </div>
-                </div>
-                <br />
+            </div>
+            <div class='col-sm-1'>
+                <button style="width:100%;" title="Search" class="btn btn-success" onclick="onSearchIndustry()">
+                    <span class="fas fa-search"></span>
+                </button>
+            </div>
+        </div>
+        <br />
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Email</h3>
+            </div>
+            <div class="card-body">
+
                 @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.MembershipPermissionDataTransfer>()
 .Name("MembershipPermissionDataTransferContact")
 .Columns(columns =>
@@ -330,7 +331,7 @@
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
     columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/MembershipPermission/Product/#=ID#"");' class='btn btn-success' style='color:white;'><i class='fas fa-list-ul'></i></a>").Title("Product").Width(70).HtmlAttributes(new { style = "text-align:center;" });
-    columns.Bound(t => t.Company.TextName).EditorTemplateName("Membership_Company").Title("Competitor - Partner - Branch").Width(150);    
+    columns.Bound(t => t.Company.TextName).EditorTemplateName("Membership_Company").Title("Competitor - Partner - Branch").Width(150);
     columns.Bound(t => t.Segment.TextName).EditorTemplateName("Config_Segment").Title("Segment").Width(150);
     columns.Bound(t => t.SortOrder).Title("Sort").Width(200);
 })
@@ -717,7 +718,7 @@
     function filterMembershipPermissionIndustry(e) {
         var membershipIDValue = $("#ID").val();
         return { membershipID: membershipIDValue };
-    }    
+    }
     //Contact
     function onGridRequestEndContact(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
@@ -728,8 +729,8 @@
             notification.show(note, messageType);
             $("#MembershipPermissionDataTransferContact").data("kendoGrid").dataSource.read();
         }
-    }    
-    
+    }
+
     function onGridRequestEndProduct(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
             var response = e.response;
@@ -740,7 +741,7 @@
             $("#MembershipPermissionDataTransferProduct").data("kendoGrid").dataSource.read();
         }
     }
-    
+
     //DailyReportSection
     function onGridRequestEndDailyReportSection(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
@@ -751,7 +752,7 @@
             notification.show(note, messageType);
             $("#MembershipPermissionDataTransferDailyReportSection").data("kendoGrid").dataSource.read();
         }
-    }   
+    }
     function onInitializationDailyReportSection() {
         BeginRequestHandler();
         var membershipIDValue = $("#ID").val();
@@ -785,7 +786,7 @@
             $("#MembershipPermissionDataTransferDailyReportColumn").data("kendoGrid").dataSource.read();
         }
     }
-  
+
     function onInitializationDailyReportColumn() {
         BeginRequestHandler();
         var membershipIDValue = $("#ID").val();
@@ -819,7 +820,7 @@
             $("#MembershipPermissionChannel").data("kendoGrid").dataSource.read();
         }
     }
-   
+
     function onInitializationChannel() {
         BeginRequestHandler();
         var membershipIDValue = $("#ID").val();
@@ -853,7 +854,7 @@
             $("#MembershipPermissionDataTransferCompetitor").data("kendoGrid").dataSource.read();
         }
     }
-    
+
     //Keyword Negative
     function onGridRequestEndKeywordNegative(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
@@ -865,7 +866,7 @@
             $("#MembershipPermissionKeywordNegative").data("kendoGrid").dataSource.read();
         }
     }
-    
+
     //Keyword Positive
     function onGridRequestEndKeywordPositive(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
@@ -877,11 +878,11 @@
             $("#MembershipPermissionKeywordPositive").data("kendoGrid").dataSource.read();
         }
     }
-    
+
     function filterMembershipPermissionByMembershipIDAndIndustryID(e) {
         var membershipIDValue = $("#ID").val();
         var industryIDValue = $("#Industry").data("kendoDropDownList").value();
         return { membershipID: membershipIDValue, industryID: industryIDValue };
     }
-   
+
 </script>
