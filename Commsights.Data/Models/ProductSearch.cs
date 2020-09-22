@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Commsights.Data.Models
 {
     public partial class ProductSearch : BaseModel
-    {
+    {        
         public int? CompanyID { get; set; }
         public int? CompanyCount { get; set; }
         public int? ProductCount { get; set; }
@@ -25,5 +25,10 @@ namespace Commsights.Data.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
         public DateTime DatePublishEnd { get; set; }
+        public int? IsSend { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
+        public DateTime DateSend { get; set; }
+        public int? IndustryID { get; set; }
     }
 }

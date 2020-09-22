@@ -226,6 +226,11 @@ namespace Commsights.MVC.Controllers
             var data = _membershipRepository.GetByIndustryIDToList(industryID);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetByIndustryIDAndParrentIDToListToJSON(int industryID)
+        {
+            List<Membership> listMembership = _membershipRepository.GetByIndustryIDAndParrentIDToList(industryID, AppGlobal.ParentIDCustomer);
+            return Json(listMembership);
+        }
         [AcceptVerbs("Post")]
         public IActionResult SaveCompany(Membership model)
         {

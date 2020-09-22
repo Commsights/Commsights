@@ -32,6 +32,21 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<Membership> GetByIndustryIDAndParrentIDToList(int industryID, int parentID)
+        {
+            List<Membership> list = new List<Membership>();
+            if ((industryID > 0) && (parentID > 0))
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@IndustryID",industryID),
+                new SqlParameter("@ParentID",parentID)
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectByIndustryIDAndParrentID", parameters);
+                list = SQLHelper.ToList<Membership>(dt);
+            }
+            return list;
+        }
         public List<Membership> GetByCompanyToList()
         {
             return _context.Membership.Where(item => (item.ParentID == AppGlobal.ParentIDCustomer || item.ParentID == AppGlobal.ParentIDCompetitor) && (item.Active == true)).OrderBy(item => item.Account).ToList();
@@ -48,6 +63,7 @@ namespace Commsights.Data.Repositories
         {
             return _context.Membership.Where(item => item.ParentID == AppGlobal.ParentIDEmployee).OrderBy(item => item.Account).ToList();
         }
+
         public bool IsExistAccount(string account)
         {
             var membership = _context.Membership.FirstOrDefault(user => user.Account.Equals(account));

@@ -57,6 +57,13 @@ namespace Commsights.MVC.Controllers
                 model.Summary = model.Summary.Trim();
             }
         }
+        public IActionResult Index()
+        {
+            BaseViewModel model = new BaseViewModel();
+            model.DatePublishBegin = DateTime.Now.AddDays(-1);
+            model.DatePublishEnd = DateTime.Now;
+            return View(model);
+        }
         public IActionResult Upload(int ID)
         {
             return View();
@@ -175,8 +182,8 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult ReportDaily02ByProductSearchIDAndActiveToListJSON(int productSearchID)
         {
-            List<ProductSearchPropertyDataTransfer> ListProductSearchPropertyDataTransfer = _reportRepository.ReportDaily02ByProductSearchIDAndActiveToList(productSearchID, true);
-            return Json(ListProductSearchPropertyDataTransfer);
+            List<ProductSearchPropertyDataTransfer> listProductSearchPropertyDataTransfer = _reportRepository.ReportDaily02ByProductSearchIDAndActiveToList(productSearchID, true);
+            return Json(listProductSearchPropertyDataTransfer);
         }
         public async Task<IActionResult> ExportExcelReportDaily(CancellationToken cancellationToken, int ID)
         {

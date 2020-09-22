@@ -20,5 +20,6 @@ namespace Commsights.Data.Repositories
         public List<Membership> GetCompetitorToList();
         public List<Membership> GetEmployeeToList();
         public Membership GetByAccount(string account);
+        public List<Membership> GetByIndustryIDAndParrentIDToList(int industryID, int parentID);
     }
 }

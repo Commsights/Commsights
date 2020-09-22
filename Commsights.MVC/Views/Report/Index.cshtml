@@ -11,11 +11,32 @@
             <div class="card-body">
                 <div class="row">
                     <div class='col-sm-2'>
-                        @(Html.Kendo().DatePickerFor(Model => Model.DatePublish)
+                        @(Html.Kendo().DatePickerFor(Model => Model.DatePublishBegin)
                                      .Format("dd/MM/yyyy")
-                                     .HtmlAttributes(new { @class = "form-control text-right", title = "Date publish" })
+                                     .HtmlAttributes(new { @class = "form-control text-right", title = "Date begin" })
                                      .DateInput()
                                 )
+                    </div>
+                    <div class='col-sm-2'>
+                        @(Html.Kendo().DatePickerFor(Model => Model.DatePublishEnd)
+                                     .Format("dd/MM/yyyy")
+                                     .HtmlAttributes(new { @class = "form-control text-right", title = "Date end" })
+                                     .DateInput()
+                                )
+                    </div>
+                    <div class='col-sm-1'>
+                        <b>Industry</b>
+                    </div>
+                    <div class='col-sm-4'>
+                        @(Html.Kendo().DropDownList()
+                     .Name("Industry")
+                     .DataValueField("ID")
+                     .DataTextField("CodeName")
+                    .HtmlAttributes(new { @class = "form-control" })
+                      .Events(e => e.DataBound("onIndustryDataBound"))
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
+                            )
                     </div>
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" onclick="onSearch()">
@@ -24,6 +45,9 @@
                     </div>
                 </div>
                 <br />
+                <div class="row">
+                    <div id="DataMain" class='col-sm-12'></div>
+                </div>
             </div>
         </div>
     </div>
@@ -33,7 +57,58 @@
     .Position(p => p.Pinned(true).Top(30).Right(30))
     .Width(400)
 )
-<script>   
-    function onSearch() {        
+<script>
+    function onIndustryDataBound() {
+        var control = $("#Industry").data("kendoDropDownList");
+        var controlLength = control.dataSource.data().length;
+        if (controlLength > 0) {
+            control.select(0);
+            onSearch();
+        }
+    }
+    function onSearch() {
+        GetByIndustryIDAndParrentIDToList();
+    }
+    function GetByIndustryIDAndParrentIDToList() {
+        $("#DataMain").html('');
+        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetByIndustryIDAndParrentIDToListToJSON", "Membership")",
+            data: {
+                industryID: industryIDValue,
+            },
+             success: function (listMembership) {
+                var html = '<table class="border01" id="Data" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                html = html + '<thead>';
+                html = html + '<tr>';
+                html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>No</a></th>";
+                html = html + "<th class='text-center' style='width: 30%;'><a style='cursor:pointer;'>Customer</a></th>";
+                html = html + "<th class='text-center' style='width: 60%;'><a style='cursor:pointer;'>Competitor</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in listMembership) {
+                     $(listMembership[index]).each(function (iRec, item) {
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                        }
+                        html = html + '<td class="text-center">' + no + '</td>';
+                        html = html + '<td class="text-left"><b>' + item.Account + '</b></td>';
+                        html = html + '<td class="text-left">' + item.Note + '</td>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                $("#DataMain").append(html);
+            }
+        }).done(() => {
+        });
     }
 </script>
