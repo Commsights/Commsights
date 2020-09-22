@@ -9,6 +9,7 @@ namespace Commsights.Data.Repositories
     public interface IProductPropertyRepository : IRepository<ProductProperty>
     {
         public string UpdateItemsWithParentIDIsZero();
+        public bool IsExistByProductIDAndCodeAndCompanyID(int productID, string code, int companyID);
         public bool IsExistByGUICodeAndCodeAndCompanyID(string gUICode, string code, int companyID);
         public bool IsExistByGUICodeAndCodeAndIndustryID(string gUICode, string code, int industryID);
         public bool IsExistByGUICodeAndCodeAndIndustryIDAndSegmentID(string gUICode, string code, int industryID, int segmentID);
@@ -17,5 +18,6 @@ namespace Commsights.Data.Repositories
         public List<ProductPropertyDataTransfer> GetDataTransferIndustryByParentIDToList(int parentID);
         public List<ProductPropertyDataTransfer> GetDataTransferProductByParentIDToList(int parentID);
         public List<ProductProperty> GetByParentIDAndCodeToList(int parentID, string code);
+
     }
 }

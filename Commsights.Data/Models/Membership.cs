@@ -25,7 +25,7 @@ namespace Commsights.Data.Models
         public string TaxCode { get; set; }
         public string ShortName { get; set; }
         public string EnglishName { get; set; }
-        public string Avatar { get; set; }
+        public string Avatar { get; set; }       
         public void InitDefaultValue()
         {
             if (string.IsNullOrEmpty(this.Guicode))
@@ -34,7 +34,7 @@ namespace Commsights.Data.Models
             }
         }
         public void EncryptPassword()
-        {            
+        {
             this.Password = SecurityHelper.Encrypt(this.Guicode, this.Password);
         }
         public void DecryptPassword()

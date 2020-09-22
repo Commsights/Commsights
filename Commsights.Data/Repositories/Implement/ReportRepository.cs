@@ -176,5 +176,34 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<ProductDataTransfer> GetDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
+        {
+            List<ProductDataTransfer> list = new List<ProductDataTransfer>();
+            if (industryID > 0)
+            {
+                SqlParameter[] parameters =
+                       {
+                    new SqlParameter("@DatePublishBegin",datePublishBegin),
+                    new SqlParameter("@DatePublishEnd",datePublishEnd),
+                    new SqlParameter("@IndustryID",industryID)
+                    };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectDataTransferByDatePublishBeginAndDatePublishEndAndIndustryID", parameters);
+                list = SQLHelper.ToList<ProductDataTransfer>(dt);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    list[i].ArticleType = new ModelTemplate();
+                    list[i].ArticleType.ID = list[i].ArticleTypeID;
+                    list[i].ArticleType.TextName = list[i].ArticleTypeName;
+                    list[i].Company = new ModelTemplate();
+                    list[i].Company.ID = list[i].CompanyID;
+                    list[i].Company.TextName = list[i].CompanyName;
+                    list[i].AssessType = new ModelTemplate();
+                    list[i].AssessType.ID = list[i].AssessID;
+                    list[i].AssessType.TextName = list[i].AssessName;
+                }
+            }
+
+            return list;
+        }
     }
 }

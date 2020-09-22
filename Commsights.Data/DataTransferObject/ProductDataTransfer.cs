@@ -44,6 +44,7 @@ namespace Commsights.Data.DataTransferObject
         public string IndustryName { get; set; }
         public string ProductName { get; set; }
         public string ParentName { get; set; }
+        public int? MembershipTypeID { get; set; }
         public ModelTemplate ArticleType { get; set; }
         public ModelTemplate Company { get; set; }
         public ModelTemplate AssessType { get; set; }

@@ -492,6 +492,7 @@ namespace Commsights.Data.Repositories
                 foreach (Config config in listConfig)
                 {
                     MembershipPermission model = new MembershipPermission();
+                    model.LanguageID = AppGlobal.LanguageID;
                     model.MembershipID = membershipID;
                     model.IndustryID = industryID;
                     model.Code = code;

@@ -57,6 +57,21 @@ namespace Commsights.MVC.Controllers
                 model.Summary = model.Summary.Trim();
             }
         }
+        private void Initialization(ProductDataTransfer model)
+        {
+            if (!string.IsNullOrEmpty(model.TitleEnglish))
+            {
+                model.TitleEnglish = model.TitleEnglish.Trim();
+            }
+            if (!string.IsNullOrEmpty(model.Description))
+            {
+                model.Description = model.Description.Trim();
+            }
+            if (!string.IsNullOrEmpty(model.DescriptionEnglish))
+            {
+                model.DescriptionEnglish = model.DescriptionEnglish.Trim();
+            }
+        }
         public IActionResult Index()
         {
             BaseViewModel model = new BaseViewModel();
@@ -184,6 +199,42 @@ namespace Commsights.MVC.Controllers
         {
             List<ProductSearchPropertyDataTransfer> listProductSearchPropertyDataTransfer = _reportRepository.ReportDaily02ByProductSearchIDAndActiveToList(productSearchID, true);
             return Json(listProductSearchPropertyDataTransfer);
+        }
+        public ActionResult GetDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
+        {
+            var data = _reportRepository.GetDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public IActionResult UpdateDataTransfer(ProductDataTransfer model)
+        {
+            Initialization(model);
+            model.CompanyID = model.Company.ID;
+            model.ArticleTypeID = model.ArticleType.ID;
+            model.AssessID = model.AssessType.ID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Update, RequestUserID);
+            int result = _productRepository.Update(model.ID, model);
+            if (result > 0)
+            {
+                if (_productPropertyRepository.IsExistByProductIDAndCodeAndCompanyID(model.ID, AppGlobal.Company, model.CompanyID.Value) == true)
+                {
+                    ProductProperty productProperty = new ProductProperty();                    
+                    productProperty.Code = AppGlobal.Company;
+                    productProperty.GUICode = model.GUICode;
+                    productProperty.ParentID = model.ID;
+                    productProperty.ArticleTypeID = model.ArticleTypeID;
+                    productProperty.AssessID = model.AssessID;
+                    productProperty.CompanyID = model.CompanyID;
+                    productProperty.Initialization(InitType.Insert, RequestUserID);
+                    _productPropertyRepository.Create(productProperty);
+                }
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
         }
         public async Task<IActionResult> ExportExcelReportDaily(CancellationToken cancellationToken, int ID)
         {
