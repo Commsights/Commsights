@@ -176,6 +176,21 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<ProductSearchPropertyDataTransfer> ReportDailyByProductSearchIDAndActiveToListToHTML(int productSearchID, bool active)
+        {
+            List<ProductSearchPropertyDataTransfer> list = new List<ProductSearchPropertyDataTransfer>();
+            if (productSearchID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ProductSearchID",productSearchID),
+                    new SqlParameter("@Active",active)
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportDailyByProductSearchIDAndActiveToHTML", parameters);
+                list = SQLHelper.ToList<ProductSearchPropertyDataTransfer>(dt);              
+            }
+            return list;
+        }
         public List<ProductDataTransfer> GetDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
         {
             List<ProductDataTransfer> list = new List<ProductDataTransfer>();
