@@ -2132,15 +2132,15 @@ namespace Commsights.MVC.Controllers
                                                             }
                                                             model.CompanyID = company.ID;
                                                         }
+                                                        //if (workSheet.Cells[i, 3].Value != null)
+                                                        //{
+                                                        //    string productName = workSheet.Cells[i, 3].Value.ToString().Trim();
+                                                        //    MembershipPermission product = _membershipPermissionRepository.GetByProductName(productName);
+                                                        //    model.ProductID = product.ID;
+                                                        //}
                                                         if (workSheet.Cells[i, 3].Value != null)
                                                         {
-                                                            string productName = workSheet.Cells[i, 3].Value.ToString().Trim();
-                                                            MembershipPermission product = _membershipPermissionRepository.GetByProductName(productName);
-                                                            model.ProductID = product.ID;
-                                                        }
-                                                        if (workSheet.Cells[i, 4].Value != null)
-                                                        {
-                                                            string assessString = workSheet.Cells[i, 4].Value.ToString().Trim();
+                                                            string assessString = workSheet.Cells[i, 3].Value.ToString().Trim();
                                                             switch (assessString)
                                                             {
                                                                 case "-1":
@@ -2165,9 +2165,13 @@ namespace Commsights.MVC.Controllers
                                                                     break;
                                                             }
                                                         }
+                                                        if (workSheet.Cells[i, 4].Value != null)
+                                                        {
+                                                            model.Title = workSheet.Cells[i, 4].Value.ToString().Trim();
+                                                        }
                                                         if (workSheet.Cells[i, 5].Value != null)
                                                         {
-                                                            model.Title = workSheet.Cells[i, 5].Value.ToString().Trim();
+                                                            model.TitleEnglish = workSheet.Cells[i, 5].Value.ToString().Trim();
                                                         }
                                                         if (workSheet.Cells[i, 6].Value != null)
                                                         {
