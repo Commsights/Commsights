@@ -152,17 +152,17 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetByMembershipIDAndIndustryIDAndKeywordNegativeToList([DataSourceRequest] DataSourceRequest request, int membershipID, int industryID)
         {
-            var data = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCode001ToList(membershipID, industryID, AppGlobal.KeywordNegative);
+            var data = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCodeToList(membershipID, industryID, AppGlobal.KeywordNegative);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetByMembershipIDAndIndustryIDAndKeywordPositiveToList([DataSourceRequest] DataSourceRequest request, int membershipID, int industryID)
         {
-            var data = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCode001ToList(membershipID, industryID, AppGlobal.KeywordPositive);
+            var data = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCodeToList(membershipID, industryID, AppGlobal.KeywordPositive);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetByMembershipIDAndIndustryIDAndChannelToList([DataSourceRequest] DataSourceRequest request, int membershipID, int industryID)
         {
-            var data = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCode001ToList(membershipID, industryID, AppGlobal.WebsiteType);
+            var data = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCodeToList(membershipID, industryID, AppGlobal.WebsiteType);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetIndustryIDAndCodeToList([DataSourceRequest] DataSourceRequest request, int industryID)

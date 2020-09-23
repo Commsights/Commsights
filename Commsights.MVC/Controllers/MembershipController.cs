@@ -126,6 +126,15 @@ namespace Commsights.MVC.Controllers
             }
             return View(membership);
         }
+        public IActionResult CustomerDetailWindow(int ID)
+        {
+            Membership membership = new Membership();
+            if (ID > 0)
+            {
+                membership = _membershipRepository.GetByID(ID);
+            }
+            return View(membership);
+        }
         public IActionResult CompanyDetail(int ID)
         {
             Membership membership = new Membership();

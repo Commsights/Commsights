@@ -79,6 +79,47 @@ namespace Commsights.MVC.Controllers
             model.DatePublishEnd = DateTime.Now;
             return View(model);
         }
+        public IActionResult DailyPreview(int industryID, string datePublishBeginString, string datePublishEndString)
+        {
+            int day = 0;
+            int month = 0;
+            int year = 0;
+            BaseViewModel model = new BaseViewModel();
+            model.DatePublishBegin = DateTime.Now.AddDays(-1);
+            model.DatePublishEnd = DateTime.Now;
+            if (industryID > 0)
+            {
+                model.IndustryID = industryID;
+                model.IndustryName = _configResposistory.GetByID(model.IndustryID).CodeName;
+            }
+            if (!string.IsNullOrEmpty(datePublishBeginString))
+            {
+                try
+                {
+                    day = int.Parse(datePublishBeginString.Split('-')[2]);
+                    month = int.Parse(datePublishBeginString.Split('-')[1]);
+                    year = int.Parse(datePublishBeginString.Split('-')[0]);
+                    model.DatePublishBegin = new DateTime(year, month, day);
+                }
+                catch
+                {
+                }
+            }
+            if (!string.IsNullOrEmpty(datePublishEndString))
+            {
+                try
+                {
+                    day = int.Parse(datePublishEndString.Split('-')[2]);
+                    month = int.Parse(datePublishEndString.Split('-')[1]);
+                    year = int.Parse(datePublishEndString.Split('-')[0]);
+                    model.DatePublishEnd = new DateTime(year, month, day);
+                }
+                catch
+                {
+                }
+            }
+            return View(model);
+        }
         public IActionResult Upload(int ID)
         {
             return View();
@@ -98,6 +139,40 @@ namespace Commsights.MVC.Controllers
             if (ID > 0)
             {
                 model = _productSearchRepository.GetDataTransferByID(ID);
+            }
+            return View(model);
+        }
+        public IActionResult DailyPrintPreviewFormHTML(int ID)
+        {
+            ProductSearchDataTransfer model = new ProductSearchDataTransfer();
+            if (ID > 0)
+            {
+                model = _productSearchRepository.GetDataTransferByID(ID);
+                string html = "";
+                var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "html", "ReportDailySub.html");
+                using (var stream = new FileStream(physicalPath, FileMode.Open))
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        html = reader.ReadToEnd();
+                    }
+                }
+                if (!string.IsNullOrEmpty(html))
+                {
+                    html = html.Replace(@"[Background_Logo_Opacity10_1400_1000URLFUll]", @""+AppGlobal.Background_Logo_Opacity10_1400_1000URLFUll);
+                    html = html.Replace(@"[Logo01URLFull]", @"" + AppGlobal.Logo01URLFull);
+                    html = html.Replace(@"[CompanyTitleEnglish]", @"" + AppGlobal.CompanyTitleEnglish);
+                    html = html.Replace(@"[TaxCode]", @"" + AppGlobal.TaxCode);
+                    html = html.Replace(@"[PhoneReportHTML]", @"" + AppGlobal.PhoneReportHTML);
+                    html = html.Replace(@"[EmailReportHTML]", @"" + AppGlobal.EmailReportHTML);
+                    html = html.Replace(@"[FacebookHTML]", @"" + AppGlobal.FacebookHTML);
+                    html = html.Replace(@"[GoogleMapHTML]", @"" + AppGlobal.GoogleMapHTML);
+                    html = html.Replace(@"[PreviewDate]", @"" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"));
+                    html = html.Replace(@"[CompanyName]", @"" + model.CompanyName);
+                    html = html.Replace(@"[Title]", @"" + model.Title);
+                    //List<MembershipPermission> listDailyReportSection=_membershipPermissionRepository.get
+                }
+                model.Note = html;
             }
             return View(model);
         }
@@ -160,6 +235,11 @@ namespace Commsights.MVC.Controllers
             }
             return RedirectToAction("Daily03", new { ID = model.ID });
         }
+        public ActionResult InitializationByDatePublishBeginAndDatePublishEndAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
+        {
+            var data = _reportRepository.InitializationByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult InitializationByDatePublishToList([DataSourceRequest] DataSourceRequest request, DateTime datePublish)
         {
             var data = _reportRepository.InitializationByDatePublishToList(datePublish);
@@ -216,15 +296,24 @@ namespace Commsights.MVC.Controllers
             int result = _productRepository.Update(model.ID, model);
             if (result > 0)
             {
-                if (_productPropertyRepository.IsExistByProductIDAndCodeAndCompanyID(model.ID, AppGlobal.Company, model.CompanyID.Value) == true)
+                ProductProperty productProperty = _productPropertyRepository.GetByProductIDAndCodeAndCompanyID(model.ID, AppGlobal.Company, model.CompanyID.Value);
+                if (productProperty == null)
                 {
-                    ProductProperty productProperty = new ProductProperty();                    
-                    productProperty.Code = AppGlobal.Company;
-                    productProperty.GUICode = model.GUICode;
-                    productProperty.ParentID = model.ID;
-                    productProperty.ArticleTypeID = model.ArticleTypeID;
-                    productProperty.AssessID = model.AssessID;
-                    productProperty.CompanyID = model.CompanyID;
+                    productProperty = new ProductProperty();
+                }
+                productProperty.Code = AppGlobal.Company;
+                productProperty.GUICode = model.GUICode;
+                productProperty.ParentID = model.ID;
+                productProperty.ArticleTypeID = model.ArticleTypeID;
+                productProperty.AssessID = model.AssessID;
+                productProperty.CompanyID = model.CompanyID;
+                if (productProperty.ID > 0)
+                {
+                    productProperty.Initialization(InitType.Update, RequestUserID);
+                    _productPropertyRepository.Update(productProperty.ID, productProperty);
+                }
+                else
+                {
                     productProperty.Initialization(InitType.Insert, RequestUserID);
                     _productPropertyRepository.Create(productProperty);
                 }

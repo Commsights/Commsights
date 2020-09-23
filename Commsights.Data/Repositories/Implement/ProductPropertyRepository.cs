@@ -63,6 +63,10 @@ namespace Commsights.Data.Repositories
             }
             return false;
         }
+        public ProductProperty GetByProductIDAndCodeAndCompanyID(int productID, string code, int companyID)
+        {
+            return _context.ProductProperty.FirstOrDefault(item => item.ProductID == productID && item.Code.Equals(code) && item.CompanyID == companyID);
+        }
         public List<ProductProperty> GetByParentIDAndCodeToList(int parentID, string code)
         {
             return _context.ProductProperty.Where(item => item.ParentID == parentID && item.Code.Equals(code)).OrderBy(item => item.ID).ToList();

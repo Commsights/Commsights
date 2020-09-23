@@ -181,6 +181,8 @@ namespace Commsights.Data.Repositories
             List<ProductDataTransfer> list = new List<ProductDataTransfer>();
             if (industryID > 0)
             {
+                datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+                datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
                 SqlParameter[] parameters =
                        {
                     new SqlParameter("@DatePublishBegin",datePublishBegin),
@@ -202,7 +204,22 @@ namespace Commsights.Data.Repositories
                     list[i].AssessType.TextName = list[i].AssessName;
                 }
             }
-
+            return list;
+        }
+        public List<ProductSearchDataTransfer> InitializationByDatePublishBeginAndDatePublishEndAndIndustryIDToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
+        {
+            List<ProductSearchDataTransfer> list = new List<ProductSearchDataTransfer>();
+            if (industryID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@DatePublishBegin",datePublishBegin),
+                new SqlParameter("@DatePublishEnd",datePublishEnd),
+                new SqlParameter("@IndustryID",industryID)
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportDailyInitializationByDatePublishBeginAndDatePublishEndAndIndustryID", parameters);
+                list = SQLHelper.ToList<ProductSearchDataTransfer>(dt);
+            }
             return list;
         }
     }

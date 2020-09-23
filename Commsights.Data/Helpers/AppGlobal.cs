@@ -26,6 +26,34 @@ namespace Commsights.Data.Helpers
         #endregion
 
         #region AppSettings 
+        public static string PhoneReportHTML
+        {
+            get
+            {
+                return "<a target='_blank' href='" + PhoneReportURLFUll + "' title='" + PhoneReport + "'>" + PhoneDisplay + "</a>";
+            }
+        }
+        public static string EmailReportHTML
+        {
+            get
+            {
+                return "<a target='_blank' href='" + EmailReportURLFUll + "' title='" + EmailReport + "'>" + EmailReport + "</a>";
+            }
+        }
+        public static string FacebookHTML
+        {
+            get
+            {
+                return "<a target='_blank' href='" + FacebookURLFUll + "' title='" + Facebook + "'>" + Facebook + "</a>";
+            }
+        }
+        public static string GoogleMapHTML
+        {
+            get
+            {
+                return "<a target='_blank' href='" + GoogleMapURLFUll + "' title='" + AddressReport + "'>" + AddressReport + "</a>";
+            }
+        }
         public static string URLCode
         {
             get
@@ -111,6 +139,14 @@ namespace Commsights.Data.Helpers
             get
             {
                 string result = "https://www.google.com/maps/d/u/0/viewer?mid=" + GoogleMapID;
+                return result;
+            }
+        }
+        public static string Background_Logo_Opacity10_1400_1000URLFUll
+        {
+            get
+            {
+                string result = Domain + Images + "/" + Background_Logo_Opacity10_1400_1000;
                 return result;
             }
         }
@@ -554,6 +590,14 @@ namespace Commsights.Data.Helpers
                 return builder.Build().GetSection("AppSettings").GetSection("Logo160_160").Value;
             }
         }
+        public static string Background_Logo_Opacity10_1400_1000
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Background_Logo_Opacity10_1400_1000").Value;
+            }
+        }
         public static string URLImagesCustomer
         {
             get
@@ -788,6 +832,14 @@ namespace Commsights.Data.Helpers
                 return builder.Build().GetSection("AppSettings").GetSection("Domain").Value;
             }
         }
+        public static string DomainSub
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("DomainSub").Value;
+            }
+        }
 
         public static string SitemapFTP
         {
@@ -1007,7 +1059,7 @@ namespace Commsights.Data.Helpers
             return list;
         }
         public static int CheckContentAndKeyword(string content, string keyword)
-        {            
+        {
             int check = 0;
             int checkSub = 0;
             int index = content.IndexOf(keyword);
@@ -1561,7 +1613,7 @@ namespace Commsights.Data.Helpers
         {
             List<string> list = new List<string>();
             foreach (string item in content.Split(';'))
-            {      
+            {
                 if (!string.IsNullOrEmpty(item))
                 {
                     list.Add(item.Trim());

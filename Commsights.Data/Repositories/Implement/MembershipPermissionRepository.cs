@@ -30,10 +30,10 @@ namespace Commsights.Data.Repositories
         {
             return _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.Code.Equals(code)).OrderBy(item => item.DateUpdated).ToList();
         }
-        public List<MembershipPermission> GetByMembershipIDAndIndustryIDAndCode001ToList(int membershipID, int industryID, string code)
+        public List<MembershipPermission> GetByMembershipIDAndIndustryIDAndCodeToList(int membershipID, int industryID, string code)
         {
             return _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.IndustryID == industryID && item.Code.Equals(code)).OrderBy(item => item.DateUpdated).ToList();
-        }
+        }        
         public List<MembershipPermission> GetByCodeToList(string code)
         {
             return _context.MembershipPermission.Where(item => item.Code.Equals(code)).OrderBy(item => item.ProductName).ToList();
@@ -412,15 +412,7 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
-        public List<MembershipPermission> GetByMembershipIDAndIndustryIDAndCodeToList(int membershipID, int industryID, string code)
-        {
-            List<MembershipPermission> list = new List<MembershipPermission>();
-            if (membershipID > 0)
-            {
-                list = _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.IndustryID == industryID && item.Code.Equals(code)).OrderBy(item => item.DateUpdated).ToList();
-            }
-            return list;
-        }
+        
         public void InitializationMenuPermission(int membershipID, int requestUserID)
         {
             List<MembershipPermission> list = _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.MenuID > 0).ToList();

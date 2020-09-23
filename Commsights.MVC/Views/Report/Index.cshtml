@@ -1,4 +1,4 @@
-﻿@{ ViewData["Title"] = "Report - Daily"; }
+﻿@{ ViewData["Title"] = "Report - Daily - Data"; }
 
 @model Commsights.MVC.Models.BaseViewModel
 
@@ -6,7 +6,7 @@
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Report - Daily</h3>
+                <h3 class="card-title">Report - Daily - Data</h3>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -44,7 +44,7 @@
                         </button>
                     </div>
                     <div class='col-sm-1'>                       
-                        <button type="button" class="btn btn-success" onclick="onSearch()">
+                        <button type="button" class="btn btn-success" onclick="onPreview()">
                             <span class="fas fa-flag-checkered"></span> Preview
                         </button>
                     </div>
@@ -59,15 +59,15 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); }).Width(150);
-    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=URLCode#"");' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("URL").Width(70);
+    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=URLCode#"");' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("URL").Width(70);
     columns.Bound(t => t.IsData).Title("Data").Width(100);
     columns.Bound(t => t.IsSummary).Title("Summary").Width(100);
     columns.Bound(t => t.Company.TextName).EditorTemplateName("Membership_Company").Title("Company").Width(200);
     columns.Bound(t => t.ArticleType.TextName).EditorTemplateName("Config_ArticleType").Title("Article type").Width(200);
-    columns.Bound(t => t.AssessType.TextName).EditorTemplateName("Config_AssessType").Title("Sentiment").Width(200);
-    columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(300);
-    columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(300);
-    columns.Bound(t => t.Description).Title("Summary").Width(300);    
+    columns.Bound(t => t.AssessType.TextName).EditorTemplateName("Config_AssessType").Title("Sentiment").Width(150);
+    columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(200);
+    columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(200);
+    columns.Bound(t => t.Description).Title("Summary").Width(200);    
     columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=URLCode#"");' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(1000);
     columns.Bound(t => t.DatePublish).Title("Publish").Width(200).HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.Media).Title("Media").Width(200);
@@ -112,7 +112,7 @@
     model.Field(t => t.ArticleType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
     model.Field(t => t.AssessType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
-
+.Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList", "Report").Data("filterProduct"))
 .Update(t => t.Action("UpdateDataTransfer", "Report"))))
             </div>
@@ -125,6 +125,16 @@
     .Width(400)
 )
 <script>
+    function onGridRequestEnd(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            var response = e.response;
+            var messageType = response.split('-')[0];
+            var note = response.split('-')[1];
+            var notification = $("#Notification").data("kendoNotification");
+            notification.show(note, messageType);
+            $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
+        }
+    }
     function onIndustryDataBound() {
         var control = $("#Industry").data("kendoDropDownList");
         var controlLength = control.dataSource.data().length;
@@ -133,10 +143,7 @@
             onSearch();
         }
     }
-    function onSearch() {
-        GetByIndustryIDAndParrentIDToList();
-        $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
-    }
+    
     function filterProduct(e) {
         var industryIDValue = $("#Industry").data("kendoDropDownList").value();
         var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
@@ -184,5 +191,20 @@
             }
         }).done(() => {
         });
+    }
+    function onSearch() {
+        GetByIndustryIDAndParrentIDToList();
+        $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
+    }
+    function onPreview() {
+        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
+        var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
+        var datePublishEndValue = toDate02($("#DatePublishEnd").val());
+        datePublishBeginValue = datePublishBeginValue.replace("/", "-");
+        datePublishBeginValue = datePublishBeginValue.replace("/", "-");
+        datePublishEndValue = datePublishEndValue.replace("/", "-");
+        datePublishEndValue = datePublishEndValue.replace("/", "-");
+        var url = "/Report/DailyPreview?industryID=" + industryIDValue + "&datePublishBeginString=" + datePublishBeginValue + "&datePublishEndString=" + datePublishEndValue;
+        window.location.replace(url);
     }
 </script>

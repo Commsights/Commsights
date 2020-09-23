@@ -7,14 +7,11 @@ ViewData["Title"] = "" + Model.CompanyName + " - " + Model.Title;
 
 @model Commsights.Data.DataTransferObject.ProductSearchDataTransfer
 @Html.HiddenFor(Model => Model.ID)
-<div style="width:1400px; height:auto; padding:40px; margin:auto; background-color:#ffffff; background-repeat:repeat-x; background-image:url('/images/Background_Logo_Opacity10_1400_1000.png');">
-    <i></i>
-    <br />
-    <br />
+<div style="width:1400px; min-height:960px; padding:40px; margin:auto; background-color:#ffffff; background-repeat:repeat-x; background-image:url('/images/Background_Logo_Opacity10_1400_1000.png');">   
     <table>
         <tr>
             <td valign="top" style="width:40%; text-align:center;">
-                <a title="In trang" href='javascript:window.print();'><img src="/images/logo01.png" style="width:80%;" alt="In trang" title="In trang" /></a>
+                <a title="In trang" href='javascript:window.print();'><img src="@Commsights.Data.Helpers.AppGlobal.DomainSub/images/logo01.png" style="width:80%;" alt="In trang" title="In trang" /></a>
                 <br />
                 <b style="font-size:30px;">@Commsights.Data.Helpers.AppGlobal.CompanyTitleEnglish</b>
             </td>
@@ -39,42 +36,14 @@ ViewData["Title"] = "" + Model.CompanyName + " - " + Model.Title;
     </table>
     <div style="text-align:center; border-top-color:black;border-top-style:solid;border-top-width:1px; padding:10px; line-height:30px;position: relative;">
         <div>
-            <b style="font-size:40px; text-transform:uppercase;">@Model.CompanyName - @Model.Title</b>
+            <b style="font-size:40px; text-transform:uppercase; color:#c00000;">@Model.CompanyName - @Model.Title</b>
         </div>
     </div>
-    <div>
-        @*<table cellspacing="10" width="100%">
-            <tr>
-                <td style="width:10%;">
-                    Article company:
-                </td>
-                <td style="width:10%;">
-                    <h3>@Model.CompanyCount</h3>
-                </td>
-                <td style="width:10%;">
-                    Article industry:
-                </td>
-                <td style="width:10%;">
-                    <h3>@Model.IndustryCount</h3>
-                </td>
-                <td style="width:10%;">
-                    Article product:
-                </td>
-                <td style="width:10%;">
-                    <h3>@Model.ProductCount</h3>
-                </td>
-                <td style="width:10%;">
-                    Article competitor:
-                </td>
-                <td style="width:10%;">
-                    <h3>@Model.CompetitorCount</h3>
-                </td>
-            </tr>
-        </table>*@      
-        <b>I - HIGHLIGHT NEWS OF THE DAY</b>
+    <div>        
+        <b style="color: #ed7d31;">I - HIGHLIGHT NEWS OF THE DAY</b>
         @Html.Raw(Model.Summary)
         <br />
-        <b>II - INFORMATION</b>
+        <b style="color: #ed7d31;">II - INFORMATION</b>
         <br />
         <br />
         <div id="DataMain"></div>
@@ -92,18 +61,18 @@ ViewData["Title"] = "" + Model.CompanyName + " - " + Model.Title;
                 var html = '<table class="border" id="Data" style="font-size:12px;">';
                 html = html + '<thead>';
                 html = html + '<tr>';
-                html = html + "<th style='text-align:center;'><a style='cursor:pointer;'>No</a></th>";
-                html = html + "<th style='text-align:center;'><a style='cursor:pointer;'>Publish</a></th>";
-                html = html + "<th style='text-align:center;'><a style='cursor:pointer;'>Category</a></th>";
-                html = html + "<th style='text-align:center;'><a style='cursor:pointer;'>Industry</a></th>";
-                html = html + "<th style='text-align:center;'><a style='cursor:pointer;'>Company</a></th>";
-                html = html + "<th style='text-align:center;'><a style='cursor:pointer;'>Product</a></th>";
-                html = html + "<th style='text-align:center;'><a style='cursor:pointer;'>Sentiment</a></th>";
-                html = html + "<th style='text-align:center;'><a style='cursor:pointer;'>Headline (Vie)</a></th>";
-                html = html + "<th style='text-align:center;'><a style='cursor:pointer;'>Headline (Eng)</a></th>";
-                html = html + "<th style='text-align:center;'><a style='cursor:pointer;'>Media</a></th>";
-                html = html + "<th style='text-align:center;'><a style='cursor:pointer;'>Media type</a></th>";
-                html = html + "<th style='text-align:center;'><a style='cursor:pointer;'>Ad value</a></th>";
+                html = html + "<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>No</a></th>";
+                html = html + "<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>Publish</a></th>";
+                html = html + "<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>Category</a></th>";
+                html = html + "<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>Industry</a></th>";
+                html = html + "<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>Company</a></th>";
+                html = html + "<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>Product</a></th>";
+                html = html + "<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>Sentiment</a></th>";
+                html = html + "<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>Headline (Vie)</a></th>";
+                html = html + "<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>Headline (Eng)</a></th>";
+                html = html + "<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>Media</a></th>";
+                html = html + "<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>Media type</a></th>";
+                html = html + "<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>Ad value</a></th>";
                 //html = html + "<th style='text-align:center;'><a style='cursor:pointer;'>Summary</a></th>";
                 html = html + '</tr>';
                 html = html + '</thead>';
