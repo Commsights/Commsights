@@ -2,6 +2,7 @@
 
 @model Commsights.MVC.Models.BaseViewModel
 @Html.HiddenFor(Model => Model.IndustryID)
+
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
@@ -86,7 +87,7 @@
     function filterReport(e) {
         var industryIDValue = $("#IndustryID").val();
         var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
-        var datePublishEndValue = toDate02($("#DatePublishEnd").val());        
+        var datePublishEndValue = toDate02($("#DatePublishEnd").val());    
         return { datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, industryID: industryIDValue };
     }
 </script>

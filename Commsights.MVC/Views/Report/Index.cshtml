@@ -24,10 +24,7 @@
                                      .DateInput()
                                 )
                     </div>
-                    <div class='col-sm-1'>
-                        <b>Industry</b>
-                    </div>
-                    <div class='col-sm-4'>
+                    <div class='col-sm-3'>
                         @(Html.Kendo().DropDownList()
                      .Name("Industry")
                      .DataValueField("ID")
@@ -43,7 +40,16 @@
                             <span class="fas fa-search"></span>
                         </button>
                     </div>
-                    <div class='col-sm-1'>                       
+                    <div class='col-sm-1' style="display:flex; justify-content:start; align-items:center;">
+                        <input id="chkAllData" type="checkbox">
+                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Data</p>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onSaveAllData()">
+                            <span class="fas fa-save"></span>
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" onclick="onPreview()">
                             <span class="fas fa-flag-checkered"></span> Preview
                         </button>
@@ -67,7 +73,7 @@
     columns.Bound(t => t.AssessType.TextName).EditorTemplateName("Config_AssessType").Title("Sentiment").Width(150);
     columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(200);
     columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(200);
-    columns.Bound(t => t.Description).Title("Summary").Width(200);    
+    columns.Bound(t => t.Description).Title("Summary").Width(200);
     columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=URLCode#"");' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(1000);
     columns.Bound(t => t.DatePublish).Title("Publish").Width(200).HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.Media).Title("Media").Width(200);
@@ -143,12 +149,34 @@
             onSearch();
         }
     }
-    
+
     function filterProduct(e) {
         var industryIDValue = $("#Industry").data("kendoDropDownList").value();
         var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
         var datePublishEndValue = toDate02($("#DatePublishEnd").val());
         return { datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, industryID: industryIDValue };
+    }
+    function onSaveAllData() {
+        BeginRequestHandler();
+        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
+        var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
+        var datePublishEndValue = toDate02($("#DatePublishEnd").val());
+        var allDataValue = document.getElementById('chkAllData').checked;
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("UpdateByIndustryIDAndDatePublishBeginAndDatePublishEndAndAllData", "Report")",
+            data: {
+                industryID: industryIDValue,
+                datePublishBegin: datePublishBeginValue,
+                datePublishEnd: datePublishEndValue,
+                allData: allDataValue
+            },
+             success: function () {}
+         }).done(() => {             
+             $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
+             EndRequestHandler();
+        });
+
     }
     function GetByIndustryIDAndParrentIDToList() {
         $("#DataMain").html('');

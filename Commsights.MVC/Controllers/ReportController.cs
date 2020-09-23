@@ -173,167 +173,167 @@ namespace Commsights.MVC.Controllers
                     html = html.Replace(@"[Title]", @"" + model.Title);
                     StringBuilder reportData = new StringBuilder();
                     StringBuilder reportSummary = new StringBuilder();
-                    List<MembershipPermissionDataTransfer> listDailyReportSection = _membershipPermissionRepository.GetDataTransferDailyReportSectionByMembershipIDAndIndustryIDAndCodeToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportSection);
-                    List<ProductSearchPropertyDataTransfer> listData = _reportRepository.ReportDaily02ByProductSearchIDAndActiveToList(model.ID, true);
-                    foreach (MembershipPermissionDataTransfer dailyReportSection in listDailyReportSection)
-                    {
-                        if ((dailyReportSection.CategoryID == AppGlobal.DailyReportSectionSummaryID) && (dailyReportSection.Active == true))
-                        {
-                            if (listData.Count > 0)
-                            {
-                                reportSummary.AppendLine(@"<b style='color: #ed7d31;'>I - HIGHLIGHT NEWS OF THE DAY</b>");
-                                reportSummary.AppendLine(@"<br />");
-                                reportSummary.AppendLine(@"<br />");
-                                reportSummary.AppendLine(@"<div style='font-size:12px;'>");
-                                foreach (ProductSearchPropertyDataTransfer data in listData)
-                                {
-                                    string title = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.Title + "</a></td>";
-                                    string titleEnglish = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.TitleEnglish + "</a></td>";
-                                    string mediaURLFull = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.MediaURLFull + "' title='" + data.MediaURLFull + "'>" + data.Media + "</a></td>";
-                                    if (data.IsSummary == true)
-                                    {
-                                        if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
-                                        {
-                                            reportSummary.AppendLine(@"<b>" + data.CompanyName + ": " + title + " (" + mediaURLFull + " - " + data.DatePublishString + ")</b>");
-                                            reportSummary.AppendLine(@"<br />");
-                                            reportSummary.AppendLine(@"" + data.Description);
-                                        }
-                                        else
-                                        {
-                                            reportSummary.AppendLine(@"<b>" + data.CompanyName + ": " + titleEnglish + " (" + mediaURLFull + " - " + data.DatePublishString + ")</b>");
-                                            reportSummary.AppendLine(@"<br />");
-                                            reportSummary.AppendLine(@"" + data.DescriptionEnglish);
-                                        }
-                                        reportSummary.AppendLine(@"<br />");
-                                        reportSummary.AppendLine(@"<br />");
-                                    }
-                                }
-                                reportSummary.AppendLine(@"</div>");
-                                reportSummary.AppendLine(@"<hr/>");
-                            }
-                        }
-                        if ((dailyReportSection.CategoryID == AppGlobal.DailyReportSectionDataID) && (dailyReportSection.Active == true))
-                        {
-                            if (listData.Count > 0)
-                            {
-                                List<MembershipPermissionDataTransfer> listDailyReportColumn = _membershipPermissionRepository.GetDataTransferDailyReportColumnByMembershipIDAndIndustryIDAndCodeToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn);
-                                reportData.AppendLine(@"<b style='color: #ed7d31;'>II - INFORMATION</b>");
-                                reportData.AppendLine(@"<br />");
-                                reportData.AppendLine(@"<br />");
-                                reportData.AppendLine(@"<table class='border' style='font-size:12px; width:100%;'>");
-                                reportData.AppendLine(@"<thead>");
-                                reportData.AppendLine(@"<tr>");
-                                reportData.AppendLine(@"<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>No</a></th>");
-                                foreach (MembershipPermissionDataTransfer dailyReportColumn in listDailyReportColumn)
-                                {
-                                    if (dailyReportColumn.Active == true)
-                                    {
-                                        reportData.Append(@"<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>");
-                                        if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
-                                        {
-                                            reportData.Append(@"" + dailyReportColumn.Phone);
-                                        }
-                                        else
-                                        {
-                                            reportData.Append(@"" + dailyReportColumn.Email);
-                                        }
-                                        reportData.Append(@"</a></th>");
-                                    }
-                                }
-                                reportData.AppendLine(@"</tr>");
-                                reportData.AppendLine(@"</thead>");
-                                reportData.AppendLine(@"<tbody>");
-                                int no = 0;
-                                foreach (ProductSearchPropertyDataTransfer data in listData)
-                                {
-                                    string title = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.Title + "</a></td>";
-                                    string titleEnglish = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.TitleEnglish + "</a></td>";
-                                    no = no + 1;
-                                    if (no % 2 == 0)
-                                    {
-                                        reportData.AppendLine(@"<tr style='background-color:#ffffff;'>");
-                                    }
-                                    else
-                                    {
-                                        reportData.AppendLine(@"<tr style='background-color:#f1f1f1;'>");
-                                    }
-                                    reportData.AppendLine(@"<td style='text-align: center;'>" + no + "</td>");
-                                    foreach (MembershipPermissionDataTransfer dailyReportColumn in listDailyReportColumn)
-                                    {
-                                        if (dailyReportColumn.Active == true)
-                                        {
-                                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnDatePublishID)
-                                            {
-                                                reportData.AppendLine(@"<td style='text-align: center;'>" + data.DatePublishString + "</td>");
-                                            }
-                                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnCategoryID)
-                                            {
-                                                reportData.AppendLine(@"<td style='text-align: center;'>" + data.ArticleTypeName + "</td>");
-                                            }
-                                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnCompanyID)
-                                            {
-                                                reportData.AppendLine(@"<td style='text-align: center;'>" + data.CompanyName + "</td>");
-                                            }
-                                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnSentimentID)
-                                            {
-                                                reportData.Append(@"<td style='text-align: center;'>");
-                                                if (data.AssessID == AppGlobal.NegativeID)
-                                                {
-                                                    reportData.Append(@"<span style='color:red;'>" + data.AssessName + "</span>");
-                                                }
-                                                else
-                                                {
-                                                    reportData.Append(@"" + data.AssessName);
-                                                }
-                                                reportData.Append(@"</td>");
-                                            }
-                                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnHeadlineVietnameseID)
-                                            {
-                                                reportData.AppendLine(@"<td style='text-align: left;'>" + title + "</td>");
-                                            }
-                                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnHeadlineEnglishID)
-                                            {
-                                                reportData.AppendLine(@"<td style='text-align: left;'>" + titleEnglish + "</td>");
-                                            }
-                                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnMediaTitleID)
-                                            {
-                                                reportData.AppendLine(@"<td style='text-align: center;'>" + data.Media + "</td>");
-                                            }
-                                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnMediaTypeID)
-                                            {
-                                                reportData.AppendLine(@"<td style='text-align: center;'>" + data.MediaType + "</td>");
-                                            }
-                                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnPageID)
-                                            {
-                                                reportData.AppendLine(@"<td style='text-align: center;'>" + data.Page + "</td>");
-                                            }
-                                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnAdvertisementID)
-                                            {
-                                                reportData.AppendLine(@"<td style='text-align: center;'>" + data.AdvertisementValueString + "</td>");
-                                            }
-                                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnSummaryID)
-                                            {
-                                                reportData.Append(@"<td style='text-align: center;'>");
-                                                if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
-                                                {
-                                                    reportData.Append(@"" + data.Description);
-                                                }
-                                                else
-                                                {
-                                                    reportData.Append(@"" + data.DescriptionEnglish);
-                                                }
-                                                reportData.Append(@"</td>");
-                                            }
-                                        }
-                                    }
-                                    reportData.AppendLine(@"</tr>");
-                                }
-                                reportData.AppendLine(@"</tbody>");
-                                reportData.AppendLine(@"</table>");
-                            }
+                    //List<MembershipPermissionDataTransfer> listDailyReportSection = _membershipPermissionRepository.GetDataTransferDailyReportSectionByMembershipIDAndIndustryIDAndCodeToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportSection);
+                    //List<ProductSearchPropertyDataTransfer> listData = _reportRepository.ReportDaily02ByProductSearchIDAndActiveToList(model.ID, true);
+                    //foreach (MembershipPermissionDataTransfer dailyReportSection in listDailyReportSection)
+                    //{
+                    //    if ((dailyReportSection.CategoryID == AppGlobal.DailyReportSectionSummaryID) && (dailyReportSection.Active == true))
+                    //    {
+                    //        if (listData.Count > 0)
+                    //        {
+                    //            reportSummary.AppendLine(@"<b style='color: #ed7d31;'>I - HIGHLIGHT NEWS OF THE DAY</b>");
+                    //            reportSummary.AppendLine(@"<br />");
+                    //            reportSummary.AppendLine(@"<br />");
+                    //            reportSummary.AppendLine(@"<div style='font-size:12px;'>");
+                    //            foreach (ProductSearchPropertyDataTransfer data in listData)
+                    //            {
+                    //                string title = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.Title + "</a></td>";
+                    //                string titleEnglish = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.TitleEnglish + "</a></td>";
+                    //                string mediaURLFull = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.MediaURLFull + "' title='" + data.MediaURLFull + "'>" + data.Media + "</a></td>";
+                    //                if (data.IsSummary == true)
+                    //                {
+                    //                    if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
+                    //                    {
+                    //                        reportSummary.AppendLine(@"<b>" + data.CompanyName + ": " + title + " (" + mediaURLFull + " - " + data.DatePublishString + ")</b>");
+                    //                        reportSummary.AppendLine(@"<br />");
+                    //                        reportSummary.AppendLine(@"" + data.Description);
+                    //                    }
+                    //                    else
+                    //                    {
+                    //                        reportSummary.AppendLine(@"<b>" + data.CompanyName + ": " + titleEnglish + " (" + mediaURLFull + " - " + data.DatePublishString + ")</b>");
+                    //                        reportSummary.AppendLine(@"<br />");
+                    //                        reportSummary.AppendLine(@"" + data.DescriptionEnglish);
+                    //                    }
+                    //                    reportSummary.AppendLine(@"<br />");
+                    //                    reportSummary.AppendLine(@"<br />");
+                    //                }
+                    //            }
+                    //            reportSummary.AppendLine(@"</div>");
+                    //            reportSummary.AppendLine(@"<hr/>");
+                    //        }
+                    //    }
+                    //    if ((dailyReportSection.CategoryID == AppGlobal.DailyReportSectionDataID) && (dailyReportSection.Active == true))
+                    //    {
+                    //        if (listData.Count > 0)
+                    //        {
+                    //            List<MembershipPermissionDataTransfer> listDailyReportColumn = _membershipPermissionRepository.GetDataTransferDailyReportColumnByMembershipIDAndIndustryIDAndCodeToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn);
+                    //            reportData.AppendLine(@"<b style='color: #ed7d31;'>II - INFORMATION</b>");
+                    //            reportData.AppendLine(@"<br />");
+                    //            reportData.AppendLine(@"<br />");
+                    //            reportData.AppendLine(@"<table class='border' style='font-size:12px; width:100%;'>");
+                    //            reportData.AppendLine(@"<thead>");
+                    //            reportData.AppendLine(@"<tr>");
+                    //            reportData.AppendLine(@"<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>No</a></th>");
+                    //            foreach (MembershipPermissionDataTransfer dailyReportColumn in listDailyReportColumn)
+                    //            {
+                    //                if (dailyReportColumn.Active == true)
+                    //                {
+                    //                    reportData.Append(@"<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>");
+                    //                    if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
+                    //                    {
+                    //                        reportData.Append(@"" + dailyReportColumn.Phone);
+                    //                    }
+                    //                    else
+                    //                    {
+                    //                        reportData.Append(@"" + dailyReportColumn.Email);
+                    //                    }
+                    //                    reportData.Append(@"</a></th>");
+                    //                }
+                    //            }
+                    //            reportData.AppendLine(@"</tr>");
+                    //            reportData.AppendLine(@"</thead>");
+                    //            reportData.AppendLine(@"<tbody>");
+                    //            int no = 0;
+                    //            foreach (ProductSearchPropertyDataTransfer data in listData)
+                    //            {
+                    //                string title = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.Title + "</a></td>";
+                    //                string titleEnglish = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.TitleEnglish + "</a></td>";
+                    //                no = no + 1;
+                    //                if (no % 2 == 0)
+                    //                {
+                    //                    reportData.AppendLine(@"<tr style='background-color:#ffffff;'>");
+                    //                }
+                    //                else
+                    //                {
+                    //                    reportData.AppendLine(@"<tr style='background-color:#f1f1f1;'>");
+                    //                }
+                    //                reportData.AppendLine(@"<td style='text-align: center;'>" + no + "</td>");
+                    //                foreach (MembershipPermissionDataTransfer dailyReportColumn in listDailyReportColumn)
+                    //                {
+                    //                    if (dailyReportColumn.Active == true)
+                    //                    {
+                    //                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnDatePublishID)
+                    //                        {
+                    //                            reportData.AppendLine(@"<td style='text-align: center;'>" + data.DatePublishString + "</td>");
+                    //                        }
+                    //                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnCategoryID)
+                    //                        {
+                    //                            reportData.AppendLine(@"<td style='text-align: center;'>" + data.ArticleTypeName + "</td>");
+                    //                        }
+                    //                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnCompanyID)
+                    //                        {
+                    //                            reportData.AppendLine(@"<td style='text-align: center;'>" + data.CompanyName + "</td>");
+                    //                        }
+                    //                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnSentimentID)
+                    //                        {
+                    //                            reportData.Append(@"<td style='text-align: center;'>");
+                    //                            if (data.AssessID == AppGlobal.NegativeID)
+                    //                            {
+                    //                                reportData.Append(@"<span style='color:red;'>" + data.AssessName + "</span>");
+                    //                            }
+                    //                            else
+                    //                            {
+                    //                                reportData.Append(@"" + data.AssessName);
+                    //                            }
+                    //                            reportData.Append(@"</td>");
+                    //                        }
+                    //                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnHeadlineVietnameseID)
+                    //                        {
+                    //                            reportData.AppendLine(@"<td style='text-align: left;'>" + title + "</td>");
+                    //                        }
+                    //                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnHeadlineEnglishID)
+                    //                        {
+                    //                            reportData.AppendLine(@"<td style='text-align: left;'>" + titleEnglish + "</td>");
+                    //                        }
+                    //                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnMediaTitleID)
+                    //                        {
+                    //                            reportData.AppendLine(@"<td style='text-align: center;'>" + data.Media + "</td>");
+                    //                        }
+                    //                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnMediaTypeID)
+                    //                        {
+                    //                            reportData.AppendLine(@"<td style='text-align: center;'>" + data.MediaType + "</td>");
+                    //                        }
+                    //                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnPageID)
+                    //                        {
+                    //                            reportData.AppendLine(@"<td style='text-align: center;'>" + data.Page + "</td>");
+                    //                        }
+                    //                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnAdvertisementID)
+                    //                        {
+                    //                            reportData.AppendLine(@"<td style='text-align: center;'>" + data.AdvertisementValueString + "</td>");
+                    //                        }
+                    //                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnSummaryID)
+                    //                        {
+                    //                            reportData.Append(@"<td style='text-align: center;'>");
+                    //                            if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
+                    //                            {
+                    //                                reportData.Append(@"" + data.Description);
+                    //                            }
+                    //                            else
+                    //                            {
+                    //                                reportData.Append(@"" + data.DescriptionEnglish);
+                    //                            }
+                    //                            reportData.Append(@"</td>");
+                    //                        }
+                    //                    }
+                    //                }
+                    //                reportData.AppendLine(@"</tr>");
+                    //            }
+                    //            reportData.AppendLine(@"</tbody>");
+                    //            reportData.AppendLine(@"</table>");
+                    //        }
 
-                        }
-                    }
+                    //    }
+                    //}
                     html = html.Replace(@"[ReportSummary]", @"" + reportSummary.ToString());
                     html = html.Replace(@"[ReportData]", @"" + reportData.ToString());
                 }
@@ -403,6 +403,11 @@ namespace Commsights.MVC.Controllers
         public ActionResult InitializationByDatePublishBeginAndDatePublishEndAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
         {
             var data = _reportRepository.InitializationByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult InitializationByDatePublishBeginAndDatePublishEndAndIndustryIDAndAllDataAndAllSummaryToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool allData, bool allSummary)
+        {
+            var data = _reportRepository.InitializationByDatePublishBeginAndDatePublishEndAndIndustryIDAndAllDataAndAllSummaryToList(datePublishBegin, datePublishEnd, industryID, allData, allSummary, RequestUserID);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult InitializationByDatePublishToList([DataSourceRequest] DataSourceRequest request, DateTime datePublish)
@@ -488,6 +493,15 @@ namespace Commsights.MVC.Controllers
             {
                 note = AppGlobal.Error + " - " + AppGlobal.EditFail;
             }
+            return Json(note);
+        }
+        public IActionResult UpdateByIndustryIDAndDatePublishBeginAndDatePublishEndAndAllData(int industryID, DateTime datePublishBegin, DateTime datePublishEnd, bool allData)
+        {
+            if (allData == true)
+            {
+                _reportRepository.UpdateByDatePublishBeginAndDatePublishEndAndIndustryIDAndAllData(datePublishBegin, datePublishEnd, industryID, allData, RequestUserID);
+            }
+            string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
             return Json(note);
         }
         public async Task<IActionResult> ExportExcelReportDaily(CancellationToken cancellationToken, int ID)
@@ -1470,7 +1484,7 @@ namespace Commsights.MVC.Controllers
             catch
             {
             }
-            action = "Daily";
+            action = "Index";
             controller = "Report";
             return RedirectToAction(action, controller);
         }
@@ -2019,7 +2033,7 @@ namespace Commsights.MVC.Controllers
             catch
             {
             }
-            action = "Daily";
+            action = "Index";
             controller = "Report";
             return RedirectToAction(action, controller);
         }
@@ -2059,11 +2073,15 @@ namespace Commsights.MVC.Controllers
                                             if (workSheet != null)
                                             {
                                                 int totalRows = workSheet.Dimension.Rows;
+
                                                 for (int i = 2; i <= totalRows; i++)
                                                 {
+                                                    List<ProductProperty> listProductProperty = new List<ProductProperty>();
+                                                    ProductProperty productProperty = new ProductProperty();
                                                     Product model = new Product();
-
                                                     model.Initialization(InitType.Insert, RequestUserID);
+                                                    model.Source = "Google";
+                                                    model.GUICode = AppGlobal.InitGuiCode;
                                                     model.DatePublish = DateTime.Now;
                                                     model.ParentID = AppGlobal.WebsiteID;
                                                     model.CategoryID = AppGlobal.WebsiteID;
@@ -2071,10 +2089,7 @@ namespace Commsights.MVC.Controllers
                                                     model.CompanyID = AppGlobal.CompetitorID;
                                                     model.AssessID = AppGlobal.AssessID;
                                                     model.IndustryID = baseViewModel.IndustryIDUploadGoogleSearch;
-                                                    if (baseViewModel.IsIndustryIDUploadGoogleSearch == true)
-                                                    {
-                                                        model.IndustryID = AppGlobal.IndustryID;
-                                                    }
+
                                                     try
                                                     {
                                                         string datePublish = "";
@@ -2117,27 +2132,6 @@ namespace Commsights.MVC.Controllers
                                                                 }
                                                             }
                                                         }
-                                                        if (workSheet.Cells[i, 2].Value != null)
-                                                        {
-                                                            string companyName = workSheet.Cells[i, 2].Value.ToString().Trim();
-                                                            Membership company = _membershipRepository.GetByAccount(companyName);
-                                                            if (company == null)
-                                                            {
-                                                                company = new Membership();
-                                                                company.Account = companyName;
-                                                                company.FullName = companyName;
-                                                                company.ParentID = AppGlobal.ParentIDCustomer;
-                                                                company.Initialization(InitType.Insert, RequestUserID);
-                                                                _membershipRepository.Create(company);
-                                                            }
-                                                            model.CompanyID = company.ID;
-                                                        }
-                                                        //if (workSheet.Cells[i, 3].Value != null)
-                                                        //{
-                                                        //    string productName = workSheet.Cells[i, 3].Value.ToString().Trim();
-                                                        //    MembershipPermission product = _membershipPermissionRepository.GetByProductName(productName);
-                                                        //    model.ProductID = product.ID;
-                                                        //}
                                                         if (workSheet.Cells[i, 3].Value != null)
                                                         {
                                                             string assessString = workSheet.Cells[i, 3].Value.ToString().Trim();
@@ -2165,6 +2159,48 @@ namespace Commsights.MVC.Controllers
                                                                     break;
                                                             }
                                                         }
+                                                        if (baseViewModel.IsIndustryIDUploadGoogleSearch == true)
+                                                        {
+                                                            model.IndustryID = AppGlobal.IndustryID;
+                                                        }
+                                                        else
+                                                        {
+                                                            model.ArticleTypeID = AppGlobal.TinNganhID;
+                                                            productProperty = new ProductProperty();
+                                                            productProperty.Code = AppGlobal.Industry;
+                                                            productProperty.Initialization(InitType.Insert, RequestUserID);
+                                                            productProperty.GUICode = model.GUICode;
+                                                            productProperty.IndustryID = model.IndustryID;
+                                                            productProperty.ArticleTypeID = model.ArticleTypeID;
+                                                            productProperty.AssessID = model.AssessID;
+                                                            listProductProperty.Add(productProperty);
+                                                        }
+                                                        if (workSheet.Cells[i, 2].Value != null)
+                                                        {
+                                                            string companyName = workSheet.Cells[i, 2].Value.ToString().Trim();
+                                                            Membership company = _membershipRepository.GetByAccount(companyName);
+                                                            if (company == null)
+                                                            {
+                                                                company = new Membership();
+                                                                company.Active = true;
+                                                                company.Account = companyName;
+                                                                company.FullName = companyName;
+                                                                company.ParentID = AppGlobal.ParentIDCustomer;
+                                                                company.Initialization(InitType.Insert, RequestUserID);
+                                                                _membershipRepository.Create(company);
+                                                            }
+                                                            model.CompanyID = company.ID;
+                                                            model.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
+                                                            productProperty = new ProductProperty();
+                                                            productProperty.Code = AppGlobal.Company;
+                                                            productProperty.Initialization(InitType.Insert, RequestUserID);
+                                                            productProperty.GUICode = model.GUICode;
+                                                            productProperty.CompanyID = model.CompanyID;
+                                                            productProperty.ArticleTypeID = model.ArticleTypeID;
+                                                            productProperty.AssessID = model.AssessID;
+                                                            listProductProperty.Add(productProperty);
+                                                        }
+
                                                         if (workSheet.Cells[i, 4].Value != null)
                                                         {
                                                             model.Title = workSheet.Cells[i, 4].Value.ToString().Trim();
@@ -2204,13 +2240,9 @@ namespace Commsights.MVC.Controllers
                                                         }
                                                         if (!string.IsNullOrEmpty(model.URLCode))
                                                         {
-                                                            model.Source = "Google";
-                                                            model.GUICode = AppGlobal.InitGuiCode;
                                                             model.Description = "";
                                                             model.MetaTitle = AppGlobal.SetName(model.Title);
                                                             model.CategoryID = model.ParentID;
-                                                            model.TitleEnglish = "";
-                                                            List<ProductProperty> listProductProperty = new List<ProductProperty>();
                                                             _productRepository.FilterProduct(model, listProductProperty, RequestUserID);
                                                             Product product = _productRepository.GetByURLCode(model.URLCode);
                                                             if (product == null)
@@ -2241,12 +2273,14 @@ namespace Commsights.MVC.Controllers
                                                                     }
                                                                     _productPropertyRepository.Range(listProductProperty);
                                                                 }
-                                                                result = result + 1;
+
                                                             }
                                                         }
+                                                        result = result + 1;
                                                     }
-                                                    catch
+                                                    catch (Exception e)
                                                     {
+                                                        result = 0;
                                                     }
                                                 }
                                             }
@@ -2263,7 +2297,7 @@ namespace Commsights.MVC.Controllers
             }
             if (result > 0)
             {
-                action = "Daily";
+                action = "Index";
                 controller = "Report";
             }
             return RedirectToAction(action, controller);
@@ -2307,7 +2341,6 @@ namespace Commsights.MVC.Controllers
                                                 for (int i = 2; i <= totalRows; i++)
                                                 {
                                                     Product model = new Product();
-
                                                     model.Initialization(InitType.Insert, RequestUserID);
                                                     model.DatePublish = DateTime.Now;
                                                     model.ParentID = AppGlobal.WebsiteID;
@@ -2528,7 +2561,7 @@ namespace Commsights.MVC.Controllers
             }
             if (result > 0)
             {
-                action = "Daily";
+                action = "Index";
                 controller = "Report";
             }
             return RedirectToAction(action, controller);

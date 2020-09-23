@@ -429,6 +429,18 @@ namespace Commsights.Data.Repositories
         }
         public void FilterProduct(Product product, List<ProductProperty> listProductProperty, int RequestUserID)
         {
+            if(string.IsNullOrEmpty(product.Title))
+            {
+                product.Title = "";
+            }
+            if (string.IsNullOrEmpty(product.Description))
+            {
+                product.Description = "";
+            }
+            if (string.IsNullOrEmpty(product.ContentMain))
+            {
+                product.ContentMain = "";
+            }
             int order = 0;
             string keyword = "";
             bool title = false;
@@ -476,12 +488,12 @@ namespace Commsights.Data.Repositories
                     if (check > 0)
                     {
                         ProductProperty productProperty = new ProductProperty();
+                        productProperty.Code = AppGlobal.Product;
                         productProperty.Initialization(InitType.Insert, RequestUserID);
                         productProperty.ParentID = 0;
                         productProperty.ArticleTypeID = AppGlobal.TinSanPhamID;
-                        productProperty.AssessID = AppGlobal.AssessID;
-                        productProperty.GUICode = product.GUICode;
-                        productProperty.Code = AppGlobal.Product;
+                        productProperty.AssessID = product.AssessID;
+                        productProperty.GUICode = product.GUICode;                        
                         segment = _configResposistory.GetByID(listProduct[i].SegmentID.Value);
                         if (order == 0)
                         {
@@ -583,12 +595,12 @@ namespace Commsights.Data.Repositories
                     if (check > 0)
                     {
                         ProductProperty productProperty = new ProductProperty();
+                        productProperty.Code = AppGlobal.Segment;
                         productProperty.Initialization(InitType.Insert, RequestUserID);
                         productProperty.ParentID = 0;
                         productProperty.ArticleTypeID = AppGlobal.TinNganhID;
-                        productProperty.AssessID = AppGlobal.AssessID;
-                        productProperty.GUICode = product.GUICode;
-                        productProperty.Code = AppGlobal.Segment;
+                        productProperty.AssessID = product.AssessID;
+                        productProperty.GUICode = product.GUICode;                        
                         segment = _configResposistory.GetByID(listSegment[i].ParentID.Value);
                         if (order == 0)
                         {
@@ -671,12 +683,12 @@ namespace Commsights.Data.Repositories
                     if (check > 0)
                     {
                         ProductProperty productProperty = new ProductProperty();
+                        productProperty.Code = AppGlobal.Industry;
                         productProperty.Initialization(InitType.Insert, RequestUserID);
                         productProperty.ParentID = 0;
                         productProperty.ArticleTypeID = AppGlobal.TinNganhID;
-                        productProperty.AssessID = AppGlobal.AssessID;
-                        productProperty.GUICode = product.GUICode;
-                        productProperty.Code = AppGlobal.Industry;
+                        productProperty.AssessID = product.AssessID;
+                        productProperty.GUICode = product.GUICode;                       
                         if (order == 0)
                         {
                             product.IndustryID = listIndustry[i].ID;
@@ -732,12 +744,12 @@ namespace Commsights.Data.Repositories
                     if (check > 0)
                     {
                         ProductProperty productProperty = new ProductProperty();
+                        productProperty.Code = AppGlobal.Company;
                         productProperty.Initialization(InitType.Insert, RequestUserID);
                         productProperty.ParentID = 0;
                         productProperty.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
-                        productProperty.AssessID = AppGlobal.AssessID;
-                        productProperty.GUICode = product.GUICode;
-                        productProperty.Code = AppGlobal.Company;
+                        productProperty.AssessID = product.AssessID;
+                        productProperty.GUICode = product.GUICode;                        
                         if (order == 0)
                         {
                             product.CompanyID = listCompany[i].ID;

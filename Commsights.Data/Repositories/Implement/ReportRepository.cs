@@ -175,7 +175,7 @@ namespace Commsights.Data.Repositories
                 }
             }
             return list;
-        }       
+        }
         public List<ProductDataTransfer> GetDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
         {
             List<ProductDataTransfer> list = new List<ProductDataTransfer>();
@@ -189,7 +189,7 @@ namespace Commsights.Data.Repositories
                     new SqlParameter("@DatePublishEnd",datePublishEnd),
                     new SqlParameter("@IndustryID",industryID)
                     };
-                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectDataTransferByDatePublishBeginAndDatePublishEndAndIndustryID", parameters);
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportSelectDataTransferByDatePublishBeginAndDatePublishEndAndIndustryID", parameters);
                 list = SQLHelper.ToList<ProductDataTransfer>(dt);
                 for (int i = 0; i < list.Count; i++)
                 {
@@ -221,6 +221,43 @@ namespace Commsights.Data.Repositories
                 list = SQLHelper.ToList<ProductSearchDataTransfer>(dt);
             }
             return list;
+        }
+        public List<ProductSearchDataTransfer> InitializationByDatePublishBeginAndDatePublishEndAndIndustryIDAndAllDataAndAllSummaryToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool allData, bool allSummary, int requestUserID)
+        {
+            List<ProductSearchDataTransfer> list = new List<ProductSearchDataTransfer>();
+            if (industryID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@DatePublishBegin",datePublishBegin),
+                new SqlParameter("@DatePublishEnd",datePublishEnd),
+                new SqlParameter("@IndustryID",industryID),
+                 new SqlParameter("@AllData",allData),
+                  new SqlParameter("@AllSummary",allSummary),
+                  new SqlParameter("@RequestUserID",requestUserID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportDailyInitializationByDatePublishBeginAndDatePublishEndAndIndustryIDAndAllDataAndAllSummary", parameters);
+                list = SQLHelper.ToList<ProductSearchDataTransfer>(dt);
+            }
+            return list;
+        }
+        public string UpdateByDatePublishBeginAndDatePublishEndAndIndustryIDAndAllData(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool allData, int requestUserID)
+        {
+            string result = "";
+            if (industryID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@DatePublishBegin",datePublishBegin),
+                new SqlParameter("@DatePublishEnd",datePublishEnd),
+                new SqlParameter("@IndustryID",industryID),
+                 new SqlParameter("@AllData",allData),
+                  new SqlParameter("@RequestUserID",requestUserID),
+                };
+                result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ReportDailyUpdateByDatePublishBeginAndDatePublishEndAndIndustryIDAndAllData", parameters);
+
+            }
+            return result;
         }
     }
 }
