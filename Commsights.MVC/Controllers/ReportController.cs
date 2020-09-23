@@ -2168,10 +2168,12 @@ namespace Commsights.MVC.Controllers
                                                         if (workSheet.Cells[i, 4].Value != null)
                                                         {
                                                             model.Title = workSheet.Cells[i, 4].Value.ToString().Trim();
+                                                            model.URLCode = workSheet.Cells[i, 4].Hyperlink.AbsoluteUri.Trim();
                                                         }
                                                         if (workSheet.Cells[i, 5].Value != null)
                                                         {
                                                             model.TitleEnglish = workSheet.Cells[i, 5].Value.ToString().Trim();
+                                                            model.URLCode = workSheet.Cells[i, 5].Hyperlink.AbsoluteUri.Trim();
                                                         }
                                                         if (workSheet.Cells[i, 6].Value != null)
                                                         {
