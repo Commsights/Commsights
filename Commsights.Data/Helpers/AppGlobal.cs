@@ -26,6 +26,119 @@ namespace Commsights.Data.Helpers
         #endregion
 
         #region AppSettings 
+        public static int DailyReportColumnDatePublishID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DailyReportColumnDatePublishID").Value);
+            }
+        }
+        public static int DailyReportColumnCategoryID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DailyReportColumnCategoryID").Value);
+            }
+        }
+        public static int DailyReportColumnCompanyID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DailyReportColumnCompanyID").Value);
+            }
+        }
+        public static int DailyReportColumnSentimentID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DailyReportColumnSentimentID").Value);
+            }
+        }
+       
+        public static int DailyReportColumnHeadlineVietnameseID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DailyReportColumnHeadlineVietnameseID").Value);
+            }
+        }
+        public static int DailyReportColumnHeadlineEnglishID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DailyReportColumnHeadlineEnglishID").Value);
+            }
+        }
+        public static int DailyReportColumnMediaTitleID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DailyReportColumnMediaTitleID").Value);
+            }
+        }
+        public static int DailyReportColumnMediaTypeID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DailyReportColumnMediaTypeID").Value);
+            }
+        }
+        public static int DailyReportColumnPageID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DailyReportColumnPageID").Value);
+            }
+        }
+        public static int DailyReportColumnAdvertisementID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DailyReportColumnAdvertisementID").Value);
+            }
+        }
+        public static int DailyReportColumnSummaryID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DailyReportColumnSummaryID").Value);
+            }
+        }
+        public static int DailyReportSectionDataID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DailyReportSectionDataID").Value);
+            }
+        }
+        public static int DailyReportSectionSummaryID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DailyReportSectionSummaryID").Value);
+            }
+        }
+        public static int DailyReportSectionExtraID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DailyReportSectionExtraID").Value);
+            }
+        }
         public static string PhoneReportHTML
         {
             get

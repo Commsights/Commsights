@@ -23,11 +23,24 @@ namespace Commsights.Data.DataTransferObject
                 return result;
             }
         }
+        public string DatePublishStringEnglish
+        {
+            get
+            {
+                string result = "";
+                if (DatePublish != null)
+                {
+                    result = DatePublish.Value.ToString("MM/dd/yyyy");
+                }
+                return result;
+            }
+        }
         public string TitleEnglish { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string URLCode { get; set; }
         public string Media { get; set; }
+        public string MediaURLFull { get; set; }
         public string MediaType { get; set; }
         public string ChannelName { get; set; }
         public string ArticleTypeName { get; set; }
@@ -45,6 +58,8 @@ namespace Commsights.Data.DataTransferObject
                 return result;
             }
         }
+        public string Page { get; set; }
+        public string DescriptionEnglish { get; set; }        
         public ModelTemplate ArticleType { get; set; }
         public ModelTemplate Company { get; set; }
         public ModelTemplate AssessType { get; set; }

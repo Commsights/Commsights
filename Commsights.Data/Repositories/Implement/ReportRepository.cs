@@ -175,7 +175,7 @@ namespace Commsights.Data.Repositories
                 }
             }
             return list;
-        }
+        }       
         public List<ProductDataTransfer> GetDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
         {
             List<ProductDataTransfer> list = new List<ProductDataTransfer>();
