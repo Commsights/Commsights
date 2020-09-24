@@ -510,6 +510,11 @@ namespace Commsights.MVC.Controllers
             var data = _reportRepository.GetDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult ReportDailyByProductSearchIDAndActiveToListToHTML([DataSourceRequest] DataSourceRequest request, int productSearchID)
+        {
+            var data = _reportRepository.ReportDailyByProductSearchIDAndActiveToListToHTML(productSearchID, true);
+            return Json(data.ToDataSourceResult(request));
+        }
         public IActionResult UpdateDataTransfer(ProductDataTransfer model)
         {
             Initialization(model);
@@ -558,6 +563,113 @@ namespace Commsights.MVC.Controllers
             }
             string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
             return Json(note);
+        }
+        public async Task<IActionResult> ExportExcelReportDailyByProductSearchIDAndActive(CancellationToken cancellationToken, int ID)
+        {
+            await Task.Yield();
+            var list = _reportRepository.ReportDailyByProductSearchIDAndActiveToListToHTML(ID, true);
+            var stream = new MemoryStream();
+            using (var package = new ExcelPackage(stream))
+            {
+                var workSheet = package.Workbook.Worksheets.Add("Sheet1");
+                workSheet.Cells[1, 1].Value = "No";
+                workSheet.Cells[1, 1].Style.Font.Bold = true;
+                workSheet.Cells[1, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 2].Value = "Publish";
+                workSheet.Cells[1, 2].Style.Font.Bold = true;
+                workSheet.Cells[1, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 3].Value = "Category";
+                workSheet.Cells[1, 3].Style.Font.Bold = true;
+                workSheet.Cells[1, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 4].Value = "Company";
+                workSheet.Cells[1, 4].Style.Font.Bold = true;
+                workSheet.Cells[1, 4].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 5].Value = "Sentiment";
+                workSheet.Cells[1, 5].Style.Font.Bold = true;
+                workSheet.Cells[1, 5].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 6].Value = "Headline (Vie)";
+                workSheet.Cells[1, 6].Style.Font.Bold = true;
+                workSheet.Cells[1, 6].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 7].Value = "Headline (Eng)";
+                workSheet.Cells[1, 7].Style.Font.Bold = true;
+                workSheet.Cells[1, 7].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 8].Value = "Media";
+                workSheet.Cells[1, 8].Style.Font.Bold = true;
+                workSheet.Cells[1, 8].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 9].Value = "Media type";
+                workSheet.Cells[1, 9].Style.Font.Bold = true;
+                workSheet.Cells[1, 9].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 10].Value = "Ad value";
+                workSheet.Cells[1, 10].Style.Font.Bold = true;
+                workSheet.Cells[1, 10].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 11].Value = "Summary";
+                workSheet.Cells[1, 11].Style.Font.Bold = true;
+                workSheet.Cells[1, 11].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                int i = 0;
+                int no = 0;
+                for (int row = 2; row <= list.Count + 1; row++)
+                {
+                    no = no + 1;
+                    workSheet.Cells[row, 1].Value = no.ToString();
+                    workSheet.Cells[row, 2].Value = list[i].DatePublishString;
+                    workSheet.Cells[row, 3].Value = list[i].ArticleTypeName;
+                    workSheet.Cells[row, 4].Value = list[i].CompanyName;
+                    workSheet.Cells[row, 5].Value = list[i].AssessName;
+                    string assessName = list[i].AssessName.ToLower();
+                    if (assessName == "negative")
+                    {
+                        workSheet.Cells[row, 5].Style.Font.Color.SetColor(System.Drawing.Color.Red);
+                    }
+                    workSheet.Cells[row, 6].Value = list[i].Title;
+                    if (!string.IsNullOrEmpty(list[i].Title))
+                    {
+                        workSheet.Cells[row, 6].Hyperlink = new Uri(list[i].URLCode);
+                        workSheet.Cells[row, 6].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                    }
+                    workSheet.Cells[row, 7].Value = list[i].TitleEnglish;
+                    if (!string.IsNullOrEmpty(list[i].TitleEnglish))
+                    {
+                        workSheet.Cells[row, 7].Hyperlink = new Uri(list[i].URLCode);
+                        workSheet.Cells[row, 7].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                    }
+                    workSheet.Cells[row, 8].Value = list[i].Media;
+                    workSheet.Cells[row, 9].Value = list[i].MediaType;
+                    workSheet.Cells[row, 10].Value = list[i].AdvertisementValueString;
+                    workSheet.Cells[row, 11].Value = list[i].Summary;
+                    i = i + 1;
+                }
+                workSheet.Column(1).AutoFit();
+                workSheet.Column(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Column(2).AutoFit();
+                workSheet.Column(2).Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                workSheet.Column(3).AutoFit();
+                workSheet.Column(4).AutoFit();
+                workSheet.Column(5).AutoFit();
+                workSheet.Column(6).AutoFit();
+                workSheet.Column(7).AutoFit();
+                workSheet.Column(8).AutoFit();
+                workSheet.Column(9).AutoFit();
+                workSheet.Column(10).AutoFit();
+                workSheet.Column(11).AutoFit();
+                workSheet.Column(12).AutoFit();
+                workSheet.Column(12).Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                workSheet.Column(13).AutoFit();
+                workSheet.Column(14).AutoFit();
+                workSheet.Column(14).Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                package.Save();
+            }
+            stream.Position = 0;
+            string excelName = @"ReportDaily_" + AppGlobal.DateTimeCode + ".xlsx";
+            ProductSearchDataTransfer model = new ProductSearchDataTransfer();
+            if (ID > 0)
+            {
+                model = _productSearchRepository.GetDataTransferByID(ID);
+                if (model != null)
+                {
+                    excelName = model.CompanyName + "_" + model.Title + "_" + AppGlobal.DateTimeCode + ".xlsx";
+                }
+            }
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
         }
         public async Task<IActionResult> ExportExcelReportDaily(CancellationToken cancellationToken, int ID)
         {
