@@ -2253,6 +2253,22 @@ namespace Commsights.MVC.Controllers
                                                             productProperty.CompanyID = model.CompanyID;
                                                             productProperty.ArticleTypeID = model.ArticleTypeID;
                                                             productProperty.AssessID = model.AssessID;
+                                                            productProperty.IndustryID = model.IndustryID;
+                                                            MembershipPermission membershipPermission = _membershipPermissionRepository.GetByMembershipIDAndAndCodeAndActive(productProperty.CompanyID.Value, AppGlobal.Industry, true);
+                                                            if (productProperty.IndustryID == AppGlobal.IndustryID)
+                                                            {
+                                                                if (membershipPermission != null)
+                                                                {
+                                                                    productProperty.IndustryID = membershipPermission.IndustryID;
+                                                                }
+                                                            }
+                                                            if (model.IndustryID == AppGlobal.IndustryID)
+                                                            {
+                                                                if (membershipPermission != null)
+                                                                {
+                                                                    productProperty.IndustryID = membershipPermission.IndustryID;
+                                                                }
+                                                            }
                                                             listProductProperty.Add(productProperty);
                                                         }
 

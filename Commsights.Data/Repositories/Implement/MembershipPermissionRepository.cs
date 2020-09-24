@@ -33,7 +33,7 @@ namespace Commsights.Data.Repositories
         public List<MembershipPermission> GetByMembershipIDAndIndustryIDAndCodeToList(int membershipID, int industryID, string code)
         {
             return _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.IndustryID == industryID && item.Code.Equals(code)).OrderBy(item => item.DateUpdated).ToList();
-        }        
+        }
         public List<MembershipPermission> GetByCodeToList(string code)
         {
             return _context.MembershipPermission.Where(item => item.Code.Equals(code)).OrderBy(item => item.ProductName).ToList();
@@ -45,6 +45,15 @@ namespace Commsights.Data.Repositories
         public MembershipPermission GetByProductName(string productName)
         {
             return _context.MembershipPermission.FirstOrDefault(item => item.ProductName.Equals(productName));
+        }
+        public MembershipPermission GetByMembershipIDAndAndCodeAndActive(int membershipID, string code, bool active)
+        {
+            MembershipPermission model = _context.MembershipPermission.FirstOrDefault(item => item.MembershipID == membershipID && item.Code.Equals(code) && item.Active == active);
+            if (model == null)
+            {
+                model = _context.MembershipPermission.FirstOrDefault(item => item.MembershipID == membershipID && item.Code.Equals(code));
+            }
+            return model;
         }
         public List<MembershipPermissionDataTransfer> GetDataTransferMembershipBySegmentIDAndCodeToList(int segmentID, string code)
         {
@@ -412,7 +421,7 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
-        
+
         public void InitializationMenuPermission(int membershipID, int requestUserID)
         {
             List<MembershipPermission> list = _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.MenuID > 0).ToList();
