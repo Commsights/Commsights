@@ -11,22 +11,30 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class='form-group'>
                             <label for='Industry'>Industry</label>
                             @(Html.TextBoxFor(Model => Model.IndustryName, new { placeholder = "Industry", @class = "form-control", @readonly = "readonly" }))
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class='form-group'>
                             <label for='DatePublishBegin'>From</label>
                             @(Html.TextBoxFor(Model => Model.DatePublishBegin, "{0:dd/MM/yyyy}", new { placeholder = "Date publish begin", @class = "form-control text-right", @readonly = "readonly" }))
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class='form-group'>
                             <label for='DatePublishEnd'>To</label>
                             @(Html.TextBoxFor(Model => Model.DatePublishEnd, "{0:dd/MM/yyyy}", new { placeholder = "Date publish end", @class = "form-control text-right", @readonly = "readonly" }))
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class='form-group'>
+                            <label for='DatePublishEnd'>Send mail</label>
+                            <button type="button" class="btn btn-success" onclick="onSendMail()">
+                                <span class="fas fa-paper-plane"></span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -86,10 +94,37 @@
     .Width(400)
 )
 <script>
+
     function filterReport(e) {
         var industryIDValue = $("#IndustryID").val();
         var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
-        var datePublishEndValue = toDate02($("#DatePublishEnd").val());    
+        var datePublishEndValue = toDate02($("#DatePublishEnd").val());
         return { datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, industryID: industryIDValue };
+    }
+    function onSendMail() {
+        BeginRequestHandler();
+        var industryIDValue = $("#IndustryID").val();
+        var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
+        var datePublishEndValue = toDate02($("#DatePublishEnd").val());
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("SendMailReportDaily", "Report")",
+            data: {
+                industryID: industryIDValue,
+                datePublishBegin: datePublishBeginValue,
+                datePublishEnd: datePublishEndValue
+            },
+             success: function (e) {              
+                 var messageType = e.split('-')[0];
+                 var note = e.split('-')[1];
+                 var notification = $("#Notification").data("kendoNotification");
+                 notification.show(note, messageType);
+                $("#ProductSearchDataTransfer").data("kendoGrid").dataSource.read();
+                EndRequestHandler();
+            }
+         }).done(() => {
+            
+        });
+
     }
 </script>

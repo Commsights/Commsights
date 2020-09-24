@@ -7,16 +7,16 @@ namespace Commsights.Service.Mail
 {
     public class Mail
     {
-        private protected Mail() { }
+        //private protected Mail() { }
 
-        private Mail _instance { get; set; }
+        //private Mail _instance { get; set; }
 
-        public Mail GetInstance()
-        {
-            if (this._instance != null)
-                return this._instance;
-            return new Mail();
-        }
+        //public Mail GetInstance()
+        //{
+        //    if (this._instance != null)
+        //        return this._instance;
+        //    return new Mail();
+        //}
 
         public string FromMail { get; set; }
 
@@ -42,18 +42,33 @@ namespace Commsights.Service.Mail
 
         public void Initialization()
         {
+            if (string.IsNullOrEmpty(this.STMPServer))
+            {
+                this.STMPServer = AppGlobal.SMTPServer;
+            }
             if (string.IsNullOrEmpty(this.FromMail))
-                this.FromMail = AppGlobal.MailUsername;
-
+            {
+                this.FromMail = AppGlobal.MasterEmailUser;
+            }
             if (string.IsNullOrEmpty(this.Username))
-                this.Username = AppGlobal.MailUsername;
-
+            {
+                this.Username = AppGlobal.MasterEmailUser;
+            }
             if (string.IsNullOrEmpty(this.Password))
-                this.Password = AppGlobal.MailPassword;
-
+            {
+                this.Password = AppGlobal.MasterEmailPassword;
+            }
+            if (string.IsNullOrEmpty(this.Display))
+            {
+                this.Display = AppGlobal.MasterEmailDisplay;
+            }
+            if (string.IsNullOrEmpty(this.Subject))
+            {
+                this.Subject = AppGlobal.MasterEmailSubject;
+            }
+            this.SMTPPort = AppGlobal.SMTPPort;
             this.IsMailBodyHtml = true;
             this.IsUsingSSL = true;
-            this.SMTPPort = AppGlobal.MailSTMPPort;
         }
     }
 }

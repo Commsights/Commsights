@@ -21,6 +21,7 @@ using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using System.Diagnostics.Eventing.Reader;
+using Commsights.Service.Mail;
 
 namespace Commsights.MVC.Controllers
 {
@@ -35,7 +36,8 @@ namespace Commsights.MVC.Controllers
         private readonly IMembershipRepository _membershipRepository;
         private readonly IMembershipPermissionRepository _membershipPermissionRepository;
         private readonly IConfigRepository _configResposistory;
-        public ReportController(IHostingEnvironment hostingEnvironment, IConfigRepository configResposistory, IMembershipRepository membershipRepository, IMembershipPermissionRepository membershipPermissionRepository, IProductRepository productRepository, IProductPropertyRepository productPropertyRepository, IReportRepository reportRepository, IProductSearchRepository productSearchRepository, IProductSearchPropertyRepository productSearchPropertyRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
+        private readonly IMailService _mailService;
+        public ReportController(IHostingEnvironment hostingEnvironment, IMailService mailService, IConfigRepository configResposistory, IMembershipRepository membershipRepository, IMembershipPermissionRepository membershipPermissionRepository, IProductRepository productRepository, IProductPropertyRepository productPropertyRepository, IReportRepository reportRepository, IProductSearchRepository productSearchRepository, IProductSearchPropertyRepository productSearchPropertyRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
             _hostingEnvironment = hostingEnvironment;
             _reportRepository = reportRepository;
@@ -46,6 +48,7 @@ namespace Commsights.MVC.Controllers
             _membershipRepository = membershipRepository;
             _membershipPermissionRepository = membershipPermissionRepository;
             _configResposistory = configResposistory;
+            _mailService = mailService;
         }
         private void Initialization(ProductSearchDataTransfer model)
         {
@@ -149,192 +152,239 @@ namespace Commsights.MVC.Controllers
             if (ID > 0)
             {
                 model = _productSearchRepository.GetDataTransferByID(ID);
-                string html = "";
-                var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "html", "ReportDailySub.html");
-                using (var stream = new FileStream(physicalPath, FileMode.Open))
+                model = InitializationReportDailyHTML(model, "ReportDailySub.html");
+            }
+
+            return View(model);
+        }
+        public IActionResult SendMailReportDaily(int industryID, DateTime datePublishBegin, DateTime datePublishEnd)
+        {
+            List<ProductSearchDataTransfer> list = _productSearchRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
+            foreach (ProductSearchDataTransfer item in list)
+            {
+                ProductSearchDataTransfer model = InitializationReportDailyHTMLSendMail(item, "ReportDaily.html");
+                Commsights.Service.Mail.Mail mail = new Service.Mail.Mail();
+                mail.Initialization();
+                mail.Content = model.Note;
+                mail.Subject = "Daily Report (" + item.CompanyName + " - CommSights ) " + item.DateSearch.ToString("dd.MM.yyyy");
+                mail.ToMail = "vietnam.commsights@gmail.com";
+                //mail.ToMail = "khanh.nguyen@commsightsvn.com,ngoc.huynh@commsightsvn.com";
+                _mailService.Send(mail);
+            }
+            string note = AppGlobal.Success + " - " + AppGlobal.SendMailSuccess;
+            return Json(note);
+        }
+        public ProductSearchDataTransfer InitializationReportDailyHTMLSendMail(ProductSearchDataTransfer model, string fileName)
+        {
+            string html = "";
+            var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "html", fileName);
+            using (var stream = new FileStream(physicalPath, FileMode.Open))
+            {
+                using (StreamReader reader = new StreamReader(stream))
                 {
-                    using (StreamReader reader = new StreamReader(stream))
-                    {
-                        html = reader.ReadToEnd();
-                    }
+                    html = reader.ReadToEnd();
                 }
-                if (!string.IsNullOrEmpty(html))
+            }
+            if (!string.IsNullOrEmpty(html))
+            {
+                html = html.Replace(@"[Logo01URLFull]", @"" + AppGlobal.Logo01URLFull);
+                html = html.Replace(@"[CompanyTitleEnglish]", @"" + AppGlobal.CompanyTitleEnglish);
+                html = html.Replace(@"[WebsiteHTML]", @"" + AppGlobal.WebsiteHTML);
+                html = html.Replace(@"[PhoneReportHTML]", @"" + AppGlobal.PhoneReportHTML);
+                html = html.Replace(@"[EmailReportHTML]", @"" + AppGlobal.EmailReportHTML);
+                html = html.Replace(@"[FacebookHTML]", @"" + AppGlobal.FacebookHTML);
+                html = html.Replace(@"[GoogleMapHTML]", @"" + AppGlobal.GoogleMapHTML);
+                html = html.Replace(@"[PreviewDate]", @"" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"));
+                html = html.Replace(@"[CompanyName]", @"" + model.CompanyName);
+                html = html.Replace(@"[Title]", @"DAILY REPORT");
+                html = html.Replace(@"[DateSearchString]", @"" + model.DateSearch.ToString("dd/MM/yyyy"));
+                StringBuilder reportData = new StringBuilder();
+                StringBuilder reportSummary = new StringBuilder();
+                List<MembershipPermission> listDailyReportSection = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCodeToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportSection);
+                List<ProductSearchPropertyDataTransfer> listData = _reportRepository.ReportDailyByProductSearchIDAndActiveToListToHTML(model.ID, true);
+                foreach (MembershipPermission dailyReportSection in listDailyReportSection)
                 {
-                    html = html.Replace(@"[Background_Logo_Opacity10_1400_1000URLFUll]", @"" + AppGlobal.Background_Logo_Opacity10_1400_1000URLFUll);
-                    html = html.Replace(@"[Logo01URLFull]", @"" + AppGlobal.Logo01URLFull);
-                    html = html.Replace(@"[CompanyTitleEnglish]", @"" + AppGlobal.CompanyTitleEnglish);
-                    html = html.Replace(@"[TaxCode]", @"" + AppGlobal.TaxCode);
-                    html = html.Replace(@"[PhoneReportHTML]", @"" + AppGlobal.PhoneReportHTML);
-                    html = html.Replace(@"[EmailReportHTML]", @"" + AppGlobal.EmailReportHTML);
-                    html = html.Replace(@"[FacebookHTML]", @"" + AppGlobal.FacebookHTML);
-                    html = html.Replace(@"[GoogleMapHTML]", @"" + AppGlobal.GoogleMapHTML);
-                    html = html.Replace(@"[PreviewDate]", @"" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"));
-                    html = html.Replace(@"[CompanyName]", @"" + model.CompanyName);
-                    html = html.Replace(@"[Title]", @"" + model.Title);
-                    StringBuilder reportData = new StringBuilder();
-                    StringBuilder reportSummary = new StringBuilder();
-                    List<MembershipPermission> listDailyReportSection = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCodeToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportSection);
-                    List<ProductSearchPropertyDataTransfer> listData = _reportRepository.ReportDailyByProductSearchIDAndActiveToListToHTML(model.ID, true);
-                    foreach (MembershipPermission dailyReportSection in listDailyReportSection)
+                    if ((dailyReportSection.CategoryID == AppGlobal.DailyReportSectionSummaryID) && (dailyReportSection.Active == true))
                     {
-                        if ((dailyReportSection.CategoryID == AppGlobal.DailyReportSectionSummaryID) && (dailyReportSection.Active == true))
+                        if (listData.Count > 0)
                         {
-                            if (listData.Count > 0)
+                            reportSummary.AppendLine(@"<b style='color: #ed7d31; font-size:14px;'>I - HIGHLIGHT NEWS OF THE DAY</b>");
+                            reportSummary.AppendLine(@"<br />");
+                            reportSummary.AppendLine(@"<br />");
+                            reportSummary.AppendLine(@"<div style='font-size:12px;'>");
+                            foreach (ProductSearchPropertyDataTransfer data in listData)
                             {
-                                reportSummary.AppendLine(@"<b style='color: #ed7d31;'>I - HIGHLIGHT NEWS OF THE DAY</b>");
-                                reportSummary.AppendLine(@"<br />");
-                                reportSummary.AppendLine(@"<br />");
-                                reportSummary.AppendLine(@"<div style='font-size:12px;'>");
-                                foreach (ProductSearchPropertyDataTransfer data in listData)
+                                string title = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.Title + "</a></td>";
+                                string titleEnglish = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.TitleEnglish + "</a></td>";
+                                string mediaURLFull = "" + data.Media + "";
+                                if (data.IsSummary == true)
                                 {
-                                    string title = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.Title + "</a></td>";
-                                    string titleEnglish = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.TitleEnglish + "</a></td>";
-                                    string mediaURLFull = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.MediaURLFull + "' title='" + data.MediaURLFull + "'>" + data.Media + "</a></td>";
-                                    if (data.IsSummary == true)
+                                    if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
                                     {
-                                        if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
-                                        {
-                                            reportSummary.AppendLine(@"<b>" + data.CompanyName + ": " + title + " (" + mediaURLFull + " - " + data.DatePublishString + ")</b>");
-                                            reportSummary.AppendLine(@"<br />");
-                                            reportSummary.AppendLine(@"" + data.Description);
-                                        }
-                                        else
-                                        {
-                                            reportSummary.AppendLine(@"<b>" + data.CompanyName + ": " + titleEnglish + " (" + mediaURLFull + " - " + data.DatePublishString + ")</b>");
-                                            reportSummary.AppendLine(@"<br />");
-                                            reportSummary.AppendLine(@"" + data.DescriptionEnglish);
-                                        }
+                                        reportSummary.AppendLine(@"<b>" + data.CompanyName + ": " + title + " (" + mediaURLFull + " - " + data.DatePublishString + ")</b>");
                                         reportSummary.AppendLine(@"<br />");
-                                        reportSummary.AppendLine(@"<br />");
-                                    }
-                                }
-                                reportSummary.AppendLine(@"</div>");
-                                reportSummary.AppendLine(@"<hr/>");
-                            }
-                        }
-                        if ((dailyReportSection.CategoryID == AppGlobal.DailyReportSectionDataID) && (dailyReportSection.Active == true))
-                        {
-                            if (listData.Count > 0)
-                            {
-                                List<MembershipPermission> listDailyReportColumn = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCodeToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn);
-                                reportData.AppendLine(@"<b style='color: #ed7d31;'>II - INFORMATION</b>");
-                                reportData.AppendLine(@"<br />");
-                                reportData.AppendLine(@"<br />");
-                                reportData.AppendLine(@"<table class='border' style='font-size:12px; width:100%;'>");
-                                reportData.AppendLine(@"<thead>");
-                                reportData.AppendLine(@"<tr>");
-                                reportData.AppendLine(@"<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>No</a></th>");
-                                foreach (MembershipPermission dailyReportColumn in listDailyReportColumn)
-                                {
-                                    if (dailyReportColumn.Active == true)
-                                    {
-                                        reportData.Append(@"<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>");
-                                        if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
-                                        {
-                                            reportData.Append(@"" + dailyReportColumn.Phone);
-                                        }
-                                        else
-                                        {
-                                            reportData.Append(@"" + dailyReportColumn.Email);
-                                        }
-                                        reportData.Append(@"</a></th>");
-                                    }
-                                }
-                                reportData.AppendLine(@"</tr>");
-                                reportData.AppendLine(@"</thead>");
-                                reportData.AppendLine(@"<tbody>");
-                                int no = 0;
-                                int DailyReportColumnDatePublishID = 0;
-                                int DailyReportColumnCategoryID = 0;
-                                int DailyReportColumnCompanyID = 0;
-                                int DailyReportColumnSentimentID = 0;
-                                int DailyReportColumnHeadlineVietnameseID = 0;
-                                int DailyReportColumnHeadlineEnglishID = 0;
-                                int DailyReportColumnMediaTitleID = 0;
-                                int DailyReportColumnMediaTypeID = 0;
-                                int DailyReportColumnPageID = 0;
-                                int DailyReportColumnAdvertisementID = 0;
-                                int DailyReportColumnSummaryID = 0;
-                                foreach (MembershipPermission dailyReportColumn in listDailyReportColumn)
-                                {
-                                    if (dailyReportColumn.Active == true)
-                                    {
-                                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnDatePublishID)
-                                        {
-                                            DailyReportColumnDatePublishID = dailyReportColumn.ID;
-                                        }
-                                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnCategoryID)
-                                        {
-                                            DailyReportColumnCategoryID = dailyReportColumn.ID;
-                                        }
-                                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnCompanyID)
-                                        {
-                                            DailyReportColumnCompanyID = dailyReportColumn.ID;
-                                        }
-                                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnSentimentID)
-                                        {
-                                            DailyReportColumnSentimentID = dailyReportColumn.ID;
-                                        }
-                                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnHeadlineVietnameseID)
-                                        {
-                                            DailyReportColumnHeadlineVietnameseID = dailyReportColumn.ID;
-                                        }
-                                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnHeadlineEnglishID)
-                                        {
-                                            DailyReportColumnHeadlineEnglishID = dailyReportColumn.ID;
-                                        }
-                                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnMediaTitleID)
-                                        {
-                                            DailyReportColumnMediaTitleID = dailyReportColumn.ID;
-                                        }
-                                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnMediaTypeID)
-                                        {
-                                            DailyReportColumnMediaTypeID = dailyReportColumn.ID;
-                                        }
-                                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnPageID)
-                                        {
-                                            DailyReportColumnPageID = dailyReportColumn.ID;
-                                        }
-                                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnAdvertisementID)
-                                        {
-                                            DailyReportColumnAdvertisementID = dailyReportColumn.ID;
-                                        }
-                                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnSummaryID)
-                                        {
-                                            DailyReportColumnSummaryID = dailyReportColumn.ID;
-                                        }
-                                    }
-                                }
-                                foreach (ProductSearchPropertyDataTransfer data in listData)
-                                {
-                                    string title = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.Title + "</a></td>";
-                                    string titleEnglish = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.TitleEnglish + "</a></td>";
-                                    no = no + 1;
-                                    if (no % 2 == 0)
-                                    {
-                                        reportData.AppendLine(@"<tr style='background-color:#ffffff;'>");
+                                        reportSummary.AppendLine(@"" + data.Description);
                                     }
                                     else
                                     {
-                                        reportData.AppendLine(@"<tr style='background-color:#f1f1f1;'>");
+                                        reportSummary.AppendLine(@"<b>" + data.CompanyName + ": " + titleEnglish + " (" + mediaURLFull + " - " + data.DatePublishString + ")</b>");
+                                        reportSummary.AppendLine(@"<br />");
+                                        reportSummary.AppendLine(@"" + data.DescriptionEnglish);
                                     }
-                                    reportData.AppendLine(@"<td style='text-align: center;'>" + no + "</td>");
+                                    reportSummary.AppendLine(@"<br />");
+                                    reportSummary.AppendLine(@"<br />");
+                                }
+                            }
+                            reportSummary.AppendLine(@"</div>");
+                        }
+                    }
+                    if ((dailyReportSection.CategoryID == AppGlobal.DailyReportSectionDataID) && (dailyReportSection.Active == true))
+                    {
+                        if (listData.Count > 0)
+                        {
+                            int no = 0;
+                            int DailyReportColumnDatePublishID = 0;
+                            int DailyReportColumnCategoryID = 0;
+                            int DailyReportColumnCompanyID = 0;
+                            int DailyReportColumnSentimentID = 0;
+                            int DailyReportColumnHeadlineVietnameseID = 0;
+                            int DailyReportColumnHeadlineEnglishID = 0;
+                            int DailyReportColumnMediaTitleID = 0;
+                            int DailyReportColumnMediaTypeID = 0;
+                            int DailyReportColumnPageID = 0;
+                            int DailyReportColumnAdvertisementID = 0;
+                            int DailyReportColumnSummaryID = 0;
+                            int DailyReportColumnDatePublishIDSortOrder = 0;
+                            int DailyReportColumnCategoryIDSortOrder = 0;
+                            int DailyReportColumnCompanyIDSortOrder = 0;
+                            int DailyReportColumnSentimentIDSortOrder = 0;
+                            int DailyReportColumnHeadlineVietnameseIDSortOrder = 0;
+                            int DailyReportColumnHeadlineEnglishIDSortOrder = 0;
+                            int DailyReportColumnMediaTitleIDSortOrder = 0;
+                            int DailyReportColumnMediaTypeIDSortOrder = 0;
+                            int DailyReportColumnPageIDSortOrder = 0;
+                            int DailyReportColumnAdvertisementIDSortOrder = 0;
+                            int DailyReportColumnSummaryIDSortOrder = 0;
+                            List<MembershipPermission> listDailyReportColumn = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCodeToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn);
+                            reportData.AppendLine(@"<b style='color: #ed7d31; font-size:14px;'>II - INFORMATION</b>");
+                            reportData.AppendLine(@"<br />");
+                            reportData.AppendLine(@"<br />");
+                            reportData.AppendLine(@"<table style='font-size:12px; border-color: #000000; border-style: solid;border-width: 1px; padding: 4px; border-collapse: collapse;'>");
+                            reportData.AppendLine(@"<thead>");
+                            reportData.AppendLine(@"<tr>");
+                            foreach (MembershipPermission dailyReportColumn in listDailyReportColumn)
+                            {
+                                if (dailyReportColumn.Active == true)
+                                {
+                                    if ((dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnHeadlineVietnameseID) || (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnHeadlineEnglishID))
+                                    {
+                                        reportData.Append(@"<th style='width:300px; text-align:center; background-color:#c00000; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'><a style='cursor:pointer; color:#ffffff;'>");
+                                    }
+                                    else
+                                    {
+                                        reportData.Append(@"<th style='text-align:center; background-color:#c00000; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;overflow: hidden;'><a style='cursor:pointer; color:#ffffff;'>");
+                                    }
 
-                                    if (DailyReportColumnDatePublishID > 0)
+                                    if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: center;'>" + data.DatePublishString + "</td>");
+                                        reportData.Append(@"" + dailyReportColumn.Phone);
                                     }
-                                    if (DailyReportColumnCategoryID > 0)
+                                    else
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: center;'>" + data.ArticleTypeName + "</td>");
+                                        reportData.Append(@"" + dailyReportColumn.Email);
                                     }
-                                    if (DailyReportColumnCompanyID > 0)
+                                    reportData.Append(@"</a></th>");
+
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnDatePublishID)
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: center;'>" + data.CompanyName + "</td>");
+                                        DailyReportColumnDatePublishID = dailyReportColumn.ID;
+                                        DailyReportColumnDatePublishIDSortOrder = dailyReportColumn.SortOrder.Value;
                                     }
-                                    if (DailyReportColumnSentimentID > 0)
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnCategoryID)
                                     {
-                                        reportData.Append(@"<td style='text-align: center;'>");
+                                        DailyReportColumnCategoryID = dailyReportColumn.ID;
+                                        DailyReportColumnCategoryIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                    }
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnCompanyID)
+                                    {
+                                        DailyReportColumnCompanyID = dailyReportColumn.ID;
+                                        DailyReportColumnCompanyIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                    }
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnSentimentID)
+                                    {
+                                        DailyReportColumnSentimentID = dailyReportColumn.ID;
+                                        DailyReportColumnSentimentIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                    }
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnHeadlineVietnameseID)
+                                    {
+                                        DailyReportColumnHeadlineVietnameseID = dailyReportColumn.ID;
+                                        DailyReportColumnHeadlineVietnameseIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                    }
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnHeadlineEnglishID)
+                                    {
+                                        DailyReportColumnHeadlineEnglishID = dailyReportColumn.ID;
+                                        DailyReportColumnHeadlineEnglishIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                    }
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnMediaTitleID)
+                                    {
+                                        DailyReportColumnMediaTitleID = dailyReportColumn.ID;
+                                        DailyReportColumnMediaTitleIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                    }
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnMediaTypeID)
+                                    {
+                                        DailyReportColumnMediaTypeID = dailyReportColumn.ID;
+                                        DailyReportColumnMediaTypeIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                    }
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnPageID)
+                                    {
+                                        DailyReportColumnPageID = dailyReportColumn.ID;
+                                        DailyReportColumnPageIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                    }
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnAdvertisementID)
+                                    {
+                                        DailyReportColumnAdvertisementID = dailyReportColumn.ID;
+                                        DailyReportColumnAdvertisementIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                    }
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnSummaryID)
+                                    {
+                                        DailyReportColumnSummaryID = dailyReportColumn.ID;
+                                        DailyReportColumnSummaryIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                    }
+                                }
+                            }
+                            reportData.AppendLine(@"</tr>");
+                            reportData.AppendLine(@"</thead>");
+                            reportData.AppendLine(@"<tbody>");
+                            foreach (ProductSearchPropertyDataTransfer data in listData)
+                            {
+                                string title = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.Title + "</a></td>";
+                                string titleEnglish = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.TitleEnglish + "</a></td>";
+                                no = no + 1;
+                                if (no % 2 == 0)
+                                {
+                                    reportData.AppendLine(@"<tr style='background-color:#ffffff;'>");
+                                }
+                                else
+                                {
+                                    reportData.AppendLine(@"<tr style='background-color:#f1f1f1;'>");
+                                }
+                                for (int i = 1; i < 12; i++)
+                                {
+                                    if ((DailyReportColumnDatePublishID > 0) && (DailyReportColumnDatePublishIDSortOrder == i))
+                                    {
+                                        reportData.AppendLine(@"<td style='text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;overflow: hidden;'>" + data.DatePublishString + "</td>");
+                                    }
+                                    if ((DailyReportColumnCategoryID > 0) && (DailyReportColumnCategoryIDSortOrder == i))
+                                    {
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;overflow: hidden;'>" + data.ArticleTypeName + "</td>");
+                                    }
+                                    if ((DailyReportColumnCompanyID > 0) && (DailyReportColumnCompanyIDSortOrder == i))
+                                    {
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;overflow: hidden;'>" + data.CompanyName + "</td>");
+                                    }
+                                    if ((DailyReportColumnSentimentID > 0) && (DailyReportColumnSentimentIDSortOrder == i))
+                                    {
+                                        reportData.Append(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;overflow: hidden;'>");
                                         if (data.AssessID == AppGlobal.NegativeID)
                                         {
                                             reportData.Append(@"<span style='color:red;'>" + data.AssessName + "</span>");
@@ -345,33 +395,33 @@ namespace Commsights.MVC.Controllers
                                         }
                                         reportData.Append(@"</td>");
                                     }
-                                    if (DailyReportColumnHeadlineVietnameseID > 0)
+                                    if ((DailyReportColumnHeadlineVietnameseID > 0) && (DailyReportColumnHeadlineVietnameseIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: left;'>" + title + "</td>");
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>" + title + "</td>");
                                     }
-                                    if (DailyReportColumnHeadlineEnglishID > 0)
+                                    if ((DailyReportColumnHeadlineEnglishID > 0) && (DailyReportColumnHeadlineEnglishIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: left;'>" + titleEnglish + "</td>");
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>" + titleEnglish + "</td>");
                                     }
-                                    if (DailyReportColumnMediaTitleID > 0)
+                                    if ((DailyReportColumnMediaTitleID > 0) && (DailyReportColumnMediaTitleIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: center;'>" + data.Media + "</td>");
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;overflow: hidden;'>" + data.Media + "</td>");
                                     }
-                                    if (DailyReportColumnMediaTypeID > 0)
+                                    if ((DailyReportColumnMediaTypeID > 0) && (DailyReportColumnMediaTypeIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: center;'>" + data.MediaType + "</td>");
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;overflow: hidden;'>" + data.MediaType + "</td>");
                                     }
-                                    if (DailyReportColumnPageID > 0)
+                                    if ((DailyReportColumnPageID > 0) && (DailyReportColumnPageIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: center;'>" + data.Page + "</td>");
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;overflow: hidden;'>" + data.Page + "</td>");
                                     }
-                                    if (DailyReportColumnAdvertisementID > 0)
+                                    if ((DailyReportColumnAdvertisementID > 0) && (DailyReportColumnAdvertisementIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: center;'>" + data.AdvertisementValueString + "</td>");
+                                        reportData.AppendLine(@"<td style='text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;overflow: hidden;'>" + data.AdvertisementValueString + "</td>");
                                     }
-                                    if (DailyReportColumnSummaryID > 0)
+                                    if ((DailyReportColumnSummaryID > 0) && (DailyReportColumnSummaryIDSortOrder == i))
                                     {
-                                        reportData.Append(@"<td style='text-align: center;'>");
+                                        reportData.Append(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;overflow: hidden;'>");
                                         if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
                                         {
                                             reportData.Append(@"" + data.Description);
@@ -382,19 +432,283 @@ namespace Commsights.MVC.Controllers
                                         }
                                         reportData.Append(@"</td>");
                                     }
-                                    reportData.AppendLine(@"</tr>");
                                 }
-                                reportData.AppendLine(@"</tbody>");
-                                reportData.AppendLine(@"</table>");
+                                reportData.AppendLine(@"</tr>");
                             }
+                            reportData.AppendLine(@"</tbody>");
+                            reportData.AppendLine(@"</table>");
                         }
                     }
-                    html = html.Replace(@"[ReportSummary]", @"" + reportSummary.ToString());
-                    html = html.Replace(@"[ReportData]", @"" + reportData.ToString());
                 }
-                model.Note = html;
+                html = html.Replace(@"[ReportSummary]", @"" + reportSummary.ToString());
+                html = html.Replace(@"[ReportData]", @"" + reportData.ToString());
             }
-            return View(model);
+            model.Note = html;
+            return model;
+        }
+        public ProductSearchDataTransfer InitializationReportDailyHTML(ProductSearchDataTransfer model, string fileName)
+        {
+            string html = "";
+            var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "html", fileName);
+            using (var stream = new FileStream(physicalPath, FileMode.Open))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    html = reader.ReadToEnd();
+                }
+            }
+            if (!string.IsNullOrEmpty(html))
+            {
+                html = html.Replace(@"[CompanyTitleEnglish]", @"" + AppGlobal.CompanyTitleEnglish);
+                html = html.Replace(@"[WebsiteHTML]", @"" + AppGlobal.WebsiteHTML);
+                html = html.Replace(@"[PhoneReportHTML]", @"" + AppGlobal.PhoneReportHTML);
+                html = html.Replace(@"[EmailReportHTML]", @"" + AppGlobal.EmailReportHTML);
+                html = html.Replace(@"[FacebookHTML]", @"" + AppGlobal.FacebookHTML);
+                html = html.Replace(@"[GoogleMapHTML]", @"" + AppGlobal.GoogleMapHTML);
+                html = html.Replace(@"[PreviewDate]", @"" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"));
+                html = html.Replace(@"[CompanyName]", @"" + model.CompanyName);
+                html = html.Replace(@"[Title]", @"DAILY REPORT");
+                html = html.Replace(@"[DateSearchString]", @"" + model.DateSearch.ToString("dd/MM/yyyy"));
+                StringBuilder reportData = new StringBuilder();
+                StringBuilder reportSummary = new StringBuilder();
+                List<MembershipPermission> listDailyReportSection = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCodeToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportSection);
+                List<ProductSearchPropertyDataTransfer> listData = _reportRepository.ReportDailyByProductSearchIDAndActiveToListToHTML(model.ID, true);
+                foreach (MembershipPermission dailyReportSection in listDailyReportSection)
+                {
+                    if ((dailyReportSection.CategoryID == AppGlobal.DailyReportSectionSummaryID) && (dailyReportSection.Active == true))
+                    {
+                        if (listData.Count > 0)
+                        {
+                            reportSummary.AppendLine(@"<b style='color: #ed7d31; font-size:14px;'>I - HIGHLIGHT NEWS OF THE DAY</b>");
+                            reportSummary.AppendLine(@"<br />");
+                            reportSummary.AppendLine(@"<br />");
+                            reportSummary.AppendLine(@"<div style='font-size:12px;'>");
+                            foreach (ProductSearchPropertyDataTransfer data in listData)
+                            {
+                                string title = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.Title + "</a></td>";
+                                string titleEnglish = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.TitleEnglish + "</a></td>";
+                                string mediaURLFull = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.MediaURLFull + "' title='" + data.MediaURLFull + "'>" + data.Media + "</a></td>";
+                                if (data.IsSummary == true)
+                                {
+                                    if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
+                                    {
+                                        reportSummary.AppendLine(@"<b>" + data.CompanyName + ": " + title + " (" + mediaURLFull + " - " + data.DatePublishString + ")</b>");
+                                        reportSummary.AppendLine(@"<br />");
+                                        reportSummary.AppendLine(@"" + data.Description);
+                                    }
+                                    else
+                                    {
+                                        reportSummary.AppendLine(@"<b>" + data.CompanyName + ": " + titleEnglish + " (" + mediaURLFull + " - " + data.DatePublishString + ")</b>");
+                                        reportSummary.AppendLine(@"<br />");
+                                        reportSummary.AppendLine(@"" + data.DescriptionEnglish);
+                                    }
+                                    reportSummary.AppendLine(@"<br />");
+                                    reportSummary.AppendLine(@"<br />");
+                                }
+                            }
+                            reportSummary.AppendLine(@"</div>");
+                        }
+                    }
+                    if ((dailyReportSection.CategoryID == AppGlobal.DailyReportSectionDataID) && (dailyReportSection.Active == true))
+                    {
+                        if (listData.Count > 0)
+                        {
+                            int no = 0;
+                            int DailyReportColumnDatePublishID = 0;
+                            int DailyReportColumnCategoryID = 0;
+                            int DailyReportColumnCompanyID = 0;
+                            int DailyReportColumnSentimentID = 0;
+                            int DailyReportColumnHeadlineVietnameseID = 0;
+                            int DailyReportColumnHeadlineEnglishID = 0;
+                            int DailyReportColumnMediaTitleID = 0;
+                            int DailyReportColumnMediaTypeID = 0;
+                            int DailyReportColumnPageID = 0;
+                            int DailyReportColumnAdvertisementID = 0;
+                            int DailyReportColumnSummaryID = 0;
+                            int DailyReportColumnDatePublishIDSortOrder = 0;
+                            int DailyReportColumnCategoryIDSortOrder = 0;
+                            int DailyReportColumnCompanyIDSortOrder = 0;
+                            int DailyReportColumnSentimentIDSortOrder = 0;
+                            int DailyReportColumnHeadlineVietnameseIDSortOrder = 0;
+                            int DailyReportColumnHeadlineEnglishIDSortOrder = 0;
+                            int DailyReportColumnMediaTitleIDSortOrder = 0;
+                            int DailyReportColumnMediaTypeIDSortOrder = 0;
+                            int DailyReportColumnPageIDSortOrder = 0;
+                            int DailyReportColumnAdvertisementIDSortOrder = 0;
+                            int DailyReportColumnSummaryIDSortOrder = 0;
+                            List<MembershipPermission> listDailyReportColumn = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCodeToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn);
+                            reportData.AppendLine(@"<b style='color: #ed7d31; font-size:14px;'>II - INFORMATION</b>");
+                            reportData.AppendLine(@"<br />");
+                            reportData.AppendLine(@"<br />");
+                            reportData.AppendLine(@"<table class='border' style='font-size:12px; width:100%;'>");
+                            reportData.AppendLine(@"<thead>");
+                            reportData.AppendLine(@"<tr>");
+                            //reportData.AppendLine(@"<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>No</a></th>");
+                            foreach (MembershipPermission dailyReportColumn in listDailyReportColumn)
+                            {
+                                if (dailyReportColumn.Active == true)
+                                {
+                                    reportData.Append(@"<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>");
+                                    if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
+                                    {
+                                        reportData.Append(@"" + dailyReportColumn.Phone);
+                                    }
+                                    else
+                                    {
+                                        reportData.Append(@"" + dailyReportColumn.Email);
+                                    }
+                                    reportData.Append(@"</a></th>");
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnDatePublishID)
+                                    {
+                                        DailyReportColumnDatePublishID = dailyReportColumn.ID;
+                                        DailyReportColumnDatePublishIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                    }
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnCategoryID)
+                                    {
+                                        DailyReportColumnCategoryID = dailyReportColumn.ID;
+                                        DailyReportColumnCategoryIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                    }
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnCompanyID)
+                                    {
+                                        DailyReportColumnCompanyID = dailyReportColumn.ID;
+                                        DailyReportColumnCompanyIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                    }
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnSentimentID)
+                                    {
+                                        DailyReportColumnSentimentID = dailyReportColumn.ID;
+                                        DailyReportColumnSentimentIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                    }
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnHeadlineVietnameseID)
+                                    {
+                                        DailyReportColumnHeadlineVietnameseID = dailyReportColumn.ID;
+                                        DailyReportColumnHeadlineVietnameseIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                    }
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnHeadlineEnglishID)
+                                    {
+                                        DailyReportColumnHeadlineEnglishID = dailyReportColumn.ID;
+                                        DailyReportColumnHeadlineEnglishIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                    }
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnMediaTitleID)
+                                    {
+                                        DailyReportColumnMediaTitleID = dailyReportColumn.ID;
+                                        DailyReportColumnMediaTitleIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                    }
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnMediaTypeID)
+                                    {
+                                        DailyReportColumnMediaTypeID = dailyReportColumn.ID;
+                                        DailyReportColumnMediaTypeIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                    }
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnPageID)
+                                    {
+                                        DailyReportColumnPageID = dailyReportColumn.ID;
+                                        DailyReportColumnPageIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                    }
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnAdvertisementID)
+                                    {
+                                        DailyReportColumnAdvertisementID = dailyReportColumn.ID;
+                                        DailyReportColumnAdvertisementIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                    }
+                                    if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnSummaryID)
+                                    {
+                                        DailyReportColumnSummaryID = dailyReportColumn.ID;
+                                        DailyReportColumnSummaryIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                    }
+                                }
+                            }
+                            reportData.AppendLine(@"</tr>");
+                            reportData.AppendLine(@"</thead>");
+                            reportData.AppendLine(@"<tbody>");
+
+                            foreach (ProductSearchPropertyDataTransfer data in listData)
+                            {
+                                string title = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.Title + "</a></td>";
+                                string titleEnglish = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.TitleEnglish + "</a></td>";
+                                no = no + 1;
+                                if (no % 2 == 0)
+                                {
+                                    reportData.AppendLine(@"<tr style='background-color:#ffffff;'>");
+                                }
+                                else
+                                {
+                                    reportData.AppendLine(@"<tr style='background-color:#f1f1f1;'>");
+                                }
+                                for (int i = 1; i < 12; i++)
+                                {
+                                    if ((DailyReportColumnDatePublishID > 0) && (DailyReportColumnDatePublishIDSortOrder == i))
+                                    {
+                                        reportData.AppendLine(@"<td style='text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>" + data.DatePublishString + "</td>");
+                                    }
+                                    if ((DailyReportColumnCategoryID > 0) && (DailyReportColumnCategoryIDSortOrder == i))
+                                    {
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>" + data.ArticleTypeName + "</td>");
+                                    }
+                                    if ((DailyReportColumnCompanyID > 0) && (DailyReportColumnCompanyIDSortOrder == i))
+                                    {
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>" + data.CompanyName + "</td>");
+                                    }
+                                    if ((DailyReportColumnSentimentID > 0) && (DailyReportColumnSentimentIDSortOrder == i))
+                                    {
+                                        reportData.Append(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>");
+                                        if (data.AssessID == AppGlobal.NegativeID)
+                                        {
+                                            reportData.Append(@"<span style='color:red;'>" + data.AssessName + "</span>");
+                                        }
+                                        else
+                                        {
+                                            reportData.Append(@"" + data.AssessName);
+                                        }
+                                        reportData.Append(@"</td>");
+                                    }
+                                    if ((DailyReportColumnHeadlineVietnameseID > 0) && (DailyReportColumnHeadlineVietnameseIDSortOrder == i))
+                                    {
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>" + title + "</td>");
+                                    }
+                                    if ((DailyReportColumnHeadlineEnglishID > 0) && (DailyReportColumnHeadlineEnglishIDSortOrder == i))
+                                    {
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>" + titleEnglish + "</td>");
+                                    }
+                                    if ((DailyReportColumnMediaTitleID > 0) && (DailyReportColumnMediaTitleIDSortOrder == i))
+                                    {
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>" + data.Media + "</td>");
+                                    }
+                                    if ((DailyReportColumnMediaTypeID > 0) && (DailyReportColumnMediaTypeIDSortOrder == i))
+                                    {
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>" + data.MediaType + "</td>");
+                                    }
+                                    if ((DailyReportColumnPageID > 0) && (DailyReportColumnPageIDSortOrder == i))
+                                    {
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>" + data.Page + "</td>");
+                                    }
+                                    if ((DailyReportColumnAdvertisementID > 0) && (DailyReportColumnAdvertisementIDSortOrder == i))
+                                    {
+                                        reportData.AppendLine(@"<td style='text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>" + data.AdvertisementValueString + "</td>");
+                                    }
+                                    if ((DailyReportColumnSummaryID > 0) && (DailyReportColumnSummaryIDSortOrder == i))
+                                    {
+                                        reportData.Append(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>");
+                                        if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
+                                        {
+                                            reportData.Append(@"" + data.Description);
+                                        }
+                                        else
+                                        {
+                                            reportData.Append(@"" + data.DescriptionEnglish);
+                                        }
+                                        reportData.Append(@"</td>");
+                                    }
+                                }
+                                reportData.AppendLine(@"</tr>");
+                            }
+                            reportData.AppendLine(@"</tbody>");
+                            reportData.AppendLine(@"</table>");
+                        }
+                    }
+                }
+                html = html.Replace(@"[ReportSummary]", @"" + reportSummary.ToString());
+                html = html.Replace(@"[ReportData]", @"" + reportData.ToString());
+            }
+            model.Note = html;
+            return model;
         }
         public IActionResult Daily()
         {
@@ -1651,7 +1965,7 @@ namespace Commsights.MVC.Controllers
             catch
             {
             }
-            action = "Index";
+            action = "Upload";
             controller = "Report";
             return RedirectToAction(action, controller);
         }
@@ -1692,7 +2006,7 @@ namespace Commsights.MVC.Controllers
                                             {
 
                                                 int totalRows = workSheet.Dimension.Rows;
-                                                for (int i = 2; i <= totalRows; i++)
+                                                for (int i = 6; i <= totalRows; i++)
                                                 {
                                                     List<ProductProperty> listProductProperty = new List<ProductProperty>();
                                                     Membership membership = new Membership();
@@ -1938,7 +2252,7 @@ namespace Commsights.MVC.Controllers
             {
             }
 
-            action = "Daily";
+            action = "Upload";
             controller = "Report";
 
             return RedirectToAction(action, controller);
@@ -2200,7 +2514,7 @@ namespace Commsights.MVC.Controllers
             catch
             {
             }
-            action = "Index";
+            action = "Upload";
             controller = "Report";
             return RedirectToAction(action, controller);
         }
@@ -2400,7 +2714,7 @@ namespace Commsights.MVC.Controllers
                                                         }
                                                         if (workSheet.Cells[i, 7].Value != null)
                                                         {
-                                                            model.ContentMain = workSheet.Cells[i, 7].Value.ToString().Trim();
+                                                            model.Description = workSheet.Cells[i, 7].Value.ToString().Trim();
                                                         }
                                                         if (workSheet.Cells[i, 8].Value != null)
                                                         {
@@ -2423,7 +2737,6 @@ namespace Commsights.MVC.Controllers
                                                         }
                                                         if (!string.IsNullOrEmpty(model.URLCode))
                                                         {
-                                                            model.Description = "";
                                                             model.MetaTitle = AppGlobal.SetName(model.Title);
                                                             model.CategoryID = model.ParentID;
                                                             _productRepository.FilterProduct(model, listProductProperty, RequestUserID);
@@ -2480,7 +2793,7 @@ namespace Commsights.MVC.Controllers
             }
             if (result > 0)
             {
-                action = "Index";
+                action = "Upload";
                 controller = "Report";
             }
             return RedirectToAction(action, controller);

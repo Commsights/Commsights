@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Commsights.Service.Mail
 {
-    public class MailService
+    public class MailService : IMailService
     {
         public void Send(Mail mail)
         {

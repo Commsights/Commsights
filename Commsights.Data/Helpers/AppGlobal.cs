@@ -139,6 +139,13 @@ namespace Commsights.Data.Helpers
                 return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DailyReportSectionExtraID").Value);
             }
         }
+        public static string WebsiteHTML
+        {
+            get
+            {
+                return "<a target='_blank' href='" + CommsightsWebsite + "' title='" + CommsightsWebsiteDisplay + "'>" + CommsightsWebsiteDisplay + "</a>";
+            }
+        }
         public static string PhoneReportHTML
         {
             get
@@ -165,6 +172,22 @@ namespace Commsights.Data.Helpers
             get
             {
                 return "<a target='_blank' href='" + GoogleMapURLFUll + "' title='" + AddressReport + "'>" + AddressReport + "</a>";
+            }
+        }
+        public static string CommsightsWebsite
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("CommsightsWebsite").Value;
+            }
+        }
+        public static string CommsightsWebsiteDisplay
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("CommsightsWebsiteDisplay").Value;
             }
         }
         public static string URLCode
@@ -663,6 +686,14 @@ namespace Commsights.Data.Helpers
                 return builder.Build().GetSection("AppSettings").GetSection("Product").Value;
             }
         }
+        public static string SendMailSuccess
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("SendMailSuccess").Value;
+            }
+        }
         public static string ScanFinish
         {
             get
@@ -739,7 +770,7 @@ namespace Commsights.Data.Helpers
         {
             get
             {
-                string result = AppGlobal.Domain + AppGlobal.Images + "/" + AppGlobal.Loading;
+                string result = AppGlobal.DomainMain + AppGlobal.Images + "/" + AppGlobal.Loading;
                 return result;
             }
         }
@@ -747,7 +778,7 @@ namespace Commsights.Data.Helpers
         {
             get
             {
-                string result = AppGlobal.Domain + AppGlobal.Images + "/" + AppGlobal.Logo;
+                string result = AppGlobal.DomainMain + AppGlobal.Images + "/" + AppGlobal.Logo;
                 return result;
             }
         }
@@ -755,7 +786,7 @@ namespace Commsights.Data.Helpers
         {
             get
             {
-                string result = AppGlobal.Domain + AppGlobal.Images + "/" + AppGlobal.Logo01;
+                string result = AppGlobal.DomainMain + AppGlobal.Images + "/" + AppGlobal.Logo01;
                 return result;
             }
         }
@@ -763,7 +794,7 @@ namespace Commsights.Data.Helpers
         {
             get
             {
-                string result = AppGlobal.Domain + AppGlobal.Images + "/" + AppGlobal.Logo160_160;
+                string result = AppGlobal.DomainMain + AppGlobal.Images + "/" + AppGlobal.Logo160_160;
                 return result;
             }
         }
@@ -1124,40 +1155,78 @@ namespace Commsights.Data.Helpers
                 return builder.Build().GetSection("AppSettings").GetSection("PriceUnit").Value;
             }
         }
-
-        public static string MailUsername
-        {
-            get
-            {
-                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-                return builder.Build().GetSection("AppSettings").GetSection("MailUsername").Value;
-            }
-        }
-
-        public static string MailPassword
-        {
-            get
-            {
-                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-                return builder.Build().GetSection("AppSettings").GetSection("MailPassword").Value;
-            }
-        }
-
-        public static int MailSTMPPort
-        {
-            get
-            {
-                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("MailSTMPPort").Value);
-            }
-        }
-
         public static string TagCode
         {
             get
             {
                 var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                 return builder.Build().GetSection("AppSettings").GetSection("TagCode").Value;
+            }
+        }
+        public static string SMTPServer
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("SMTPServer").Value;
+            }
+        }
+
+        public static int SMTPPort
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("SMTPPort").Value);
+            }
+        }
+
+        public static int IsMailUsingSSL
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("IsMailUsingSSL").Value);
+            }
+        }
+        public static string IsMailBodyHtml
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("IsMailBodyHtml").Value;
+            }
+        }
+        public static string MasterEmailUser
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("MasterEmailUser").Value;
+            }
+        }
+        public static string MasterEmailPassword
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("MasterEmailPassword").Value;
+            }
+        }
+        public static string MasterEmailDisplay
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("MasterEmailDisplay").Value;
+            }
+        }
+        public static string MasterEmailSubject
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("MasterEmailSubject").Value;
             }
         }
         #endregion

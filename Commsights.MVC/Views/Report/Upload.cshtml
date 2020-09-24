@@ -7,62 +7,6 @@
     <div class="col-md-4">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Upload - Excel Scan</h3>
-            </div>
-            <div class="card-body">
-                <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadScan", "Report")'>
-                    <div class='col-sm-12'>
-                        <div class='form-group'>
-                            <label for='Download'>Step 01: File excel template: </label>
-                            <a href="@Commsights.Data.Helpers.AppGlobal.URLDownloadExcel/Scan.xlsx" target="_blank">Download</a>
-                        </div>
-                    </div>
-                    <div class='col-sm-12'>
-                        <div class='form-group'>
-                            <label for='Ten'>Step 02: Select the excel file include data: </label>
-                            @(Html.Kendo().Upload()
-                                  .Name("UploadScan")
-                            )
-                        </div>
-                    </div>
-                    <div class='col-sm-12'>
-                        <div class='form-group'>
-                            <label for='IndustryID'>Step 03: Select Industry: </label>
-                            @(Html.Kendo().DropDownListFor(Model => Model.IndustryIDUploadScan)
-                           .DataValueField("ID")
-                           .DataTextField("CodeName")
-                           .HtmlAttributes(new { style = "width:100%;" })
-                          .Events(e => e.DataBound("onIndustryIDUploadScanDataBound"))
-                           .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
-                                )
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class='form-group'>
-                            @(Html.CheckBoxFor(Model => Model.IsIndustryIDUploadScan))
-                            <label for='IsIndustryIDUploadScan'>Not select industry</label>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class='form-group'>
-                            @(Html.CheckBoxFor(Model => Model.IsUploadScanOverride))
-                            <label for='IsIndustryIDUploadScan'>Override</label>
-                        </div>
-                    </div>
-                    <div class='col-sm-12'>
-                        <div class='form-group'>
-                            <label for='Upload'></label>
-                            <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload</button>
-                        </div>
-                    </div>
-                </form>
-
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card card-primary">
-            <div class="card-header">
                 <h3 class="card-title">Upload - Excel Andi source</h3>
             </div>
             <div class="card-body">
@@ -116,6 +60,63 @@
             </div>
         </div>
     </div>
+    <div class="col-md-4">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Upload - Excel Scan</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadScan", "Report")'>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='Download'>Step 01: File excel template: </label>
+                            <a href="@Commsights.Data.Helpers.AppGlobal.URLDownloadExcel/Scan.xlsx" target="_blank">Download</a>
+                        </div>
+                    </div>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='Ten'>Step 02: Select the excel file include data: </label>
+                            @(Html.Kendo().Upload()
+                                  .Name("UploadScan")
+                            )
+                        </div>
+                    </div>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='IndustryID'>Step 03: Select Industry: </label>
+                            @(Html.Kendo().DropDownListFor(Model => Model.IndustryIDUploadScan)
+                           .DataValueField("ID")
+                           .DataTextField("CodeName")
+                           .HtmlAttributes(new { style = "width:100%;" })
+                          .Events(e => e.DataBound("onIndustryIDUploadScanDataBound"))
+                           .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
+                                )
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class='form-group'>
+                            @(Html.CheckBoxFor(Model => Model.IsIndustryIDUploadScan))
+                            <label for='IsIndustryIDUploadScan'>Not select industry</label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class='form-group'>
+                            @(Html.CheckBoxFor(Model => Model.IsUploadScanOverride))
+                            <label for='IsIndustryIDUploadScan'>Override</label>
+                        </div>
+                    </div>
+                    <div class='col-sm-12'>
+                        <div class='form-group'>
+                            <label for='Upload'></label>
+                            <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
     <div class="col-md-4">
         <div class="card card-primary">
             <div class="card-header">

@@ -4,7 +4,7 @@
 @model Commsights.Data.DataTransferObject.ProductSearchDataTransfer
 @Html.HiddenFor(Model => Model.ID)
 @Html.HiddenFor(Model => Model.Domain)
-<div class="card card-primary card-outline">    
+<div class="card card-primary card-outline">
     <div class="card-body">
         <div class="row">
             <div class='col-md-10'>
@@ -13,10 +13,12 @@
                 <a asp-route-ID="@Model.ID" asp-action="ExportExcelReportDailyByProductSearchIDAndActive" asp-controller="Report" title="Excel" style="width:100%;" class="btn btn-success">
                     <span class="fas fa-file-excel"></span> Excel
                 </a>
-            </div>           
+            </div>
         </div>
         <div class="row">
-            <div id="DataMain"></div>
+            <div class='col-md-12'>
+                <div id="DataMain"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -30,17 +32,16 @@
             type: 'GET',
             url: "@Url.Action("ReportDailyByProductSearchIDAndActiveToListToHTML", "Report")",
             data: {
-                productSearchID: $('#ID').val()                
+                productSearchID: $('#ID').val()
             },
             success: function (ListProductSearchPropertyDataTransfer) {
 
-                var html = '<table class="border01" id="Data" cellspacing="4" style="background-color:#ffffff; font-size:12px;">';
+                var html = '<table class="border" id="Data" cellspacing="4" style="background-color:#ffffff; font-size:12px; width:100%;">';
                 html = html + '<thead>';
                 html = html + '<tr>';
-                html = html + "<th class='text-center'><a style='cursor:pointer; font-size:12px;'>No</a></th>";
                 html = html + "<th class='text-center'><a style='cursor:pointer; font-size:12px;'>Publish</a></th>";
-                html = html + "<th class='text-center'><a style='cursor:pointer; font-size:12px;'>Category</a></th>";                
-                html = html + "<th class='text-center'><a style='cursor:pointer; font-size:12px;'>Company</a></th>";                
+                html = html + "<th class='text-center'><a style='cursor:pointer; font-size:12px;'>Category</a></th>";
+                html = html + "<th class='text-center'><a style='cursor:pointer; font-size:12px;'>Company</a></th>";
                 html = html + "<th class='text-center'><a style='cursor:pointer; font-size:12px;'>Sentiment</a></th>";
                 html = html + "<th class='text-center'><a style='cursor:pointer; font-size:12px;'>Headline (Vie)</a></th>";
                 html = html + "<th class='text-center'><a style='cursor:pointer; font-size:12px;'>Headline (Eng)</a></th>";
@@ -53,7 +54,7 @@
                 html = html + '<tbody>';
                 var no = 0;
                 for (var index in ListProductSearchPropertyDataTransfer) {
-                    $(ListProductSearchPropertyDataTransfer[index]).each(function (iRec, item) {                                                
+                    $(ListProductSearchPropertyDataTransfer[index]).each(function (iRec, item) {
                         no = no + 1;
                         if (no % 2 == 0) {
                             html = html + '<tr style="background-color:#ffffff;">';
@@ -61,20 +62,19 @@
                         else {
                             html = html + '<tr style="background-color:#f1f1f1;">';
                         }
-                        html = html + '<td class="text-center">' + no + '</td>';
                         html = html + '<td class="text-center">' + item.DatePublishString + '</td>';
-                        html = html + '<td class="text-center">' + item.ArticleTypeName + '</td>';                        
-                        html = html + '<td class="text-center">' + item.CompanyName + '</td>'; 
+                        html = html + '<td class="text-center">' + item.ArticleTypeName + '</td>';
+                        html = html + '<td class="text-center">' + item.CompanyName + '</td>';
                         if ((item.AssessName == 'Negative') || (item.AssessName == 'negative')) {
                             html = html + '<td class="text-center"><span style="color: red;">' + item.AssessName + '</span></td>';
                         }
                         else {
                             html = html + '<td class="text-center">' + item.AssessName + '</td>';
                         }
-                        
-                        
-                        html = html + '<td><a target="_blank" style="color:blue; cursor:pointer; font-size:12px;" href="' + item.URLCode + '" title="' + item.URLCode + '">' + item.Title + '</a></td>';
-                        html = html + '<td><a target="_blank" style="color:blue; cursor:pointer; font-size:12px;" href="' + item.URLCode + '" title="' + item.URLCode + '">' + item.TitleEnglish + '</a></td>';
+
+
+                        html = html + '<td class="text-left"><a target="_blank" style="color:blue; cursor:pointer; font-size:12px;" href="' + item.URLCode + '" title="' + item.URLCode + '">' + item.Title + '</a></td>';
+                        html = html + '<td class="text-left"><a target="_blank" style="color:blue; cursor:pointer; font-size:12px;" href="' + item.URLCode + '" title="' + item.URLCode + '">' + item.TitleEnglish + '</a></td>';
                         html = html + '<td class="text-center">' + item.Media + '</td>';
                         html = html + '<td class="text-center">' + item.MediaType + '</td>';
                         html = html + '<td class="text-center">' + item.AdvertisementValueString + '</td>';
@@ -86,7 +86,7 @@
                 html = $.parseHTML(html);
                 $("#DataMain").append(html);
             }
-        }).done(() => {           
+        }).done(() => {
         });
-    });    
+    });
 </script>

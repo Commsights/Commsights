@@ -8,8 +8,7 @@ body {
     margin: 0px; /* this affects the margin on the content before sending to printer */
 }
 
-</style >
-<style >
+
 * {
     -webkit-print-color-adjust: exact !important; /*Chrome, Safari */
     color-adjust: exact !important; /*Firefox*/
@@ -20,6 +19,8 @@ body {
     border-style: solid;
     border-width: 1px;
     padding: 10px;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .border {

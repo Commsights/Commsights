@@ -19,6 +19,22 @@ namespace Commsights.Data.Repositories
         {
             _context = context;
         }
+        public List<ProductSearchDataTransfer> GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
+        {
+            List<ProductSearchDataTransfer> list = new List<ProductSearchDataTransfer>();
+            if (industryID > 2019)
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@DatePublishBegin",datePublishBegin),
+                new SqlParameter("@DatePublishEnd",datePublishEnd),
+                new SqlParameter("@IndustryID",industryID),
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportDailyByDatePublishBeginAndDatePublishEndAndIndustryID", parameters);
+                list = SQLHelper.ToList<ProductSearchDataTransfer>(dt);               
+            }
+            return list;
+        }
         public ProductSearchDataTransfer GetDataTransferByID(int ID)
         {
             ProductSearchDataTransfer model = new ProductSearchDataTransfer();

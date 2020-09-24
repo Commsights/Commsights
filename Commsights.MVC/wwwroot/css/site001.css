@@ -17,27 +17,43 @@ input[type="checkbox"] {
         height: 450px;
     } 
 }
-.border01 a {
-    font-size: 16px;
+
+@page {
+    size: auto; /* auto is the initial value */
+    margin: 0mm; /* this affects the margin in the printer settings */
 }
 
-.border01, .border01 td, .border01 th {
-    border: 1px solid #000000;
-    padding: 5px;
+body {
+    margin: 0px; /* this affects the margin on the content before sending to printer */
 }
 
-.border01 {
+
+* {
+    -webkit-print-color-adjust: exact !important; /*Chrome, Safari */
+    color-adjust: exact !important; /*Firefox*/
+}
+
+.border, .border td, .border th {
+    border-color: #000000;
+    border-style: solid;
+    border-width: 1px;
+    padding: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.border {
     border-collapse: collapse;
-    font-size: 16px;
 }
 
-    .border01 th {
+    .border th {
         text-align: center;
     }
 
-    .border01 td {
+    .border td {
+        text-align: right;
     }
 
-    .border01 .text {
+    .border .text {
         text-align: left;
     }

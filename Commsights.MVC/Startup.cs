@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using Commsights.Data.Models;
 using Commsights.Data.Repositories;
+using Commsights.Service.Mail;
 
 namespace Commsights.MVC
 {
@@ -40,6 +41,7 @@ namespace Commsights.MVC
             services.AddTransient<IConfigRepository, ConfigRepository>();
             services.AddTransient<IDashbroadRepository, DashbroadRepository>();
             services.AddTransient<IReportRepository, ReportRepository>();
+            services.AddTransient<IMailService, MailService>();
             services.AddControllersWithViews();
 
             // Add Kendo UI services to the services container

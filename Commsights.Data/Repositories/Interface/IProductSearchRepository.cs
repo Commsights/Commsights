@@ -8,6 +8,7 @@ namespace Commsights.Data.Repositories
 {
     public interface IProductSearchRepository : IRepository<ProductSearch>
     {
+        public List<ProductSearchDataTransfer> GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID);
         public ProductSearchDataTransfer GetDataTransferByID(int ID);
         public List<ProductSearchDataTransfer> InitializationByDatePublishToList(DateTime datePublish);
         public List<ProductSearch> GetByDateSearchBeginAndDateSearchEndToList(DateTime dateSearchBegin, DateTime dateSearchEnd);
