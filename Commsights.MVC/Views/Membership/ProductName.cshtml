@@ -130,7 +130,7 @@
     function onSearch() {
         $("#MembershipPermissionDataTransfer").data("kendoGrid").dataSource.read();
     }
-    function filterSegment(e) {
+    function filterConfig_SegmentByIndustry(e) {
         var parentIDValue = $("#Industry").data("kendoDropDownList").value();
         return { parentID: parentIDValue };
     }

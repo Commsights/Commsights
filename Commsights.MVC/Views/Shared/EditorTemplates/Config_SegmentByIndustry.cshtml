@@ -4,5 +4,5 @@
                    .DataTextField("CodeName")
                    .HtmlAttributes(new {data_bind= "value: Segment", @class = "form-control" })
                     .Filter(FilterType.Contains)
-                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByParentIDToList", "Config").Data("filterSegment")))
+                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByParentIDToList", "Config").Data("filterConfig_SegmentByIndustry")))
 )
