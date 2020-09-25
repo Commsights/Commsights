@@ -190,7 +190,7 @@
             notification.show(note, messageType);
             $("#MembershipPermissionDataTransferIndustry").data("kendoGrid").dataSource.read();
         }
-    }   
+    }
     function filterMembershipPermissionIndustry(e) {
         var membershipIDValue = $("#ID").val();
         return { membershipID: membershipIDValue };
@@ -209,13 +209,14 @@
             $("#MembershipPermissionDataTransferProduct").data("kendoGrid").dataSource.read();
         }
     }
-   
+
     function filterProduct(e) {
         var membershipIDValue = $("#ID").val();
         return { membershipID: membershipIDValue };
     }
     function filterCreateProduct(e) {
         var membershipIDValue = $("#ID").val();
-        return { membershipID: membershipIDValue };
+        var industryIDValue = 0;
+        return { membershipID: membershipIDValue, industryID: industryIDValue };
     }
 </script>

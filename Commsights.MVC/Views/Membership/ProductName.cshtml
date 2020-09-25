@@ -82,7 +82,7 @@
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetDataTransferSegmentByMembershipIDAndProductToList", "MembershipPermission").Data("filterProduct"))
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
-.Create(t => t.Action("CreateDataTransferSegmentProduct", "MembershipPermission").Data("filterProduct"))
+.Create(t => t.Action("CreateDataTransferSegmentProduct", "MembershipPermission").Data("filterCreateProduct"))
 .Update(t => t.Action("UpdateDataTransferSegmentProduct", "MembershipPermission"))
 )
 )
@@ -140,6 +140,7 @@
     }
     function filterCreateProduct(e) {
         var membershipIDValue = $("#Customer").data("kendoDropDownList").value();
-        return { membershipID: membershipIDValue };
+        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
+        return { membershipID: membershipIDValue, industryID: industryIDValue };
     }
 </script>

@@ -276,10 +276,10 @@ namespace Commsights.MVC.Controllers
             model.Code = AppGlobal.Product;
             model.MembershipID = membershipID;
             model.IndustryID = industryID;
-            model.SegmentID = AppGlobal.SegmentID;
-            if (model.Segment != null)
+            model.SegmentID = model.Segment.ID;
+            if (model.SegmentID == null)
             {
-                model.SegmentID = model.Segment.ID;
+                model.SegmentID = AppGlobal.SegmentID;
             }
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 1;
@@ -636,6 +636,10 @@ namespace Commsights.MVC.Controllers
         {
             Initialization();
             model.SegmentID = model.Segment.ID;
+            if (model.SegmentID == null)
+            {
+                model.SegmentID = AppGlobal.SegmentID;
+            }
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
             int result = 0;
