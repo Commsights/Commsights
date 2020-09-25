@@ -29,6 +29,7 @@ namespace Commsights.Data.DataTransferObject
         public bool IsCompetitorAll { get; set; }
         public bool IsAll { get; set; }
         public string CompanyName { get; set; }
+        public string PhysicalPath { get; set; }
         public ModelTemplate Company { get; set; }
     }
 }

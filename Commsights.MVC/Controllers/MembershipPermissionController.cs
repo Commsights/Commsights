@@ -276,7 +276,11 @@ namespace Commsights.MVC.Controllers
             model.Code = AppGlobal.Product;
             model.MembershipID = membershipID;
             model.IndustryID = industryID;
-            model.SegmentID = model.Segment.ID;
+            model.SegmentID = AppGlobal.SegmentID;
+            if (model.Segment != null)
+            {
+                model.SegmentID = model.Segment.ID;
+            }
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 1;
             if ((model.MembershipID > 0) && (model.IndustryID > 0) && (model.SegmentID > 0))
@@ -292,7 +296,7 @@ namespace Commsights.MVC.Controllers
                     membershipPermission.Code = AppGlobal.Product;
                     membershipPermission.MembershipID = membershipID;
                     membershipPermission.IndustryID = industryID;
-                    membershipPermission.SegmentID = model.Segment.ID;
+                    membershipPermission.SegmentID = model.SegmentID;
                     membershipPermission.ProductName = product.Trim();
                     membershipPermission.Initialization(InitType.Insert, RequestUserID);
                     result = result + _membershipPermissionRepository.Create(membershipPermission);

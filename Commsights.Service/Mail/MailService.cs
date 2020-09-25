@@ -48,6 +48,17 @@ namespace Commsights.Service.Mail
                     BodyEncoding = Encoding.GetEncoding("UTF-8"),
                     From = new MailAddress(mail.FromMail, mail.Display),
                 };
+                if (!string.IsNullOrEmpty(mail.AttachmentFiles))
+                {
+                    foreach (string attachmentFile in mail.AttachmentFiles.Split(';'))
+                    {
+                        if (!string.IsNullOrEmpty(attachmentFile))
+                        {
+                            System.Net.Mail.Attachment attachment = new System.Net.Mail.Attachment(mail.AttachmentFiles);
+                            message.Attachments.Add(attachment);
+                        }
+                    }
+                }
                 message.To.Add(mail.ToMail);
                 return message;
             }

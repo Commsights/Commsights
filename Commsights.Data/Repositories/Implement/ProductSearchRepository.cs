@@ -31,9 +31,24 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@IndustryID",industryID),
             };
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportDailyByDatePublishBeginAndDatePublishEndAndIndustryID", parameters);
-                list = SQLHelper.ToList<ProductSearchDataTransfer>(dt);               
+                list = SQLHelper.ToList<ProductSearchDataTransfer>(dt);
             }
             return list;
+        }
+        public string UpdateByID(int ID, int userUpdated, bool isSend)
+        {
+            string result = "";
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                    new SqlParameter("@UserUpdated",userUpdated),
+                    new SqlParameter("@IsSend",isSend),
+                };
+                result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductSearchUpdateByID", parameters);
+            }
+            return result;
         }
         public ProductSearchDataTransfer GetDataTransferByID(int ID)
         {

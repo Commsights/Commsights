@@ -32,9 +32,11 @@ namespace Commsights.Service.Mail
 
         public string Content { get; set; }
 
+        public string AttachmentFiles { get; set; }
+
         public string STMPServer { get; set; }
 
-        public int SMTPPort { get; set; }
+        public int SMTPPort { get; set; }        
 
         public bool IsUsingSSL { get; set; }
 

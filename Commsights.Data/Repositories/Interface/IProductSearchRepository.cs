@@ -12,7 +12,7 @@ namespace Commsights.Data.Repositories
         public ProductSearchDataTransfer GetDataTransferByID(int ID);
         public List<ProductSearchDataTransfer> InitializationByDatePublishToList(DateTime datePublish);
         public List<ProductSearch> GetByDateSearchBeginAndDateSearchEndToList(DateTime dateSearchBegin, DateTime dateSearchEnd);
-
+        public string UpdateByID(int ID, int userUpdated, bool isSend);
         public ProductSearch SaveProductSearch(string search, DateTime datePublishBegin, DateTime datePublishEnd, int requestUserID, bool isAll);
     }
 }

@@ -15,12 +15,13 @@
     columns.Bound(t => t.IsMenuLeft).Title("Is RSS").Width(100);
     columns.Bound(t => t.Title).Title("Title").Width(300);
     columns.Bound(t => t.URLFull).Title("URLFull").Width(300);
+    columns.Bound(t => t.Color).Title("Ad value (Color)").Width(200).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.BlackWhite).Title("Ad value (BlackWhite)").Width(200).HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.Parent.TextName).EditorTemplateName("Config_WebsiteType").Title("Media type").Width(200);
     columns.Bound(t => t.Country.TextName).EditorTemplateName("Config_Country").Title("Country").Width(200);
     columns.Bound(t => t.Language.TextName).EditorTemplateName("Config_Language").Title("Language").Width(200);
     columns.Bound(t => t.Frequency.TextName).EditorTemplateName("Config_Frequency").Title("Frequency").Width(200);
-    columns.Bound(t => t.BlackWhite).Title("BlackWhite").Width(200).HtmlAttributes(new { @class = "text-right" });
-    columns.Bound(t => t.Color).Title("Color").Width(200).HtmlAttributes(new { @class = "text-right" });
+
     columns.Bound(t => t.SortOrder).Title("Sort order").Width(200);
     columns.Bound(t => t.ID).Title("ID").Width(100);
 })

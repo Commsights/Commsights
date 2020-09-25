@@ -8,8 +8,16 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class='col-sm-1'>
-                        Company
+                    <div class='col-sm-4'>
+                        @(Html.Kendo().DropDownList()
+                     .Name("Industry")
+                     .DataValueField("ID")
+                     .DataTextField("CodeName")
+                    .HtmlAttributes(new { @class = "form-control" })
+                      .Events(e => e.DataBound("onIndustryDataBound").Change("onIndustryChange"))
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
+                            )
                     </div>
                     <div class='col-sm-4'>
                         @(Html.Kendo().DropDownList()
@@ -17,30 +25,16 @@
                      .DataValueField("ID")
                      .DataTextField("Account")
                      .HtmlAttributes(new { style = "width:100%; font-size: 16px;" })
-                      .Events(e => e.DataBound("onCustomerDataBound").Change("onCustomerChange"))
+                      .Events(e => e.DataBound("onCustomerDataBound"))
                        .Filter(FilterType.Contains)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCompetitorToList", "Membership")))
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByIndustryIDToList", "Membership").Data("filterCustomer")))
                             )
                     </div>
-                    @*<div class='col-sm-1'>
-                            Industry
-                        </div>
-                        <div class='col-sm-4'>
-                            @(Html.Kendo().DropDownList()
-                         .Name("Industry")
-                         .DataValueField("IndustryID")
-                         .DataTextField("IndustryName")
-                         .HtmlAttributes(new { @class = "form-control" })
-                          .Events(e => e.DataBound("onIndustryDataBound"))
-                           .Filter(FilterType.Contains)
-                         .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferIndustryByMembershipIDAndIndustryToList", "MembershipPermission").Data("filterIndustry")))
-                                )
-                        </div>*@
-                    @*<div class='col-sm-1'>
+                    <div class='col-sm-1'>
                             <button type="button" class="btn btn-success" onclick="onSearch()">
                                 <span class="fas fa-search"></span>
                             </button>
-                        </div>*@
+                    </div>
                 </div>
                 <br />
                 @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.MembershipPermissionDataTransfer>()
@@ -88,7 +82,7 @@
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetDataTransferSegmentByMembershipIDAndProductToList", "MembershipPermission").Data("filterProduct"))
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
-.Create(t => t.Action("CreateDataTransferSegmentProduct", "MembershipPermission").Data("filterCreateProduct"))
+.Create(t => t.Action("CreateDataTransferSegmentProduct", "MembershipPermission").Data("filterProduct"))
 .Update(t => t.Action("UpdateDataTransferSegmentProduct", "MembershipPermission"))
 )
 )
@@ -114,6 +108,17 @@
             $("#MembershipPermissionDataTransfer").data("kendoGrid").dataSource.read();
         }
     }
+    function onIndustryDataBound() {
+        var control = $("#Industry").data("kendoDropDownList");
+        var controlLength = control.dataSource.data().length;
+        if (controlLength > 0) {
+            control.select(0);
+            control.trigger("change");
+        }
+    }
+    function onIndustryChange() {
+        $("#Customer").data("kendoDropDownList").dataSource.read();
+    }
     function onCustomerDataBound() {
         var control = $("#Customer").data("kendoDropDownList");
         var controlLength = control.dataSource.data().length;
@@ -122,10 +127,13 @@
             control.trigger("change");
         }
     }
-    function onCustomerChange() {
+    function onSearch() {
         $("#MembershipPermissionDataTransfer").data("kendoGrid").dataSource.read();
     }
-
+    function filterCustomer(e) {
+        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
+        return { industryID: industryIDValue };
+    }
     function filterProduct(e) {
         var membershipIDValue = $("#Customer").data("kendoDropDownList").value();
         return { membershipID: membershipIDValue };

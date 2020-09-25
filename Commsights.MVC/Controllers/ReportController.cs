@@ -22,6 +22,7 @@ using OfficeOpenXml.Style;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using System.Diagnostics.Eventing.Reader;
 using Commsights.Service.Mail;
+using System.Drawing;
 
 namespace Commsights.MVC.Controllers
 {
@@ -162,22 +163,192 @@ namespace Commsights.MVC.Controllers
             List<ProductSearchDataTransfer> list = _productSearchRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
             foreach (ProductSearchDataTransfer item in list)
             {
-                ProductSearchDataTransfer model = InitializationReportDailyHTMLSendMail(item, "ReportDaily.html");
-                Commsights.Service.Mail.Mail mail = new Service.Mail.Mail();
-                mail.Initialization();
-                mail.Content = model.Note;
-                mail.Subject = "Daily Report (" + item.CompanyName + " - CommSights ) " + item.DateSearch.ToString("dd.MM.yyyy");
-                mail.ToMail = "vietnam.commsights@gmail.com";
-                //mail.ToMail = "khanh.nguyen@commsightsvn.com,ngoc.huynh@commsightsvn.com";
-                _mailService.Send(mail);
+                if (item.IsSend != true)
+                {
+                    ProductSearchDataTransfer model = InitializationReportDailyHTMLSendMail(item, "ReportDaily.html");
+                    Commsights.Service.Mail.Mail mail = new Service.Mail.Mail();
+                    mail.Initialization();
+                    mail.AttachmentFiles = model.PhysicalPath;
+                    mail.Content = model.Note;
+                    mail.Subject = "Daily Report (" + item.CompanyName + " - CommSights) " + item.DateSearch.ToString("dd.MM.yyyy");
+                    mail.ToMail = "vietnam.commsights@gmail.com";
+                    //mail.ToMail = "khanh.nguyen@commsightsvn.com,ngoc.huynh@commsightsvn.com";
+                    try
+                    {
+                        _mailService.Send(mail);                        
+                        _productSearchRepository.UpdateByID(item.ID, RequestUserID, true);
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                }
             }
             string note = AppGlobal.Success + " - " + AppGlobal.SendMailSuccess;
             return Json(note);
         }
         public ProductSearchDataTransfer InitializationReportDailyHTMLSendMail(ProductSearchDataTransfer model, string fileName)
         {
+            List<ProductSearchPropertyDataTransfer> listData = _reportRepository.ReportDailyByProductSearchIDAndActiveToListToHTML(model.ID, true);
+
+            //Export excel file
+            var streamExport = new MemoryStream();
+            using (var package = new ExcelPackage(streamExport))
+            {
+                Color color = Color.FromArgb(int.Parse("#c00000".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));
+
+                var workSheet = package.Workbook.Worksheets.Add("Sheet1");
+
+                workSheet.Cells[1, 6].Value = "DAILY REPORT (" + model.DateSearch.ToString("dd/MM/yyyy") + ")";
+                workSheet.Cells[1, 6].Style.Font.Bold = true;
+                workSheet.Cells[1, 6].Style.Font.Size = 12;
+                workSheet.Cells[1, 6].Style.Font.Name = "Times New Roman";
+                workSheet.Cells[1, 6].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                workSheet.Cells[3, 1].Value = "Date";
+                workSheet.Cells[3, 1].Style.Font.Bold = true;
+                workSheet.Cells[3, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[3, 1].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[3, 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[3, 1].Style.Fill.BackgroundColor.SetColor(color);
+
+                workSheet.Cells[3, 2].Value = "Category";
+                workSheet.Cells[3, 2].Style.Font.Bold = true;
+                workSheet.Cells[3, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[3, 2].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[3, 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[3, 2].Style.Fill.BackgroundColor.SetColor(color);
+
+                workSheet.Cells[3, 3].Value = "Company";
+                workSheet.Cells[3, 3].Style.Font.Bold = true;
+                workSheet.Cells[3, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[3, 3].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[3, 3].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[3, 3].Style.Fill.BackgroundColor.SetColor(color);
+
+                workSheet.Cells[3, 4].Value = "Sentiment";
+                workSheet.Cells[3, 4].Style.Font.Bold = true;
+                workSheet.Cells[3, 4].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[3, 4].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[3, 4].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[3, 4].Style.Fill.BackgroundColor.SetColor(color);
+
+                workSheet.Cells[3, 5].Value = "Headline (Vie)";
+                workSheet.Cells[3, 5].Style.Font.Bold = true;
+                workSheet.Cells[3, 5].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[3, 5].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[3, 5].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[3, 5].Style.Fill.BackgroundColor.SetColor(color);
+
+                workSheet.Cells[3, 6].Value = "Headline (Eng)";
+                workSheet.Cells[3, 6].Style.Font.Bold = true;
+                workSheet.Cells[3, 6].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[3, 6].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[3, 6].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[3, 6].Style.Fill.BackgroundColor.SetColor(color);
+
+                workSheet.Cells[3, 7].Value = "Media";
+                workSheet.Cells[3, 7].Style.Font.Bold = true;
+                workSheet.Cells[3, 7].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[3, 7].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[3, 7].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[3, 7].Style.Fill.BackgroundColor.SetColor(color);
+
+                workSheet.Cells[3, 8].Value = "Media type";
+                workSheet.Cells[3, 8].Style.Font.Bold = true;
+                workSheet.Cells[3, 8].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[3, 8].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[3, 8].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[3, 8].Style.Fill.BackgroundColor.SetColor(color);
+
+                workSheet.Cells[3, 9].Value = "Ad value";
+                workSheet.Cells[3, 9].Style.Font.Bold = true;
+                workSheet.Cells[3, 9].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[3, 9].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[3, 9].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[3, 9].Style.Fill.BackgroundColor.SetColor(color);
+
+                workSheet.Cells[3, 10].Value = "Summary";
+                workSheet.Cells[3, 10].Style.Font.Bold = true;
+                workSheet.Cells[3, 10].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[3, 10].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[3, 10].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[3, 10].Style.Fill.BackgroundColor.SetColor(color);
+
+                int i = 0;
+                for (int row = 4; row <= listData.Count + 1; row++)
+                {
+                    workSheet.Cells[row, 1].Value = listData[i].DatePublishString;
+                    workSheet.Cells[row, 2].Value = listData[i].ArticleTypeName;
+                    workSheet.Cells[row, 3].Value = listData[i].CompanyName;
+                    workSheet.Cells[row, 4].Value = listData[i].AssessName;
+                    string assessName = listData[i].AssessName.ToLower();
+                    if (assessName == "negative")
+                    {
+                        workSheet.Cells[row, 4].Style.Font.Color.SetColor(System.Drawing.Color.Red);
+                    }
+                    workSheet.Cells[row, 5].Value = listData[i].Title;
+                    if (!string.IsNullOrEmpty(listData[i].Title))
+                    {
+                        workSheet.Cells[row, 5].Hyperlink = new Uri(listData[i].URLCode);
+                        workSheet.Cells[row, 5].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                    }
+                    workSheet.Cells[row, 6].Value = listData[i].TitleEnglish;
+                    if (!string.IsNullOrEmpty(listData[i].TitleEnglish))
+                    {
+                        workSheet.Cells[row, 6].Hyperlink = new Uri(listData[i].URLCode);
+                        workSheet.Cells[row, 6].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                    }
+                    workSheet.Cells[row, 7].Value = listData[i].Media;
+                    workSheet.Cells[row, 8].Value = listData[i].MediaType;
+                    workSheet.Cells[row, 9].Value = listData[i].AdvertisementValueString;
+                    workSheet.Cells[row, 10].Value = listData[i].Summary;
+                    i = i + 1;
+                }
+                for (int row = 3; row <= listData.Count + 1; row++)
+                {
+                    for (int column = 1; column <= 10; column++)
+                    {
+                        workSheet.Cells[row, column].Style.Font.Name = "Times New Roman";
+                        workSheet.Cells[row, column].Style.Font.Size = 12;
+                        workSheet.Cells[row, column].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[row, column].Style.Border.Top.Color.SetColor(Color.Black);
+                        workSheet.Cells[row, column].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[row, column].Style.Border.Left.Color.SetColor(Color.Black);
+                        workSheet.Cells[row, column].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[row, column].Style.Border.Right.Color.SetColor(Color.Black);
+                        workSheet.Cells[row, column].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[row, column].Style.Border.Bottom.Color.SetColor(Color.Black);
+                    }
+                }
+                workSheet.Column(1).AutoFit();
+                workSheet.Column(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                workSheet.Column(2).AutoFit();
+                workSheet.Column(3).AutoFit();
+                workSheet.Column(4).AutoFit();
+                workSheet.Column(5).AutoFit();
+                workSheet.Column(6).AutoFit();
+                workSheet.Column(7).AutoFit();
+                workSheet.Column(8).AutoFit();
+                workSheet.Column(9).AutoFit();
+                workSheet.Column(9).Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                workSheet.Column(10).AutoFit();
+                package.Save();
+            }
+            streamExport.Position = 0;
+            string excelName = @"ReportDaily_" + AppGlobal.DateTimeCode + ".xlsx";
+            if (model != null)
+            {
+                excelName = "Daily Report (" + model.CompanyName + " - CommSights) " + model.DateSearch.ToString("dd.MM.yyyy") + ".xlsx";
+            }
+            var physicalPathCreate = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.FTPDownloadReprotDaily, excelName);
+            using (var stream = new FileStream(physicalPathCreate, FileMode.Create))
+            {
+                streamExport.CopyTo(stream);
+            }
+            model.PhysicalPath = physicalPathCreate;
+            //HTML
             string html = "";
-            var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "html", fileName);
+            var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.HTML, fileName);
             using (var stream = new FileStream(physicalPath, FileMode.Open))
             {
                 using (StreamReader reader = new StreamReader(stream))
@@ -201,7 +372,6 @@ namespace Commsights.MVC.Controllers
                 StringBuilder reportData = new StringBuilder();
                 StringBuilder reportSummary = new StringBuilder();
                 List<MembershipPermission> listDailyReportSection = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCodeToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportSection);
-                List<ProductSearchPropertyDataTransfer> listData = _reportRepository.ReportDailyByProductSearchIDAndActiveToListToHTML(model.ID, true);
                 foreach (MembershipPermission dailyReportSection in listDailyReportSection)
                 {
                     if ((dailyReportSection.CategoryID == AppGlobal.DailyReportSectionSummaryID) && (dailyReportSection.Active == true))
@@ -242,7 +412,6 @@ namespace Commsights.MVC.Controllers
                     {
                         if (listData.Count > 0)
                         {
-                            int no = 0;
                             int DailyReportColumnDatePublishID = 0;
                             int DailyReportColumnCategoryID = 0;
                             int DailyReportColumnCompanyID = 0;
@@ -359,15 +528,7 @@ namespace Commsights.MVC.Controllers
                             {
                                 string title = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.Title + "</a></td>";
                                 string titleEnglish = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.TitleEnglish + "</a></td>";
-                                no = no + 1;
-                                if (no % 2 == 0)
-                                {
-                                    reportData.AppendLine(@"<tr style='background-color:#ffffff;'>");
-                                }
-                                else
-                                {
-                                    reportData.AppendLine(@"<tr style='background-color:#f1f1f1;'>");
-                                }
+                                reportData.AppendLine(@"<tr>");
                                 for (int i = 1; i < 12; i++)
                                 {
                                     if ((DailyReportColumnDatePublishID > 0) && (DailyReportColumnDatePublishIDSortOrder == i))
@@ -449,7 +610,7 @@ namespace Commsights.MVC.Controllers
         public ProductSearchDataTransfer InitializationReportDailyHTML(ProductSearchDataTransfer model, string fileName)
         {
             string html = "";
-            var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "html", fileName);
+            var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.HTML, fileName);
             using (var stream = new FileStream(physicalPath, FileMode.Open))
             {
                 using (StreamReader reader = new StreamReader(stream))
@@ -618,7 +779,6 @@ namespace Commsights.MVC.Controllers
                             reportData.AppendLine(@"</tr>");
                             reportData.AppendLine(@"</thead>");
                             reportData.AppendLine(@"<tbody>");
-
                             foreach (ProductSearchPropertyDataTransfer data in listData)
                             {
                                 string title = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.Title + "</a></td>";

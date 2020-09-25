@@ -37,6 +37,12 @@
                             </button>
                         </div>
                     </div>
+                    <div class='col-md-1'>
+                        <label for='DatePublishEnd'>Daily</label>
+                        <a asp-action="Index" asp-controller="Report" title="Files" style="width:100%;" class="btn btn-info">
+                            <span class="fas fa-arrow-left"></span>
+                        </a>
+                    </div>
                 </div>
                 <br />
                 @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ProductSearchDataTransfer>()
@@ -114,7 +120,7 @@
                 datePublishBegin: datePublishBeginValue,
                 datePublishEnd: datePublishEndValue
             },
-             success: function (e) {              
+             success: function (e) {
                  var messageType = e.split('-')[0];
                  var note = e.split('-')[1];
                  var notification = $("#Notification").data("kendoNotification");
@@ -123,7 +129,7 @@
                 EndRequestHandler();
             }
          }).done(() => {
-            
+
         });
 
     }
