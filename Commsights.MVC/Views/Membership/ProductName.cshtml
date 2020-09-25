@@ -80,7 +80,7 @@
     model.Field(t => t.Segment).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetDataTransferSegmentByMembershipIDAndProductToList", "MembershipPermission").Data("filterProduct"))
+.Read(t => t.Action("GetDataTransferSegmentByMembershipIDAndIndustryIDAndCodeToList", "MembershipPermission").Data("filterProduct"))
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
 .Create(t => t.Action("CreateDataTransferSegmentProduct", "MembershipPermission").Data("filterCreateProduct"))
 .Update(t => t.Action("UpdateDataTransferSegmentProduct", "MembershipPermission"))
@@ -140,7 +140,8 @@
     }
     function filterProduct(e) {
         var membershipIDValue = $("#Customer").data("kendoDropDownList").value();
-        return { membershipID: membershipIDValue };
+        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
+        return { membershipID: membershipIDValue, industryID: industryIDValue };
     }
     function filterCreateProduct(e) {
         var membershipIDValue = $("#Customer").data("kendoDropDownList").value();

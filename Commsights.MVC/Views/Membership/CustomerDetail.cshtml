@@ -74,12 +74,12 @@
                                     )
                             </div>
                             <div class='form-group'>
-                                <label for='DateBegin'>Date begin</label>
-                                @(Html.TextBoxFor(Model => Model.DateBegin, "{0:MM/dd/yyyy}", new { placeholder = "Date begin (Month/Day/Year - MM/dd/yyyy)", @class = "form-control", style = "text-align:right;" }))
+                                <label for='DateBegin'>Contract begin</label>
+                                @(Html.TextBoxFor(Model => Model.DateBegin, "{0:MM/dd/yyyy}", new { placeholder = "Contract begin (Month/Day/Year - MM/dd/yyyy)", @class = "form-control", style = "text-align:right;" }))
                             </div>
                             <div class='form-group'>
-                                <label for='DateEnd'>Date end</label>
-                                @(Html.TextBoxFor(Model => Model.DateEnd, "{0:MM/dd/yyyy}", new { placeholder = "Date end (Month/Day/Year - MM/dd/yyyy)", @class = "form-control", style = "text-align:right;" }))
+                                <label for='DateEnd'>Contract end</label>
+                                @(Html.TextBoxFor(Model => Model.DateEnd, "{0:MM/dd/yyyy}", new { placeholder = "Contract end (Month/Day/Year - MM/dd/yyyy)", @class = "form-control", style = "text-align:right;" }))
                             </div>
                             <div class='form-group'>
                                 <label for='Email'>Email</label>
@@ -275,7 +275,7 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.Segment.TextName).EditorTemplateName("Config_Segment").Title("Segment").Width(300);
+    columns.Bound(t => t.Segment.TextName).EditorTemplateName("Config_SegmentByIndustry").Title("Segment").Width(300);
     columns.Bound(t => t.ProductName).Title("Product").Width(300);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
@@ -577,8 +577,8 @@
     columns.Bound(t => t.Active).Title("Select").Width(100);
     columns.Bound(t => t.SortOrder).Title("Sort").Width(200);
     columns.Bound(t => t.FullName).Title("Upload").Width(200);
-    columns.Bound(t => t.Email).Title("English").Width(200);
-    columns.Bound(t => t.Phone).Title("Vietnamese").Width(200);
+    columns.Bound(t => t.DailyReportColumnName).Title("English").Width(200);
+    columns.Bound(t => t.DailyReportColumnNote).Title("Vietnamese").Width(200);
 })
 .Editable(editable => editable.Mode(GridEditMode.InLine))
 .Sortable()
@@ -610,6 +610,8 @@
 .Model(model =>
 {
     model.Id(t => t.ID);
+    model.Field(t => t.DailyReportColumnName).Editable(false);
+    model.Field(t => t.DailyReportColumnNote).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEndDailyReportColumn"); })
 .Read(t => t.Action("GetDataTransferDailyReportColumnByMembershipIDAndIndustryIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
@@ -888,5 +890,8 @@
         var industryIDValue = $("#Industry").data("kendoDropDownList").value();
         return { membershipID: membershipIDValue, industryID: industryIDValue };
     }
-
+    function filterConfig_SegmentByIndustry(e) {
+        var parentIDValue = $("#Industry").data("kendoDropDownList").value();
+        return { parentID: parentIDValue };
+    }
 </script>

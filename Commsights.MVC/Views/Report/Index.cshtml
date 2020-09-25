@@ -65,16 +65,16 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); }).Width(150);
-    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=URLCode#"");' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("URL").Width(70);
+    columns.Template(@"<a onclick='javascript:OpenWindowLeftByURL(""#=URLCode#"");' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("URL").Width(70);
     columns.Bound(t => t.IsData).Title("Data").Width(100);
     columns.Bound(t => t.IsSummary).Title("Summary").Width(100);
     columns.Bound(t => t.Company.TextName).EditorTemplateName("Membership_Company").Title("Company").Width(200);
     columns.Bound(t => t.ArticleType.TextName).EditorTemplateName("Config_ArticleType").Title("Article type").Width(200);
     columns.Bound(t => t.AssessType.TextName).EditorTemplateName("Config_AssessType").Title("Sentiment").Width(150);
-    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=URLCode#"");' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(1000);
-    columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(1000);
-    columns.Bound(t => t.Description).Title("Summary").Width(1000);
-    columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(1000);  
+    columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(300);
+    columns.Bound(t => t.Description).Title("Summary").Width(300);
+    columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(300);
+    columns.Template(@"<a onclick='javascript:OpenWindowLeftByURL(""#=URLCode#"");' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(1000);
     columns.Bound(t => t.DatePublish).Title("Publish").Width(200).HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.Media).Title("Media").Width(200);
     columns.Bound(t => t.MediaType).Title("Media type").Width(200);

@@ -43,10 +43,22 @@
             $('#Dim').focus();
         }
         function OpenWindowByURL(URLParamater, w = 100, h = 200) {
-            var width01 = screen.width - w;
-            var height01 = screen.height - h;
-            var left = (screen.width - width01) / 2;
-            var top = (screen.height - height01) / 3;
+            var width = screen.width;
+            var height = screen.height;
+            var width01 = width - w;
+            var height01 = height - h;
+            var left = (width - width01) / 2;
+            var top = (height - height01) / 3;
+            var url = URLParamater;
+            window.open(url, '_blank', 'location=yes,height=' + height01 + ',width=' + width01 + ',scrollbars=yes,status=yes,toolbar=yes,top=' + top + ',left=' + left + '');
+        }
+        function OpenWindowLeftByURL(URLParamater, w = 100, h = 200) {
+            var width = screen.width;
+            var height = screen.height;
+            var width01 = width/2;
+            var height01 = height/2;
+            var left = width01 - 20;
+            var top = height01 - 120;            
             var url = URLParamater;
             window.open(url, '_blank', 'location=yes,height=' + height01 + ',width=' + width01 + ',scrollbars=yes,status=yes,toolbar=yes,top=' + top + ',left=' + left + '');
         }
@@ -237,11 +249,17 @@
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Industry</p>
                                     </a>
-                                </li>                                
+                                </li>
                                 <li class="nav-item">
                                     <a href="/Membership/CompanyByIndustry001" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Company by industry</p>
+                                        <p>By industry (Create)</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/Membership/CompanyByIndustry" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>By industry (Select)</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">

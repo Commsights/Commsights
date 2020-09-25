@@ -58,7 +58,7 @@ namespace Commsights.Data.Helpers
                 return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DailyReportColumnSentimentID").Value);
             }
         }
-       
+
         public static int DailyReportColumnHeadlineVietnameseID
         {
             get
@@ -1975,9 +1975,9 @@ namespace Commsights.Data.Helpers
                             {
                                 ProductProperty productProperty = new ProductProperty();
                                 productProperty.GUICode = model.GUICode;
-                                productProperty.Code = AppGlobal.URLCode;
                                 productProperty.Note = url;
-                                productProperty.ParentID = 0;
+                                productProperty.ProductID = 0;
+                                productProperty.Code = AppGlobal.URLCode;
                                 productProperty.Initialization(InitType.Insert, RequestUserID);
                                 listProductProperty.Add(productProperty);
                             }

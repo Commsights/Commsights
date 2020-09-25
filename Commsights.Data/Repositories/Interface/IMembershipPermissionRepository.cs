@@ -43,5 +43,6 @@ namespace Commsights.Data.Repositories
         public void InitializationDailyReportSectionByMembershipIDAndIndustryID(int membershipID, int industryID, string code, int requestUserID);
         public void InitializationDailyReportColumnByMembershipIDAndIndustryID(int membershipID, int industryID, string code, int requestUserID);
         public void InitializationChannelByMembershipIDAndIndustryID(int membershipID, int industryID, string code, int requestUserID);
+        public List<MembershipPermissionDataTransfer> GetDataTransferSegmentByMembershipIDAndIndustryIDAndCode001ToList(int membershipID, int industryID, string code);
     }
 }

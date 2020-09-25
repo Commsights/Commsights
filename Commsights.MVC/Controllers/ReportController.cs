@@ -175,7 +175,7 @@ namespace Commsights.MVC.Controllers
                     //mail.ToMail = "khanh.nguyen@commsightsvn.com,ngoc.huynh@commsightsvn.com";
                     try
                     {
-                        _mailService.Send(mail);                        
+                        _mailService.Send(mail);
                         _productSearchRepository.UpdateByID(item.ID, RequestUserID, true);
                     }
                     catch (Exception e)
@@ -2164,8 +2164,7 @@ namespace Commsights.MVC.Controllers
                                             ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
                                             if (workSheet != null)
                                             {
-
-                                                int totalRows = workSheet.Dimension.Rows;
+                                                int totalRows = workSheet.Dimension.Rows + 1;
                                                 for (int i = 6; i <= totalRows; i++)
                                                 {
                                                     List<ProductProperty> listProductProperty = new List<ProductProperty>();
@@ -2189,7 +2188,7 @@ namespace Commsights.MVC.Controllers
                                                         productProperty.ParentID = 0;
                                                         productProperty.Code = AppGlobal.Industry;
                                                         productProperty.Initialization(InitType.Insert, RequestUserID);
-                                                        _productPropertyRepository.Create(productProperty);
+                                                        listProductProperty.Add(productProperty);
                                                     }
                                                     model.Initialization(InitType.Insert, RequestUserID);
                                                     model.DatePublish = DateTime.Now;
@@ -2258,7 +2257,7 @@ namespace Commsights.MVC.Controllers
                                                                 productProperty.ParentID = 0;
                                                                 productProperty.Code = AppGlobal.Company;
                                                                 productProperty.Initialization(InitType.Insert, RequestUserID);
-                                                                _productPropertyRepository.Create(productProperty);
+                                                                listProductProperty.Add(productProperty);
                                                             }
                                                         }
                                                         if (workSheet.Cells[i, 5].Value != null)
@@ -2292,12 +2291,16 @@ namespace Commsights.MVC.Controllers
                                                             if (parent == null)
                                                             {
                                                                 parent = new Config();
+                                                                parent.GroupName = AppGlobal.CRM;
+                                                                parent.Code = code;
                                                                 parent.Title = mediaTitle;
                                                                 parent.CodeName = mediaTitle;
                                                                 Config parentOfParent = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.WebsiteType, mediaType);
                                                                 if (parentOfParent == null)
                                                                 {
                                                                     parentOfParent = new Config();
+                                                                    parentOfParent.GroupName = AppGlobal.CRM;
+                                                                    parentOfParent.Code = AppGlobal.WebsiteType;
                                                                     parentOfParent.CodeName = mediaType;
                                                                     parentOfParent.Initialization(InitType.Insert, RequestUserID);
                                                                     _configResposistory.Create(parentOfParent);
@@ -2343,54 +2346,34 @@ namespace Commsights.MVC.Controllers
                                                         }
                                                         model.MetaTitle = AppGlobal.SetName(model.Title);
                                                         model.CategoryID = model.ParentID;
-                                                        model.TitleEnglish = "";
                                                         model.Description = "";
                                                         model.Source = "Andi";
-                                                        if (!string.IsNullOrEmpty(model.URLCode))
+                                                        bool saveModel = true;
+                                                        saveModel = _productRepository.IsValid(model.URLCode);
+                                                        if (model.IsVideo != null)
                                                         {
-                                                            Product product = _productRepository.GetByURLCode(model.URLCode);
-                                                            if (product == null)
+                                                            saveModel = _productRepository.IsValidByFileNameAndDatePublish(model.URLCode, model.DatePublish);
+                                                        }
+                                                        if (saveModel)
+                                                        {
+                                                            model.MetaTitle = AppGlobal.SetName(model.Title);
+                                                            model.CategoryID = model.ParentID;
+                                                            _productRepository.Create(model);
+                                                        }
+                                                        if (model.ID > 0)
+                                                        {
+                                                            if (listProductProperty.Count > 0)
                                                             {
-                                                                bool saveModel = true;
-                                                                saveModel = _productRepository.IsValid(model.URLCode);
-                                                                if (model.IsVideo != null)
+                                                                model.URLCode = "/Product/ViewContent/" + model.ID;
+                                                                _productRepository.Update(model.ID, model);
+                                                                for (int j = 0; j < listProductProperty.Count; j++)
                                                                 {
-                                                                    saveModel = _productRepository.IsValidByFileNameAndDatePublish(model.URLCode, model.DatePublish);
+                                                                    listProductProperty[j].ParentID = model.ID;
+                                                                    listProductProperty[j].IndustryID = model.IndustryID;
+                                                                    listProductProperty[j].ArticleTypeID = model.ArticleTypeID;
+                                                                    listProductProperty[j].AssessID = model.AssessID;
                                                                 }
-                                                                if (saveModel)
-                                                                {
-                                                                    _productRepository.Create(model);
-                                                                }
-                                                            }
-                                                            else
-                                                            {
-                                                                if (product.ID > 0)
-                                                                {
-                                                                    if (baseViewModel.IsUploadAndiSourceOverride == true)
-                                                                    {
-                                                                        model.ID = product.ID;
-                                                                        model.DateCreated = product.DateCreated;
-                                                                        model.Initialization(InitType.Update, RequestUserID);
-                                                                        _productRepository.Update(model.ID, model);
-                                                                    }
-                                                                }
-                                                            }
-                                                            if (model.ID > 0)
-                                                            {
-                                                                if (listProductProperty.Count > 0)
-                                                                {
-                                                                    if (model.URLCode.Contains("http") == false)
-                                                                    {
-                                                                        model.URLCode = AppGlobal.DomainMain + "Product/ViewContent/" + model.ID;
-                                                                        _productRepository.Update(model.ID, model);
-                                                                    }
-                                                                    for (int j = 0; j < listProductProperty.Count; j++)
-                                                                    {
-                                                                        listProductProperty[j].ParentID = model.ID;
-                                                                    }
-                                                                    _productPropertyRepository.Range(listProductProperty);
-                                                                    _productPropertyRepository.UpdateItemsWithParentIDIsZero();
-                                                                }
+                                                                _productPropertyRepository.Range(listProductProperty);
                                                             }
                                                         }
                                                         result = result + 1;

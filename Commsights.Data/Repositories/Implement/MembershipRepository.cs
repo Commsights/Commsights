@@ -133,7 +133,7 @@ namespace Commsights.Data.Repositories
             Membership membership = new Membership();
             if (!string.IsNullOrEmpty(account))
             {
-                membership = _context.Membership.FirstOrDefault(item => item.Account.Equals(account));
+                membership = _context.Membership.FirstOrDefault(item => item.Account.ToLower() == account.ToLower());
             }
             return membership;
         }
