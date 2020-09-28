@@ -39,7 +39,7 @@
                             <div class='form-group'>
                                 <label for='FullName'>Full name</label>
                                 @(Html.TextBoxFor(Model => Model.FullName, new { placeholder = "Full name", @class = "form-control" }))
-                            </div>
+                            </div>                           
                         </div>
                         <div class="col-md-6">
                             <div class='form-group'>
@@ -51,6 +51,10 @@
                                     .Filter(FilterType.Contains)
                                    .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetMembershipTypeToList", "Config")))
                                     )
+                            </div>
+                            <div class='form-group'>
+                                <label for='Website'>Website</label>
+                                @(Html.TextBoxFor(Model => Model.Website, new { placeholder = "Website", @class = "form-control" }))
                             </div>
                         </div>
                     </div>

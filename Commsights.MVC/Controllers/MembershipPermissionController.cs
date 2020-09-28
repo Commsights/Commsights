@@ -299,8 +299,8 @@ namespace Commsights.MVC.Controllers
                 {
                     MembershipPermission membershipPermission = new MembershipPermission();
                     membershipPermission.Code = AppGlobal.Product;
-                    membershipPermission.MembershipID = membershipID;
-                    membershipPermission.IndustryID = industryID;
+                    membershipPermission.MembershipID = model.MembershipID;
+                    membershipPermission.IndustryID = model.IndustryID;
                     membershipPermission.SegmentID = model.SegmentID;
                     membershipPermission.ProductName = product.Trim();
                     membershipPermission.Initialization(InitType.Insert, RequestUserID);

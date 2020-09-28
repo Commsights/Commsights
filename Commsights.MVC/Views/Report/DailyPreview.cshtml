@@ -52,8 +52,9 @@
     columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/Report/DailyPrintPreviewFormHTML/#=ID#"");' title='Preview' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-print'></i></a>").Title("Preview").Width(70);
     columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/Report/DataHTML/#=ID#"");' title='Excel' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-file-excel'></i></a>").Title("Excel").Width(70);
     columns.Bound(t => t.CompanyName).Title("Company").Width(200).HtmlAttributes(new { style = "font-weight: bold;" });
-    columns.Bound(t => t.IsSend).Title("Send").Width(100);
+    columns.Bound(t => t.DateSearch).Title("Date search").Width(200).HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.DateSend).Title("Date send").Width(200).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.IsSend).Title("Send").Width(100);
 })
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
@@ -88,7 +89,7 @@
 {
     model.Id(t => t.ID);
 })
-.Read(t => t.Action("InitializationByDatePublishBeginAndDatePublishEndAndIndustryIDToList", "Report").Data("filterReport"))
+.Read(t => t.Action("InitializationByDatePublishBeginAndDatePublishEndAndIndustryIDAndHourSearchToList", "Report").Data("filterReport"))
 ))
             </div>
         </div>

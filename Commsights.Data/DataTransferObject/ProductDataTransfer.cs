@@ -48,5 +48,6 @@ namespace Commsights.Data.DataTransferObject
         public ModelTemplate ArticleType { get; set; }
         public ModelTemplate Company { get; set; }
         public ModelTemplate AssessType { get; set; }
+        public ModelTemplate Segment { get; set; }
     }
 }

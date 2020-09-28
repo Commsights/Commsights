@@ -64,20 +64,21 @@
 .Name("ProductDataTransfer")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); }).Width(150);
-    columns.Template(@"<a onclick='javascript:OpenWindowLeftByURL(""#=URLCode#"");' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("URL").Width(70);
-    columns.Bound(t => t.IsData).Title("Data").Width(100);
-    columns.Bound(t => t.IsSummary).Title("Summary").Width(100);
-    columns.Bound(t => t.Company.TextName).EditorTemplateName("Membership_Company").Title("Company").Width(200);
-    columns.Bound(t => t.ArticleType.TextName).EditorTemplateName("Config_ArticleType").Title("Article type").Width(200);
+
+    columns.Command( command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#009966; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150).Locked(true);
+    columns.Template(@"<a onclick='javascript:OpenWindowLeftByURL(""#=URLCode#"");' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("URL").Width(70).Locked(true);
+    columns.Bound(t => t.IsData).Title("Data").Width(100).Locked(true);
+    columns.Bound(t => t.IsSummary).Title("Summary").Width(100).Locked(true);
+    columns.Bound(t => t.Company.TextName).EditorTemplateName("Membership_CompanyByIndustry").Title("Company").Width(200);
+    columns.Bound(t => t.Segment.TextName).EditorTemplateName("Config_SegmentByIndustry").Title("Segment").Width(200);
+    columns.Bound(t => t.ArticleType.TextName).EditorTemplateName("Config_ArticleType").Title("Category").Width(200);
     columns.Bound(t => t.AssessType.TextName).EditorTemplateName("Config_AssessType").Title("Sentiment").Width(150);
-    columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(300);
-    columns.Bound(t => t.Description).Title("Summary").Width(300);
-    columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(300);
-    columns.Template(@"<a onclick='javascript:OpenWindowLeftByURL(""#=URLCode#"");' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(1000);
-    columns.Bound(t => t.DatePublish).Title("Publish").Width(200).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Description).Title("Summary").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Template(@"<a onclick='javascript:OpenWindowLeftByURL(""#=URLCode#"");' title='#=Title#' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.DatePublish).Title("Publish").Format("{0:dd/MM/yyyy}").Width(200).HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.Media).Title("Media").Width(200);
-    columns.Bound(t => t.MediaType).Title("Media type").Width(200);
 })
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
@@ -104,7 +105,7 @@
 .FileName("Article.pdf")
 )
 .HtmlAttributes(new { @class = "KendoGrid" })
-.Search(search => { search.Field(f => f.CompanyName); search.Field(f => f.ArticleTypeName); search.Field(f => f.AssessName); search.Field(f => f.TitleEnglish); search.Field(f => f.Description); search.Field(f => f.DescriptionEnglish); search.Field(f => f.Media); search.Field(f => f.MediaType); search.Field(f => f.Title); search.Field(f => f.URLCode); })
+.Search(search => { search.Field(f => f.CompanyName); search.Field(f => f.ArticleTypeName); search.Field(f => f.AssessName); search.Field(f => f.TitleEnglish); search.Field(f => f.Description); search.Field(f => f.DescriptionEnglish); search.Field(f => f.Media); search.Field(f => f.Title); search.Field(f => f.URLCode); })
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(10000)
@@ -115,11 +116,13 @@
     model.Field(t => t.Media).Editable(false);
     model.Field(t => t.MediaType).Editable(false);
     model.Field(t => t.Company).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Field(t => t.Segment).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
     model.Field(t => t.ArticleType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
     model.Field(t => t.AssessType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList", "Report").Data("filterProduct"))
+.Read(t => t.Action("GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList", "Report").Data("filterProduct"))
+.Create(t => t.Action("CopyProductProperty", "Report"))
 .Update(t => t.Action("UpdateDataTransfer", "Report"))))
             </div>
         </div>
@@ -140,7 +143,7 @@
             notification.show(note, messageType);
             $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
         }
-    }
+    }    
     function onIndustryDataBound() {
         var control = $("#Industry").data("kendoDropDownList");
         var controlLength = control.dataSource.data().length;
@@ -149,7 +152,14 @@
             onSearch();
         }
     }
-
+    function filterConfig_SegmentByIndustry(e) {
+        var parentIDValue = $("#Industry").data("kendoDropDownList").value();
+        return { parentID: parentIDValue };
+    }
+    function filterMembership_CompanyByIndustry(e) {
+        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
+        return { industryID: industryIDValue };
+    }
     function filterProduct(e) {
         var industryIDValue = $("#Industry").data("kendoDropDownList").value();
         var datePublishBeginValue = toDate02($("#DatePublishBegin").val());

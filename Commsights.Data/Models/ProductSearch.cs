@@ -15,6 +15,7 @@ namespace Commsights.Data.Models
         public string Title { get; set; }
         public string SearchString { get; set; }
         public string Summary { get; set; }
+        public int? HourSearch { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]

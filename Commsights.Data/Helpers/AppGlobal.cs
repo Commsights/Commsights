@@ -21,6 +21,7 @@ namespace Commsights.Data.Helpers
         public static string InitString => string.Empty;
 
         public static string DateTimeCode => DateTime.Now.ToString("yyyyMMddHHmmss");
+        public static string HourCode => DateTime.Now.ToString("yyyyMMddHH");
 
         public static string InitGuiCode => Guid.NewGuid().ToString();
         #endregion
@@ -1937,7 +1938,7 @@ namespace Commsights.Data.Helpers
             fileNameReturn = fileNameReturn.Replace("--", "-");
             return fileNameReturn;
         }
-        public static void GetURLByURLAndi(Product model, List<ProductProperty> listProductProperty, int RequestUserID)
+        public static void GetURLByURLAndi(Product model, List<ProductProperty> listProductPropertyURLCode, int RequestUserID)
         {
             string html = "";
             try
@@ -1979,7 +1980,7 @@ namespace Commsights.Data.Helpers
                                 productProperty.ProductID = 0;
                                 productProperty.Code = AppGlobal.URLCode;
                                 productProperty.Initialization(InitType.Insert, RequestUserID);
-                                listProductProperty.Add(productProperty);
+                                listProductPropertyURLCode.Add(productProperty);
                             }
                         }
                     }

@@ -134,6 +134,14 @@ namespace Commsights.Data.Repositories
             if (!string.IsNullOrEmpty(account))
             {
                 membership = _context.Membership.FirstOrDefault(item => item.Account.ToLower() == account.ToLower());
+                if (membership == null)
+                {
+                    membership = _context.Membership.FirstOrDefault(item => item.FullName.ToLower() == account.ToLower());
+                }
+                if (membership == null)
+                {
+                    membership = _context.Membership.FirstOrDefault(item => item.Website.ToLower() == account.ToLower());
+                }
             }
             return membership;
         }

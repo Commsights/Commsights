@@ -119,17 +119,24 @@ namespace Commsights.Data.Repositories
         }
         public Product GetByURLCode(string uRLCode)
         {
-            Product product = new Product();
-            if (!string.IsNullOrEmpty(uRLCode))
+            SqlParameter[] parameters =
             {
-                SqlParameter[] parameters =
-                {
                     new SqlParameter("@URLCode",uRLCode),
                 };
-                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectByURLCode", parameters);
-                product = SQLHelper.ToList<ProductDataTransfer>(dt).FirstOrDefault();
-            }
-            return product;
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectByURLCode", parameters);
+            return SQLHelper.ToList<ProductDataTransfer>(dt).FirstOrDefault();
+        }
+        public Product GetByURLCode001(string uRLCode)
+        {
+            return _context.Set<Product>().FirstOrDefault(item => item.URLCode.Equals(uRLCode));
+        }
+        public Product GetByFileName(string fileName)
+        {
+            return _context.Set<Product>().FirstOrDefault(item => item.FileName.Equals(fileName));
+        }
+        public Product GetByFileNameAndDatePublish(string fileName, DateTime datePublish)
+        {
+            return _context.Set<Product>().FirstOrDefault(item => item.FileName.Equals(fileName) && item.DatePublish.Equals(datePublish));
         }
         public List<ProductDataTransfer> GetDataTransferByProductSearchIDToList(int productSearchID)
         {
@@ -412,7 +419,7 @@ namespace Commsights.Data.Repositories
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectDataTransferByDatePublishBeginAndDatePublishEndAndIndustryID", parameters);
                 list = SQLHelper.ToList<ProductDataTransfer>(dt);
                 for (int i = 0; i < list.Count; i++)
-                {                    
+                {
                     list[i].ArticleType = new ModelTemplate();
                     list[i].ArticleType.ID = list[i].ArticleTypeID;
                     list[i].ArticleType.TextName = list[i].ArticleTypeName;
@@ -427,9 +434,24 @@ namespace Commsights.Data.Repositories
 
             return list;
         }
+        public Product GetByID001(int ID)
+        {
+            Product model = new Product();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ID",ID),
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectByID", parameters);
+                model = SQLHelper.ToList<Product>(dt).FirstOrDefault();
+            }
+
+            return model;
+        }
         public void FilterProduct(Product product, List<ProductProperty> listProductProperty, int RequestUserID)
         {
-            if(string.IsNullOrEmpty(product.Title))
+            if (string.IsNullOrEmpty(product.Title))
             {
                 product.Title = "";
             }
@@ -493,7 +515,7 @@ namespace Commsights.Data.Repositories
                         productProperty.ParentID = 0;
                         productProperty.ArticleTypeID = AppGlobal.TinSanPhamID;
                         productProperty.AssessID = product.AssessID;
-                        productProperty.GUICode = product.GUICode;                        
+                        productProperty.GUICode = product.GUICode;
                         segment = _configResposistory.GetByID(listProduct[i].SegmentID.Value);
                         if (order == 0)
                         {
@@ -600,7 +622,7 @@ namespace Commsights.Data.Repositories
                         productProperty.ParentID = 0;
                         productProperty.ArticleTypeID = AppGlobal.TinNganhID;
                         productProperty.AssessID = product.AssessID;
-                        productProperty.GUICode = product.GUICode;                        
+                        productProperty.GUICode = product.GUICode;
                         segment = _configResposistory.GetByID(listSegment[i].ParentID.Value);
                         if (order == 0)
                         {
@@ -688,7 +710,7 @@ namespace Commsights.Data.Repositories
                         productProperty.ParentID = 0;
                         productProperty.ArticleTypeID = AppGlobal.TinNganhID;
                         productProperty.AssessID = product.AssessID;
-                        productProperty.GUICode = product.GUICode;                       
+                        productProperty.GUICode = product.GUICode;
                         if (order == 0)
                         {
                             product.IndustryID = listIndustry[i].ID;
@@ -749,7 +771,7 @@ namespace Commsights.Data.Repositories
                         productProperty.ParentID = 0;
                         productProperty.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
                         productProperty.AssessID = product.AssessID;
-                        productProperty.GUICode = product.GUICode;                        
+                        productProperty.GUICode = product.GUICode;
                         if (order == 0)
                         {
                             product.CompanyID = listCompany[i].ID;

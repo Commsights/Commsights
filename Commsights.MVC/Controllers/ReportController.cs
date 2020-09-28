@@ -188,7 +188,7 @@ namespace Commsights.MVC.Controllers
         }
         public ProductSearchDataTransfer InitializationReportDailyHTMLSendMail(ProductSearchDataTransfer model, string fileName)
         {
-            List<ProductSearchPropertyDataTransfer> listData = _reportRepository.ReportDailyByProductSearchIDAndActiveToListToHTML(model.ID, true);
+            List<ProductSearchPropertyDataTransfer> listData = _reportRepository.ReportDailyByProductSearchIDToListToHTML(model.ID);
 
             //Export excel file
             var streamExport = new MemoryStream();
@@ -434,26 +434,18 @@ namespace Commsights.MVC.Controllers
                             int DailyReportColumnPageIDSortOrder = 0;
                             int DailyReportColumnAdvertisementIDSortOrder = 0;
                             int DailyReportColumnSummaryIDSortOrder = 0;
-                            List<MembershipPermission> listDailyReportColumn = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCodeToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn);
+                            List<MembershipPermission> listDailyReportColumn = _membershipPermissionRepository.GetDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndActiveToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn, true);
                             reportData.AppendLine(@"<b style='color: #ed7d31; font-size:14px;'>II - INFORMATION</b>");
                             reportData.AppendLine(@"<br />");
                             reportData.AppendLine(@"<br />");
-                            reportData.AppendLine(@"<table style='font-size:12px; border-color: #000000; border-style: solid;border-width: 1px; padding: 4px; border-collapse: collapse;'>");
+                            reportData.AppendLine(@"<table style='width:1200px; font-size:12px; border-color: #000000; border-style: solid;border-width: 1px; padding: 4px; border-collapse: collapse;'>");
                             reportData.AppendLine(@"<thead>");
                             reportData.AppendLine(@"<tr>");
                             foreach (MembershipPermission dailyReportColumn in listDailyReportColumn)
                             {
                                 if (dailyReportColumn.Active == true)
                                 {
-                                    if ((dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnHeadlineVietnameseID) || (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnHeadlineEnglishID))
-                                    {
-                                        reportData.Append(@"<th style='width:300px; text-align:center; background-color:#c00000; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'><a style='cursor:pointer; color:#ffffff;'>");
-                                    }
-                                    else
-                                    {
-                                        reportData.Append(@"<th style='text-align:center; background-color:#c00000; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;overflow: hidden;'><a style='cursor:pointer; color:#ffffff;'>");
-                                    }
-
+                                    reportData.Append(@"<th style='text-align:center; background-color:#c00000; padding: 4px; border-color: #000000; border-style: solid;border-width: 1px;'><a style='cursor:pointer; color:#ffffff;'>");
                                     if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
                                     {
                                         reportData.Append(@"" + dailyReportColumn.Phone);
@@ -533,19 +525,19 @@ namespace Commsights.MVC.Controllers
                                 {
                                     if ((DailyReportColumnDatePublishID > 0) && (DailyReportColumnDatePublishIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;overflow: hidden;'>" + data.DatePublishString + "</td>");
+                                        reportData.AppendLine(@"<td style='text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;'>" + data.DatePublishString + "</td>");
                                     }
                                     if ((DailyReportColumnCategoryID > 0) && (DailyReportColumnCategoryIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;overflow: hidden;'>" + data.ArticleTypeName + "</td>");
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;'>" + data.ArticleTypeName + "</td>");
                                     }
                                     if ((DailyReportColumnCompanyID > 0) && (DailyReportColumnCompanyIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;overflow: hidden;'>" + data.CompanyName + "</td>");
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;'>" + data.CompanyName + "</td>");
                                     }
                                     if ((DailyReportColumnSentimentID > 0) && (DailyReportColumnSentimentIDSortOrder == i))
                                     {
-                                        reportData.Append(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;overflow: hidden;'>");
+                                        reportData.Append(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;'>");
                                         if (data.AssessID == AppGlobal.NegativeID)
                                         {
                                             reportData.Append(@"<span style='color:red;'>" + data.AssessName + "</span>");
@@ -558,31 +550,35 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnHeadlineVietnameseID > 0) && (DailyReportColumnHeadlineVietnameseIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>" + title + "</td>");
+                                        reportData.AppendLine(@"<td style='border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
+                                        reportData.AppendLine(@"<p style='word-break: break-word; text-align: left;'>" + title + "</p>");
+                                        reportData.AppendLine(@"</td>");
                                     }
                                     if ((DailyReportColumnHeadlineEnglishID > 0) && (DailyReportColumnHeadlineEnglishIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>" + titleEnglish + "</td>");
+                                        reportData.AppendLine(@"<td style='border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
+                                        reportData.AppendLine(@"<p style='word-break: break-word; text-align: left;'>" + titleEnglish + "</p>");
+                                        reportData.AppendLine(@"</td>");
                                     }
                                     if ((DailyReportColumnMediaTitleID > 0) && (DailyReportColumnMediaTitleIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;overflow: hidden;'>" + data.Media + "</td>");
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;'>" + data.Media + "</td>");
                                     }
                                     if ((DailyReportColumnMediaTypeID > 0) && (DailyReportColumnMediaTypeIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;overflow: hidden;'>" + data.MediaType + "</td>");
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;'>" + data.MediaType + "</td>");
                                     }
                                     if ((DailyReportColumnPageID > 0) && (DailyReportColumnPageIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;overflow: hidden;'>" + data.Page + "</td>");
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;'>" + data.Page + "</td>");
                                     }
                                     if ((DailyReportColumnAdvertisementID > 0) && (DailyReportColumnAdvertisementIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;overflow: hidden;'>" + data.AdvertisementValueString + "</td>");
+                                        reportData.AppendLine(@"<td style='text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;'>" + data.AdvertisementValueString + "</td>");
                                     }
                                     if ((DailyReportColumnSummaryID > 0) && (DailyReportColumnSummaryIDSortOrder == i))
                                     {
-                                        reportData.Append(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;overflow: hidden;'>");
+                                        reportData.Append(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;'>");
                                         if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
                                         {
                                             reportData.Append(@"" + data.Description);
@@ -620,6 +616,7 @@ namespace Commsights.MVC.Controllers
             }
             if (!string.IsNullOrEmpty(html))
             {
+                html = html.Replace(@"[Logo01URLFull]", @"" + AppGlobal.Logo01URLFull);
                 html = html.Replace(@"[CompanyTitleEnglish]", @"" + AppGlobal.CompanyTitleEnglish);
                 html = html.Replace(@"[WebsiteHTML]", @"" + AppGlobal.WebsiteHTML);
                 html = html.Replace(@"[PhoneReportHTML]", @"" + AppGlobal.PhoneReportHTML);
@@ -633,7 +630,7 @@ namespace Commsights.MVC.Controllers
                 StringBuilder reportData = new StringBuilder();
                 StringBuilder reportSummary = new StringBuilder();
                 List<MembershipPermission> listDailyReportSection = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCodeToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportSection);
-                List<ProductSearchPropertyDataTransfer> listData = _reportRepository.ReportDailyByProductSearchIDAndActiveToListToHTML(model.ID, true);
+                List<ProductSearchPropertyDataTransfer> listData = _reportRepository.ReportDailyByProductSearchIDToListToHTML(model.ID);
                 foreach (MembershipPermission dailyReportSection in listDailyReportSection)
                 {
                     if ((dailyReportSection.CategoryID == AppGlobal.DailyReportSectionSummaryID) && (dailyReportSection.Active == true))
@@ -697,19 +694,18 @@ namespace Commsights.MVC.Controllers
                             int DailyReportColumnPageIDSortOrder = 0;
                             int DailyReportColumnAdvertisementIDSortOrder = 0;
                             int DailyReportColumnSummaryIDSortOrder = 0;
-                            List<MembershipPermission> listDailyReportColumn = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCodeToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn);
+                            List<MembershipPermission> listDailyReportColumn = _membershipPermissionRepository.GetDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndActiveToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn, true);
                             reportData.AppendLine(@"<b style='color: #ed7d31; font-size:14px;'>II - INFORMATION</b>");
                             reportData.AppendLine(@"<br />");
-                            reportData.AppendLine(@"<br />");
-                            reportData.AppendLine(@"<table class='border' style='font-size:12px; width:100%;'>");
+                            reportData.AppendLine(@"<br />");                            
+                            reportData.AppendLine(@"<table style='width:100%; font-size:12px; border-color: #000000; border-style: solid;border-width: 1px; border-collapse: collapse;'>");
                             reportData.AppendLine(@"<thead>");
                             reportData.AppendLine(@"<tr>");
-                            //reportData.AppendLine(@"<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>No</a></th>");
                             foreach (MembershipPermission dailyReportColumn in listDailyReportColumn)
                             {
                                 if (dailyReportColumn.Active == true)
                                 {
-                                    reportData.Append(@"<th style='text-align:center; background-color:#c00000;'><a style='cursor:pointer; color:#ffffff;'>");
+                                    reportData.Append(@"<th style='text-align:center; background-color:#c00000; padding: 4px; border-color: #000000; border-style: solid;border-width: 1px;'><a style='cursor:pointer; color:#ffffff;'>");
                                     if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
                                     {
                                         reportData.Append(@"" + dailyReportColumn.Phone);
@@ -781,34 +777,27 @@ namespace Commsights.MVC.Controllers
                             reportData.AppendLine(@"<tbody>");
                             foreach (ProductSearchPropertyDataTransfer data in listData)
                             {
-                                string title = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.Title + "</a></td>";
-                                string titleEnglish = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.TitleEnglish + "</a></td>";
+                                string title = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.Title + "'>" + data.Title + "</a>";
+                                string titleEnglish = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.TitleEnglish + "'>" + data.TitleEnglish + "</a>";
                                 no = no + 1;
-                                if (no % 2 == 0)
-                                {
-                                    reportData.AppendLine(@"<tr style='background-color:#ffffff;'>");
-                                }
-                                else
-                                {
-                                    reportData.AppendLine(@"<tr style='background-color:#f1f1f1;'>");
-                                }
+                                reportData.AppendLine(@"<tr style='background-color:#ffffff;'>");
                                 for (int i = 1; i < 12; i++)
                                 {
                                     if ((DailyReportColumnDatePublishID > 0) && (DailyReportColumnDatePublishIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>" + data.DatePublishString + "</td>");
+                                        reportData.AppendLine(@"<td style='text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.DatePublishString + "</td>");
                                     }
                                     if ((DailyReportColumnCategoryID > 0) && (DailyReportColumnCategoryIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>" + data.ArticleTypeName + "</td>");
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.ArticleTypeName + "</td>");
                                     }
                                     if ((DailyReportColumnCompanyID > 0) && (DailyReportColumnCompanyIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>" + data.CompanyName + "</td>");
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.CompanyName + "</td>");
                                     }
                                     if ((DailyReportColumnSentimentID > 0) && (DailyReportColumnSentimentIDSortOrder == i))
                                     {
-                                        reportData.Append(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>");
+                                        reportData.Append(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>");
                                         if (data.AssessID == AppGlobal.NegativeID)
                                         {
                                             reportData.Append(@"<span style='color:red;'>" + data.AssessName + "</span>");
@@ -821,31 +810,35 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnHeadlineVietnameseID > 0) && (DailyReportColumnHeadlineVietnameseIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>" + title + "</td>");
+                                        reportData.AppendLine(@"<td style='border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
+                                        reportData.AppendLine(@"<p style='word-break: break-word; text-align: left;'>" + title + "</p>");
+                                        reportData.AppendLine(@"</td>");
                                     }
                                     if ((DailyReportColumnHeadlineEnglishID > 0) && (DailyReportColumnHeadlineEnglishIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>" + titleEnglish + "</td>");
+                                        reportData.AppendLine(@"<td style='border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
+                                        reportData.AppendLine(@"<p style='word-break: break-word; text-align: left;'>" + titleEnglish + "</p>");
+                                        reportData.AppendLine(@"</td>");
                                     }
                                     if ((DailyReportColumnMediaTitleID > 0) && (DailyReportColumnMediaTitleIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>" + data.Media + "</td>");
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px; white-space: nowrap;'>" + data.Media + "</td>");
                                     }
                                     if ((DailyReportColumnMediaTypeID > 0) && (DailyReportColumnMediaTypeIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>" + data.MediaType + "</td>");
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px; white-space: nowrap;'>" + data.MediaType + "</td>");
                                     }
                                     if ((DailyReportColumnPageID > 0) && (DailyReportColumnPageIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>" + data.Page + "</td>");
+                                        reportData.AppendLine(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px; white-space: nowrap;'>" + data.Page + "</td>");
                                     }
                                     if ((DailyReportColumnAdvertisementID > 0) && (DailyReportColumnAdvertisementIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>" + data.AdvertisementValueString + "</td>");
+                                        reportData.AppendLine(@"<td style='text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px; white-space: nowrap;'>" + data.AdvertisementValueString + "</td>");
                                     }
                                     if ((DailyReportColumnSummaryID > 0) && (DailyReportColumnSummaryIDSortOrder == i))
                                     {
-                                        reportData.Append(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;white-space: nowrap;overflow: hidden;'>");
+                                        reportData.Append(@"<td style='text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px; white-space: nowrap;'>");
                                         if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
                                         {
                                             reportData.Append(@"" + data.Description);
@@ -929,9 +922,19 @@ namespace Commsights.MVC.Controllers
             }
             return RedirectToAction("Daily03", new { ID = model.ID });
         }
+        public ActionResult GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
+        {
+            var data = _reportRepository.GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult InitializationByDatePublishBeginAndDatePublishEndAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
         {
             var data = _reportRepository.InitializationByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult InitializationByDatePublishBeginAndDatePublishEndAndIndustryIDAndHourSearchToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
+        {
+            var data = _reportRepository.InitializationByDatePublishBeginAndDatePublishEndAndIndustryIDAndHourSearchToList(datePublishBegin, datePublishEnd, industryID, DateTime.Now.Hour);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult InitializationByDatePublishBeginAndDatePublishEndAndIndustryIDAndAllDataAndAllSummaryToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool allData, bool allSummary)
@@ -954,6 +957,7 @@ namespace Commsights.MVC.Controllers
             var data = _reportRepository.ReportDailyProductByDatePublishAndCompanyIDToList(datePublish, companyID);
             return Json(data.ToDataSourceResult(request));
         }
+
         public ActionResult ReportDailyIndustryByDatePublishAndCompanyIDToList([DataSourceRequest] DataSourceRequest request, DateTime datePublish, int companyID)
         {
             var data = _reportRepository.ReportDailyIndustryByDatePublishAndCompanyIDToList(datePublish, companyID);
@@ -992,48 +996,50 @@ namespace Commsights.MVC.Controllers
         public IActionResult UpdateDataTransfer(ProductDataTransfer model)
         {
             Initialization(model);
-            model.CompanyID = model.Company.ID;
-            model.ArticleTypeID = model.ArticleType.ID;
-            model.AssessID = model.AssessType.ID;
-            string note = AppGlobal.InitString;
-            model.Initialization(InitType.Update, RequestUserID);
-            int result = _productRepository.Update(model.ID, model);
-            if (result > 0)
+            ProductProperty productProperty = _productPropertyRepository.GetByID001(model.ID);
+            if (productProperty != null)
             {
-                ProductProperty productProperty = _productPropertyRepository.GetByProductIDAndCodeAndCompanyID(model.ID, AppGlobal.Company, model.CompanyID.Value);
-                if (productProperty == null)
-                {
-                    productProperty = new ProductProperty();
-                }
-                productProperty.Code = AppGlobal.Company;
-                productProperty.GUICode = model.GUICode;
-                productProperty.ParentID = model.ID;
-                productProperty.ArticleTypeID = model.ArticleTypeID;
-                productProperty.AssessID = model.AssessID;
-                productProperty.CompanyID = model.CompanyID;
-                if (productProperty.ID > 0)
-                {
-                    productProperty.Initialization(InitType.Update, RequestUserID);
-                    _productPropertyRepository.Update(productProperty.ID, productProperty);
-                }
-                else
-                {
-                    productProperty.Initialization(InitType.Insert, RequestUserID);
-                    _productPropertyRepository.Create(productProperty);
-                }
-                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+                productProperty.IsSummary = model.IsSummary;
+                productProperty.IsData = model.IsData;
+                productProperty.CompanyID = model.Company.ID;
+                productProperty.SegmentID = model.Segment.ID;
+                productProperty.ArticleTypeID = model.ArticleType.ID;
+                productProperty.AssessID = model.AssessType.ID;
+                productProperty.Initialization(InitType.Update, RequestUserID);
+                _productPropertyRepository.Update(productProperty.ID, productProperty);
             }
-            else
+            Product product = _productRepository.GetByID001(model.ProductID.Value);
+            if (product != null)
             {
-                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+                product.IsSummary = model.IsSummary;
+                product.IsData = model.IsData;
+                product.Title = model.Title;
+                product.TitleEnglish = model.TitleEnglish;
+                product.Description = model.Description;
+                product.DescriptionEnglish = model.DescriptionEnglish;
+                product.Initialization(InitType.Update, RequestUserID);
+                _productRepository.Update(product.ID, product);
             }
+            string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            return Json(note);
+        }
+        public IActionResult CopyProductProperty(ProductDataTransfer model)
+        {
+            ProductProperty productProperty = _productPropertyRepository.GetByID001(model.ID);
+            if (productProperty != null)
+            {
+                productProperty.ID = 0;
+                productProperty.Initialization(InitType.Insert, RequestUserID);
+                _productPropertyRepository.Create(productProperty);
+            }
+            string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
             return Json(note);
         }
         public IActionResult UpdateByIndustryIDAndDatePublishBeginAndDatePublishEndAndAllData(int industryID, DateTime datePublishBegin, DateTime datePublishEnd, bool allData)
         {
             if (allData == true)
             {
-                _reportRepository.UpdateByDatePublishBeginAndDatePublishEndAndIndustryIDAndAllData(datePublishBegin, datePublishEnd, industryID, allData, RequestUserID);
+                _reportRepository.UpdateByDatePublishBeginAndDatePublishEndAndIndustryIDAndAllData001(datePublishBegin, datePublishEnd, industryID, allData, RequestUserID);
             }
             string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
             return Json(note);
@@ -2103,6 +2109,7 @@ namespace Commsights.MVC.Controllers
                                                                 if (model.ID > 0)
                                                                 {
                                                                     _productPropertyRepository.UpdateItemsWithParentIDIsZero();
+                                                                    _productPropertyRepository.Initialization();
                                                                 }
                                                                 result = model.ID;
                                                             }
@@ -2374,12 +2381,252 @@ namespace Commsights.MVC.Controllers
                                                                     listProductProperty[j].AssessID = model.AssessID;
                                                                 }
                                                                 _productPropertyRepository.Range(listProductProperty);
+                                                                _productPropertyRepository.Initialization();
                                                             }
                                                         }
                                                         result = result + 1;
                                                     }
                                                     catch (Exception e)
                                                     {
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+            action = "Upload";
+            controller = "Report";
+
+            return RedirectToAction(action, controller);
+        }
+        public ActionResult UploadAndiSource001(Commsights.MVC.Models.BaseViewModel baseViewModel)
+        {
+            int result = 0;
+            string action = "Upload";
+            string controller = "Report";
+            try
+            {
+                if (Request.Form.Files.Count > 0)
+                {
+                    var file = Request.Form.Files[0];
+                    if (file == null || file.Length == 0)
+                    {
+                    }
+                    if (file != null)
+                    {
+                        string fileExtension = Path.GetExtension(file.FileName);
+                        string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                        fileName = "AndiSource";
+                        fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
+                        var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.FTPUploadExcel, fileName);
+                        using (var stream = new FileStream(physicalPath, FileMode.Create))
+                        {
+                            file.CopyTo(stream);
+                            FileInfo fileLocation = new FileInfo(physicalPath);
+                            if (fileLocation.Length > 0)
+                            {
+                                if ((fileExtension == ".xlsx") || (fileExtension == ".xls"))
+                                {
+                                    using (ExcelPackage package = new ExcelPackage(stream))
+                                    {
+                                        if (package.Workbook.Worksheets.Count > 0)
+                                        {
+                                            ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
+                                            if (workSheet != null)
+                                            {
+                                                int totalRows = workSheet.Dimension.Rows + 1;
+                                                for (int i = 6; i <= totalRows; i++)
+                                                {
+                                                    List<ProductProperty> listProductPropertyURLCode = new List<ProductProperty>();
+                                                    Product model = new Product();
+                                                    model.Initialization(InitType.Insert, RequestUserID);
+                                                    try
+                                                    {
+                                                        if (workSheet.Cells[i, 1].Value != null)
+                                                        {
+                                                            string datePublish = workSheet.Cells[i, 1].Value.ToString().Trim();
+                                                            try
+                                                            {
+                                                                int year = int.Parse(datePublish.Split('/')[2]);
+                                                                int month = int.Parse(datePublish.Split('/')[1]);
+                                                                int day = int.Parse(datePublish.Split('/')[0]);
+                                                                int hour = int.Parse(model.Page.Split(':')[0]);
+                                                                int minutes = int.Parse(model.Page.Split(':')[1]);
+                                                                int second = int.Parse(model.Page.Split(':')[2]);
+                                                                model.DatePublish = new DateTime(year, month, day, hour, minutes, second);
+                                                            }
+                                                            catch
+                                                            {
+                                                                try
+                                                                {
+                                                                    DateTime DateTimeStandard = new DateTime(1899, 12, 30);
+                                                                    model.DatePublish = DateTimeStandard.AddDays(int.Parse(datePublish));
+                                                                }
+                                                                catch
+                                                                {
+                                                                }
+                                                            }
+                                                        }
+                                                        if (workSheet.Cells[i, 5].Value != null)
+                                                        {
+                                                            model.Title = workSheet.Cells[i, 5].Value.ToString().Trim();
+                                                            model.ImageThumbnail = workSheet.Cells[i, 5].Hyperlink.AbsoluteUri.Trim();
+                                                            AppGlobal.GetURLByURLAndi(model, listProductPropertyURLCode, RequestUserID);
+                                                        }
+                                                        if (workSheet.Cells[i, 6].Value != null)
+                                                        {
+                                                            model.TitleEnglish = workSheet.Cells[i, 6].Value.ToString().Trim();
+                                                        }
+                                                        if (workSheet.Cells[i, 7].Value != null)
+                                                        {
+                                                            model.FileName = workSheet.Cells[i, 7].Value.ToString().Trim();
+                                                        }
+                                                        if (workSheet.Cells[i, 8].Value != null)
+                                                        {
+                                                            string mediaTitle = workSheet.Cells[i, 8].Value.ToString().Trim();
+                                                            string mediaType = "Online";
+                                                            string code = AppGlobal.Website;
+                                                            if (workSheet.Cells[i, 9].Value != null)
+                                                            {
+                                                                mediaType = workSheet.Cells[i, 9].Value.ToString().Trim();
+                                                            }
+                                                            if (mediaType.Contains("Online") == false)
+                                                            {
+                                                                code = AppGlobal.PressList;
+                                                            }
+                                                            Config parent = _configResposistory.GetByGroupNameAndCodeAndTitle(AppGlobal.CRM, code, mediaTitle);
+                                                            if (parent == null)
+                                                            {
+                                                                parent = new Config();
+                                                                parent.GroupName = AppGlobal.CRM;
+                                                                parent.Code = code;
+                                                                parent.Title = mediaTitle;
+                                                                parent.CodeName = mediaTitle;
+                                                                Config parentOfParent = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.WebsiteType, mediaType);
+                                                                if (parentOfParent == null)
+                                                                {
+                                                                    parentOfParent = new Config();
+                                                                    parentOfParent.GroupName = AppGlobal.CRM;
+                                                                    parentOfParent.Code = AppGlobal.WebsiteType;
+                                                                    parentOfParent.CodeName = mediaType;
+                                                                    parentOfParent.Initialization(InitType.Insert, RequestUserID);
+                                                                    _configResposistory.Create(parentOfParent);
+                                                                }
+                                                                if (workSheet.Cells[i, 10].Value != null)
+                                                                {
+                                                                    string frequencyName = workSheet.Cells[i, 10].Value.ToString().Trim();
+                                                                    Config frequency = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Frequency, frequencyName);
+                                                                    if (frequency == null)
+                                                                    {
+                                                                        frequency = new Config();
+                                                                        frequency.CodeName = frequencyName;
+                                                                        frequency.Initialization(InitType.Insert, RequestUserID);
+                                                                        _configResposistory.Create(parentOfParent);
+                                                                    }
+                                                                    parent.FrequencyID = frequency.ID;
+                                                                }
+                                                                if (workSheet.Cells[i, 13].Value != null)
+                                                                {
+                                                                    try
+                                                                    {
+                                                                        string color = workSheet.Cells[i, 13].Value.ToString().Trim();
+                                                                        parent.Color = int.Parse(color);
+                                                                    }
+                                                                    catch
+                                                                    {
+                                                                    }
+                                                                }
+                                                                parent.ParentID = parentOfParent.ID;
+                                                                parent.Initialization(InitType.Insert, RequestUserID);
+                                                                _configResposistory.Create(parent);
+                                                            }
+                                                            model.ParentID = parent.ID;
+                                                        }
+                                                        if (workSheet.Cells[i, 12].Value != null)
+                                                        {
+                                                            model.Duration = workSheet.Cells[i, 12].Value.ToString().Trim();
+                                                        }
+                                                        if (workSheet.Cells[i, 14].Value != null)
+                                                        {
+                                                            model.Author = workSheet.Cells[i, 14].Value.ToString().Trim();
+                                                        }
+                                                        Product product = _productRepository.GetByFileNameAndDatePublish(model.FileName, model.DatePublish);
+                                                        if (product == null)
+                                                        {
+                                                            model.GUICode = AppGlobal.InitGuiCode;
+                                                            model.Source = "Andi";
+                                                            model.MetaTitle = AppGlobal.SetName(model.Title);
+                                                            _productRepository.Create(model);
+                                                            product = model;
+                                                        }
+                                                        if (product.ID > 0)
+                                                        {
+                                                            if (listProductPropertyURLCode.Count > 0)
+                                                            {
+                                                                product.URLCode = AppGlobal.DomainMain + "Product/ViewContent/" + product.ID;
+                                                                _productRepository.Update(product.ID, product);
+                                                                for (int j = 0; j < listProductPropertyURLCode.Count; j++)
+                                                                {
+                                                                    listProductPropertyURLCode[j].ParentID = product.ID;
+                                                                    listProductPropertyURLCode[j].IndustryID = product.IndustryID;
+                                                                    listProductPropertyURLCode[j].ArticleTypeID = product.ArticleTypeID;
+                                                                    listProductPropertyURLCode[j].AssessID = product.AssessID;
+                                                                }
+                                                                _productPropertyRepository.Range(listProductPropertyURLCode);
+                                                            }
+                                                            ProductProperty productProperty = new ProductProperty();
+                                                            productProperty.Initialization(InitType.Insert, RequestUserID);
+                                                            productProperty.Code = AppGlobal.Industry;
+                                                            productProperty.ArticleTypeID = AppGlobal.TinNganhID;
+                                                            productProperty.AssessID = AppGlobal.AssessID;
+                                                            productProperty.ParentID = product.ID;
+                                                            productProperty.GUICode = product.GUICode;
+                                                            productProperty.IndustryID = baseViewModel.IndustryIDUploadAndiSource;
+                                                            if (workSheet.Cells[i, 3].Value != null)
+                                                            {
+                                                                string company = workSheet.Cells[i, 3].Value.ToString().Trim();
+                                                                Membership membership = _membershipRepository.GetByAccount(company);
+                                                                if (membership == null)
+                                                                {
+                                                                    membership = new Membership();
+                                                                    membership.Account = company;
+                                                                    membership.FullName = company;
+                                                                    membership.ParentID = AppGlobal.ParentIDCustomer;
+                                                                    if (workSheet.Cells[i, 2].Value != null)
+                                                                    {
+                                                                        string mainCategory = workSheet.Cells[i, 2].Value.ToString().Trim();
+                                                                        if (mainCategory.Contains("ompetitor"))
+                                                                        {
+                                                                            membership.ParentID = AppGlobal.ParentIDCompetitor;
+                                                                        }
+                                                                    }
+                                                                    membership.Initialization(InitType.Insert, RequestUserID);
+                                                                    _membershipRepository.Create(membership);
+                                                                }
+                                                                productProperty.CompanyID = membership.ID;
+                                                                productProperty.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
+                                                                productProperty.Code = AppGlobal.Company;
+                                                                if (baseViewModel.IsIndustryIDUploadGoogleSearch == true)
+                                                                {
+                                                                    productProperty.IndustryID = _membershipPermissionRepository.GetByMembershipIDAndAndCodeAndActive(productProperty.CompanyID.Value, AppGlobal.Industry, true).IndustryID;
+                                                                }
+                                                            }
+                                                            _productPropertyRepository.Create(productProperty);
+                                                            _productPropertyRepository.Initialization();
+                                                        }
+                                                    }
+                                                    catch (Exception e)
+                                                    {
+
                                                     }
                                                 }
                                             }
@@ -2636,6 +2883,7 @@ namespace Commsights.MVC.Controllers
                                                                         listProductProperty[m].ParentID = model.ID;
                                                                     }
                                                                     _productPropertyRepository.Range(listProductProperty);
+                                                                    _productPropertyRepository.Initialization();
                                                                 }
                                                                 result = result + 1;
                                                             }
@@ -2713,7 +2961,6 @@ namespace Commsights.MVC.Controllers
                                                     model.CompanyID = AppGlobal.CompetitorID;
                                                     model.AssessID = AppGlobal.AssessID;
                                                     model.IndustryID = baseViewModel.IndustryIDUploadGoogleSearch;
-
                                                     try
                                                     {
                                                         string datePublish = "";
@@ -2911,6 +3158,7 @@ namespace Commsights.MVC.Controllers
                                                                         listProductProperty[m].ParentID = model.ID;
                                                                     }
                                                                     _productPropertyRepository.Range(listProductProperty);
+                                                                    _productPropertyRepository.Initialization();
                                                                 }
 
                                                             }
@@ -3201,6 +3449,217 @@ namespace Commsights.MVC.Controllers
             if (result > 0)
             {
                 action = "Index";
+                controller = "Report";
+            }
+            return RedirectToAction(action, controller);
+        }
+        public ActionResult UploadGoogleSearch002(Commsights.MVC.Models.BaseViewModel baseViewModel)
+        {
+            int result = 0;
+            string action = "Upload";
+            string controller = "Report";
+            try
+            {
+                if (Request.Form.Files.Count > 0)
+                {
+                    var file = Request.Form.Files[0];
+                    if (file == null || file.Length == 0)
+                    {
+                    }
+                    if (file != null)
+                    {
+                        string fileExtension = Path.GetExtension(file.FileName);
+                        string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                        fileName = "GoogleSearch";
+                        fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
+                        var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.FTPUploadExcel, fileName);
+                        using (var stream = new FileStream(physicalPath, FileMode.Create))
+                        {
+                            file.CopyTo(stream);
+                            FileInfo fileLocation = new FileInfo(physicalPath);
+                            if (fileLocation.Length > 0)
+                            {
+                                if ((fileExtension == ".xlsx") || (fileExtension == ".xls"))
+                                {
+                                    using (ExcelPackage package = new ExcelPackage(stream))
+                                    {
+                                        if (package.Workbook.Worksheets.Count > 0)
+                                        {
+                                            ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
+                                            if (workSheet != null)
+                                            {
+                                                int totalRows = workSheet.Dimension.Rows;
+                                                for (int i = 2; i <= totalRows; i++)
+                                                {
+                                                    try
+                                                    {
+                                                        Product model = new Product();
+                                                        string datePublish = "";
+                                                        if (workSheet.Cells[i, 1].Value != null)
+                                                        {
+                                                            datePublish = workSheet.Cells[i, 1].Value.ToString().Trim();
+                                                            try
+                                                            {
+                                                                model.DatePublish = DateTime.Parse(datePublish);
+                                                            }
+                                                            catch
+                                                            {
+                                                                try
+                                                                {
+                                                                    int year = int.Parse(datePublish.Split('/')[2]);
+                                                                    int month = int.Parse(datePublish.Split('/')[0]);
+                                                                    int day = int.Parse(datePublish.Split('/')[1]);
+                                                                    model.DatePublish = new DateTime(year, month, day, 0, 0, 0);
+                                                                }
+                                                                catch
+                                                                {
+                                                                    try
+                                                                    {
+                                                                        int year = int.Parse(datePublish.Split('/')[2]);
+                                                                        int month = int.Parse(datePublish.Split('/')[1]);
+                                                                        int day = int.Parse(datePublish.Split('/')[0]);
+                                                                        model.DatePublish = new DateTime(year, month, day, 0, 0, 0);
+                                                                    }
+                                                                    catch
+                                                                    {
+                                                                        try
+                                                                        {
+                                                                            DateTime DateTimeStandard = new DateTime(1899, 12, 30);
+                                                                            model.DatePublish = DateTimeStandard.AddDays(int.Parse(datePublish));
+                                                                        }
+                                                                        catch
+                                                                        {
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        if (workSheet.Cells[i, 4].Value != null)
+                                                        {
+                                                            model.Title = workSheet.Cells[i, 4].Value.ToString().Trim();
+                                                            model.URLCode = workSheet.Cells[i, 4].Hyperlink.AbsoluteUri.Trim();
+                                                        }
+                                                        if (workSheet.Cells[i, 5].Value != null)
+                                                        {
+                                                            model.TitleEnglish = workSheet.Cells[i, 5].Value.ToString().Trim();
+                                                            model.URLCode = workSheet.Cells[i, 5].Hyperlink.AbsoluteUri.Trim();
+                                                        }
+                                                        if (workSheet.Cells[i, 6].Value != null)
+                                                        {
+                                                            model.URLCode = workSheet.Cells[i, 6].Value.ToString().Trim();
+                                                        }
+                                                        if (workSheet.Cells[i, 7].Value != null)
+                                                        {
+                                                            model.Description = workSheet.Cells[i, 7].Value.ToString().Trim();
+                                                        }
+                                                        if (workSheet.Cells[i, 8].Value != null)
+                                                        {
+                                                            model.Author = workSheet.Cells[i, 8].Value.ToString().Trim();
+                                                        }
+                                                        Product product = _productRepository.GetByURLCode(model.URLCode);
+                                                        if (product == null)
+                                                        {
+                                                            model.MetaTitle = AppGlobal.SetName(model.Title);
+                                                            model.Source = "Google";
+                                                            model.GUICode = AppGlobal.InitGuiCode;
+                                                            model.FileName = AppGlobal.SetDomainByURL(model.URLCode);
+                                                            Config website = _configResposistory.GetByGroupNameAndCodeAndTitle(AppGlobal.CRM, AppGlobal.Website, model.FileName);
+                                                            if (website == null)
+                                                            {
+                                                                website = new Config();
+                                                                website.GroupName = AppGlobal.CRM;
+                                                                website.Code = AppGlobal.Website;
+                                                                website.Title = model.FileName;
+                                                                website.URLFull = model.FileName;
+                                                                website.ParentID = AppGlobal.ParentID;
+                                                                website.Initialization(InitType.Insert, RequestUserID);
+                                                                _configResposistory.Create(website);
+                                                            }
+                                                            model.ParentID = website.ID;
+                                                            model.Initialization(InitType.Insert, RequestUserID);
+                                                            _productRepository.Create(model);
+                                                            product = model;
+                                                        }
+                                                        if (product.ID > 0)
+                                                        {
+                                                            ProductProperty productProperty = new ProductProperty();
+                                                            productProperty.Initialization(InitType.Insert, RequestUserID);
+                                                            productProperty.ParentID = product.ID;
+                                                            productProperty.GUICode = product.GUICode;
+                                                            productProperty.ArticleTypeID = AppGlobal.TinNganhID;
+                                                            productProperty.Code = AppGlobal.Industry;
+                                                            productProperty.IndustryID = baseViewModel.IndustryIDUploadGoogleSearch;
+                                                            if (workSheet.Cells[i, 2].Value != null)
+                                                            {
+                                                                string companyName = workSheet.Cells[i, 2].Value.ToString().Trim();
+                                                                Membership company = _membershipRepository.GetByAccount(companyName);
+                                                                if (company == null)
+                                                                {
+                                                                    company = new Membership();
+                                                                    company.Active = true;
+                                                                    company.Account = companyName;
+                                                                    company.FullName = companyName;
+                                                                    company.ParentID = AppGlobal.ParentIDCustomer;
+                                                                    company.Initialization(InitType.Insert, RequestUserID);
+                                                                    _membershipRepository.Create(company);
+                                                                }
+                                                                productProperty.CompanyID = company.ID;
+                                                                productProperty.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
+                                                                productProperty.Code = AppGlobal.Company;
+                                                                if (baseViewModel.IsIndustryIDUploadGoogleSearch == true)
+                                                                {
+                                                                    productProperty.IndustryID = _membershipPermissionRepository.GetByMembershipIDAndAndCodeAndActive(productProperty.CompanyID.Value, AppGlobal.Industry, true).IndustryID;
+                                                                }
+                                                            }
+                                                            if (workSheet.Cells[i, 3].Value != null)
+                                                            {
+                                                                string assessString = workSheet.Cells[i, 3].Value.ToString().Trim();
+                                                                switch (assessString)
+                                                                {
+                                                                    case "-1":
+                                                                        productProperty.AssessID = AppGlobal.NegativeID;
+                                                                        break;
+                                                                    case "0":
+                                                                        productProperty.AssessID = AppGlobal.NeutralID;
+                                                                        break;
+                                                                    case "1":
+                                                                        productProperty.AssessID = AppGlobal.PositiveID;
+                                                                        break;
+                                                                    default:
+                                                                        Config assess = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.AssessType, assessString);
+                                                                        if (assess == null)
+                                                                        {
+                                                                            assess = new Config();
+                                                                            assess.CodeName = assessString;
+                                                                            assess.Initialization(InitType.Insert, RequestUserID);
+                                                                            _configResposistory.Create(assess);
+                                                                        }
+                                                                        productProperty.AssessID = assess.ID;
+                                                                        break;
+                                                                }
+                                                            }
+                                                            _productPropertyRepository.Create(productProperty);
+                                                        }
+                                                    }
+                                                    catch (Exception e)
+                                                    {
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+            if (result > 0)
+            {
+                action = "Upload";
                 controller = "Report";
             }
             return RedirectToAction(action, controller);

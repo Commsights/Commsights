@@ -20,6 +20,10 @@ namespace Commsights.Data.Repositories
         public List<ProductSearchDataTransfer> InitializationByDatePublishBeginAndDatePublishEndAndIndustryIDToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID);
         public List<ProductSearchDataTransfer> InitializationByDatePublishBeginAndDatePublishEndAndIndustryIDAndAllDataAndAllSummaryToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool allData, bool allSummary, int requestUserID);
         public string UpdateByDatePublishBeginAndDatePublishEndAndIndustryIDAndAllData(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool allData, int requestUserID);
+        public string UpdateByDatePublishBeginAndDatePublishEndAndIndustryIDAndAllData001(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool allData, int requestUserID);
         public List<ProductSearchPropertyDataTransfer> ReportDailyByProductSearchIDAndActiveToListToHTML(int productSearchID, bool active);
+        public List<ProductSearchPropertyDataTransfer> ReportDailyByProductSearchIDToListToHTML(int productSearchID);
+        public List<ProductDataTransfer> GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID);
+        public List<ProductSearchDataTransfer> InitializationByDatePublishBeginAndDatePublishEndAndIndustryIDAndHourSearchToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int hourSearch);
     }
 }

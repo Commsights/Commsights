@@ -9,6 +9,7 @@ namespace Commsights.Data.Models
         public string Summary { get; set; }
         public int? ProductSearchID { get; set; }
         public int? ProductID { get; set; }
+        public int? ProductPropertyID { get; set; }
         public int? ArticleTypeID { get; set; }
         public int? CompanyID { get; set; }
         public int? AssessID { get; set; }

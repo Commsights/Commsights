@@ -15,5 +15,7 @@ namespace Commsights.Data.Models
         public decimal? Point { get; set; }
         public string GUICode { get; set; }
         public string Code { get; set; }
+        public bool? IsSummary { get; set; }
+        public bool? IsData { get; set; }
     }
 }

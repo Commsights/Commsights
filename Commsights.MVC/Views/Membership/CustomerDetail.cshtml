@@ -58,6 +58,10 @@
                                 @(Html.TextBoxFor(Model => Model.Phone, new { placeholder = "Phone", @class = "form-control" }))
                             </div>
                             <div class='form-group'>
+                                <label for='Website'>Website</label>
+                                @(Html.TextBoxFor(Model => Model.Website, new { placeholder = "Website", @class = "form-control" }))
+                            </div>
+                            <div class='form-group'>
                                 <label for='Address'>Address</label>
                                 @(Html.TextBoxFor(Model => Model.Address, new { placeholder = "Address", @class = "form-control" }))
                             </div>
@@ -333,7 +337,7 @@
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
     columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/MembershipPermission/Product/#=ID#"");' class='btn btn-success' style='color:white;'><i class='fas fa-list-ul'></i></a>").Title("Product").Width(70).HtmlAttributes(new { style = "text-align:center;" });
     columns.Bound(t => t.Company.TextName).EditorTemplateName("Membership_Company").Title("Competitor - Partner - Branch").Width(150);
-    columns.Bound(t => t.Segment.TextName).EditorTemplateName("Config_Segment").Title("Segment").Width(150);
+    columns.Bound(t => t.Segment.TextName).EditorTemplateName("Config_SegmentByIndustry").Title("Segment").Width(150);
     columns.Bound(t => t.SortOrder).Title("Sort").Width(200);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
@@ -697,6 +701,10 @@
             control.select(0);
             onSearchIndustry();
         }
+    }
+    function filterMembership_CompanyByIndustry(e) {
+        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
+        return { industryID: industryIDValue };
     }
     function onSearchIndustry() {
         BeginRequestHandler();

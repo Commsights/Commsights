@@ -71,6 +71,21 @@ namespace Commsights.Data.Repositories
         {
             return _context.ProductProperty.Where(item => item.ParentID == parentID && item.Code.Equals(code)).OrderBy(item => item.ID).ToList();
         }
+        public ProductProperty GetByID001(int ID)
+        {
+            ProductProperty model = new ProductProperty();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ID",ID),
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectByID", parameters);
+                model = SQLHelper.ToList<ProductProperty>(dt).FirstOrDefault();
+            }
+
+            return model;
+        }
         public List<ProductPropertyDataTransfer> GetDataTransferCompanyByParentIDToList(int parentID)
         {
             List<ProductPropertyDataTransfer> list = new List<ProductPropertyDataTransfer>();
@@ -133,6 +148,10 @@ namespace Commsights.Data.Repositories
             }
 
             return list;
+        }
+        public string Initialization()
+        {
+            return SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInitialization");
         }
     }
 }
