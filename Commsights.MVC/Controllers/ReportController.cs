@@ -1014,24 +1014,6 @@ namespace Commsights.MVC.Controllers
                 product.DescriptionEnglish = model.DescriptionEnglish;
                 product.Initialization(InitType.Update, RequestUserID);
                 _productRepository.Update(product.ID, product);
-                foreach (Product item in _productRepository.GetByTitleToList(product.Title))
-                {
-                    item.TitleEnglish = model.TitleEnglish;
-                    item.Description = model.Description;
-                    item.DescriptionEnglish = model.DescriptionEnglish;
-                    item.Initialization(InitType.Update, RequestUserID);
-                    _productRepository.Update(item.ID, item);
-                }
-                Config media = _configResposistory.GetByID(product.ParentID.Value);
-                if (media != null)
-                {
-                    if (media.Color != model.AdvertisementValue)
-                    {
-                        media.Color = model.AdvertisementValue;
-                        media.Initialization(InitType.Update, RequestUserID);
-                        _configResposistory.Update(media.ID, media);
-                    }
-                }
             }
             string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
             return Json(note);
@@ -2235,7 +2217,7 @@ namespace Commsights.MVC.Controllers
                                                         if (workSheet.Cells[i, 8].Value != null)
                                                         {
                                                             model.Title = workSheet.Cells[i, 8].Value.ToString().Trim();
-                                                            if (workSheet.Cells[i, 8].Hyperlink != null)
+                                                            if (!string.IsNullOrEmpty(workSheet.Cells[i, 8].Hyperlink.AbsoluteUri))
                                                             {
                                                                 model.URLCode = workSheet.Cells[i, 8].Hyperlink.AbsoluteUri.Trim();
                                                             }
@@ -2747,11 +2729,11 @@ namespace Commsights.MVC.Controllers
                                                         if (workSheet.Cells[i, 5].Value != null)
                                                         {
                                                             model.Title = workSheet.Cells[i, 5].Value.ToString().Trim();
-                                                            if (workSheet.Cells[i, 5].Hyperlink != null)
+                                                            if (!string.IsNullOrEmpty(workSheet.Cells[i, 5].Hyperlink.AbsoluteUri))
                                                             {
                                                                 model.ImageThumbnail = workSheet.Cells[i, 5].Hyperlink.AbsoluteUri.Trim();
                                                                 AppGlobal.GetURLByURLAndi(model, listProductPropertyURLCode, RequestUserID);
-                                                            }
+                                                            }                                               
                                                         }
                                                         if (workSheet.Cells[i, 6].Value != null)
                                                         {
@@ -4052,7 +4034,7 @@ namespace Commsights.MVC.Controllers
                                                         if (workSheet.Cells[i, 4].Value != null)
                                                         {
                                                             model.Title = workSheet.Cells[i, 4].Value.ToString().Trim();
-                                                            if (workSheet.Cells[i, 4].Hyperlink != null)
+                                                            if (!string.IsNullOrEmpty(workSheet.Cells[i, 4].Hyperlink.AbsoluteUri))
                                                             {
                                                                 model.URLCode = workSheet.Cells[i, 4].Hyperlink.AbsoluteUri.Trim();
                                                             }
@@ -4060,7 +4042,7 @@ namespace Commsights.MVC.Controllers
                                                         if (workSheet.Cells[i, 5].Value != null)
                                                         {
                                                             model.TitleEnglish = workSheet.Cells[i, 5].Value.ToString().Trim();
-                                                            if (workSheet.Cells[i, 5].Hyperlink != null)
+                                                            if (!string.IsNullOrEmpty(workSheet.Cells[i, 5].Hyperlink.AbsoluteUri))
                                                             {
                                                                 model.URLCode = workSheet.Cells[i, 5].Hyperlink.AbsoluteUri.Trim();
                                                             }

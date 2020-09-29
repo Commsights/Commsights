@@ -45,8 +45,6 @@ namespace Commsights.Data.DataTransferObject
         public string ProductName { get; set; }
         public string ParentName { get; set; }
         public int? MembershipTypeID { get; set; }
-        public bool? IsSource { get; set; }
-        public bool? IsCopy { get; set; }
         public ModelTemplate ArticleType { get; set; }
         public ModelTemplate Company { get; set; }
         public ModelTemplate AssessType { get; set; }
