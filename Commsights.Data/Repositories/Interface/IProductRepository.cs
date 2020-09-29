@@ -22,6 +22,7 @@ namespace Commsights.Data.Repositories
         public List<Product> GetByDatePublishToList(DateTime datePublish);
         public List<Product> GetByDateUpdatedToList(DateTime dateUpdated);
         public List<Product> GetBySearchToList(string search);
+        public List<Product> GetByTitleToList(string title);
         public List<ProductDataTransfer> GetDataTransferByProductSearchIDToList(int productSearchID);
         public List<ProductDataTransfer> GetDataTransferByDatePublishToList(DateTime datePublish);
         public List<ProductDataTransfer> GetDataTransferByDatePublishAndArticleTypeIDAndIndustryIDAndActionToList(DateTime datePublish, int articleTypeID, int industryID, int action);

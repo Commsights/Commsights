@@ -73,6 +73,10 @@ namespace Commsights.Data.Repositories
         {
             return _context.Product.Where(item => item.DateUpdated.Year == dateUpdated.Year && item.DateUpdated.Month == dateUpdated.Month && item.DateUpdated.Day == dateUpdated.Day).OrderByDescending(item => item.DateUpdated).ToList();
         }
+        public List<Product> GetByTitleToList(string title)
+        {
+            return _context.Product.Where(item => item.Title.Equals(title)).OrderByDescending(item => item.DatePublish).ToList();
+        }
         public List<Product> GetBySearchToList(string search)
         {
             List<Product> list = new List<Product>();
@@ -134,6 +138,7 @@ namespace Commsights.Data.Repositories
         {
             return _context.Set<Product>().FirstOrDefault(item => item.FileName.Equals(fileName));
         }
+        
         public Product GetByFileNameAndDatePublish(string fileName, DateTime datePublish)
         {
             return _context.Set<Product>().FirstOrDefault(item => item.FileName.Equals(fileName) && item.DatePublish.Equals(datePublish));
