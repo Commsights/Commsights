@@ -742,11 +742,7 @@ namespace Commsights.Data.Repositories
             {
                 if (!string.IsNullOrEmpty(listCompany[i].Account))
                 {
-                    keyword = listCompany[i].Account.Trim();
-                    if ((keyword == "Tiki") || (keyword == "Lazada"))
-                    {
-
-                    }
+                    keyword = listCompany[i].Account.Trim();                   
                     int check = 0;
                     if (product.Title.Contains(keyword))
                     {
@@ -777,6 +773,7 @@ namespace Commsights.Data.Repositories
                             product.CompanyID = listCompany[i].ID;
                         }
                         productProperty.CompanyID = listCompany[i].ID;
+                        productProperty.IndustryID = _membershipPermissionRepository.GetByMembershipIDAndAndCodeAndActive(productProperty.CompanyID.Value, AppGlobal.Industry, true).IndustryID;
                         if (_productPropertyRepository.IsExistByGUICodeAndCodeAndCompanyID(productProperty.GUICode, productProperty.Code, productProperty.CompanyID.Value) == false)
                         {
                             listProductProperty.Add(productProperty);
