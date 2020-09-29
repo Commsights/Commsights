@@ -2217,7 +2217,10 @@ namespace Commsights.MVC.Controllers
                                                         if (workSheet.Cells[i, 8].Value != null)
                                                         {
                                                             model.Title = workSheet.Cells[i, 8].Value.ToString().Trim();
-                                                            model.URLCode = workSheet.Cells[i, 8].Hyperlink.AbsoluteUri.Trim();
+                                                            if (!string.IsNullOrEmpty(workSheet.Cells[i, 8].Hyperlink.AbsoluteUri))
+                                                            {
+                                                                model.URLCode = workSheet.Cells[i, 8].Hyperlink.AbsoluteUri.Trim();
+                                                            }
                                                         }
                                                         if (workSheet.Cells[i, 10].Value != null)
                                                         {
@@ -2726,8 +2729,11 @@ namespace Commsights.MVC.Controllers
                                                         if (workSheet.Cells[i, 5].Value != null)
                                                         {
                                                             model.Title = workSheet.Cells[i, 5].Value.ToString().Trim();
-                                                            model.ImageThumbnail = workSheet.Cells[i, 5].Hyperlink.AbsoluteUri.Trim();
-                                                            AppGlobal.GetURLByURLAndi(model, listProductPropertyURLCode, RequestUserID);
+                                                            if (!string.IsNullOrEmpty(workSheet.Cells[i, 5].Hyperlink.AbsoluteUri))
+                                                            {
+                                                                model.ImageThumbnail = workSheet.Cells[i, 5].Hyperlink.AbsoluteUri.Trim();
+                                                                AppGlobal.GetURLByURLAndi(model, listProductPropertyURLCode, RequestUserID);
+                                                            }                                               
                                                         }
                                                         if (workSheet.Cells[i, 6].Value != null)
                                                         {
@@ -4028,10 +4034,18 @@ namespace Commsights.MVC.Controllers
                                                         if (workSheet.Cells[i, 4].Value != null)
                                                         {
                                                             model.Title = workSheet.Cells[i, 4].Value.ToString().Trim();
+                                                            if (!string.IsNullOrEmpty(workSheet.Cells[i, 4].Hyperlink.AbsoluteUri))
+                                                            {
+                                                                model.URLCode = workSheet.Cells[i, 4].Hyperlink.AbsoluteUri.Trim();
+                                                            }
                                                         }
                                                         if (workSheet.Cells[i, 5].Value != null)
                                                         {
                                                             model.TitleEnglish = workSheet.Cells[i, 5].Value.ToString().Trim();
+                                                            if (!string.IsNullOrEmpty(workSheet.Cells[i, 5].Hyperlink.AbsoluteUri))
+                                                            {
+                                                                model.URLCode = workSheet.Cells[i, 5].Hyperlink.AbsoluteUri.Trim();
+                                                            }
                                                         }
                                                         if (workSheet.Cells[i, 6].Value != null)
                                                         {
