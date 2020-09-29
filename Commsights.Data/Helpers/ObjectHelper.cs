@@ -27,8 +27,7 @@ namespace Commsights.Data.Helpers
                     break;
             }
             return model;
-        }
-
+        }      
         public static Dictionary<string, string> ToDictionaryStringString(this object obj)
         {
             if (obj != null)

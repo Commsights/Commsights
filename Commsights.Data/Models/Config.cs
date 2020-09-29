@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Commsights.Data.Models
 {
     public partial class Config : BaseModel
-    {        
+    {
         public string GroupName { get; set; }
         public string Code { get; set; }
         public string CodeName { get; set; }
@@ -19,9 +19,16 @@ namespace Commsights.Data.Models
         public bool? IsMenuLeft { get; set; }
         public int? BlackWhite { get; set; }
         public int? Color { get; set; }
-        public int? CountryID { get; set; }       
+        public int? CountryID { get; set; }
         public int? LanguageID { get; set; }
         public int? FrequencyID { get; set; }
         public int? ColorTypeID { get; set; }
+        public void Initialization()
+        {
+            if (!string.IsNullOrEmpty(this.Title))
+            {
+                this.Title = this.Title[0].ToString().ToUpper() + this.Title.Substring(1).ToLower();
+            }
+        }
     }
 }

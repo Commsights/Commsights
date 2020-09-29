@@ -697,7 +697,7 @@ namespace Commsights.MVC.Controllers
                             List<MembershipPermission> listDailyReportColumn = _membershipPermissionRepository.GetDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndActiveToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn, true);
                             reportData.AppendLine(@"<b style='color: #ed7d31; font-size:14px;'>II - INFORMATION</b>");
                             reportData.AppendLine(@"<br />");
-                            reportData.AppendLine(@"<br />");                            
+                            reportData.AppendLine(@"<br />");
                             reportData.AppendLine(@"<table style='width:100%; font-size:12px; border-color: #000000; border-style: solid;border-width: 1px; border-collapse: collapse;'>");
                             reportData.AppendLine(@"<thead>");
                             reportData.AppendLine(@"<tr>");
@@ -1033,6 +1033,25 @@ namespace Commsights.MVC.Controllers
                 _productPropertyRepository.Create(productProperty);
             }
             string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            return Json(note);
+        }
+        public IActionResult CopyProductPropertyByID(int ID)
+        {
+            ProductProperty productProperty = _productPropertyRepository.GetByID001(ID);
+            if (productProperty != null)
+            {
+                productProperty.ID = 0;
+                productProperty.Initialization(InitType.Insert, RequestUserID);
+                _productPropertyRepository.Create(productProperty);
+            }
+            string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            return Json(note);
+        }
+        public IActionResult DeleteProductAndProductProperty(ProductDataTransfer model)
+        {
+            int result = _productPropertyRepository.Delete(model.ID);
+            result = result + _productRepository.Delete(model.ProductID.Value);
+            string note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
             return Json(note);
         }
         public IActionResult UpdateByIndustryIDAndDatePublishBeginAndDatePublishEndAndAllData(int industryID, DateTime datePublishBegin, DateTime datePublishEnd, bool allData)
@@ -2074,6 +2093,7 @@ namespace Commsights.MVC.Controllers
                                                                     }
                                                                 }
                                                                 parent.Initialization(InitType.Insert, RequestUserID);
+                                                                parent.Initialization();
                                                                 _configResposistory.Create(parent);
                                                             }
                                                             if (parent != null)
@@ -2547,6 +2567,7 @@ namespace Commsights.MVC.Controllers
                                                                 }
                                                                 parent.ParentID = parentOfParent.ID;
                                                                 parent.Initialization(InitType.Insert, RequestUserID);
+                                                                parent.Initialization();
                                                                 _configResposistory.Create(parent);
                                                             }
                                                             model.ParentID = parent.ID;
@@ -2585,6 +2606,7 @@ namespace Commsights.MVC.Controllers
                                                             }
                                                             ProductProperty productProperty = new ProductProperty();
                                                             productProperty.Initialization(InitType.Insert, RequestUserID);
+                                                            productProperty.IsData = true;
                                                             productProperty.Code = AppGlobal.Industry;
                                                             productProperty.ArticleTypeID = AppGlobal.TinNganhID;
                                                             productProperty.AssessID = AppGlobal.AssessID;
@@ -3584,6 +3606,7 @@ namespace Commsights.MVC.Controllers
                                                         {
                                                             ProductProperty productProperty = new ProductProperty();
                                                             productProperty.Initialization(InitType.Insert, RequestUserID);
+                                                            productProperty.IsData = true;
                                                             productProperty.ParentID = product.ID;
                                                             productProperty.GUICode = product.GUICode;
                                                             productProperty.ArticleTypeID = AppGlobal.TinNganhID;
