@@ -30,6 +30,10 @@ namespace Commsights.Service.Mail
                     UseDefaultCredentials = false,
                     Credentials = new NetworkCredential(mail.Username, mail.Password),
                 };
+                if (mail.STMPServer.Contains("mail.commsightsvn.com") == true)
+                {
+                    client.EnableSsl = false;
+                }                
                 return client;
             }
             return null;
