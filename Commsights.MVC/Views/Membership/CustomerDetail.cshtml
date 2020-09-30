@@ -73,7 +73,7 @@
                                    .DataValueField("ID")
                                    .DataTextField("CodeName")
                                    .HtmlAttributes(new {@class = "form-control" })
-                                    .Filter(FilterType.Contains)
+                                    .Filter(FilterType.StartsWith)
                                    .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetMembershipTypeToList", "Config")))
                                     )
                             </div>
@@ -198,7 +198,7 @@
                      .DataTextField("IndustryName")
                     .HtmlAttributes(new { @class = "form-control" })
                       .Events(e => e.DataBound("onIndustryDataBound"))
-                       .Filter(FilterType.Contains)
+                       .Filter(FilterType.StartsWith)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferIndustryByMembershipIDAndIndustryToList", "MembershipPermission").Data("filterMembershipPermissionIndustry")))
                             )
             </div>

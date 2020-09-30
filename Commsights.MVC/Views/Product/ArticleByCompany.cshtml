@@ -29,7 +29,7 @@
                      .DataValueField("ID")
                      .DataTextField("Account")
                      .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.Contains)
+                       .Filter(FilterType.StartsWith)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByCompanyToList", "Membership")))
                             )
                     </div>

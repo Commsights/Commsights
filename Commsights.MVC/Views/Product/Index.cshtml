@@ -17,7 +17,7 @@
                      .DataTextField("Title")
                      .HtmlAttributes(new { @class = "form-control" })
                       .Events(e => e.DataBound("onWebsiteDataBound"))
-                       .Filter(FilterType.Contains)
+                       .Filter(FilterType.StartsWith)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetWebisteAndActiveToList", "Config")))
                             )
                     </div>

@@ -407,19 +407,19 @@ namespace Commsights.MVC.Controllers
                                 {
                                     if ((DailyReportColumnDatePublishID > 0) && (DailyReportColumnDatePublishIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 50px; height:20px; text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>" + data.DatePublishString + "</td>");
+                                        reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>" + data.DatePublishString + "</td>");
                                     }
                                     if ((DailyReportColumnCategoryID > 0) && (DailyReportColumnCategoryIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 50px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>" + data.ArticleTypeName + "</td>");
+                                        reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>" + data.ArticleTypeName + "</td>");
                                     }
                                     if ((DailyReportColumnCompanyID > 0) && (DailyReportColumnCompanyIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 50px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>" + data.CompanyName + "</td>");
+                                        reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>" + data.CompanyName + "</td>");
                                     }
                                     if ((DailyReportColumnSentimentID > 0) && (DailyReportColumnSentimentIDSortOrder == i))
                                     {
-                                        reportData.Append(@"<td style='width: 50px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>");
+                                        reportData.Append(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>");
                                         if (data.AssessID == AppGlobal.NegativeID)
                                         {
                                             reportData.Append(@"<span style='color:red;'>" + data.AssessName + "</span>");
@@ -432,13 +432,13 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnHeadlineVietnameseID > 0) && (DailyReportColumnHeadlineVietnameseIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 300px; height:20px; border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
+                                        reportData.AppendLine(@"<td style='min-width:200px; height:20px; border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
                                         reportData.AppendLine(@"<p style='word-break: break-word; text-align: left;'>" + title + "</p>");
                                         reportData.AppendLine(@"</td>");
                                     }
                                     if ((DailyReportColumnHeadlineEnglishID > 0) && (DailyReportColumnHeadlineEnglishIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 300px; height:20px; border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
+                                        reportData.AppendLine(@"<td style='min-width:200px; height:20px; border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
                                         reportData.AppendLine(@"<p style='word-break: break-word; text-align: left;'>" + titleEnglish + "</p>");
                                         reportData.AppendLine(@"</td>");
                                     }
@@ -452,7 +452,7 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnPageID > 0) && (DailyReportColumnPageIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 50px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;'>" + data.Page + "</td>");
+                                        reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;'>" + data.Page + "</td>");
                                     }
                                     if ((DailyReportColumnAdvertisementID > 0) && (DailyReportColumnAdvertisementIDSortOrder == i))
                                     {
@@ -499,7 +499,7 @@ namespace Commsights.MVC.Controllers
                                                     }
                                                 }
                                             }
-                                            reportData.Append(@"<td rowspan='" + rowspan + "' style='width: 300px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>");
+                                            reportData.Append(@"<td rowspan='" + rowspan + "' style='height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>");
                                             reportData.Append(@"<p style='text-align: left;'>" + description + "</p>");
                                             reportData.Append(@"</td>");
                                         }
@@ -711,7 +711,7 @@ namespace Commsights.MVC.Controllers
                             reportSummary.AppendLine(@"<b style='color: #ed7d31; font-size:14px;'>I - HIGHLIGHT NEWS OF THE DAY</b>");
                             reportSummary.AppendLine(@"<br />");
                             reportSummary.AppendLine(@"<br />");
-                            reportSummary.AppendLine(@"<div style='font-size:12px;'>");
+                            reportSummary.AppendLine(@"<div style='font-size:14px;'>");
                             foreach (ProductSearchPropertyDataTransfer data in listData)
                             {
                                 string title = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.URLCode + "'>" + data.Title + "</a></td>";
@@ -769,7 +769,7 @@ namespace Commsights.MVC.Controllers
                             reportData.AppendLine(@"<b style='color: #ed7d31; font-size:14px;'>II - INFORMATION</b>");
                             reportData.AppendLine(@"<br />");
                             reportData.AppendLine(@"<br />");
-                            reportData.AppendLine(@"<table style='width:100%; font-size:12px; border-color: #000000; border-style: solid;border-width: 1px; border-collapse: collapse;'>");
+                            reportData.AppendLine(@"<table style='width:100%; font-size:14px; border-color: #000000; border-style: solid;border-width: 1px; border-collapse: collapse;'>");
                             reportData.AppendLine(@"<thead>");
                             reportData.AppendLine(@"<tr>");
                             foreach (MembershipPermission dailyReportColumn in listDailyReportColumn)
@@ -866,19 +866,19 @@ namespace Commsights.MVC.Controllers
                                 {
                                     if ((DailyReportColumnDatePublishID > 0) && (DailyReportColumnDatePublishIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 50px; height:20px; text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.DatePublishString + "</td>");
+                                        reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.DatePublishString + "</td>");
                                     }
                                     if ((DailyReportColumnCategoryID > 0) && (DailyReportColumnCategoryIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 50px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.ArticleTypeName + "</td>");
+                                        reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.ArticleTypeName + "</td>");
                                     }
                                     if ((DailyReportColumnCompanyID > 0) && (DailyReportColumnCompanyIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 50px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.CompanyName + "</td>");
+                                        reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.CompanyName + "</td>");
                                     }
                                     if ((DailyReportColumnSentimentID > 0) && (DailyReportColumnSentimentIDSortOrder == i))
                                     {
-                                        reportData.Append(@"<td style='width: 50px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>");
+                                        reportData.Append(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>");
                                         if (data.AssessID == AppGlobal.NegativeID)
                                         {
                                             reportData.Append(@"<span style='color:red;'>" + data.AssessName + "</span>");
@@ -891,13 +891,13 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnHeadlineVietnameseID > 0) && (DailyReportColumnHeadlineVietnameseIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 300px; height:20px; border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
+                                        reportData.AppendLine(@"<td style='min-width:200px; height:20px; border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
                                         reportData.AppendLine(@"<p style='text-align: left;'>" + title + "</p>");
                                         reportData.AppendLine(@"</td>");
                                     }
                                     if ((DailyReportColumnHeadlineEnglishID > 0) && (DailyReportColumnHeadlineEnglishIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 300px; height:20px; border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
+                                        reportData.AppendLine(@"<td style='min-width:200px; height:20px; border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
                                         reportData.AppendLine(@"<p style='text-align: left;'>" + titleEnglish + "</p>");
                                         reportData.AppendLine(@"</td>");
                                     }
@@ -911,7 +911,7 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnPageID > 0) && (DailyReportColumnPageIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 50px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.Page + "</td>");
+                                        reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.Page + "</td>");
                                     }
                                     if ((DailyReportColumnAdvertisementID > 0) && (DailyReportColumnAdvertisementIDSortOrder == i))
                                     {
@@ -958,7 +958,7 @@ namespace Commsights.MVC.Controllers
                                                     }
                                                 }
                                             }
-                                            reportData.Append(@"<td rowspan='" + rowspan + "' style='width: 300px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>");
+                                            reportData.Append(@"<td rowspan='" + rowspan + "' style='height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>");
                                             reportData.Append(@"<p style='text-align: left;'>" + description + "</p>");
                                             reportData.Append(@"</td>");
                                         }
@@ -1111,12 +1111,8 @@ namespace Commsights.MVC.Controllers
             var data = _reportRepository.ReportDailyByProductSearchIDAndActiveToListToHTML(productSearchID, true);
             return Json(data.ToDataSourceResult(request));
         }
-        public IActionResult UpdateDataTransfer(ProductDataTransfer model)
+        public IActionResult UpdateDataTransfer(ProductDataTransfer model, DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
         {
-            if (model.IsSource == true)
-            {
-                Response.Cookies.Append("ProductID", model.ProductID.Value.ToString());
-            }
             Initialization(model);
             ProductProperty productProperty = _productPropertyRepository.GetByID001(model.ID);
             if (productProperty != null)
@@ -1133,20 +1129,19 @@ namespace Commsights.MVC.Controllers
             Product product = _productRepository.GetByID001(model.ProductID.Value);
             if (product != null)
             {
-
                 product.IsSummary = model.IsSummary;
                 product.IsData = model.IsData;
                 product.Title = model.Title;
                 product.TitleEnglish = model.TitleEnglish;
                 product.Description = model.Description;
                 product.DescriptionEnglish = model.DescriptionEnglish;
-                if (model.IsCopy == true)
+                product.SourceID = model.SourceID;
+                product.TargetID = model.TargetID;
+                if (model.TargetID > 0)
                 {
                     try
                     {
-                        Product productSource = new Product();
-                        productSource.ID = int.Parse(Request.Cookies["ProductID"]);
-                        productSource = _productRepository.GetByID001(productSource.ID);
+                        Product productSource = _productRepository.GetByByDatePublishBeginAndDatePublishEndAndIndustryIDAndSourceID(datePublishBegin, datePublishEnd, industryID, model.TargetID.Value);
                         if (productSource != null)
                         {
                             product.Description = productSource.Description;
@@ -1161,7 +1156,7 @@ namespace Commsights.MVC.Controllers
                 product.Initialization(InitType.Update, RequestUserID);
                 _productRepository.Update(product.ID, product);
                 foreach (Product item in _productRepository.GetByTitleToList(product.Title))
-                {
+                {                    
                     item.TitleEnglish = product.TitleEnglish;
                     item.Description = product.Description;
                     item.DescriptionEnglish = product.DescriptionEnglish;
@@ -2589,7 +2584,7 @@ namespace Commsights.MVC.Controllers
                                                     model.DatePublish = DateTime.Now;
                                                     model.ParentID = AppGlobal.WebsiteID;
                                                     model.CategoryID = AppGlobal.WebsiteID;
-                                                    model.PriceUnitId = 0;
+                                                    model.PriceUnitID = 0;
                                                     model.Liked = 0;
                                                     model.Comment = 0;
                                                     model.Share = 0;

@@ -2,6 +2,6 @@
                    .DataValueField("ID")
                    .DataTextField("CodeName")
                    .HtmlAttributes(new {data_bind= "value: Country", @class = "form-control" })
-                    .Filter(FilterType.Contains)
+                    .Filter(FilterType.StartsWith)
                    .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCountryToList", "Config")))
 )

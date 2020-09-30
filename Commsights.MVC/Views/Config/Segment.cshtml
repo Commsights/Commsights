@@ -15,7 +15,7 @@
                      .DataTextField("CodeName")
                     .HtmlAttributes(new { @class = "form-control" })
                       .Events(e => e.DataBound("onIndustryDataBound").Change("onIndustryChange"))
-                       .Filter(FilterType.Contains)
+                       .Filter(FilterType.StartsWith)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
                             )
                     </div>

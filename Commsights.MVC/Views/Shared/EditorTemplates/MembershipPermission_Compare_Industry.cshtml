@@ -3,6 +3,6 @@
                    .DataValueField("IndustryID")
                    .DataTextField("IndustryName")
                    .HtmlAttributes(new { data_bind = ViewData["ValueBind"], @class = "form-control" })
-                    .Filter(FilterType.Contains)
+                    .Filter(FilterType.StartsWith)
                    .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferIndustryByMembershipIDAndIndustryToList", "MembershipPermission", new { membershipID = ViewData["CompareID"] })))
 )

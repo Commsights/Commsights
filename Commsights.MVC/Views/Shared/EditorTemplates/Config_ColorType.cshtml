@@ -2,6 +2,6 @@
                    .DataValueField("ID")
                    .DataTextField("CodeName")
                    .HtmlAttributes(new {data_bind= "value: ColorType", @class = "form-control" })
-                    .Filter(FilterType.Contains)
+                    .Filter(FilterType.StartsWith)
                    .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetColorToList", "Config")))
 )

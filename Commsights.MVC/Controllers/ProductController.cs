@@ -737,7 +737,7 @@ namespace Commsights.MVC.Controllers
                                                     model.DatePublish = DateTime.Now;
                                                     model.ParentID = AppGlobal.WebsiteID;
                                                     model.CategoryID = AppGlobal.WebsiteID;
-                                                    model.PriceUnitId = 0;
+                                                    model.PriceUnitID = 0;
                                                     model.Liked = 0;
                                                     model.Comment = 0;
                                                     model.Share = 0;
@@ -897,12 +897,12 @@ namespace Commsights.MVC.Controllers
                                                                 _productSearchPropertyRepository.Create(productSearchProperty);
                                                                 if (productSearchProperty.ID > 0)
                                                                 {
-                                                                    if (model.PriceUnitId > 0)
+                                                                    if (model.PriceUnitID > 0)
                                                                     {
                                                                         ProductSearchProperty productSearchPropertySub = new ProductSearchProperty();
                                                                         productSearchPropertySub.ParentID = productSearchProperty.ID;
                                                                         productSearchPropertySub.CompanyID = AppGlobal.CompetitorID;
-                                                                        productSearchPropertySub.AssessID = model.PriceUnitId;
+                                                                        productSearchPropertySub.AssessID = model.PriceUnitID;
                                                                         productSearchPropertySub.Initialization(InitType.Insert, RequestUserID);
                                                                         _productSearchPropertyRepository.Create(productSearchPropertySub);
                                                                     }

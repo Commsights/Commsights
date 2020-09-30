@@ -18,7 +18,7 @@
                      .DataTextField("FullName")
                      .HtmlAttributes(new { @class = "form-control" })
                       .Events(e => e.DataBound("onCustomerDataBound").Change("onCustomerChange"))
-                       .Filter(FilterType.Contains)
+                       .Filter(FilterType.StartsWith)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCustomerToList", "Membership")))
                             )
                     </div>

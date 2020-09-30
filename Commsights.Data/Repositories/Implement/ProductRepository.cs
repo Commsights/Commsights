@@ -130,6 +130,20 @@ namespace Commsights.Data.Repositories
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectByURLCode", parameters);
             return SQLHelper.ToList<ProductDataTransfer>(dt).FirstOrDefault();
         }
+        public Product GetByByDatePublishBeginAndDatePublishEndAndIndustryIDAndSourceID(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int sourceID)
+        {
+            datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+            datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+            SqlParameter[] parameters =
+            {
+                    new SqlParameter("@DatePublishBegin",datePublishBegin),
+                    new SqlParameter("@DatePublishEnd",datePublishEnd),
+                    new SqlParameter("@IndustryID",industryID),
+                    new SqlParameter("@SourceID",sourceID),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectByDatePublishBeginAndDatePublishEndAndIndustryIDAndSourceID", parameters);
+            return SQLHelper.ToList<ProductDataTransfer>(dt).FirstOrDefault();
+        }
         public Product GetByURLCode001(string uRLCode)
         {
             return _context.Set<Product>().FirstOrDefault(item => item.URLCode.Equals(uRLCode));
@@ -746,7 +760,7 @@ namespace Commsights.Data.Repositories
             {
                 if (!string.IsNullOrEmpty(listCompany[i].Account))
                 {
-                    keyword = listCompany[i].Account.Trim();                   
+                    keyword = listCompany[i].Account.Trim();
                     int check = 0;
                     if (product.Title.Contains(keyword))
                     {

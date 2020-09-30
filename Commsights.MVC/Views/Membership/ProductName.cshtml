@@ -15,7 +15,7 @@
                      .DataTextField("CodeName")
                     .HtmlAttributes(new { @class = "form-control" })
                       .Events(e => e.DataBound("onIndustryDataBound").Change("onIndustryChange"))
-                       .Filter(FilterType.Contains)
+                       .Filter(FilterType.StartsWith)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
                             )
                     </div>
@@ -26,7 +26,7 @@
                      .DataTextField("Account")
                      .HtmlAttributes(new { style = "width:100%; font-size: 16px;" })
                       .Events(e => e.DataBound("onCustomerDataBound"))
-                       .Filter(FilterType.Contains)
+                       .Filter(FilterType.StartsWith)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByIndustryIDToList", "Membership").Data("filterCustomer")))
                             )
                     </div>

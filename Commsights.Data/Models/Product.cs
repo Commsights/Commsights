@@ -19,7 +19,7 @@ namespace Commsights.Data.Models
         public string Description { get; set; }
         public string ContentMain { get; set; }
         public decimal? Price { get; set; }
-        public int? PriceUnitId { get; set; }
+        public int? PriceUnitID { get; set; }
         public string Page { get; set; }
         public string TitleEnglish { get; set; }
         public string FileName { get; set; }
@@ -39,7 +39,11 @@ namespace Commsights.Data.Models
         public string Source { get; set; }
         public string DescriptionEnglish { get; set; }
         public bool? IsSummary { get; set; }
-        public bool? IsData { get; set; }       
+        public bool? IsData { get; set; }
+
+        public int? SourceID { get; set; }
+
+        public int? TargetID { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]

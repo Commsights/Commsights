@@ -15,7 +15,7 @@
                      .DataTextField("DisplayName")
                      .HtmlAttributes(new { @class = "form-control" })
                       .Events(e => e.DataBound("onWebsiteDataBound").Change("onWebsiteChange"))
-                       .Filter(FilterType.Contains)
+                       .Filter(FilterType.StartsWith)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferChildrenWebisteAndActiveToList", "Config")))
                             )
                     </div>
