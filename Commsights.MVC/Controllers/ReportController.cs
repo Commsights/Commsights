@@ -432,13 +432,27 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnHeadlineVietnameseID > 0) && (DailyReportColumnHeadlineVietnameseIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='min-width:200px; height:20px; border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
+                                        if (DailyReportColumnSummaryID > 0)
+                                        {
+                                            reportData.AppendLine(@"<td style='width:200px; height:20px; border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
+                                        }
+                                        else
+                                        {
+                                            reportData.AppendLine(@"<td style='width:300px; height:20px; border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
+                                        }
                                         reportData.AppendLine(@"<p style='word-break: break-word; text-align: left;'>" + title + "</p>");
                                         reportData.AppendLine(@"</td>");
                                     }
                                     if ((DailyReportColumnHeadlineEnglishID > 0) && (DailyReportColumnHeadlineEnglishIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='min-width:200px; height:20px; border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
+                                        if (DailyReportColumnSummaryID > 0)
+                                        {
+                                            reportData.AppendLine(@"<td style='width:200px; height:20px; border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
+                                        }
+                                        else
+                                        {
+                                            reportData.AppendLine(@"<td style='width:300px; height:20px; border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
+                                        }
                                         reportData.AppendLine(@"<p style='word-break: break-word; text-align: left;'>" + titleEnglish + "</p>");
                                         reportData.AppendLine(@"</td>");
                                     }
@@ -891,13 +905,27 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnHeadlineVietnameseID > 0) && (DailyReportColumnHeadlineVietnameseIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='min-width:200px; height:20px; border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
+                                        if (DailyReportColumnSummaryID > 0)
+                                        {
+                                            reportData.AppendLine(@"<td style='width:200px; height:20px; border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
+                                        }
+                                        else
+                                        {
+                                            reportData.AppendLine(@"<td style='width:300px; height:20px; border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
+                                        }
                                         reportData.AppendLine(@"<p style='text-align: left;'>" + title + "</p>");
                                         reportData.AppendLine(@"</td>");
                                     }
                                     if ((DailyReportColumnHeadlineEnglishID > 0) && (DailyReportColumnHeadlineEnglishIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='min-width:200px; height:20px; border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
+                                        if (DailyReportColumnSummaryID > 0)
+                                        {
+                                            reportData.AppendLine(@"<td style='width:200px; height:20px; border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
+                                        }
+                                        else
+                                        {
+                                            reportData.AppendLine(@"<td style='width:300px; height:20px; border-color: #000000; border-style: solid; border-width: 1px; padding: 2px;'>");
+                                        }
                                         reportData.AppendLine(@"<p style='text-align: left;'>" + titleEnglish + "</p>");
                                         reportData.AppendLine(@"</td>");
                                     }
@@ -1156,7 +1184,7 @@ namespace Commsights.MVC.Controllers
                 product.Initialization(InitType.Update, RequestUserID);
                 _productRepository.Update(product.ID, product);
                 foreach (Product item in _productRepository.GetByTitleToList(product.Title))
-                {                    
+                {
                     item.TitleEnglish = product.TitleEnglish;
                     item.Description = product.Description;
                     item.DescriptionEnglish = product.DescriptionEnglish;

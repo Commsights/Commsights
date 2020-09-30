@@ -513,27 +513,41 @@ namespace Commsights.Data.Repositories
             if ((membershipID > 0) && (industryID > 0) && (!string.IsNullOrEmpty(code)))
             {
                 List<MembershipPermission> listMembershipPermission = _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.IndustryID == industryID && item.Code.Equals(code)).ToList();
-                _context.MembershipPermission.RemoveRange(listMembershipPermission);
+
                 List<Config> listConfig = _context.Config.Where(item => item.Code.Equals(code)).ToList();
-                listMembershipPermission = new List<MembershipPermission>();
+
                 foreach (Config config in listConfig)
                 {
-                    MembershipPermission model = new MembershipPermission();
-                    model.LanguageID = AppGlobal.LanguageID;
-                    model.MembershipID = membershipID;
-                    model.IndustryID = industryID;
-                    model.Code = code;
-                    model.CategoryID = config.ID;
-                    model.Hour = AppGlobal.Hour;
-                    model.Minute = -1;
-                    model.SortOrder = -1;
-                    model.Active = false;
-                    model.Email = config.CodeName;
-                    model.Phone = config.Note;
-                    model.Initialization(InitType.Insert, requestUserID);
-                    listMembershipPermission.Add(model);
+                    foreach (MembershipPermission membershipPermission in listMembershipPermission)
+                    {
+                        bool check = true;
+                        for (int i = 0; i < listMembershipPermission.Count; i++)
+                        {
+                            if (config.ID == listMembershipPermission[i].CategoryID)
+                            {
+                                check = false;
+                                i = listMembershipPermission.Count;
+                            }
+                        }
+                        if (check == true)
+                        {
+                            MembershipPermission model = new MembershipPermission();
+                            model.LanguageID = AppGlobal.LanguageID;
+                            model.MembershipID = membershipID;
+                            model.IndustryID = industryID;
+                            model.Code = code;
+                            model.CategoryID = config.ID;
+                            model.Hour = AppGlobal.Hour;
+                            model.Minute = -1;
+                            model.SortOrder = -1;
+                            model.Active = false;
+                            model.Email = config.CodeName;
+                            model.Phone = config.Note;
+                            model.Initialization(InitType.Insert, requestUserID);
+                            _context.MembershipPermission.Add(model);
+                        }
+                    }
                 }
-                _context.MembershipPermission.AddRange(listMembershipPermission);
                 _context.SaveChangesAsync();
             }
         }
@@ -565,24 +579,33 @@ namespace Commsights.Data.Repositories
             if ((membershipID > 0) && (industryID > 0) && (!string.IsNullOrEmpty(code)))
             {
                 List<MembershipPermission> listMembershipPermission = _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.IndustryID == industryID && item.Code.Equals(code)).ToList();
-                _context.MembershipPermission.RemoveRange(listMembershipPermission);
                 List<Config> listConfig = _context.Config.Where(item => item.GroupName.Equals(AppGlobal.CRM) && item.Code.Equals(code)).ToList();
-                listMembershipPermission = new List<MembershipPermission>();
                 foreach (Config config in listConfig)
                 {
-                    MembershipPermission model = new MembershipPermission();
-                    model.MembershipID = membershipID;
-                    model.IndustryID = industryID;
-                    model.Code = code;
-                    model.SortOrder = 0;
-                    model.Active = false;
-                    model.CategoryID = config.ID;
-                    model.Email = config.CodeName;
-                    model.Phone = config.Note;
-                    model.Initialization(InitType.Insert, requestUserID);
-                    listMembershipPermission.Add(model);
+                    bool check = true;
+                    for (int i = 0; i < listMembershipPermission.Count; i++)
+                    {
+                        if (config.ID == listMembershipPermission[i].CategoryID)
+                        {
+                            check = false;
+                            i = listMembershipPermission.Count;
+                        }
+                    }
+                    if (check == true)
+                    {
+                        MembershipPermission model = new MembershipPermission();
+                        model.MembershipID = membershipID;
+                        model.IndustryID = industryID;
+                        model.Code = code;
+                        model.SortOrder = 0;
+                        model.Active = false;
+                        model.CategoryID = config.ID;
+                        model.Email = config.CodeName;
+                        model.Phone = config.Note;
+                        model.Initialization(InitType.Insert, requestUserID);
+                        _context.MembershipPermission.Add(model);
+                    }
                 }
-                _context.MembershipPermission.AddRange(listMembershipPermission);
                 _context.SaveChangesAsync();
             }
         }
@@ -613,25 +636,37 @@ namespace Commsights.Data.Repositories
             if ((membershipID > 0) && (industryID > 0) && (!string.IsNullOrEmpty(code)))
             {
                 List<MembershipPermission> listMembershipPermission = _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.IndustryID == industryID && item.Code.Equals(code)).ToList();
-                _context.MembershipPermission.RemoveRange(listMembershipPermission);
                 List<Config> listConfig = _context.Config.Where(item => item.GroupName.Equals(AppGlobal.CRM) && item.Code.Equals(code)).ToList();
-                listMembershipPermission = new List<MembershipPermission>();
                 foreach (Config config in listConfig)
                 {
-                    MembershipPermission model = new MembershipPermission();
-                    model.MembershipID = membershipID;
-                    model.IndustryID = industryID;
-                    model.Code = code;
-                    model.SortOrder = 0;
-                    model.Active = false;
-                    model.CategoryID = config.ID;
-                    model.FullName = config.CodeName;
-                    model.Email = config.CodeName;
-                    model.Phone = config.Note;
-                    model.Initialization(InitType.Insert, requestUserID);
-                    listMembershipPermission.Add(model);
+                    foreach (MembershipPermission membershipPermission in listMembershipPermission)
+                    {
+                        bool check = true;
+                        for (int i = 0; i < listMembershipPermission.Count; i++)
+                        {
+                            if (config.ID == listMembershipPermission[i].CategoryID)
+                            {
+                                check = false;
+                                i = listMembershipPermission.Count;
+                            }
+                        }
+                        if (check == true)
+                        {
+                            MembershipPermission model = new MembershipPermission();
+                            model.MembershipID = membershipID;
+                            model.IndustryID = industryID;
+                            model.Code = code;
+                            model.SortOrder = 0;
+                            model.Active = false;
+                            model.CategoryID = config.ID;
+                            model.FullName = config.CodeName;
+                            model.Email = config.CodeName;
+                            model.Phone = config.Note;
+                            model.Initialization(InitType.Insert, requestUserID);
+                            _context.MembershipPermission.Add(model);
+                        }
+                    }
                 }
-                _context.MembershipPermission.AddRange(listMembershipPermission);
                 _context.SaveChangesAsync();
             }
         }
