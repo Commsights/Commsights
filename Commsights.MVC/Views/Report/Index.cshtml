@@ -76,11 +76,11 @@
     columns.Bound(t => t.Description).Title("Summary").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Template(@"<a onclick='javascript:OpenWindowLeftByURL(""#=URLCode#"");' title='#=Title#' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
-    columns.Bound(t => t.DatePublish).Title("Publish").Format("{0:dd/MM/yyyy}").Width(200).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.DatePublish).Title("Publish").Format("{0:dd/MM/yyyy}").Width(120).HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.Media).Title("Media").Width(200);
-    columns.Bound(t => t.AdvertisementValue).Title("Ad Value").Width(200).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.AdvertisementValue).Title("Ad Value").Width(120).HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.IsSource).Title("Source").Width(100);
-    columns.Bound(t => t.IsCopy).Title("Copy").Width(100);
+    columns.Bound(t => t.IsCopy).Title("Target").Width(100);
     columns.Template(@"<a onclick='javascript:OpenWindowRightByURL(""#=URLCode#"");' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70);
     columns.Command(command => { command.Custom("Copy").Click("addProductProperty").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#007bff; color:#ffffff; padding-left:10px;" }); }).Width(80);
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);

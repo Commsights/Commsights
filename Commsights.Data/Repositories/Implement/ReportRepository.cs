@@ -198,7 +198,7 @@ namespace Commsights.Data.Repositories
             {
                 SqlParameter[] parameters =
                 {
-                    new SqlParameter("@ProductSearchID",productSearchID),                    
+                    new SqlParameter("@ProductSearchID",productSearchID),
                 };
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportDailyByProductSearchIDToHTML", parameters);
                 list = SQLHelper.ToList<ProductSearchPropertyDataTransfer>(dt);
@@ -355,6 +355,40 @@ namespace Commsights.Data.Repositories
                 }
             }
             return list;
+        }
+        public string UpdateProductPropertyByDatePublishBeginAndDatePublishEndAndIndustryID(DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
+        {
+            string result = "";
+            if (industryID > 0)
+            {
+                datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+                datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+                SqlParameter[] parameters =
+                       {
+                    new SqlParameter("@DatePublishBegin",datePublishBegin),
+                    new SqlParameter("@DatePublishEnd",datePublishEnd),
+                    new SqlParameter("@IndustryID",industryID)
+                    };
+                result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ReportDailyUpdateProductPropertyByDatePublishBeginAndDatePublishEndAndIndustryID", parameters);
+            }
+            return result;
+        }
+        public string UpdateProductByDatePublishBeginAndDatePublishEndAndIndustryID(DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
+        {
+            string result = "";
+            if (industryID > 0)
+            {
+                datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+                datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+                SqlParameter[] parameters =
+                       {
+                    new SqlParameter("@DatePublishBegin",datePublishBegin),
+                    new SqlParameter("@DatePublishEnd",datePublishEnd),
+                    new SqlParameter("@IndustryID",industryID)
+                    };
+                result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ReportDailyUpdateProductByDatePublishBeginAndDatePublishEndAndIndustryID", parameters);
+            }
+            return result;
         }
     }
 }

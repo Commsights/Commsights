@@ -25,5 +25,7 @@ namespace Commsights.Data.Repositories
         public List<ProductSearchPropertyDataTransfer> ReportDailyByProductSearchIDToListToHTML(int productSearchID);
         public List<ProductDataTransfer> GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID);
         public List<ProductSearchDataTransfer> InitializationByDatePublishBeginAndDatePublishEndAndIndustryIDAndHourSearchToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int hourSearch);
+        public string UpdateProductPropertyByDatePublishBeginAndDatePublishEndAndIndustryID(DateTime datePublishBegin, DateTime datePublishEnd, int industryID);
+        public string UpdateProductByDatePublishBeginAndDatePublishEndAndIndustryID(DateTime datePublishBegin, DateTime datePublishEnd, int industryID);
     }
 }
