@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 
-    
+
     <script>
         function BeginRequestHandler() {
             Slider();
@@ -55,10 +55,20 @@
         function OpenWindowLeftByURL(URLParamater, w = 100, h = 200) {
             var width = screen.width;
             var height = screen.height;
-            var width01 = width/2;
-            var height01 = height/2;
+            var width01 = width / 2;
+            var height01 = height / 2;
             var left = width01 - 20;
-            var top = height01 - 120;            
+            var top = height01 - 120;
+            var url = URLParamater;
+            window.open(url, '_blank', 'location=yes,height=' + height01 + ',width=' + width01 + ',scrollbars=yes,status=yes,toolbar=yes,top=' + top + ',left=' + left + '');
+        }
+        function OpenWindowRightByURL(URLParamater, w = 100, h = 200) {
+            var width = screen.width;
+            var height = screen.height;
+            var width01 = width / 2;
+            var height01 = height / 2;
+            var left = 0;
+            var top = height01 - 120;
             var url = URLParamater;
             window.open(url, '_blank', 'location=yes,height=' + height01 + ',width=' + width01 + ',scrollbars=yes,status=yes,toolbar=yes,top=' + top + ',left=' + left + '');
         }
@@ -185,7 +195,7 @@
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Scan article</p>
                                     </a>
-                                </li>                                
+                                </li>
                             </ul>
                         </li>
                         <li class="nav-item has-treeview">
@@ -432,20 +442,12 @@
                 </div>
             </section>
         </div>
-        @*<footer class="main-footer">
-                <div class="float-right d-none d-sm-block">
-                    <b>Version</b> 3.0.5
-                </div>
-                <strong>Copyright &copy; 2020 <a title="@Commsights.Data.Helpers.AppGlobal.Title" target="_blank" href="https://www.commsights.com/">@Commsights.Data.Helpers.AppGlobal.Title</a>.</strong> All rights reserved.
-            </footer>
-            <aside class="control-sidebar control-sidebar-dark">
-            </aside>*@
     </div>
     <script src="/AdminLTE_3_0_5/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/AdminLTE_3_0_5/dist/js/adminlte.min.js"></script>
 
     <script src="/AdminLTE_3_0_5/dist/js/demo.js"></script>
-    <script src="/js/site.js"></script>    
+    <script src="/js/site.js"></script>
     <script>
         function setMenuLeftActive() {
             var tag = $('a[href="' + this.location.pathname + '"]');
