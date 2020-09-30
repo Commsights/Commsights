@@ -38,6 +38,7 @@
                            .DataTextField("CodeName")
                            .HtmlAttributes(new { style = "width:100%;" })
                           .Events(e => e.DataBound("onIndustryIDUploadAndiSourceDataBound"))
+                          .Filter(FilterType.StartsWith)
                            .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
                                 )
                     </div>
@@ -79,6 +80,7 @@
                            .DataTextField("CodeName")
                            .HtmlAttributes(new { style = "width:100%;" })
                           .Events(e => e.DataBound("onIndustryIDUploadScanDataBound"))
+                          .Filter(FilterType.StartsWith)
                            .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
                                 )
                     </div>
@@ -119,6 +121,7 @@
                            .DataTextField("CodeName")
                            .HtmlAttributes(new { style = "width:100%;" })
                           .Events(e => e.DataBound("onIndustryIDUploadYounetDataBound"))
+                          .Filter(FilterType.StartsWith)
                            .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
                                 )
                     </div>
@@ -158,6 +161,7 @@
                            .DataTextField("CodeName")
                            .HtmlAttributes(new { style = "width:100%;" })
                           .Events(e => e.DataBound("onIndustryIDUploadGoogleSearchDataBound"))
+                          .Filter(FilterType.StartsWith)
                            .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
                                 )
                     </div>
