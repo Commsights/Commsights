@@ -30,5 +30,7 @@ namespace Commsights.MVC.Models
         public bool AllSummary { get; set; }
         public DateTime DatePublishBegin { get; set; }
         public DateTime DatePublishEnd { get; set; }
+        public string DatePublishBeginString { get; set; }
+        public string DatePublishEndString { get; set; }
     }
 }

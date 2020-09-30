@@ -25,8 +25,7 @@
                                 )
                     </div>
                     <div class='col-sm-3'>
-                        @(Html.Kendo().DropDownList()
-                     .Name("Industry")
+                        @(Html.Kendo().DropDownListFor(Model=>Model.IndustryID)
                      .DataValueField("ID")
                      .DataTextField("CodeName")
                     .HtmlAttributes(new { @class = "form-control" })
@@ -148,12 +147,7 @@
         }
     }
     function onIndustryDataBound() {
-        var control = $("#Industry").data("kendoDropDownList");
-        var controlLength = control.dataSource.data().length;
-        if (controlLength > 0) {
-            control.select(0);
-            onSearch();
-        }
+        onSearch();
     }
     function addProductProperty(e) {
         BeginRequestHandler();
@@ -171,22 +165,22 @@
         });
     }
     function filterConfig_SegmentByIndustry(e) {
-        var parentIDValue = $("#Industry").data("kendoDropDownList").value();
+        var parentIDValue = $("#IndustryID").data("kendoDropDownList").value();
         return { parentID: parentIDValue };
     }
     function filterMembership_CompanyByIndustry(e) {
-        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
         return { industryID: industryIDValue };
     }
     function filterProduct(e) {
-        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
         var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
         var datePublishEndValue = toDate02($("#DatePublishEnd").val());
         return { datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, industryID: industryIDValue };
     }
     function onSaveAllData() {
         BeginRequestHandler();
-        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
         var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
         var datePublishEndValue = toDate02($("#DatePublishEnd").val());
         var allDataValue = document.getElementById('chkAllData').checked;
@@ -208,7 +202,7 @@
     }
     function GetByIndustryIDAndParrentIDToList() {
         $("#DataMain").html('');
-        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
          $.ajax({
             type: 'GET',
             url: "@Url.Action("GetByIndustryIDAndParrentIDToListToJSON", "Membership")",
@@ -253,7 +247,7 @@
         $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
     }
     function onPreview() {
-        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
         var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
         var datePublishEndValue = toDate02($("#DatePublishEnd").val());
         datePublishBeginValue = datePublishBeginValue.replace("/", "-");
