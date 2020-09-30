@@ -208,7 +208,7 @@ namespace Commsights.MVC.Controllers
                     mail.AttachmentFiles = model.PhysicalPath;
                     mail.Content = model.Note;
                     mail.Subject = "Daily Report (" + item.CompanyName + " - CommSights) " + item.DateSearch.ToString("dd.MM.yyyy");
-                    mail.ToMail = "vietnam.commsights@gmail.com,it@commsightsvn.com,support@commsightsvn.com,khanh.nguyen@commsightsvn.com,ngoc.huynh@commsightsvn.com";
+                    mail.ToMail = AppGlobal.EmailSupport;
                     try
                     {
                         _mailService.Send(mail);

@@ -175,6 +175,14 @@ namespace Commsights.Data.Helpers
                 return "<a target='_blank' href='" + GoogleMapURLFUll + "' title='" + AddressReport + "'>" + AddressReport + "</a>";
             }
         }
+        public static string EmailSupport
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("EmailSupport").Value;
+            }
+        }
         public static string CommsightsWebsite
         {
             get
