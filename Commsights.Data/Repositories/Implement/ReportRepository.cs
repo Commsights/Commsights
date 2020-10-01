@@ -352,9 +352,26 @@ namespace Commsights.Data.Repositories
                     list[i].Segment = new ModelTemplate();
                     list[i].Segment.ID = list[i].SegmentID;
                     list[i].Segment.TextName = list[i].SegmentName;
+                    list[i].Product = new ModelTemplate();
+                    list[i].Product.ID = list[i].MembershipPermissionProductID;
+                    list[i].Product.TextName = list[i].ProductName;
                 }
             }
             return list;
+        }
+        public ProductDataTransfer GetProductDataTransferByProductPropertyID(int productPropertyID)
+        {
+            ProductDataTransfer model = new ProductDataTransfer();
+            if (productPropertyID > 0)
+            {
+                SqlParameter[] parameters =
+                    {
+                    new SqlParameter("@ProductPropertyID",productPropertyID)
+                    };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportSelectProductDataTransferByProductPropertyID", parameters);
+                model = SQLHelper.ToList<ProductDataTransfer>(dt).FirstOrDefault();
+            }
+            return model;
         }
         public string UpdateProductPropertyByDatePublishBeginAndDatePublishEndAndIndustryID(DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
         {

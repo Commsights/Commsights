@@ -1,0 +1,75 @@
+﻿<style>
+    @page {
+        size: auto; /* auto is the initial value */
+        margin: 0mm; /* this affects the margin in the printer settings */
+    }
+
+    body {
+        margin: 0px; /* this affects the margin on the content before sending to printer */
+    }
+
+    * {
+        -webkit-print-color-adjust: exact !important; /*Chrome, Safari */
+        color-adjust: exact !important; /*Firefox*/
+    }
+
+    .border, .border td, .border th {
+        border-color: #000000;
+        border-style: solid;
+        border-width: 1px;
+        padding: 10px;
+    }
+
+    .border {
+        border-collapse: collapse;
+    }
+
+        .border th {
+            text-align: center;
+        }
+
+        .border td {
+            text-align: right;
+        }
+
+        .border .text {
+            text-align: left;
+        }
+</style>
+<div style="width: 1400px; min-height: 960px; padding: 40px; margin: auto; background-color: #ffffff; background-repeat: repeat-x; background-image: url('[Background_Logo_Opacity10_1400_1000URLFUll]');">
+    <table>
+        <tr>
+            <td valign="top" style="width:40%; text-align:center;">
+                <a title="Print" href='javascript:window.print();'><img src="[Logo01URLFull]" style="width:80%;" alt="Print" title="Print" /></a>
+                <br />
+                <b style="font-size:30px;">[CompanyTitleEnglish]</b>
+            </td>
+            <td valign="top" style="width:60%;">
+                <div style="text-align: right; font-size:14px;">
+                    Tax code: [TaxCode]
+                    <br />
+                    Phone: [PhoneReportHTML]
+                    <br />
+                    Email: [EmailReportHTML]
+                    <br />
+                    Facebook: [FacebookHTML]
+                    <br />
+                    Address: [GoogleMapHTML]
+                    <br />
+                    Preview: [PreviewDate]
+                    <br />
+                    Layout: Landscape
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div style="text-align:center; border-top-color:black;border-top-style:solid;border-top-width:1px; padding:10px; line-height:30px;position: relative;">
+        <div>
+            <b style="font-size:40px; text-transform:uppercase; color:#c00000;">[CompanyName] - [Title]</b>
+        </div>
+    </div>
+    <div>
+        [ReportSummary]        
+        [ReportData]
+    </div>
+</div>

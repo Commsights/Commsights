@@ -2,6 +2,7 @@
 
 @model Commsights.MVC.Models.BaseViewModel
 
+
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
@@ -28,8 +29,7 @@
                         @(Html.Kendo().DropDownListFor(Model=>Model.IndustryID)
                      .DataValueField("ID")
                      .DataTextField("CodeName")
-                    .HtmlAttributes(new { @class = "form-control" })
-                      .Events(e => e.DataBound("onIndustryDataBound"))
+                    .HtmlAttributes(new { @class = "form-control" })                      
                        .Filter(FilterType.StartsWith)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
                             )
@@ -38,7 +38,7 @@
                         <button type="button" class="btn btn-success" onclick="onSearch()">
                             <span class="fas fa-search"></span>
                         </button>
-                    </div>                 
+                    </div>
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" onclick="onPreview()">
                             <span class="fas fa-flag-checkered"></span> Preview
@@ -66,14 +66,14 @@
     columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.Description).Title("Summary").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
-    columns.Template(@"<a onclick='javascript:OpenWindowLeftByURL(""#=URLCode#"");' title='#=Title#' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.DatePublish).Title("Publish").Format("{0:dd/MM/yyyy}").Width(120).HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.Media).Title("Media").Width(200);
     columns.Bound(t => t.AdvertisementValue).Title("Ad Value").Width(200).HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.SourceID).Title("Source").Width(200);
     columns.Bound(t => t.TargetID).Title("Target").Width(200);
+    columns.Bound(t => t.Product.TextName).EditorTemplateName("MembershipPermission_Product").Title("Product").Width(300);
     columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70);
-    columns.Command(command => { command.Custom("Copy").Click("addProductProperty").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#007bff; color:#ffffff; padding-left:10px;" }); }).Width(80);
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
 })
 .ToolBar(toolBar => toolBar.Search())
@@ -115,11 +115,11 @@
     model.Field(t => t.Segment).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
     model.Field(t => t.ArticleType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
     model.Field(t => t.AssessType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Field(t => t.Product).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList", "Report").Data("filterProduct"))
 .Destroy(t => t.Action("DeleteProductAndProductProperty", "Report"))
-.Create(t => t.Action("CopyProductProperty", "Report"))
 .Update(t => t.Action("UpdateDataTransfer", "Report").Data("filterProduct"))))
             </div>
         </div>
@@ -130,7 +130,9 @@
     .Position(p => p.Pinned(true).Top(30).Right(30))
     .Width(400)
 )
-<script>
+<input type="hidden" id="timeStamp" name="timeStamp" value="">
+<input type="hidden" id="MembershipID" name="MembershipID" value="">
+<script>   
     function onGridRequestEnd(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
             var response = e.response;
@@ -140,23 +142,25 @@
             notification.show(note, messageType);
             $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
         }
-    }
-    function onIndustryDataBound() {        
-    }
+    }   
     function addProductProperty(e) {
-        BeginRequestHandler();
         var productProperty = this.dataItem($(e.currentTarget).closest("tr"));
-         $.ajax({
-            type: 'GET',
-            url: "@Url.Action("CopyProductPropertyByID", "Report")",
-            data: {
-                ID: productProperty.ID
-            },
-             success: function () {}
-         }).done(() => {
-             $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
-             EndRequestHandler();
-        });
+        var timeStamp = $("#timeStamp").val();
+        if (timeStamp != e.timeStamp) {
+            $("#timeStamp").val(e.timeStamp);
+            BeginRequestHandler();
+            $.ajax({
+                type: 'GET',
+                url: "@Url.Action("CopyProductPropertyByID", "Report")",
+                data: {
+                    ID: productProperty.ID
+                },
+                success: function () { }
+            }).done(() => {
+                $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
+                EndRequestHandler();
+            });
+        }
     }
     function filterConfig_SegmentByIndustry(e) {
         var parentIDValue = $("#IndustryID").data("kendoDropDownList").value();
@@ -166,6 +170,8 @@
         var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
         return { industryID: industryIDValue };
     }
+   
+
     function filterProduct(e) {
         var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
         var datePublishBeginValue = toDate02($("#DatePublishBegin").val());

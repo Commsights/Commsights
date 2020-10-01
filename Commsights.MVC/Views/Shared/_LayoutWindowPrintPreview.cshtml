@@ -18,6 +18,18 @@
     <script src="https://kendo.cdn.telerik.com/2020.2.617/js/jszip.min.js"></script>
     <script src="https://kendo.cdn.telerik.com/2020.2.617/js/kendo.all.min.js"></script>
     <script src="https://kendo.cdn.telerik.com/2020.2.617/js/kendo.aspnetmvc.min.js"></script>
+    <script>        
+        function OpenWindowByURL(URLParamater, w = 1000, h = 800) {
+            var width = screen.width;
+            var height = screen.height;
+            var width01 = w;
+            var height01 = h;
+            var left = (width - width01) / 2;
+            var top = (height - height01) / 3;
+            var url = URLParamater;
+            window.open(url, '_blank', 'location=yes,height=' + height01 + ',width=' + width01 + ',scrollbars=yes,status=yes,toolbar=yes,top=' + top + ',left=' + left + '');
+        }      
+    </script>
 </head>
 <body style="background-color:#808080;">
     @RenderBody()

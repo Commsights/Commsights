@@ -166,6 +166,11 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult ViewContent(int ID)
+        {
+            ProductDataTransfer model = _reportRepository.GetProductDataTransferByProductPropertyID(ID);
+            return View(model);
+        }
         public IActionResult DataHTML(int ID)
         {
             ProductSearchDataTransfer model = new ProductSearchDataTransfer();
@@ -786,6 +791,7 @@ namespace Commsights.MVC.Controllers
                             reportData.AppendLine(@"<table style='width:100%; font-size:14px; border-color: #000000; border-style: solid;border-width: 1px; border-collapse: collapse;'>");
                             reportData.AppendLine(@"<thead>");
                             reportData.AppendLine(@"<tr>");
+                            reportData.Append(@"<th style='text-align:center; background-color:#c00000; padding: 4px; border-color: #000000; border-style: solid;border-width: 1px; color:#ffffff;'></th>");
                             foreach (MembershipPermission dailyReportColumn in listDailyReportColumn)
                             {
                                 if (dailyReportColumn.Active == true)
@@ -876,23 +882,24 @@ namespace Commsights.MVC.Controllers
                                 string titleEnglish = "<a target='_blank' style='color: blue; cursor:pointer;' href='" + data.URLCode + "' title='" + data.TitleEnglish + "'>" + data.TitleEnglish + "</a>";
                                 no = no + 1;
                                 reportData.AppendLine(@"<tr style='background-color:#ffffff;'>");
+                                reportData.AppendLine(@"<td style='width: 30px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'><a onclick='javascript:OpenWindowByURL(""/Report/ViewContent/" + data.ID + @""");' title='Edit' style='color:blue; cursor: pointer;'>Edit</td>");
                                 for (int i = 1; i < 12; i++)
                                 {
                                     if ((DailyReportColumnDatePublishID > 0) && (DailyReportColumnDatePublishIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.DatePublishString + "</td>");
+                                        reportData.AppendLine(@"<td style='width: 80px; height:20px; text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.DatePublishString + "</td>");
                                     }
                                     if ((DailyReportColumnCategoryID > 0) && (DailyReportColumnCategoryIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.ArticleTypeName + "</td>");
+                                        reportData.AppendLine(@"<td style='width: 80px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.ArticleTypeName + "</td>");
                                     }
                                     if ((DailyReportColumnCompanyID > 0) && (DailyReportColumnCompanyIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.CompanyName + "</td>");
+                                        reportData.AppendLine(@"<td style='width: 80px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.CompanyName + "</td>");
                                     }
                                     if ((DailyReportColumnSentimentID > 0) && (DailyReportColumnSentimentIDSortOrder == i))
                                     {
-                                        reportData.Append(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>");
+                                        reportData.Append(@"<td style='width: 80px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>");
                                         if (data.AssessID == AppGlobal.NegativeID)
                                         {
                                             reportData.Append(@"<span style='color:red;'>" + data.AssessName + "</span>");
@@ -931,19 +938,19 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnMediaTitleID > 0) && (DailyReportColumnMediaTitleIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.Media + "</td>");
+                                        reportData.AppendLine(@"<td style='width: 80px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.Media + "</td>");
                                     }
                                     if ((DailyReportColumnMediaTypeID > 0) && (DailyReportColumnMediaTypeIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.MediaType + "</td>");
+                                        reportData.AppendLine(@"<td style='width: 80px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.MediaType + "</td>");
                                     }
                                     if ((DailyReportColumnPageID > 0) && (DailyReportColumnPageIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.Page + "</td>");
+                                        reportData.AppendLine(@"<td style='width: 80px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.Page + "</td>");
                                     }
                                     if ((DailyReportColumnAdvertisementID > 0) && (DailyReportColumnAdvertisementIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.AdvertisementValueString + "</td>");
+                                        reportData.AppendLine(@"<td style='width: 80px; height:20px; text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.AdvertisementValueString + "</td>");
                                     }
                                     if ((DailyReportColumnSummaryID > 0) && (DailyReportColumnSummaryIDSortOrder == i))
                                     {
@@ -1139,6 +1146,44 @@ namespace Commsights.MVC.Controllers
             var data = _reportRepository.ReportDailyByProductSearchIDAndActiveToListToHTML(productSearchID, true);
             return Json(data.ToDataSourceResult(request));
         }
+        public IActionResult UpdateItem(ProductDataTransfer model)
+        {
+            ProductProperty productProperty = _productPropertyRepository.GetByID001(model.ID);
+            if (productProperty != null)
+            {
+                productProperty.IsSummary = model.IsSummary;
+                productProperty.CompanyID = model.CompanyID;
+                productProperty.SegmentID = model.SegmentID;
+                productProperty.ArticleTypeID = model.ArticleTypeID;
+                productProperty.AssessID = model.AssessID;
+                productProperty.ProductID = model.ProductID;
+                productProperty.Initialization(InitType.Update, RequestUserID);
+                _productPropertyRepository.Update(productProperty.ID, productProperty);
+            }
+            Product product = _productRepository.GetByID001(model.ProductID.Value);
+            if (product != null)
+            {
+                product.IsSummary = model.IsSummary;
+                product.Title = model.Title;
+                product.TitleEnglish = model.TitleEnglish;
+                product.Description = model.Description;
+                product.DescriptionEnglish = model.DescriptionEnglish;
+                product.Initialization(InitType.Update, RequestUserID);
+                _productRepository.Update(product.ID, product);
+                Config media = _configResposistory.GetByID(product.ParentID.Value);
+                if (media != null)
+                {
+                    if (media.Color != model.AdvertisementValue)
+                    {
+                        media.Color = model.AdvertisementValue;
+                        media.Initialization(InitType.Update, RequestUserID);
+                        _configResposistory.Update(media.ID, media);
+                    }
+                }
+            }
+            string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            return Json(note);
+        }
         public IActionResult UpdateDataTransfer(ProductDataTransfer model, DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
         {
             Initialization(model);
@@ -1151,6 +1196,7 @@ namespace Commsights.MVC.Controllers
                 productProperty.SegmentID = model.Segment.ID;
                 productProperty.ArticleTypeID = model.ArticleType.ID;
                 productProperty.AssessID = model.AssessType.ID;
+                productProperty.ProductID = model.Product.ID;
                 productProperty.Initialization(InitType.Update, RequestUserID);
                 _productPropertyRepository.Update(productProperty.ID, productProperty);
             }
