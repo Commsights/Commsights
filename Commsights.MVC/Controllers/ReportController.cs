@@ -706,6 +706,8 @@ namespace Commsights.MVC.Controllers
             }
             if (!string.IsNullOrEmpty(html))
             {
+                string url = AppGlobal.Domain + "Report/DailyPrintPreviewFormHTML/" + model.ID;
+                html = html.Replace(@"[URLPage]", @"" + url);
                 html = html.Replace(@"[Logo01URLFull]", @"" + AppGlobal.Logo01URLFull);
                 html = html.Replace(@"[CompanyTitleEnglish]", @"" + AppGlobal.CompanyTitleEnglish);
                 html = html.Replace(@"[WebsiteHTML]", @"" + AppGlobal.WebsiteHTML);
