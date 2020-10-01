@@ -487,25 +487,39 @@ namespace Commsights.Data.Repositories
         public void InitializationDailyReportSection(int membershipID, string code, int requestUserID)
         {
             List<MembershipPermission> listMembershipPermission = _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.Code.Equals(code)).ToList();
-            _context.MembershipPermission.RemoveRange(listMembershipPermission);
+
             List<Config> listConfig = _context.Config.Where(item => item.Code.Equals(code)).ToList();
-            listMembershipPermission = new List<MembershipPermission>();
+
             foreach (Config config in listConfig)
             {
-                MembershipPermission model = new MembershipPermission();
-                model.MembershipID = membershipID;
-                model.Code = code;
-                model.CategoryID = config.ID;
-                model.Hour = AppGlobal.Hour;
-                model.Minute = -1;
-                model.SortOrder = -1;
-                model.Active = false;
-                model.Email = config.CodeName;
-                model.Phone = config.Note;
-                model.Initialization(InitType.Insert, requestUserID);
-                listMembershipPermission.Add(model);
+                foreach (MembershipPermission membershipPermission in listMembershipPermission)
+                {
+                    bool check = true;
+                    for (int i = 0; i < listMembershipPermission.Count; i++)
+                    {
+                        if (config.ID == listMembershipPermission[i].CategoryID)
+                        {
+                            check = false;
+                            i = listMembershipPermission.Count;
+                        }
+                    }
+                    if (check == true)
+                    {
+                        MembershipPermission model = new MembershipPermission();
+                        model.MembershipID = membershipID;
+                        model.Code = code;
+                        model.CategoryID = config.ID;
+                        model.Hour = AppGlobal.Hour;
+                        model.Minute = -1;
+                        model.SortOrder = -1;
+                        model.Active = false;
+                        model.Email = config.CodeName;
+                        model.Phone = config.Note;
+                        model.Initialization(InitType.Insert, requestUserID);
+                        _context.MembershipPermission.Add(model);
+                    }
+                }
             }
-            _context.MembershipPermission.AddRange(listMembershipPermission);
             _context.SaveChangesAsync();
         }
         public void InitializationDailyReportSectionByMembershipIDAndIndustryID(int membershipID, int industryID, string code, int requestUserID)
@@ -518,34 +532,31 @@ namespace Commsights.Data.Repositories
 
                 foreach (Config config in listConfig)
                 {
-                    foreach (MembershipPermission membershipPermission in listMembershipPermission)
+                    bool check = true;
+                    for (int i = 0; i < listMembershipPermission.Count; i++)
                     {
-                        bool check = true;
-                        for (int i = 0; i < listMembershipPermission.Count; i++)
+                        if (config.ID == listMembershipPermission[i].CategoryID)
                         {
-                            if (config.ID == listMembershipPermission[i].CategoryID)
-                            {
-                                check = false;
-                                i = listMembershipPermission.Count;
-                            }
+                            check = false;
+                            i = listMembershipPermission.Count;
                         }
-                        if (check == true)
-                        {
-                            MembershipPermission model = new MembershipPermission();
-                            model.LanguageID = AppGlobal.LanguageID;
-                            model.MembershipID = membershipID;
-                            model.IndustryID = industryID;
-                            model.Code = code;
-                            model.CategoryID = config.ID;
-                            model.Hour = AppGlobal.Hour;
-                            model.Minute = -1;
-                            model.SortOrder = -1;
-                            model.Active = false;
-                            model.Email = config.CodeName;
-                            model.Phone = config.Note;
-                            model.Initialization(InitType.Insert, requestUserID);
-                            _context.MembershipPermission.Add(model);
-                        }
+                    }
+                    if (check == true)
+                    {
+                        MembershipPermission model = new MembershipPermission();
+                        model.LanguageID = AppGlobal.LanguageID;
+                        model.MembershipID = membershipID;
+                        model.IndustryID = industryID;
+                        model.Code = code;
+                        model.CategoryID = config.ID;
+                        model.Hour = AppGlobal.Hour;
+                        model.Minute = -1;
+                        model.SortOrder = -1;
+                        model.Active = false;
+                        model.Email = config.CodeName;
+                        model.Phone = config.Note;
+                        model.Initialization(InitType.Insert, requestUserID);
+                        _context.MembershipPermission.Add(model);
                     }
                 }
                 _context.SaveChangesAsync();
@@ -639,32 +650,31 @@ namespace Commsights.Data.Repositories
                 List<Config> listConfig = _context.Config.Where(item => item.GroupName.Equals(AppGlobal.CRM) && item.Code.Equals(code)).ToList();
                 foreach (Config config in listConfig)
                 {
-                    foreach (MembershipPermission membershipPermission in listMembershipPermission)
+                    bool check = true;
+
+                    for (int i = 0; i < listMembershipPermission.Count; i++)
                     {
-                        bool check = true;
-                        for (int i = 0; i < listMembershipPermission.Count; i++)
+                        if (config.ID == listMembershipPermission[i].CategoryID)
                         {
-                            if (config.ID == listMembershipPermission[i].CategoryID)
-                            {
-                                check = false;
-                                i = listMembershipPermission.Count;
-                            }
+                            check = false;
+                            i = listMembershipPermission.Count;
                         }
-                        if (check == true)
-                        {
-                            MembershipPermission model = new MembershipPermission();
-                            model.MembershipID = membershipID;
-                            model.IndustryID = industryID;
-                            model.Code = code;
-                            model.SortOrder = 0;
-                            model.Active = false;
-                            model.CategoryID = config.ID;
-                            model.FullName = config.CodeName;
-                            model.Email = config.CodeName;
-                            model.Phone = config.Note;
-                            model.Initialization(InitType.Insert, requestUserID);
-                            _context.MembershipPermission.Add(model);
-                        }
+                    }
+
+                    if (check == true)
+                    {
+                        MembershipPermission model = new MembershipPermission();
+                        model.MembershipID = membershipID;
+                        model.IndustryID = industryID;
+                        model.Code = code;
+                        model.SortOrder = 0;
+                        model.Active = false;
+                        model.CategoryID = config.ID;
+                        model.FullName = config.CodeName;
+                        model.Email = config.CodeName;
+                        model.Phone = config.Note;
+                        model.Initialization(InitType.Insert, requestUserID);
+                        _context.MembershipPermission.Add(model);
                     }
                 }
                 _context.SaveChangesAsync();
