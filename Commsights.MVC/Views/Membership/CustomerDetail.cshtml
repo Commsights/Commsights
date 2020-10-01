@@ -613,7 +613,9 @@
 .PageSize(1000)
 .Model(model =>
 {
-    model.Id(t => t.ID);    
+    model.Id(t => t.ID);
+    model.Field(t => t.DailyReportColumnName).Editable(false);
+    model.Field(t => t.DailyReportColumnNote).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEndDailyReportColumn"); })
 .Read(t => t.Action("GetDataTransferDailyReportColumnByMembershipIDAndIndustryIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
