@@ -287,6 +287,23 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public string UpdateByCompanyIDAndTitleAndProductPropertyIDAndRequestUserID(int companyID, string title, int productPropertyID, int requestUserID)
+        {
+            string result = "";
+            if (companyID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@CompanyID",companyID),
+                new SqlParameter("@Title",title),
+                new SqlParameter("@ProductPropertyID",productPropertyID),
+                  new SqlParameter("@RequestUserID",requestUserID),
+                };
+                result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ReportDailyUpdateByCompanyIDAndTitleAndProductPropertyIDAndRequestUserID", parameters);
+
+            }
+            return result;
+        }
         public string UpdateByDatePublishBeginAndDatePublishEndAndIndustryIDAndAllData(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool allData, int requestUserID)
         {
             string result = "";
@@ -406,6 +423,20 @@ namespace Commsights.Data.Repositories
                 result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ReportDailyUpdateProductByDatePublishBeginAndDatePublishEndAndIndustryID", parameters);
             }
             return result;
+        }
+        public ProductSearchDataTransfer GetByProductSearchID(int productSearchID)
+        {
+            ProductSearchDataTransfer model = new ProductSearchDataTransfer();
+            if (productSearchID > 0)
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ProductSearchID",productSearchID),
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportDailyByProductSearchID", parameters);
+                model = SQLHelper.ToList<ProductSearchDataTransfer>(dt).FirstOrDefault();
+            }
+            return model;
         }
     }
 }

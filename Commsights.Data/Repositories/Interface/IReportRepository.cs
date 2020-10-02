@@ -28,5 +28,7 @@ namespace Commsights.Data.Repositories
         public string UpdateProductPropertyByDatePublishBeginAndDatePublishEndAndIndustryID(DateTime datePublishBegin, DateTime datePublishEnd, int industryID);
         public string UpdateProductByDatePublishBeginAndDatePublishEndAndIndustryID(DateTime datePublishBegin, DateTime datePublishEnd, int industryID);
         public ProductDataTransfer GetProductDataTransferByProductPropertyID(int productPropertyID);
+        public string UpdateByCompanyIDAndTitleAndProductPropertyIDAndRequestUserID(int companyID, string title, int productPropertyID, int requestUserID);
+        public ProductSearchDataTransfer GetByProductSearchID(int productSearchID);
     }
 }

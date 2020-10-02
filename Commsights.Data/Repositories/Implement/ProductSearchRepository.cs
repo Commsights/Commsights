@@ -22,7 +22,7 @@ namespace Commsights.Data.Repositories
         public List<ProductSearchDataTransfer> GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
         {
             List<ProductSearchDataTransfer> list = new List<ProductSearchDataTransfer>();
-            if (industryID > 2019)
+            if (industryID > 0)
             {
                 SqlParameter[] parameters =
                        {
@@ -35,6 +35,7 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        
         public string UpdateByID(int ID, int userUpdated, bool isSend)
         {
             string result = "";

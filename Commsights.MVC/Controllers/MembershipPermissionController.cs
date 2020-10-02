@@ -290,20 +290,33 @@ namespace Commsights.MVC.Controllers
             int result = 1;
             if ((model.MembershipID > 0) && (model.IndustryID > 0) && (model.SegmentID > 0))
             {
-                List<string> listProduct = AppGlobal.SetContentByDauChamPhay(model.ProductName);
-                if (listProduct.Count == 0)
+                MembershipPermission membershipPermission = new MembershipPermission();
+                membershipPermission.Initialization(InitType.Insert, RequestUserID);
+                membershipPermission.Code = AppGlobal.Product;
+                membershipPermission.MembershipID = model.MembershipID;
+                membershipPermission.IndustryID = model.IndustryID;
+                membershipPermission.SegmentID = model.SegmentID;
+                if (!string.IsNullOrEmpty(model.ProductName))
                 {
-                    listProduct.Add(model.ProductName);
+                    List<string> listProduct = AppGlobal.SetContentByDauChamPhay(model.ProductName);
+                    if (listProduct.Count == 0)
+                    {
+                        listProduct.Add(model.ProductName);
+                    }
+                    foreach (string product in listProduct)
+                    {
+                        membershipPermission = new MembershipPermission();
+                        membershipPermission.Initialization(InitType.Insert, RequestUserID);
+                        membershipPermission.Code = AppGlobal.Product;
+                        membershipPermission.MembershipID = model.MembershipID;
+                        membershipPermission.IndustryID = model.IndustryID;
+                        membershipPermission.SegmentID = model.SegmentID;
+                        membershipPermission.ProductName = product.Trim();                       
+                        result = result + _membershipPermissionRepository.Create(membershipPermission);
+                    }
                 }
-                foreach (string product in listProduct)
+                else
                 {
-                    MembershipPermission membershipPermission = new MembershipPermission();
-                    membershipPermission.Code = AppGlobal.Product;
-                    membershipPermission.MembershipID = model.MembershipID;
-                    membershipPermission.IndustryID = model.IndustryID;
-                    membershipPermission.SegmentID = model.SegmentID;
-                    membershipPermission.ProductName = product.Trim();
-                    membershipPermission.Initialization(InitType.Insert, RequestUserID);
                     result = result + _membershipPermissionRepository.Create(membershipPermission);
                 }
             }

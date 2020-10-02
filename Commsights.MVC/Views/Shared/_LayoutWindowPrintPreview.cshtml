@@ -28,10 +28,32 @@
             var top = (height - height01) / 3;
             var url = URLParamater;
             window.open(url, '_blank', 'location=yes,height=' + height01 + ',width=' + width01 + ',scrollbars=yes,status=yes,toolbar=yes,top=' + top + ',left=' + left + '');
-        }      
+        }     
+        function BeginRequestHandler() {
+            Slider();
+        }
+        function EndRequestHandler() {
+            $('#Dim').css("display", "none");
+            $('#BackGround').fadeTo("fast", 2);
+        }
+        function Slider() {
+            $('#Dim').css("display", "");
+            $('#Dim').css("z-index", "10");
+            $('#Dim').css("position", "absolute");
+            $('#Dim').css("top", ($(window).height() - $('#Dim').height()) / 2 + $(window).scrollTop() + "px");
+            $('#Dim').css("left", ($(window).width() - $('#Dim').width()) / 2 + $(window).scrollLeft() + "px");
+            $('#BackGround').fadeTo("fast", 0.5);
+            $('#Dim').focus();
+        }
     </script>
 </head>
-<body style="background-color:#808080;">
+<body id="BackGround" style="background-color:#808080;">
+    <div id="Dim" style="display: none;">
+        <div class="msgbox">
+            <img src="@Commsights.Data.Helpers.AppGlobal.LoadingURLFull" alt="Processing, please wait!"
+                 title="Processing, please wait!" width="200px" height="200px" />
+        </div>
+    </div>
     @RenderBody()
 </body>
 </html>

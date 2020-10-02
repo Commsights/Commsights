@@ -2,5 +2,76 @@
 
     ViewData["Title"] = "" + Model.CompanyName + " - " + Model.Title;
 }
-@model Commsights.Data.DataTransferObject.ProductSearchDataTransfer    
+@model Commsights.Data.DataTransferObject.ProductSearchDataTransfer
+<style>
+    body {
+        margin: 0px; /* this affects the margin on the content before sending to printer */
+        font-family: 'Times New Roman';
+    }
+
+    * {
+        -webkit-print-color-adjust: exact !important; /*Chrome, Safari */
+        color-adjust: exact !important; /*Firefox*/
+    }
+
+    .border, .border td, .border th {
+        border-color: #000000;
+        border-style: solid;
+        border-width: 1px;
+        padding: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .border {
+        border-collapse: collapse;
+    }
+
+        .border th {
+            text-align: center;
+        }
+
+        .border td {
+            text-align: right;
+        }
+
+        .border .text {
+            text-align: left;
+        }
+</style>
+@Html.HiddenFor(Model => Model.ID)
+<div style="width: 1400px; min-height: 960px; padding: 40px; margin: auto; background-color: #ffffff;">
+    <div style="text-align:right;">
+        <a onclick="onSendMail()" title="Send" style="color:blue; cursor:pointer; text-decoration:none;">Send</a> | 
+        <a href="@Model.URL" title="Refresh" style="color:blue; cursor:pointer; text-decoration:none;">Refresh</a>
+    </div>
     @Html.Raw(Model.Note)
+</div>
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+<script>
+    function onSendMail() {
+        BeginRequestHandler();
+        var productSearchIDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("SendMailReportDailyByProductSearchID", "Report")",
+            data: {
+                productSearchID: productSearchIDValue
+            },
+             success: function (e) {
+                 var messageType = e.split('-')[0];
+                 var note = e.split('-')[1];
+                 var notification = $("#Notification").data("kendoNotification");
+                 notification.show(note, messageType);
+                 EndRequestHandler();
+            }
+         }).done(() => {
+
+        });
+
+    }
+</script>

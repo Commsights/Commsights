@@ -32,7 +32,7 @@
                     </div>
                     <div class="col-md-1">
                         <div class='form-group'>
-                            <label for='DatePublishEnd'>Send mail</label>
+                            <label for='DatePublishEnd'>Send</label>
                             <button type="button" class="btn btn-success" onclick="onSendMail()">
                                 <span class="fas fa-paper-plane"></span>
                             </button>
@@ -51,7 +51,7 @@
 .Columns(columns =>
 {
     columns.Template(@"<a target='_blank' href='/Report/DailyPrintPreviewFormHTML/#=ID#' title='Preview' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-print'></i></a>").Title("Preview").Width(70);
-    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/Report/DataHTML/#=ID#"");' title='Excel' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-file-excel'></i></a>").Title("Excel").Width(70);
+    //columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/Report/DataHTML/#=ID#"");' title='Excel' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-file-excel'></i></a>").Title("Excel").Width(70);
     columns.Bound(t => t.CompanyName).Title("Company").Width(200).HtmlAttributes(new { style = "font-weight: bold;" });
     columns.Bound(t => t.DateSearch).Title("Date search").Width(200).HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.DateSend).Title("Date send").Width(200).HtmlAttributes(new { @class = "text-right" });
