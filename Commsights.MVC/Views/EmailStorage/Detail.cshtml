@@ -36,11 +36,56 @@
                                 <label for='Display'>Display</label>
                                 @(Html.TextBoxFor(Model => Model.Display, new { placeholder = "Display", @class = "form-control" }))
                             </div>
+                            <div class='form-group'>
+                                <label for='Subject'>Subject</label>
+                                @(Html.TextBoxFor(Model => Model.Subject, new { placeholder = "Subject", @class = "form-control" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='EmailFrom'>Email from</label>
+                                @(Html.TextBoxFor(Model => Model.EmailFrom, new { placeholder = "Email from", @class = "form-control" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='Password'>Password</label>
+                                @(Html.TextBoxFor(Model => Model.Password, new { placeholder = "Password", @class = "form-control" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='EmailTo'>Email To</label>
+                                @(Html.TextBoxFor(Model => Model.EmailTo, new { placeholder = "Email To", @class = "form-control" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='EmailCC'>Email CC</label>
+                                @(Html.TextBoxFor(Model => Model.EmailCC, new { placeholder = "Email CC", @class = "form-control" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='EmailBCC'>Email BCC</label>
+                                @(Html.TextBoxFor(Model => Model.EmailBCC, new { placeholder = "Email BCC", @class = "form-control" }))
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class='form-group'>
-                                <label for='Phone'>Category</label>
-                                @(Html.Kendo().DropDownListFor(Model => Model.CategoryID)
+                                <label for='IndustryID'>Industry</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.IndustryID.Value)
+                                   .DataValueField("ID")
+                                   .DataTextField("CodeName")
+                                   .HtmlAttributes(new {@class = "form-control" })
+                                    .Events(e => e.DataBound("onIndustryDataBound").Change("onIndustryChange"))
+                                    .Filter(FilterType.StartsWith)
+                                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
+                                    )
+                            </div>
+                            <div class='form-group'>
+                                <label for='CompanyID'>Company</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.CompanyID.Value)
+                                   .DataValueField("ID")
+                                   .DataTextField("Account")
+                                   .HtmlAttributes(new {@class = "form-control" })
+                                    .Filter(FilterType.StartsWith)
+                                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByIndustryIDToList", "Membership").Data("filterMembership")))
+                                    )
+                            </div>
+                            <div class='form-group'>
+                                <label for='CategoryID'>Category</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.CategoryID.Value)
                                    .DataValueField("ID")
                                    .DataTextField("CodeName")
                                    .HtmlAttributes(new {@class = "form-control" })
@@ -58,7 +103,7 @@
                             <script src="/ckeditor/ckeditor.js"></script>
                             <script src="/ckeditor/adapters/jquery.js"></script>
                             <script>
-                                CKEDITOR.replace("Note", {
+                                CKEDITOR.replace("EmailBody", {
                                     on: {
                                         'instanceReady': function (evt) {
                                             evt.editor.resize("100%", "600");
@@ -80,5 +125,19 @@
 )
 
 <script>
-
+    function filterMembership(e) {
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        return { industryID: industryIDValue };
+    }
+    function onIndustryDataBound() {
+        var control = $("#IndustryID").data("kendoDropDownList");
+        var controlLength = control.dataSource.data().length;
+        if (controlLength > 0) {
+            control.select(0);
+            control.trigger("change");
+        }
+    }
+    function onIndustryChange() {
+        $("#CompanyID").data("kendoGrid").dataSource.read();
+    }
 </script>

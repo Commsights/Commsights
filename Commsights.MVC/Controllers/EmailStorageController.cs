@@ -53,9 +53,14 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
-        public IActionResult Detail()
+        public IActionResult Detail(int ID)
         {
-            return View();
+            EmailStorage model = new EmailStorage();
+            if(ID>0)
+            {
+                model = _emailStorageRepository.GetByID(ID);
+            }    
+            return View(model);
         }
         public IActionResult Delete(int ID)
         {

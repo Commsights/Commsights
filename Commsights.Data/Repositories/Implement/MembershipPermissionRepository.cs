@@ -38,6 +38,23 @@ namespace Commsights.Data.Repositories
         {
             return _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.IndustryID == industryID && item.Code.Equals(code) && item.Active == active).OrderBy(item => item.SortOrder).ToList();
         }
+        public List<MembershipPermission> GetDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndActiveFormSQLToList(int membershipID, int industryID, string code, bool active)
+        {
+            List<MembershipPermission> list = new List<MembershipPermission>();
+            if (membershipID > 0)
+            {
+                SqlParameter[] parameters =
+                      {
+                new SqlParameter("@MembershipID",membershipID),
+                new SqlParameter("@IndustryID",industryID),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@Active",active),
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectDataTransferDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndActive", parameters);
+                list = SQLHelper.ToList<MembershipPermission>(dt);                
+            }
+            return list;
+        }
         public List<MembershipPermission> GetByCodeToList(string code)
         {
             return _context.MembershipPermission.Where(item => item.Code.Equals(code)).OrderBy(item => item.ProductName).ToList();

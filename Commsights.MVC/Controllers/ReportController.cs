@@ -201,7 +201,6 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult SendMailReportDailyByProductSearchID(int productSearchID)
         {
-
             ProductSearchDataTransfer item = _reportRepository.GetByProductSearchID(productSearchID);
             if (item != null)
             {
@@ -255,10 +254,9 @@ namespace Commsights.MVC.Controllers
         {
             await Task.Yield();
             ProductSearchDataTransfer model = _productSearchRepository.GetDataTransferByID(ID);
-
             List<ProductSearchPropertyDataTransfer> listData = _reportRepository.ReportDailyByProductSearchIDToListToHTML(model.ID);
             List<ProductSearchPropertyDataTransfer> listDataISummary = listData.Where(item => item.IsSummary == true).ToList();
-            List<MembershipPermission> listDailyReportColumn = _membershipPermissionRepository.GetDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndActiveToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn, true);
+            List<MembershipPermission> listDailyReportColumn = _membershipPermissionRepository.GetDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndActiveFormSQLToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn, true);
             List<MembershipPermission> listDailyReportSection = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCodeToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportSection);
             int DailyReportColumnDatePublishID = 0;
             int DailyReportColumnCategoryID = 0;
@@ -282,399 +280,18 @@ namespace Commsights.MVC.Controllers
             int DailyReportColumnPageIDSortOrder = 0;
             int DailyReportColumnAdvertisementIDSortOrder = 0;
             int DailyReportColumnSummaryIDSortOrder = 0;
-
-            foreach (MembershipPermission dailyReportSection in listDailyReportSection)
-            {
-                foreach (MembershipPermission dailyReportColumn in listDailyReportColumn)
-                {
-                    if (dailyReportColumn.Active == true)
-                    {
-                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnDatePublishID)
-                        {
-                            DailyReportColumnDatePublishID = dailyReportColumn.ID;
-                            DailyReportColumnDatePublishIDSortOrder = dailyReportColumn.SortOrder.Value;
-                        }
-                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnCategoryID)
-                        {
-                            DailyReportColumnCategoryID = dailyReportColumn.ID;
-                            DailyReportColumnCategoryIDSortOrder = dailyReportColumn.SortOrder.Value;
-                        }
-                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnCompanyID)
-                        {
-                            DailyReportColumnCompanyID = dailyReportColumn.ID;
-                            DailyReportColumnCompanyIDSortOrder = dailyReportColumn.SortOrder.Value;
-                        }
-                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnSentimentID)
-                        {
-                            DailyReportColumnSentimentID = dailyReportColumn.ID;
-                            DailyReportColumnSentimentIDSortOrder = dailyReportColumn.SortOrder.Value;
-                        }
-                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnHeadlineVietnameseID)
-                        {
-                            DailyReportColumnHeadlineVietnameseID = dailyReportColumn.ID;
-                            DailyReportColumnHeadlineVietnameseIDSortOrder = dailyReportColumn.SortOrder.Value;
-                        }
-                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnHeadlineEnglishID)
-                        {
-                            DailyReportColumnHeadlineEnglishID = dailyReportColumn.ID;
-                            DailyReportColumnHeadlineEnglishIDSortOrder = dailyReportColumn.SortOrder.Value;
-                        }
-                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnMediaTitleID)
-                        {
-                            DailyReportColumnMediaTitleID = dailyReportColumn.ID;
-                            DailyReportColumnMediaTitleIDSortOrder = dailyReportColumn.SortOrder.Value;
-                        }
-                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnMediaTypeID)
-                        {
-                            DailyReportColumnMediaTypeID = dailyReportColumn.ID;
-                            DailyReportColumnMediaTypeIDSortOrder = dailyReportColumn.SortOrder.Value;
-                        }
-                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnPageID)
-                        {
-                            DailyReportColumnPageID = dailyReportColumn.ID;
-                            DailyReportColumnPageIDSortOrder = dailyReportColumn.SortOrder.Value;
-                        }
-                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnAdvertisementID)
-                        {
-                            DailyReportColumnAdvertisementID = dailyReportColumn.ID;
-                            DailyReportColumnAdvertisementIDSortOrder = dailyReportColumn.SortOrder.Value;
-                        }
-                        if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnSummaryID)
-                        {
-                            DailyReportColumnSummaryID = dailyReportColumn.ID;
-                            DailyReportColumnSummaryIDSortOrder = dailyReportColumn.SortOrder.Value;
-                        }
-                    }
-                }
-                if ((dailyReportSection.CategoryID == AppGlobal.DailyReportSectionDataID) && (dailyReportSection.Active == true))
-                {
-                    if (listData.Count > 0)
-                    {
-                        var streamExport = new MemoryStream();
-                        using (var package = new ExcelPackage(streamExport))
-                        {
-                            Color color = Color.FromArgb(int.Parse("#c00000".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));
-                            var workSheet = package.Workbook.Worksheets.Add("Sheet1");
-                            workSheet.Cells[1, 5].Value = "DAILY REPORT (" + model.DateSearch.ToString("dd/MM/yyyy") + ")";
-                            workSheet.Cells[1, 5].Style.Font.Bold = true;
-                            workSheet.Cells[1, 5].Style.Font.Size = 12;
-                            workSheet.Cells[1, 5].Style.Font.Name = "Times New Roman";
-                            workSheet.Cells[1, 5].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                            int column = 1;
-                            foreach (MembershipPermission dailyReportColumn in listDailyReportColumn)
-                            {
-                                if (dailyReportColumn.Active == true)
-                                {
-                                    if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
-                                    {
-                                        workSheet.Cells[3, column].Value = dailyReportColumn.Phone;
-                                    }
-                                    else
-                                    {
-                                        workSheet.Cells[3, column].Value = dailyReportColumn.Email;
-                                    }
-                                    workSheet.Cells[3, column].Style.Font.Bold = true;
-                                    workSheet.Cells[3, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                                    workSheet.Cells[3, column].Style.Font.Color.SetColor(System.Drawing.Color.White);
-                                    workSheet.Cells[3, column].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                                    workSheet.Cells[3, column].Style.Fill.BackgroundColor.SetColor(color);
-                                    workSheet.Cells[3, column].Style.Font.Name = "Times New Roman";
-                                    workSheet.Cells[3, column].Style.Font.Size = 11;
-                                    workSheet.Cells[3, column].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                                    workSheet.Cells[3, column].Style.Border.Top.Color.SetColor(Color.Black);
-                                    workSheet.Cells[3, column].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                                    workSheet.Cells[3, column].Style.Border.Left.Color.SetColor(Color.Black);
-                                    workSheet.Cells[3, column].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                                    workSheet.Cells[3, column].Style.Border.Right.Color.SetColor(Color.Black);
-                                    workSheet.Cells[3, column].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                                    workSheet.Cells[3, column].Style.Border.Bottom.Color.SetColor(Color.Black);
-                                    column = column + 1;
-                                }
-                            }
-                            int index = 0;
-                            for (int row = 4; row <= listData.Count + 1; row++)
-                            {
-                                for (int i = 1; i < 12; i++)
-                                {
-                                    if ((DailyReportColumnDatePublishID > 0) && (DailyReportColumnDatePublishIDSortOrder == i))
-                                    {
-                                        workSheet.Cells[row, i].Value = listData[index].DatePublishString;
-                                        workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                                        workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
-                                        workSheet.Cells[row, i].Style.Font.Size = 11;
-                                        workSheet.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Top.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Left.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Right.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
-                                    }
-                                    if ((DailyReportColumnCategoryID > 0) && (DailyReportColumnCategoryIDSortOrder == i))
-                                    {
-                                        workSheet.Cells[row, i].Value = listData[index].ArticleTypeName;
-                                        workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                                        workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
-                                        workSheet.Cells[row, i].Style.Font.Size = 11;
-                                        workSheet.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Top.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Left.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Right.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
-                                    }
-                                    if ((DailyReportColumnCompanyID > 0) && (DailyReportColumnCompanyIDSortOrder == i))
-                                    {
-                                        workSheet.Cells[row, i].Value = listData[index].CompanyName;
-                                        workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                                        workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
-                                        workSheet.Cells[row, i].Style.Font.Size = 11;
-                                        workSheet.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Top.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Left.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Right.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
-                                    }
-                                    if ((DailyReportColumnSentimentID > 0) && (DailyReportColumnSentimentIDSortOrder == i))
-                                    {
-                                        workSheet.Cells[row, i].Value = listData[index].AssessName;
-                                        if (listData[index].AssessID == AppGlobal.NegativeID)
-                                        {
-                                            workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Red);
-                                        }
-                                        workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                                        workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
-                                        workSheet.Cells[row, i].Style.Font.Size = 11;
-                                        workSheet.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Top.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Left.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Right.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
-                                    }
-                                    if ((DailyReportColumnHeadlineVietnameseID > 0) && (DailyReportColumnHeadlineVietnameseIDSortOrder == i))
-                                    {
-                                        workSheet.Cells[row, i].Value = listData[index].Title;
-                                        if (!string.IsNullOrEmpty(listData[index].Title))
-                                        {
-                                            workSheet.Cells[row, i].Hyperlink = new Uri(listData[index].URLCode);
-                                            workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
-                                        }
-                                        workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                                        workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
-                                        workSheet.Cells[row, i].Style.Font.Size = 11;
-                                        workSheet.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Top.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Left.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Right.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
-                                    }
-                                    if ((DailyReportColumnHeadlineEnglishID > 0) && (DailyReportColumnHeadlineEnglishIDSortOrder == i))
-                                    {
-                                        workSheet.Cells[row, i].Value = listData[index].TitleEnglish;
-                                        if (!string.IsNullOrEmpty(listData[index].TitleEnglish))
-                                        {
-                                            workSheet.Cells[row, i].Hyperlink = new Uri(listData[index].URLCode);
-                                            workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
-                                        }
-                                        workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                                        workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
-                                        workSheet.Cells[row, i].Style.Font.Size = 11;
-                                        workSheet.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Top.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Left.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Right.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
-                                    }
-                                    if ((DailyReportColumnMediaTitleID > 0) && (DailyReportColumnMediaTitleIDSortOrder == i))
-                                    {
-                                        workSheet.Cells[row, i].Value = listData[index].Media;
-                                        workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                                        workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
-                                        workSheet.Cells[row, i].Style.Font.Size = 11;
-                                        workSheet.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Top.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Left.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Right.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
-                                    }
-                                    if ((DailyReportColumnMediaTypeID > 0) && (DailyReportColumnMediaTypeIDSortOrder == i))
-                                    {
-                                        workSheet.Cells[row, i].Value = listData[index].MediaType;
-                                        workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                                        workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
-                                        workSheet.Cells[row, i].Style.Font.Size = 11;
-                                        workSheet.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Top.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Left.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Right.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
-                                    }
-                                    if ((DailyReportColumnPageID > 0) && (DailyReportColumnPageIDSortOrder == i))
-                                    {
-                                        workSheet.Cells[row, i].Value = listData[index].Page;
-                                        workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                                        workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
-                                        workSheet.Cells[row, i].Style.Font.Size = 11;
-                                        workSheet.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Top.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Left.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Right.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
-                                    }
-                                    if ((DailyReportColumnAdvertisementID > 0) && (DailyReportColumnAdvertisementIDSortOrder == i))
-                                    {
-                                        workSheet.Cells[row, i].Value = listData[index].AdvertisementValueString;
-                                        workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                                        workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
-                                        workSheet.Cells[row, i].Style.Font.Size = 11;
-                                        workSheet.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Top.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Left.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Right.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
-                                    }
-                                    if ((DailyReportColumnSummaryID > 0) && (DailyReportColumnSummaryIDSortOrder == i))
-                                    {
-                                        if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
-                                        {
-                                            workSheet.Cells[row, 10].Value = listData[index].Description;
-                                        }
-                                        else
-                                        {
-                                            workSheet.Cells[row, 10].Value = listData[index].DescriptionEnglish;
-                                        }
-                                        workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                                        workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
-                                        workSheet.Cells[row, i].Style.Font.Size = 11;
-                                        workSheet.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Top.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Left.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Right.Color.SetColor(Color.Black);
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
-                                    }
-                                }
-                                index = index + 1;
-                            }
-                            workSheet.Column(1).AutoFit();
-                            workSheet.Column(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                            workSheet.Column(2).AutoFit();
-                            workSheet.Column(3).AutoFit();
-                            workSheet.Column(4).AutoFit();
-                            workSheet.Column(5).AutoFit();
-                            workSheet.Column(6).AutoFit();
-                            workSheet.Column(7).AutoFit();
-                            workSheet.Column(8).AutoFit();
-                            workSheet.Column(9).AutoFit();
-                            workSheet.Column(9).Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                            workSheet.Column(10).AutoFit();
-                            package.Save();
-                        }
-                        streamExport.Position = 0;
-                    }
-                }
-            }
+          
             var stream = new MemoryStream();
             using (var package = new ExcelPackage(stream))
             {
                 var workSheet = package.Workbook.Worksheets.Add("Sheet1");
                 foreach (MembershipPermission dailyReportSection in listDailyReportSection)
-                {
-                    foreach (MembershipPermission dailyReportColumn in listDailyReportColumn)
-                    {
-                        if (dailyReportColumn.Active == true)
-                        {
-                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnDatePublishID)
-                            {
-                                DailyReportColumnDatePublishID = dailyReportColumn.ID;
-                                DailyReportColumnDatePublishIDSortOrder = dailyReportColumn.SortOrder.Value;
-                            }
-                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnCategoryID)
-                            {
-                                DailyReportColumnCategoryID = dailyReportColumn.ID;
-                                DailyReportColumnCategoryIDSortOrder = dailyReportColumn.SortOrder.Value;
-                            }
-                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnCompanyID)
-                            {
-                                DailyReportColumnCompanyID = dailyReportColumn.ID;
-                                DailyReportColumnCompanyIDSortOrder = dailyReportColumn.SortOrder.Value;
-                            }
-                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnSentimentID)
-                            {
-                                DailyReportColumnSentimentID = dailyReportColumn.ID;
-                                DailyReportColumnSentimentIDSortOrder = dailyReportColumn.SortOrder.Value;
-                            }
-                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnHeadlineVietnameseID)
-                            {
-                                DailyReportColumnHeadlineVietnameseID = dailyReportColumn.ID;
-                                DailyReportColumnHeadlineVietnameseIDSortOrder = dailyReportColumn.SortOrder.Value;
-                            }
-                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnHeadlineEnglishID)
-                            {
-                                DailyReportColumnHeadlineEnglishID = dailyReportColumn.ID;
-                                DailyReportColumnHeadlineEnglishIDSortOrder = dailyReportColumn.SortOrder.Value;
-                            }
-                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnMediaTitleID)
-                            {
-                                DailyReportColumnMediaTitleID = dailyReportColumn.ID;
-                                DailyReportColumnMediaTitleIDSortOrder = dailyReportColumn.SortOrder.Value;
-                            }
-                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnMediaTypeID)
-                            {
-                                DailyReportColumnMediaTypeID = dailyReportColumn.ID;
-                                DailyReportColumnMediaTypeIDSortOrder = dailyReportColumn.SortOrder.Value;
-                            }
-                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnPageID)
-                            {
-                                DailyReportColumnPageID = dailyReportColumn.ID;
-                                DailyReportColumnPageIDSortOrder = dailyReportColumn.SortOrder.Value;
-                            }
-                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnAdvertisementID)
-                            {
-                                DailyReportColumnAdvertisementID = dailyReportColumn.ID;
-                                DailyReportColumnAdvertisementIDSortOrder = dailyReportColumn.SortOrder.Value;
-                            }
-                            if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnSummaryID)
-                            {
-                                DailyReportColumnSummaryID = dailyReportColumn.ID;
-                                DailyReportColumnSummaryIDSortOrder = dailyReportColumn.SortOrder.Value;
-                            }
-                        }
-                    }
+                {                    
                     if ((dailyReportSection.CategoryID == AppGlobal.DailyReportSectionDataID) && (dailyReportSection.Active == true))
                     {
                         if (listData.Count > 0)
                         {
-                            Color color = Color.FromArgb(int.Parse("#c00000".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));                            
+                            Color color = Color.FromArgb(int.Parse("#c00000".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));
                             workSheet.Cells[1, 5].Value = "DAILY REPORT (" + model.DateSearch.ToString("dd/MM/yyyy") + ")";
                             workSheet.Cells[1, 5].Style.Font.Bold = true;
                             workSheet.Cells[1, 5].Style.Font.Size = 12;
@@ -710,11 +327,66 @@ namespace Commsights.MVC.Controllers
                                     workSheet.Cells[3, column].Style.Border.Bottom.Color.SetColor(Color.Black);
                                     column = column + 1;
                                 }
+                                if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnDatePublishID)
+                                {
+                                    DailyReportColumnDatePublishID = dailyReportColumn.ID;
+                                    DailyReportColumnDatePublishIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                }
+                                if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnCategoryID)
+                                {
+                                    DailyReportColumnCategoryID = dailyReportColumn.ID;
+                                    DailyReportColumnCategoryIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                }
+                                if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnCompanyID)
+                                {
+                                    DailyReportColumnCompanyID = dailyReportColumn.ID;
+                                    DailyReportColumnCompanyIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                }
+                                if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnSentimentID)
+                                {
+                                    DailyReportColumnSentimentID = dailyReportColumn.ID;
+                                    DailyReportColumnSentimentIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                }
+                                if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnHeadlineVietnameseID)
+                                {
+                                    DailyReportColumnHeadlineVietnameseID = dailyReportColumn.ID;
+                                    DailyReportColumnHeadlineVietnameseIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                }
+                                if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnHeadlineEnglishID)
+                                {
+                                    DailyReportColumnHeadlineEnglishID = dailyReportColumn.ID;
+                                    DailyReportColumnHeadlineEnglishIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                }
+                                if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnMediaTitleID)
+                                {
+                                    DailyReportColumnMediaTitleID = dailyReportColumn.ID;
+                                    DailyReportColumnMediaTitleIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                }
+                                if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnMediaTypeID)
+                                {
+                                    DailyReportColumnMediaTypeID = dailyReportColumn.ID;
+                                    DailyReportColumnMediaTypeIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                }
+                                if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnPageID)
+                                {
+                                    DailyReportColumnPageID = dailyReportColumn.ID;
+                                    DailyReportColumnPageIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                }
+                                if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnAdvertisementID)
+                                {
+                                    DailyReportColumnAdvertisementID = dailyReportColumn.ID;
+                                    DailyReportColumnAdvertisementIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                }
+                                if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnSummaryID)
+                                {
+                                    DailyReportColumnSummaryID = dailyReportColumn.ID;
+                                    DailyReportColumnSummaryIDSortOrder = dailyReportColumn.SortOrder.Value;
+                                }
                             }
                             int index = 0;
-                            for (int row = 4; row <= listData.Count + 1; row++)
+                            for (int row = 4; row <= listData.Count + 3; row++)
                             {
-                                for (int i = 1; i < 12; i++)
+                                for (int i = 1; i < 13; i++)
                                 {
                                     if ((DailyReportColumnDatePublishID > 0) && (DailyReportColumnDatePublishIDSortOrder == i))
                                     {
@@ -729,7 +401,7 @@ namespace Commsights.MVC.Controllers
                                         workSheet.Cells[row, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
                                         workSheet.Cells[row, i].Style.Border.Right.Color.SetColor(Color.Black);
                                         workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
+                                        workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);                                        
                                     }
                                     if ((DailyReportColumnCategoryID > 0) && (DailyReportColumnCategoryIDSortOrder == i))
                                     {
@@ -935,7 +607,7 @@ namespace Commsights.MVC.Controllers
         {
             List<ProductSearchPropertyDataTransfer> listData = _reportRepository.ReportDailyByProductSearchIDToListToHTML(model.ID);
             List<ProductSearchPropertyDataTransfer> listDataISummary = listData.Where(item => item.IsSummary == true).ToList();
-            List<MembershipPermission> listDailyReportColumn = _membershipPermissionRepository.GetDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndActiveToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn, true);
+            List<MembershipPermission> listDailyReportColumn = _membershipPermissionRepository.GetDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndActiveFormSQLToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn, true);
             List<MembershipPermission> listDailyReportSection = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCodeToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportSection);
             int DailyReportColumnDatePublishID = 0;
             int DailyReportColumnCategoryID = 0;
@@ -1614,7 +1286,7 @@ namespace Commsights.MVC.Controllers
                             int DailyReportColumnPageIDSortOrder = 0;
                             int DailyReportColumnAdvertisementIDSortOrder = 0;
                             int DailyReportColumnSummaryIDSortOrder = 0;
-                            List<MembershipPermission> listDailyReportColumn = _membershipPermissionRepository.GetDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndActiveToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn, true);
+                            List<MembershipPermission> listDailyReportColumn = _membershipPermissionRepository.GetDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndActiveFormSQLToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn, true);
                             if (listDataISummary.Count > 0)
                             {
                                 reportData.AppendLine(@"<b style='color: #ed7d31; font-size:14px;'>II - INFORMATION</b>");
@@ -3123,6 +2795,7 @@ namespace Commsights.MVC.Controllers
                                                     List<ProductProperty> listProductPropertyURLCode = new List<ProductProperty>();
                                                     Product model = new Product();
                                                     model.Initialization(InitType.Insert, RequestUserID);
+                                                    model.AssessID = AppGlobal.AssessID;
                                                     try
                                                     {
                                                         if (workSheet.Cells[i, 1].Value != null)
@@ -3207,7 +2880,7 @@ namespace Commsights.MVC.Controllers
                                                                         frequency = new Config();
                                                                         frequency.CodeName = frequencyName;
                                                                         frequency.Initialization(InitType.Insert, RequestUserID);
-                                                                        _configResposistory.Create(parentOfParent);
+                                                                        _configResposistory.Create(frequency);
                                                                     }
                                                                     parent.FrequencyID = frequency.ID;
                                                                 }
@@ -3236,6 +2909,33 @@ namespace Commsights.MVC.Controllers
                                                         if (workSheet.Cells[i, 14].Value != null)
                                                         {
                                                             model.Author = workSheet.Cells[i, 14].Value.ToString().Trim();
+                                                        }
+                                                        if (workSheet.Cells[i, 15].Value != null)
+                                                        {
+                                                            string assessString = workSheet.Cells[i, 15].Value.ToString().Trim();
+                                                            switch (assessString)
+                                                            {
+                                                                case "-1":
+                                                                    model.AssessID = AppGlobal.NegativeID;
+                                                                    break;
+                                                                case "0":
+                                                                    model.AssessID = AppGlobal.NeutralID;
+                                                                    break;
+                                                                case "1":
+                                                                    model.AssessID = AppGlobal.PositiveID;
+                                                                    break;
+                                                                default:
+                                                                    Config assess = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.AssessType, assessString);
+                                                                    if (assess == null)
+                                                                    {
+                                                                        assess = new Config();
+                                                                        assess.CodeName = assessString;
+                                                                        assess.Initialization(InitType.Insert, RequestUserID);
+                                                                        _configResposistory.Create(assess);
+                                                                    }
+                                                                    model.AssessID = assess.ID;
+                                                                    break;
+                                                            }
                                                         }
                                                         Product product = _productRepository.GetByFileNameAndDatePublish(model.FileName, model.DatePublish);
                                                         if (product == null)
@@ -3290,7 +2990,7 @@ namespace Commsights.MVC.Controllers
                                                                         ProductProperty productProperty = new ProductProperty();
                                                                         productProperty.Initialization(InitType.Insert, RequestUserID);
                                                                         productProperty.IsData = true;
-                                                                        productProperty.AssessID = AppGlobal.AssessID;
+                                                                        productProperty.AssessID = product.AssessID;
                                                                         productProperty.ParentID = product.ID;
                                                                         productProperty.GUICode = product.GUICode;
                                                                         productProperty.CompanyID = membership.ID;
@@ -3305,7 +3005,7 @@ namespace Commsights.MVC.Controllers
                                                                     ProductProperty productProperty = new ProductProperty();
                                                                     productProperty.Initialization(InitType.Insert, RequestUserID);
                                                                     productProperty.IsData = true;
-                                                                    productProperty.AssessID = AppGlobal.AssessID;
+                                                                    productProperty.AssessID = product.AssessID;
                                                                     productProperty.ParentID = product.ID;
                                                                     productProperty.GUICode = product.GUICode;
                                                                     productProperty.IndustryID = baseViewModel.IndustryIDUploadAndiSource;
@@ -3322,7 +3022,7 @@ namespace Commsights.MVC.Controllers
                                                                 productProperty.IsData = true;
                                                                 productProperty.Code = AppGlobal.Industry;
                                                                 productProperty.ArticleTypeID = AppGlobal.TinNganhID;
-                                                                productProperty.AssessID = AppGlobal.AssessID;
+                                                                productProperty.AssessID = product.AssessID;
                                                                 productProperty.ParentID = product.ID;
                                                                 productProperty.GUICode = product.GUICode;
                                                                 productProperty.IndustryID = baseViewModel.IndustryIDUploadAndiSource;
