@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Commsights.Data.Repositories
 {
-    public interface IReportRepository
+    public interface IReportRepository 
     {
         public string InitializationByProductSearchIDAndRequestUserID(int productSearchID, int requestUserID);
         public List<ProductSearchDataTransfer> InitializationByDatePublishToList(DateTime datePublish);

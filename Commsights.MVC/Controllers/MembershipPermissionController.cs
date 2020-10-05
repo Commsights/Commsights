@@ -537,7 +537,7 @@ namespace Commsights.MVC.Controllers
             model.SegmentID = model.Segment.ID;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
-            if ((model.MembershipID > 0) && (model.CompanyID > 0) && (model.IndustryID > 0) && (model.SegmentID > 0))
+            if ((model.MembershipID > 0) && (model.CompanyID > 0) && (model.IndustryID > 0))
             {
                 result = _membershipPermissionRepository.Create(model);
             }
@@ -767,7 +767,7 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
             int result = 0;
-            if ((model.MembershipID > 0) && (model.CompanyID > 0) && (model.IndustryID > 0) && (model.SegmentID > 0))
+            if ((model.MembershipID > 0) && (model.CompanyID > 0) && (model.IndustryID > 0))
             {
                 result = _membershipPermissionRepository.Update(model.ID, model);
             }

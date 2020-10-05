@@ -41,7 +41,9 @@ namespace Commsights.MVC
             services.AddTransient<IConfigRepository, ConfigRepository>();
             services.AddTransient<IDashbroadRepository, DashbroadRepository>();
             services.AddTransient<IReportRepository, ReportRepository>();
-            services.AddTransient<IMailService, MailService>();
+            services.AddTransient<IEmailStorageRepository, EmailStorageRepository>();
+            services.AddTransient<IEmailStoragePropertyRepository, EmailStoragePropertyRepository>();
+            services.AddTransient<IMailService, MailService>();            
             services.AddControllersWithViews();
 
             // Add Kendo UI services to the services container

@@ -1,0 +1,84 @@
+﻿@{ ViewData["Title"] = "Email detail"; }
+
+@model Commsights.Data.Models.EmailStorage
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Email detail</h3>
+            </div>
+            <div class="card-body">
+                <form asp-action="SaveCustomer" asp-controller="Membership">
+                    @Html.HiddenFor(Model => Model.ID)
+                    <div class="row">
+                        <div class='col-md-9'>
+                        </div>
+                        <div class='col-md-1'>
+                            <button style="width:100%;" type="submit" title="Save" class="btn btn-primary">
+                                <span class="fas fa-save"></span>
+                            </button>
+                        </div>                        
+                        <div class='col-md-1'>
+                            <a asp-route-ID="0" asp-action="Detail" asp-controller="EmailStorage" title="New page" style="width:100%;" class="btn btn-success">
+                                <span class="fas fa-plus"></span>
+                            </a>
+                        </div>
+                        <div class='col-md-1'>
+                            <a asp-action="Index" asp-controller="EmailStorage" title="Email" style="width:100%;" class="btn btn-info">
+                                <span class="fas fa-arrow-left"></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class='form-group'>
+                                <label for='Display'>Display</label>
+                                @(Html.TextBoxFor(Model => Model.Display, new { placeholder = "Display", @class = "form-control" }))
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class='form-group'>
+                                <label for='Phone'>Category</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.CategoryID)
+                                   .DataValueField("ID")
+                                   .DataTextField("CodeName")
+                                   .HtmlAttributes(new {@class = "form-control" })
+                                    .Filter(FilterType.StartsWith)
+                                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetMembershipTypeToList", "Config")))
+                                    )
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-md-12" style="width:100%;">
+                            @Html.TextAreaFor(Model => Model.EmailBody)
+
+                            <script src="/ckeditor/ckeditor.js"></script>
+                            <script src="/ckeditor/adapters/jquery.js"></script>
+                            <script>
+                                CKEDITOR.replace("Note", {
+                                    on: {
+                                        'instanceReady': function (evt) {
+                                            evt.editor.resize("100%", "600");
+                                        }
+                                    }
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+
+<script>
+
+</script>
