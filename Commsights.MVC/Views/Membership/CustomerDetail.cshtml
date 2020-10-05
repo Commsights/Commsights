@@ -142,6 +142,7 @@
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
     columns.Bound(t => t.Industry.TextName).EditorTemplateName("Config_Industry").Title("Industry").Width(300);
     columns.Bound(t => t.Active).Title("Default").Width(300);
+    columns.Bound(t => t.SortOrder).Title("Sort").Width(200);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
@@ -581,8 +582,8 @@
     columns.Bound(t => t.Active).Title("Select").Width(100);
     columns.Bound(t => t.SortOrder).Title("Sort").Width(200);
     columns.Bound(t => t.FullName).Title("Upload").Width(200);
-    columns.Bound(t => t.DailyReportColumnName).Title("English").Width(200);
-    columns.Bound(t => t.DailyReportColumnNote).Title("Vietnamese").Width(200);
+    columns.Bound(t => t.Email).Title("English").Width(200);
+    columns.Bound(t => t.Phone).Title("Vietnamese").Width(200);
 })
 .Editable(editable => editable.Mode(GridEditMode.InLine))
 .Sortable()
@@ -613,9 +614,7 @@
 .PageSize(1000)
 .Model(model =>
 {
-    model.Id(t => t.ID);
-    model.Field(t => t.DailyReportColumnName).Editable(false);
-    model.Field(t => t.DailyReportColumnNote).Editable(false);
+    model.Id(t => t.ID);    
 })
 .Events(t => { t.RequestEnd("onGridRequestEndDailyReportColumn"); })
 .Read(t => t.Action("GetDataTransferDailyReportColumnByMembershipIDAndIndustryIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))

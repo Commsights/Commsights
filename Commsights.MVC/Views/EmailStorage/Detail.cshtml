@@ -9,7 +9,7 @@
                 <h3 class="card-title">Email detail</h3>
             </div>
             <div class="card-body">
-                <form asp-action="SaveCustomer" asp-controller="Membership">
+                <form asp-action="Save" asp-controller="EmailStorage">
                     @Html.HiddenFor(Model => Model.ID)
                     <div class="row">
                         <div class='col-md-9'>
@@ -46,7 +46,7 @@
                             </div>
                             <div class='form-group'>
                                 <label for='Password'>Password</label>
-                                @(Html.TextBoxFor(Model => Model.Password, new { placeholder = "Password", @class = "form-control" }))
+                                @(Html.TextBoxFor(Model => Model.Password, new { placeholder = "Password", @class = "form-control", @type = "password" }))
                             </div>
                             <div class='form-group'>
                                 <label for='EmailTo'>Email To</label>
@@ -64,7 +64,7 @@
                         <div class="col-md-6">
                             <div class='form-group'>
                                 <label for='IndustryID'>Industry</label>
-                                @(Html.Kendo().DropDownListFor(Model => Model.IndustryID.Value)
+                                @(Html.Kendo().DropDownListFor(Model => Model.IndustryID)
                                    .DataValueField("ID")
                                    .DataTextField("CodeName")
                                    .HtmlAttributes(new {@class = "form-control" })
@@ -75,12 +75,13 @@
                             </div>
                             <div class='form-group'>
                                 <label for='CompanyID'>Company</label>
-                                @(Html.Kendo().DropDownListFor(Model => Model.CompanyID.Value)
+                                @(Html.Kendo().DropDownListFor(Model => Model.CompanyID)
                                    .DataValueField("ID")
                                    .DataTextField("Account")
                                    .HtmlAttributes(new {@class = "form-control" })
+                                   .Events(e => e.DataBound("onCompanyDataBound").Change("onCompanyChange"))
                                     .Filter(FilterType.StartsWith)
-                                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByIndustryIDToList", "Membership").Data("filterMembership")))
+                                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByIndustryIDAndParrentIDCustomerToList", "Membership").Data("filterMembership")))
                                     )
                             </div>
                             <div class='form-group'>
@@ -90,10 +91,30 @@
                                    .DataTextField("CodeName")
                                    .HtmlAttributes(new {@class = "form-control" })
                                     .Filter(FilterType.StartsWith)
-                                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetMembershipTypeToList", "Config")))
+                                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetEmailStorageCategoryToList", "Config")))
                                     )
                             </div>
-
+                            <div class='form-group'>
+                                <label for='DateSend'>Date send</label>
+                                @(Html.TextBoxFor(Model => Model.DateSend, new { placeholder = "Date send", @class = "form-control", @disabled= "disabled" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='DateRead'>Date read</label>
+                                @(Html.TextBoxFor(Model => Model.DateRead, new { placeholder = "Date read", @class = "form-control", @disabled = "disabled" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='FileAttached'>File attached</label>
+                                <table>
+                                    <tr>
+                                        <td style="width:100%;" valign="top">
+                                            @(Html.Kendo().Upload()
+                              .Name("Upload")
+                              .HtmlAttributes(new { @class = "form-control" })
+                                )
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
                     <div class="row mt-1">
@@ -138,6 +159,16 @@
         }
     }
     function onIndustryChange() {
-        $("#CompanyID").data("kendoGrid").dataSource.read();
+        $("#CompanyID").data("kendoDropDownList").dataSource.read();
+    }
+    function onCompanyDataBound() {
+        var control = $("#CompanyID").data("kendoDropDownList");
+        var controlLength = control.dataSource.data().length;
+        if (controlLength > 0) {
+            control.select(0);
+            control.trigger("change");
+        }
+    }
+    function onCompanyChange() {        
     }
 </script>

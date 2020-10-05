@@ -13,33 +13,20 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-3">
-                        <div class='form-group'>
-                            <label for='Industry'>Industry</label>
-                            @(Html.TextBoxFor(Model => Model.IndustryName, new { placeholder = "Industry", @class = "form-control", @readonly = "readonly" }))
-                        </div>
+                        @(Html.TextBoxFor(Model => Model.IndustryName, new { placeholder = "Industry", @class = "form-control", @readonly = "readonly" }))
                     </div>
                     <div class="col-md-3">
-                        <div class='form-group'>
-                            <label for='DatePublishBegin'>From</label>
-                            @(Html.TextBoxFor(Model => Model.DatePublishBegin, "{0:dd/MM/yyyy}", new { placeholder = "Date publish begin", @class = "form-control text-right", @readonly = "readonly" }))
-                        </div>
+                        @(Html.TextBoxFor(Model => Model.DatePublishBegin, "{0:dd/MM/yyyy}", new { placeholder = "Date publish begin", @class = "form-control text-right", @readonly = "readonly" }))
                     </div>
                     <div class="col-md-3">
-                        <div class='form-group'>
-                            <label for='DatePublishEnd'>To</label>
-                            @(Html.TextBoxFor(Model => Model.DatePublishEnd, "{0:dd/MM/yyyy}", new { placeholder = "Date publish end", @class = "form-control text-right", @readonly = "readonly" }))
-                        </div>
+                        @(Html.TextBoxFor(Model => Model.DatePublishEnd, "{0:dd/MM/yyyy}", new { placeholder = "Date publish end", @class = "form-control text-right", @readonly = "readonly" }))
                     </div>
                     <div class="col-md-1">
-                        <div class='form-group'>
-                            <label for='DatePublishEnd'>Send</label>
-                            <button type="button" class="btn btn-success" onclick="onSendMail()">
-                                <span class="fas fa-paper-plane"></span>
-                            </button>
-                        </div>
+                        <button type="button" class="btn btn-success" onclick="onSendMail()">
+                            <span class="fas fa-paper-plane"></span>
+                        </button>
                     </div>
                     <div class='col-md-1'>
-                        <label for='DatePublishEnd'>Daily</label>
                         <a href="/Report/Index?industryID=@Model.IndustryID&datePublishBeginString=@Model.DatePublishBeginString&datePublishEndString=@Model.DatePublishEndString" title="Daily" style="width:100%;" class="btn btn-info">
                             <span class="fas fa-arrow-left"></span>
                         </a>

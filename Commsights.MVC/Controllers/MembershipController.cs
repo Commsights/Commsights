@@ -235,8 +235,18 @@ namespace Commsights.MVC.Controllers
             var data = _membershipRepository.GetByIndustryIDToList(industryID);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetByIndustryIDWithIDAndAccountToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {
+            var data = _membershipRepository.GetByIndustryIDWithIDAndAccountToList(industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetByIndustryIDAndParrentIDCustomerToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {
+            var data = _membershipRepository.GetByIndustryIDAndParrentIDToList(industryID, AppGlobal.ParentIDCustomer);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetByIndustryIDAndParrentIDToListToJSON(int industryID)
-        {            
+        {
             return Json(_membershipRepository.GetByIndustryIDAndParrentIDToList(industryID, AppGlobal.ParentIDCustomer));
         }
         [AcceptVerbs("Post")]
@@ -327,11 +337,16 @@ namespace Commsights.MVC.Controllers
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
             model.Account = model.Account.Trim();
-            if (_membershipRepository.IsExistAccount(model.Account) == false)
+            Membership membership = _membershipRepository.GetByAccount(model.Account);
+            if (membership.ID > 0)
+            {
+            }
+            else
             {
                 result = _membershipRepository.Create(model);
+                membership = model;
             }
-            if (result > 0)
+            if (membership.ID > 0)
             {
                 MembershipPermission membershipPermission = new MembershipPermission();
                 membershipPermission.MembershipID = model.ID;

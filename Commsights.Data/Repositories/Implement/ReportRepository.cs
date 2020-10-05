@@ -438,5 +438,40 @@ namespace Commsights.Data.Repositories
             }
             return model;
         }
+        public string DeleteProductAndProductPropertyByDatePublishBeginAndDatePublishEndAndIndustryID(DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
+        {
+            string result = "";
+            if (industryID > 0)
+            {
+                datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+                datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+                SqlParameter[] parameters =
+                       {
+                    new SqlParameter("@DatePublishBegin",datePublishBegin),
+                    new SqlParameter("@DatePublishEnd",datePublishEnd),
+                    new SqlParameter("@IndustryID",industryID)
+                    };
+                result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ReportDailyDeleteProductAndProductPropertyByDatePublishBeginAndDatePublishEndAndIndustryID", parameters);
+            }
+            return result;
+        }
+        public string DeleteProductSearchAndProductSearchPropertyByDatePublishBeginAndDatePublishEndAndIndustryIDAndHourSearch(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int hourSearch)
+        {
+            string result = "";
+            if (industryID > 0)
+            {
+                datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+                datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+                SqlParameter[] parameters =
+                       {
+                    new SqlParameter("@DatePublishBegin",datePublishBegin),
+                    new SqlParameter("@DatePublishEnd",datePublishEnd),
+                    new SqlParameter("@IndustryID",industryID),
+                    new SqlParameter("@HourSearch",hourSearch),
+                    };
+                result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ReportDailyDeleteProductSearchAndProductSearchPropertyByDatePublishBeginAndDatePublishEndAndIndustryIDAndHourSearch", parameters);
+            }
+            return result;
+        }
     }
 }

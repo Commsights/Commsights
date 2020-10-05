@@ -20,11 +20,13 @@ namespace Commsights.MVC.Controllers
     {
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IEmailStorageRepository _emailStorageRepository;
+        private readonly IEmailStoragePropertyRepository _emailStoragePropertyRepository;
 
-        public EmailStorageController(IHostingEnvironment hostingEnvironment, IEmailStorageRepository emailStorageRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
+        public EmailStorageController(IHostingEnvironment hostingEnvironment, IEmailStorageRepository emailStorageRepository, IEmailStoragePropertyRepository emailStoragePropertyRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
             _hostingEnvironment = hostingEnvironment;
             _emailStorageRepository = emailStorageRepository;
+            _emailStoragePropertyRepository = emailStoragePropertyRepository;
         }
         private void Initialization(EmailStorage model)
         {
@@ -56,10 +58,14 @@ namespace Commsights.MVC.Controllers
         public IActionResult Detail(int ID)
         {
             EmailStorage model = new EmailStorage();
-            if(ID>0)
+            model.IndustryID = AppGlobal.IndustryID;
+            model.Display = AppGlobal.MasterEmailDisplay;
+            model.EmailFrom = AppGlobal.MasterEmailUser;
+            model.Password = AppGlobal.MasterEmailPassword;
+            if (ID > 0)
             {
                 model = _emailStorageRepository.GetByID(ID);
-            }    
+            }
             return View(model);
         }
         public IActionResult Delete(int ID)
@@ -75,6 +81,49 @@ namespace Commsights.MVC.Controllers
                 note = AppGlobal.Error + " - " + AppGlobal.DeleteFail;
             }
             return Json(note);
+        }
+        [AcceptVerbs("Post")]
+        public IActionResult Save(EmailStorage model)
+        {
+            EmailStorageProperty emailStorageProperty = new EmailStorageProperty();
+            if (Request.Form.Files.Count > 0)
+            {
+                var file = Request.Form.Files[0];
+                if (file != null)
+                {
+                    string fileExtension = Path.GetExtension(file.FileName);
+                    string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                    fileName = AppGlobal.SetName(fileName);
+                    fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
+                    var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.EmailStorage, fileName);
+                    using (var stream = new FileStream(physicalPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                    emailStorageProperty.FileName = fileName;
+                }
+            }
+            Initialization(model);
+            if (model.ID > 0)
+            {
+                _emailStorageRepository.Update(model.ID, model);
+            }
+            else
+            {
+                model.Initialization(InitType.Insert, RequestUserID);
+                _emailStorageRepository.Create(model);
+            }
+            if (model.ID > 0)
+            {
+                emailStorageProperty.Title = model.Subject;
+                emailStorageProperty.ParentID = model.ID;
+                emailStorageProperty.Initialization(InitType.Insert, RequestUserID);
+                if (!string.IsNullOrEmpty(emailStorageProperty.FileName))
+                {
+                    _emailStoragePropertyRepository.Create(emailStorageProperty);
+                }
+            }
+            return RedirectToAction("Detail", new { ID = model.ID });
         }
     }
 }
