@@ -280,13 +280,13 @@ namespace Commsights.MVC.Controllers
             int DailyReportColumnPageIDSortOrder = 0;
             int DailyReportColumnAdvertisementIDSortOrder = 0;
             int DailyReportColumnSummaryIDSortOrder = 0;
-          
+
             var stream = new MemoryStream();
             using (var package = new ExcelPackage(stream))
             {
                 var workSheet = package.Workbook.Worksheets.Add("Sheet1");
                 foreach (MembershipPermission dailyReportSection in listDailyReportSection)
-                {                    
+                {
                     if ((dailyReportSection.CategoryID == AppGlobal.DailyReportSectionDataID) && (dailyReportSection.Active == true))
                     {
                         if (listData.Count > 0)
@@ -401,7 +401,7 @@ namespace Commsights.MVC.Controllers
                                         workSheet.Cells[row, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
                                         workSheet.Cells[row, i].Style.Border.Right.Color.SetColor(Color.Black);
                                         workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                                        workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);                                        
+                                        workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
                                     }
                                     if ((DailyReportColumnCategoryID > 0) && (DailyReportColumnCategoryIDSortOrder == i))
                                     {
@@ -3541,6 +3541,80 @@ namespace Commsights.MVC.Controllers
             catch
             {
             }
+            return RedirectToAction(action, controller);
+        }
+
+
+
+        public ActionResult UploadAdValue()
+        {
+            string action = "Upload";
+            string controller = "Report";
+
+            if (Request.Form.Files.Count > 0)
+            {
+                var file = Request.Form.Files[0];
+                if (file == null || file.Length == 0)
+                {
+                }
+                if (file != null)
+                {
+                    string fileExtension = Path.GetExtension(file.FileName);
+                    string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                    fileName = "AdValue";
+                    fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
+                    var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.FTPUploadExcel, fileName);
+                    using (var stream = new FileStream(physicalPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                        FileInfo fileLocation = new FileInfo(physicalPath);
+                        if (fileLocation.Length > 0)
+                        {
+                            if ((fileExtension == ".xlsx") || (fileExtension == ".xls"))
+                            {
+                                using (ExcelPackage package = new ExcelPackage(stream))
+                                {
+                                    if (package.Workbook.Worksheets.Count > 0)
+                                    {
+                                        ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
+                                        if (workSheet != null)
+                                        {
+                                            int totalRows = workSheet.Dimension.Rows;
+                                            for (int i = 2; i <= totalRows; i++)
+                                            {
+                                                string title = "";
+                                                int color = 0;
+                                                if (workSheet.Cells[i, 1].Value != null)
+                                                {
+                                                    title = workSheet.Cells[i, 1].Value.ToString().Trim();
+                                                }
+                                                if (workSheet.Cells[i, 2].Value != null)
+                                                {
+                                                    string adValue = workSheet.Cells[i, 2].Value.ToString().Trim();
+                                                    try
+                                                    {
+                                                        color = int.Parse(adValue);
+                                                    }
+                                                    catch
+                                                    {
+                                                    }
+                                                }
+                                                if (!string.IsNullOrEmpty(title))
+                                                {
+                                                    title = title.Trim();
+                                                    title = title.ToLower();
+                                                    _configResposistory.UpdateByGroupNameAndCodeAndTitleAndColor(AppGlobal.CRM, AppGlobal.Website, title, color);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             return RedirectToAction(action, controller);
         }
     }

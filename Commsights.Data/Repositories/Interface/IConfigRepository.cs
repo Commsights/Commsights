@@ -8,6 +8,7 @@ namespace Commsights.Data.Repositories
 {
     public interface IConfigRepository : IRepository<Config>
     {
+        public string UpdateByGroupNameAndCodeAndTitleAndColor(string groupName, string code, string title, int color);
         public bool IsValidByGroupNameAndCodeAndURL(string groupName, string code, string url);
         public bool IsValidByGroupNameAndCodeAndTitle(string groupName, string code, string title);
         public bool IsValidByGroupNameAndCodeAndCodeName(string groupName, string code, string codeName);
