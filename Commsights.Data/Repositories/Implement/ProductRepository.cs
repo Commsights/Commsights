@@ -156,6 +156,10 @@ namespace Commsights.Data.Repositories
         {
             return _context.Set<Product>().FirstOrDefault(item => item.FileName.Equals(fileName) && item.DatePublish.Equals(datePublish));
         }
+        public Product GetByImageThumbnail(string imageThumbnail)
+        {
+            return _context.Set<Product>().FirstOrDefault(item => item.ImageThumbnail.Equals(imageThumbnail));
+        }
         public List<ProductDataTransfer> GetDataTransferByProductSearchIDToList(int productSearchID)
         {
             List<ProductDataTransfer> list = new List<ProductDataTransfer>();

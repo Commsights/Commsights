@@ -2829,6 +2829,7 @@ namespace Commsights.MVC.Controllers
                                                             if (workSheet.Cells[i, 5].Hyperlink != null)
                                                             {
                                                                 model.ImageThumbnail = workSheet.Cells[i, 5].Hyperlink.AbsoluteUri.Trim();
+                                                                model.URLCode = model.ImageThumbnail;
                                                                 AppGlobal.GetURLByURLAndi(model, listProductPropertyURLCode, RequestUserID);
                                                             }
                                                         }
@@ -2937,7 +2938,7 @@ namespace Commsights.MVC.Controllers
                                                                     break;
                                                             }
                                                         }
-                                                        Product product = _productRepository.GetByFileNameAndDatePublish(model.FileName, model.DatePublish);
+                                                        Product product = _productRepository.GetByImageThumbnail(model.ImageThumbnail);
                                                         if (product == null)
                                                         {
                                                             model.GUICode = AppGlobal.InitGuiCode;

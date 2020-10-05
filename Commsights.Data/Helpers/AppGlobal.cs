@@ -1846,7 +1846,7 @@ namespace Commsights.Data.Helpers
         public static string SetName(string fileName)
         {
             string fileNameReturn = fileName;
-            if(!string.IsNullOrEmpty(fileNameReturn))
+            if (!string.IsNullOrEmpty(fileNameReturn))
             {
                 fileNameReturn = fileNameReturn.ToLower();
                 fileNameReturn = fileNameReturn.Replace("’", "-");
@@ -1946,11 +1946,12 @@ namespace Commsights.Data.Helpers
                 fileNameReturn = fileNameReturn.Replace("ệ", "e");
                 fileNameReturn = fileNameReturn.Replace("đ", "d");
                 fileNameReturn = fileNameReturn.Replace("--", "-");
-            }                
+            }
             return fileNameReturn;
         }
         public static void GetURLByURLAndi(Product model, List<ProductProperty> listProductPropertyURLCode, int RequestUserID)
         {
+            model.URLCode = model.ImageThumbnail;
             string html = "";
             try
             {
@@ -1997,23 +1998,10 @@ namespace Commsights.Data.Helpers
                     }
                 }
                 else
-                {
-
-                    html = html.Replace(@"rel=""canonical""", @"~");
-                    if (html.Split('~').Length > 1)
-                    {
-                        html = html.Split('~')[1];
-                        html = html.Replace(@"href=""", @"~");
-                        if (html.Split('~').Length > 1)
-                        {
-                            html = html.Split('~')[1];
-                            html = html.Split('"')[0];
-                            model.URLCode = html.Trim();
-                        }
-                    }
+                {       
                 }
             }
-            catch
+            catch (Exception e)
             {
             }
         }

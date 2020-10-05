@@ -8,6 +8,7 @@ namespace Commsights.Data.Repositories
 {
     public interface IProductRepository : IRepository<Product>
     {
+        public Product GetByImageThumbnail(string imageThumbnail);
         public Product GetByByDatePublishBeginAndDatePublishEndAndIndustryIDAndSourceID(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int sourceID);
         public Product GetByID001(int ID);
         public Product GetByURLCode(string uRLCode);
