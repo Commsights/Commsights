@@ -2696,7 +2696,7 @@ namespace Commsights.MVC.Controllers
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
         }
         public ActionResult UploadScan(Commsights.MVC.Models.BaseViewModel baseViewModel)
-        {            
+        {
             try
             {
                 if (Request.Form.Files.Count > 0)
@@ -2977,10 +2977,14 @@ namespace Commsights.MVC.Controllers
             catch
             {
             }
-            return RedirectToAction(baseViewModel.Action);
+            if (string.IsNullOrEmpty(baseViewModel.ActionView))
+            {
+                baseViewModel.ActionView = "Upload";
+            }
+            return RedirectToAction(baseViewModel.ActionView);
         }
         public ActionResult UploadAndiSource(Commsights.MVC.Models.BaseViewModel baseViewModel)
-        {          
+        {
             try
             {
                 if (Request.Form.Files.Count > 0)
@@ -3305,10 +3309,14 @@ namespace Commsights.MVC.Controllers
             catch
             {
             }
-            return RedirectToAction(baseViewModel.Action);
+            if (string.IsNullOrEmpty(baseViewModel.ActionView))
+            {
+                baseViewModel.ActionView = "Upload";
+            }
+            return RedirectToAction(baseViewModel.ActionView);
         }
         public ActionResult UploadYounet(Commsights.MVC.Models.BaseViewModel baseViewModel)
-        {            
+        {
             try
             {
                 if (Request.Form.Files.Count > 0)
@@ -3551,10 +3559,14 @@ namespace Commsights.MVC.Controllers
             catch
             {
             }
-            return RedirectToAction(baseViewModel.Action);
+            if (string.IsNullOrEmpty(baseViewModel.ActionView))
+            {
+                baseViewModel.ActionView = "Upload";
+            }
+            return RedirectToAction(baseViewModel.ActionView);
         }
         public ActionResult UploadGoogleSearch(Commsights.MVC.Models.BaseViewModel baseViewModel)
-        {           
+        {
             try
             {
                 if (Request.Form.Files.Count > 0)
@@ -3820,7 +3832,11 @@ namespace Commsights.MVC.Controllers
             catch
             {
             }
-            return RedirectToAction(baseViewModel.Action);
+            if (string.IsNullOrEmpty(baseViewModel.ActionView))
+            {
+                baseViewModel.ActionView = "Upload";
+            }
+            return RedirectToAction(baseViewModel.ActionView);
         }
         public ActionResult UploadAdValue()
         {

@@ -40,7 +40,11 @@ namespace Commsights.MVC.Controllers
             var data = _emailStoragePropertyRepository.GetParentIDAndCodeToList(parentID, AppGlobal.EmailStorage);
             return Json(data.ToDataSourceResult(request));
         }
-
+        public ActionResult GetDataTransferByDatePublishBeginAndDatePublishEndToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd)
+        {
+            var data = _emailStoragePropertyRepository.GetDataTransferByDatePublishBeginAndDatePublishEndToList(datePublishBegin, datePublishEnd);
+            return Json(data.ToDataSourceResult(request));
+        }
         public IActionResult Delete(int ID)
         {
             string note = AppGlobal.InitString;

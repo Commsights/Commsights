@@ -23,5 +23,19 @@ namespace Commsights.Data.Repositories
         {
             return _context.EmailStorageProperty.Where(item => item.ParentID == parentID && item.Code.Equals(code)).OrderBy(item => item.ID).ToList();
         }
+        public List<EmailStoragePropertyDataTransfer> GetDataTransferByDatePublishBeginAndDatePublishEndToList(DateTime datePublishBegin, DateTime datePublishEnd)
+        {
+            List<EmailStoragePropertyDataTransfer> list = new List<EmailStoragePropertyDataTransfer>();
+            datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+            datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+            SqlParameter[] parameters =
+                   {
+                    new SqlParameter("@DatePublishBegin",datePublishBegin),
+                    new SqlParameter("@DatePublishEnd",datePublishEnd),
+                    };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_EmailStoragePropertySelectDataTransferByDatePublishBeginAndDatePublishEnd", parameters);
+            list = SQLHelper.ToList<EmailStoragePropertyDataTransfer>(dt);
+            return list;
+        }
     }
 }

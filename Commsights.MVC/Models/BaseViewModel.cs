@@ -33,5 +33,6 @@ namespace Commsights.MVC.Models
         public string DatePublishBeginString { get; set; }
         public string DatePublishEndString { get; set; }
         public string Action { get; set; }
+        public string ActionView { get; set; }
     }
 }

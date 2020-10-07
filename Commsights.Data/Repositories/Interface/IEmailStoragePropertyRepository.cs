@@ -9,5 +9,6 @@ namespace Commsights.Data.Repositories
     public interface IEmailStoragePropertyRepository : IRepository<EmailStorageProperty>
     {
         public List<EmailStorageProperty> GetParentIDAndCodeToList(int parentID, string code);
+        public List<EmailStoragePropertyDataTransfer> GetDataTransferByDatePublishBeginAndDatePublishEndToList(DateTime datePublishBegin, DateTime datePublishEnd);
     }
 }

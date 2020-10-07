@@ -62,6 +62,20 @@ namespace Commsights.MVC.Controllers
             model.DatePublishEnd = DateTime.Now;
             return View(model);
         }
+        public IActionResult List()
+        {
+            BaseViewModel model = new BaseViewModel();
+            model.DatePublishBegin = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            model.DatePublishEnd = DateTime.Now;
+            return View(model);
+        }
+        public IActionResult ReadView()
+        {
+            BaseViewModel model = new BaseViewModel();
+            model.DatePublishBegin = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            model.DatePublishEnd = DateTime.Now;
+            return View(model);
+        }
         public IActionResult Detail(int ID)
         {
             EmailStorage model = new EmailStorage();
