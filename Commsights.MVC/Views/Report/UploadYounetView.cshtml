@@ -23,6 +23,7 @@
             </div>
             <div class="card-body">
                 <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadYounet", "Report")'>
+                    @Html.HiddenFor(Model => Model.Action)
                     <div class='col-sm-12'>
                         <label for='Download'>Step 01: File excel template: </label>
                         <a href="@Commsights.Data.Helpers.AppGlobal.URLDownloadExcel/Younet.xlsx" target="_blank">Download</a>

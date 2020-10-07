@@ -164,23 +164,33 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult Upload()
         {
-            return View();
+            BaseViewModel model = new BaseViewModel();
+            model.Action = "Upload";
+            return View(model);
         }
         public IActionResult UploadAndiView()
         {
-            return View();
+            BaseViewModel model = new BaseViewModel();
+            model.Action = "UploadAndiView";
+            return View(model);
         }
         public IActionResult UploadGoogleView()
         {
-            return View();
+            BaseViewModel model = new BaseViewModel();
+            model.Action = "UploadGoogleView";
+            return View(model);
         }
         public IActionResult UploadScanView()
         {
-            return View();
+            BaseViewModel model = new BaseViewModel();
+            model.Action = "UploadScanView";
+            return View(model);
         }
         public IActionResult UploadYounetView()
         {
-            return View();
+            BaseViewModel model = new BaseViewModel();
+            model.Action = "UploadYounetView";
+            return View(model);
         }
         public IActionResult ViewContent(int ID)
         {
@@ -1687,7 +1697,7 @@ namespace Commsights.MVC.Controllers
                         {
                             workSheet.Cells[row, i].Value = listData[index].Description + "|" + listData[index].DescriptionEnglish;
                             workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                        }                        
+                        }
                         workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
                         workSheet.Cells[row, i].Style.Font.Size = 11;
                         workSheet.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
@@ -2686,9 +2696,7 @@ namespace Commsights.MVC.Controllers
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
         }
         public ActionResult UploadScan(Commsights.MVC.Models.BaseViewModel baseViewModel)
-        {
-            string action = "Upload";
-            string controller = "Report";
+        {            
             try
             {
                 if (Request.Form.Files.Count > 0)
@@ -2934,6 +2942,10 @@ namespace Commsights.MVC.Controllers
                                                                 }
 
                                                             }
+                                                            else
+                                                            {
+                                                                isCompany = false;
+                                                            }
                                                             if (isCompany == false)
                                                             {
                                                                 ProductProperty productProperty = new ProductProperty();
@@ -2965,12 +2977,10 @@ namespace Commsights.MVC.Controllers
             catch
             {
             }
-            return RedirectToAction(action, controller);
+            return RedirectToAction(baseViewModel.Action);
         }
         public ActionResult UploadAndiSource(Commsights.MVC.Models.BaseViewModel baseViewModel)
-        {
-            string action = "Upload";
-            string controller = "Report";
+        {          
             try
             {
                 if (Request.Form.Files.Count > 0)
@@ -3159,6 +3169,7 @@ namespace Commsights.MVC.Controllers
                                                             }
                                                         }
                                                         Product product = _productRepository.GetByImageThumbnail(model.ImageThumbnail);
+                                                        bool urlCode = true;
                                                         if (product == null)
                                                         {
                                                             model.GUICode = AppGlobal.InitGuiCode;
@@ -3167,20 +3178,27 @@ namespace Commsights.MVC.Controllers
                                                             _productRepository.Create(model);
                                                             product = model;
                                                         }
+                                                        else
+                                                        {
+                                                            urlCode = false;
+                                                        }
                                                         if (product.ID > 0)
                                                         {
-                                                            if (listProductPropertyURLCode.Count > 0)
+                                                            if (urlCode == true)
                                                             {
-                                                                product.URLCode = AppGlobal.DomainMain + "Product/ViewContent/" + product.ID;
-                                                                _productRepository.Update(product.ID, product);
-                                                                for (int j = 0; j < listProductPropertyURLCode.Count; j++)
+                                                                if (listProductPropertyURLCode.Count > 0)
                                                                 {
-                                                                    listProductPropertyURLCode[j].ParentID = product.ID;
-                                                                    listProductPropertyURLCode[j].IndustryID = product.IndustryID;
-                                                                    listProductPropertyURLCode[j].ArticleTypeID = product.ArticleTypeID;
-                                                                    listProductPropertyURLCode[j].AssessID = product.AssessID;
+                                                                    product.URLCode = AppGlobal.DomainMain + "Product/ViewContent/" + product.ID;
+                                                                    _productRepository.Update(product.ID, product);
+                                                                    for (int j = 0; j < listProductPropertyURLCode.Count; j++)
+                                                                    {
+                                                                        listProductPropertyURLCode[j].ParentID = product.ID;
+                                                                        listProductPropertyURLCode[j].IndustryID = product.IndustryID;
+                                                                        listProductPropertyURLCode[j].ArticleTypeID = product.ArticleTypeID;
+                                                                        listProductPropertyURLCode[j].AssessID = product.AssessID;
+                                                                    }
+                                                                    _productPropertyRepository.Range(listProductPropertyURLCode);
                                                                 }
-                                                                _productPropertyRepository.Range(listProductPropertyURLCode);
                                                             }
                                                             bool isCompany = true;
                                                             if (workSheet.Cells[i, 3].Value != null)
@@ -3250,6 +3268,10 @@ namespace Commsights.MVC.Controllers
                                                                     }
                                                                 }
                                                             }
+                                                            else
+                                                            {
+                                                                isCompany = false;
+                                                            }
                                                             if (isCompany == false)
                                                             {
                                                                 ProductProperty productProperty = new ProductProperty();
@@ -3283,12 +3305,10 @@ namespace Commsights.MVC.Controllers
             catch
             {
             }
-            return RedirectToAction(action, controller);
+            return RedirectToAction(baseViewModel.Action);
         }
         public ActionResult UploadYounet(Commsights.MVC.Models.BaseViewModel baseViewModel)
-        {
-            string action = "Upload";
-            string controller = "Report";
+        {            
             try
             {
                 if (Request.Form.Files.Count > 0)
@@ -3531,14 +3551,10 @@ namespace Commsights.MVC.Controllers
             catch
             {
             }
-            action = "Upload";
-            controller = "Report";
-            return RedirectToAction(action, controller);
+            return RedirectToAction(baseViewModel.Action);
         }
         public ActionResult UploadGoogleSearch(Commsights.MVC.Models.BaseViewModel baseViewModel)
-        {
-            string action = "Upload";
-            string controller = "Report";
+        {           
             try
             {
                 if (Request.Form.Files.Count > 0)
@@ -3767,6 +3783,10 @@ namespace Commsights.MVC.Controllers
                                                                         }
                                                                     }
                                                                 }
+                                                                else
+                                                                {
+                                                                    isCompany = false;
+                                                                }
                                                                 if (isCompany == false)
                                                                 {
                                                                     ProductProperty productProperty = new ProductProperty();
@@ -3800,7 +3820,7 @@ namespace Commsights.MVC.Controllers
             catch
             {
             }
-            return RedirectToAction(action, controller);
+            return RedirectToAction(baseViewModel.Action);
         }
         public ActionResult UploadAdValue()
         {

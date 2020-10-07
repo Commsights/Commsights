@@ -32,5 +32,6 @@ namespace Commsights.MVC.Models
         public DateTime DatePublishEnd { get; set; }
         public string DatePublishBeginString { get; set; }
         public string DatePublishEndString { get; set; }
+        public string Action { get; set; }
     }
 }
