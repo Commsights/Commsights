@@ -12,13 +12,23 @@
                 <form asp-action="Save" asp-controller="EmailStorage">
                     @Html.HiddenFor(Model => Model.ID)
                     <div class="row">
-                        <div class='col-md-9'>
+                        <div class='col-md-7'>
                         </div>
                         <div class='col-md-1'>
                             <button style="width:100%;" type="submit" title="Save" class="btn btn-primary">
                                 <span class="fas fa-save"></span>
                             </button>
-                        </div>                        
+                        </div>
+                        <div class='col-md-1'>
+                            <button style="width:100%;" type="submit" title="Send" class="btn btn-success" onclick="onSendMail()">
+                                <span class="fas fa-paper-plane"></span>
+                            </button>
+                        </div>
+                        <div class='col-md-1'>
+                            <a onclick="javascript:OpenWindowByURL('/EmailStorage/Preview/@Model.ID');" title="Preview" style="width:100%; cursor:pointer; color:white;" class="btn btn-success">
+                                <span class="fas fa-print"></span>
+                            </a>
+                        </div>
                         <div class='col-md-1'>
                             <a asp-route-ID="0" asp-action="Detail" asp-controller="EmailStorage" title="New page" style="width:100%;" class="btn btn-success">
                                 <span class="fas fa-plus"></span>
@@ -41,24 +51,24 @@
                                 @(Html.TextBoxFor(Model => Model.Subject, new { placeholder = "Subject", @class = "form-control" }))
                             </div>
                             <div class='form-group'>
-                                <label for='EmailFrom'>Email from</label>
-                                @(Html.TextBoxFor(Model => Model.EmailFrom, new { placeholder = "Email from", @class = "form-control" }))
+                                <label for='EmailFrom'>Email</label>
+                                @(Html.TextBoxFor(Model => Model.EmailFrom, new { placeholder = "Email", @class = "form-control" }))
                             </div>
                             <div class='form-group'>
                                 <label for='Password'>Password</label>
                                 @(Html.TextBoxFor(Model => Model.Password, new { placeholder = "Password", @class = "form-control", @type = "password" }))
                             </div>
                             <div class='form-group'>
-                                <label for='EmailTo'>Email To</label>
-                                @(Html.TextBoxFor(Model => Model.EmailTo, new { placeholder = "Email To", @class = "form-control" }))
+                                <label for='EmailTo'>To</label>
+                                @(Html.TextBoxFor(Model => Model.EmailTo, new { placeholder = "To", @class = "form-control" }))
                             </div>
                             <div class='form-group'>
-                                <label for='EmailCC'>Email CC</label>
-                                @(Html.TextBoxFor(Model => Model.EmailCC, new { placeholder = "Email CC", @class = "form-control" }))
+                                <label for='EmailCC'>CC</label>
+                                @(Html.TextBoxFor(Model => Model.EmailCC, new { placeholder = "CC", @class = "form-control" }))
                             </div>
                             <div class='form-group'>
-                                <label for='EmailBCC'>Email BCC</label>
-                                @(Html.TextBoxFor(Model => Model.EmailBCC, new { placeholder = "Email BCC", @class = "form-control" }))
+                                <label for='EmailBCC'>BCC</label>
+                                @(Html.TextBoxFor(Model => Model.EmailBCC, new { placeholder = "BCC", @class = "form-control" }))
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -103,7 +113,7 @@
                                 @(Html.TextBoxFor(Model => Model.DateRead, new { placeholder = "Date read", @class = "form-control", @disabled = "disabled" }))
                             </div>
                             <div class='form-group'>
-                                <label for='FileAttached'>File attached</label>
+                                <label for='FileAttached'>Files attached</label>
                                 <table>
                                     <tr>
                                         <td style="width:100%;" valign="top">
@@ -137,6 +147,111 @@
                 </form>
             </div>
         </div>
+
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Files attached</h3>
+            </div>
+            <div class="card-body">
+                @(Html.Kendo().Grid<Commsights.Data.Models.EmailStorageProperty>()
+.Name("EmailStorageProperty")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
+    columns.Bound(t => t.Title).Title("Title").Width(200);
+    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/EmailStorage/#=FileName#"");' class='btn btn-success' style='color:white;'><i class='fas fa-paperclip'></i></a>").Title("File").Width(70).HtmlAttributes(new { style = "text-align:center;" });
+
+})
+.ToolBar(toolBar => toolBar.Search())
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid" })
+.Search(search => { search.Field(f => f.Title); search.Field(f => f.FileName); })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.ID);
+})
+.Events(t => { t.RequestEnd("onGridRequestEnd"); })
+.Read(t => t.Action("GetParentIDAndFileToList", "EmailStorageProperty").Data("filterEmailStorageProperty"))
+.Destroy(t => t.Action("Delete", "EmailStorageProperty"))
+)
+)
+            </div>
+        </div>
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Read</h3>
+            </div>
+            <div class="card-body">
+                @(Html.Kendo().Grid<Commsights.Data.Models.EmailStorageProperty>()
+.Name("EmailStoragePropertyRead")
+.Columns(columns =>
+{
+    columns.Bound(t => t.Email).Title("Email").Width(200);
+    columns.Bound(t => t.DateRead).Title("DateRead").Width(200).Format("{0:dd/MM/yyyy HH:mm:ss}").HtmlAttributes(new { @class = "text-right" });
+})
+.ToolBar(toolBar => toolBar.Search())
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid" })
+.Search(search => { search.Field(f => f.Title); search.Field(f => f.FileName); })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.ID);
+})
+.Read(t => t.Action("GetParentIDAndEmailStorageToList", "EmailStorageProperty").Data("filterEmailStorageProperty"))
+)
+)
+            </div>
+        </div>
     </div>
 </div>
 @(Html.Kendo().Notification()
@@ -146,6 +261,20 @@
 )
 
 <script>
+    function onGridRequestEnd(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            var response = e.response;
+            var messageType = response.split('-')[0];
+            var note = response.split('-')[1];
+            var notification = $("#Notification").data("kendoNotification");
+            notification.show(note, messageType);
+            $("#EmailStorageProperty").data("kendoGrid").dataSource.read();
+        }
+    }
+    function filterEmailStorageProperty(e) {
+        var parentIDValue = $("#ID").val();
+        return { parentID: parentIDValue };
+    }
     function filterMembership(e) {
         var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
         return { industryID: industryIDValue };
@@ -169,6 +298,27 @@
             control.trigger("change");
         }
     }
-    function onCompanyChange() {        
+    function onCompanyChange() {
+    }
+    function onSendMail() {
+        BeginRequestHandler();
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("SendMailByID", "EmailStorage")",
+            data: {
+                ID: IDValue
+            },
+             success: function (e) {
+                 var messageType = e.split('-')[0];
+                 var note = e.split('-')[1];
+                 var notification = $("#Notification").data("kendoNotification");
+                 notification.show(note, messageType);
+                 EndRequestHandler();
+            }
+         }).done(() => {
+
+        });
+
     }
 </script>

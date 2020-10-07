@@ -14,11 +14,14 @@ namespace Commsights.Data.Repositories
 {
     public class EmailStoragePropertyRepository : Repository<EmailStorageProperty>, IEmailStoragePropertyRepository
     {
-        private readonly CommsightsContext _context;     
+        private readonly CommsightsContext _context;
         public EmailStoragePropertyRepository(CommsightsContext context) : base(context)
         {
             _context = context;
-       
-        }     
+        }
+        public List<EmailStorageProperty> GetParentIDAndCodeToList(int parentID, string code)
+        {
+            return _context.EmailStorageProperty.Where(item => item.ParentID == parentID && item.Code.Equals(code)).OrderBy(item => item.ID).ToList();
+        }
     }
 }

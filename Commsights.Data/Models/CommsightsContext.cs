@@ -24,6 +24,8 @@ namespace Commsights.Data.Models
         public virtual DbSet<ProductProperty> ProductProperty { get; set; }
         public virtual DbSet<ProductSearch> ProductSearch { get; set; }
         public virtual DbSet<ProductSearchProperty> ProductSearchProperty { get; set; }
+        public virtual DbSet<EmailStorage> EmailStorage { get; set; }
+        public virtual DbSet<EmailStorageProperty> EmailStorageProperty { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

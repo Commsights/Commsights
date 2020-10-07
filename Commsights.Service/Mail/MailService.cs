@@ -33,7 +33,7 @@ namespace Commsights.Service.Mail
                 if (mail.STMPServer.Contains("mail.commsightsvn.com") == true)
                 {
                     client.EnableSsl = false;
-                }                
+                }
                 return client;
             }
             return null;
@@ -63,7 +63,18 @@ namespace Commsights.Service.Mail
                         }
                     }
                 }
-                message.To.Add(mail.ToMail);
+                if (!string.IsNullOrEmpty(mail.ToMail))
+                {
+                    message.To.Add(mail.ToMail);
+                }
+                if (!string.IsNullOrEmpty(mail.CCMail))
+                {
+                    message.CC.Add(mail.CCMail);
+                }
+                if (!string.IsNullOrEmpty(mail.BCCMail))
+                {
+                    message.Bcc.Add(mail.BCCMail);
+                }
                 return message;
             }
             return null;

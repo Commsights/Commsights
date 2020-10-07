@@ -80,7 +80,7 @@ namespace Commsights.MVC.Controllers
         public IActionResult Index(int industryID, string datePublishBeginString, string datePublishEndString)
         {
             BaseViewModel model = new BaseViewModel();
-            model.DatePublishBegin = DateTime.Now.AddDays(-1);
+            model.DatePublishBegin = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             model.DatePublishEnd = DateTime.Now;
             model.IndustryID = AppGlobal.IndustryID;
             int day = 0;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +14,8 @@ using Commsights.Data.DataTransferObject;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using OfficeOpenXml;
+using Commsights.MVC.Models;
+using Commsights.Service.Mail;
 
 namespace Commsights.MVC.Controllers
 {
@@ -21,12 +24,13 @@ namespace Commsights.MVC.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IEmailStorageRepository _emailStorageRepository;
         private readonly IEmailStoragePropertyRepository _emailStoragePropertyRepository;
-
-        public EmailStorageController(IHostingEnvironment hostingEnvironment, IEmailStorageRepository emailStorageRepository, IEmailStoragePropertyRepository emailStoragePropertyRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
+        private readonly IMailService _mailService;
+        public EmailStorageController(IHostingEnvironment hostingEnvironment, IMailService mailService, IEmailStorageRepository emailStorageRepository, IEmailStoragePropertyRepository emailStoragePropertyRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
             _hostingEnvironment = hostingEnvironment;
             _emailStorageRepository = emailStorageRepository;
             _emailStoragePropertyRepository = emailStoragePropertyRepository;
+            _mailService = mailService;
         }
         private void Initialization(EmailStorage model)
         {
@@ -53,7 +57,10 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            BaseViewModel model = new BaseViewModel();
+            model.DatePublishBegin = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            model.DatePublishEnd = DateTime.Now;
+            return View(model);
         }
         public IActionResult Detail(int ID)
         {
@@ -67,6 +74,99 @@ namespace Commsights.MVC.Controllers
                 model = _emailStorageRepository.GetByID(ID);
             }
             return View(model);
+        }
+        public IActionResult Preview(int ID)
+        {
+            EmailStorage model = new EmailStorage();
+            if (ID > 0)
+            {
+                model = _emailStorageRepository.GetByID(ID);
+                StringBuilder txt = new StringBuilder();
+                List<EmailStorageProperty> list = _emailStoragePropertyRepository.GetParentIDAndCodeToList(model.ID, AppGlobal.File);
+                foreach (EmailStorageProperty item in list)
+                {
+                    string url = Commsights.Data.Helpers.AppGlobal.Domain + "EmailStorage/Read?ID=" + item.ID + "&email=" + model.EmailTo;
+                    txt.AppendLine(@"<a target='_blank' href='" + url + "' title='" + model.Subject + "'>" + model.Subject + "</a>");
+                }
+                model.Note = txt.ToString();
+            }
+            return View(model);
+        }
+        public IActionResult Read(int ID, string email)
+        {
+            string url = Commsights.Data.Helpers.AppGlobal.Domain + "EmailStorage/";
+            EmailStorageProperty model = new EmailStorageProperty();
+            if (ID > 0)
+            {
+                model = _emailStoragePropertyRepository.GetByID(ID);
+                url = url + model.FileName;
+                EmailStorageProperty read = new EmailStorageProperty();
+                read.Email = email;
+                read.DateRead = DateTime.Now;
+                read.ParentID = model.ParentID;
+                read.Code = AppGlobal.EmailStorage;
+                read.Initialization(InitType.Insert, RequestUserID);
+                _emailStoragePropertyRepository.Create(read);
+            }
+            return Redirect(url);
+        }
+        public IActionResult SendMailByID(int ID)
+        {
+            EmailStorage model = _emailStorageRepository.GetByID(ID);
+            if (model != null)
+            {
+                StringBuilder body = new StringBuilder();
+                StringBuilder txt = new StringBuilder();
+                List<EmailStorageProperty> list = _emailStoragePropertyRepository.GetParentIDAndCodeToList(model.ID, AppGlobal.File);
+                foreach (EmailStorageProperty item in list)
+                {
+                    string url = Commsights.Data.Helpers.AppGlobal.Domain + "EmailStorage/Read?ID=" + item.ID + "&email=" + model.EmailTo;
+                    txt.AppendLine(@"<a target='_blank' href='" + url + "' title='" + model.Subject + "'>" + model.Subject + "</a>");
+                }
+                body.AppendLine(@"<p><b>Download: " + txt.ToString() + "</b></p>");
+                body.AppendLine(@"" + model.EmailBody);
+                body.AppendLine(@"<br />");
+                body.AppendLine(@"<div style='line-height:20px;'>");
+                body.AppendLine(@"------------------------------------------------------------------------------------------------");
+                body.AppendLine(@"<br />");              
+                body.AppendLine(@"<img src='" + Commsights.Data.Helpers.AppGlobal.Logo01URLFull + "' width='30%' height='30%' title='" + Commsights.Data.Helpers.AppGlobal.CompanyTitleEnglish + "' alt='" + Commsights.Data.Helpers.AppGlobal.CompanyTitleEnglish + "' />");
+                body.AppendLine(@"<br />");
+                body.AppendLine(@"" + Commsights.Data.Helpers.AppGlobal.GoogleMapHTML);
+                body.AppendLine(@"<br />");
+                body.AppendLine(@"Tel:" + Commsights.Data.Helpers.AppGlobal.PhoneReportHTML);
+                body.AppendLine(@"<br />");
+                body.AppendLine(@"Email: " + Commsights.Data.Helpers.AppGlobal.EmailReportHTML);
+                body.AppendLine(@"<br />");
+                body.AppendLine(@"Facebook: " + Commsights.Data.Helpers.AppGlobal.FacebookHTML);
+                body.AppendLine(@"<br />");
+                body.AppendLine(@"Website: " + Commsights.Data.Helpers.AppGlobal.WebsiteHTML);
+                body.AppendLine(@"</div>");
+                Commsights.Service.Mail.Mail mail = new Service.Mail.Mail();
+                mail.Initialization();
+                mail.Content = body.ToString();
+                mail.Subject = model.Subject;
+                mail.ToMail = model.EmailTo;
+                mail.CCMail = model.EmailCC;
+                mail.BCCMail = model.EmailBCC;
+                mail.FromMail = model.EmailFrom;
+                mail.Username = model.EmailFrom;
+                mail.Password = model.Password;
+                mail.Display = model.Display;
+                //try
+                //{
+                _mailService.Send(mail);
+                //}
+                //catch (Exception e)
+                //{
+                //}
+            }
+            string note = AppGlobal.Success + " - " + AppGlobal.SendMailSuccess;
+            return Json(note);
+        }
+        public ActionResult GetDataTransferByDatePublishBeginAndDatePublishEndToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd)
+        {
+            var data = _emailStorageRepository.GetDataTransferByDatePublishBeginAndDatePublishEndToList(datePublishBegin, datePublishEnd);
+            return Json(data.ToDataSourceResult(request));
         }
         public IActionResult Delete(int ID)
         {
@@ -106,6 +206,7 @@ namespace Commsights.MVC.Controllers
             Initialization(model);
             if (model.ID > 0)
             {
+                model.Initialization(InitType.Update, RequestUserID);
                 _emailStorageRepository.Update(model.ID, model);
             }
             else
@@ -115,6 +216,7 @@ namespace Commsights.MVC.Controllers
             }
             if (model.ID > 0)
             {
+                emailStorageProperty.Code = AppGlobal.File;
                 emailStorageProperty.Title = model.Subject;
                 emailStorageProperty.ParentID = model.ID;
                 emailStorageProperty.Initialization(InitType.Insert, RequestUserID);

@@ -27,6 +27,8 @@ namespace Commsights.Service.Mail
         public string Display { get; set; }
 
         public string ToMail { get; set; }
+        public string CCMail { get; set; }
+        public string BCCMail { get; set; }
 
         public string Subject { get; set; }
 
@@ -36,7 +38,7 @@ namespace Commsights.Service.Mail
 
         public string STMPServer { get; set; }
 
-        public int SMTPPort { get; set; }        
+        public int SMTPPort { get; set; }
 
         public bool IsUsingSSL { get; set; }
 
@@ -68,7 +70,10 @@ namespace Commsights.Service.Mail
             {
                 this.Subject = AppGlobal.MasterEmailSubject;
             }
-            this.SMTPPort = AppGlobal.SMTPPort;
+            if (this.SMTPPort == 0)
+            {
+                this.SMTPPort = AppGlobal.SMTPPort;
+            }
             this.IsMailBodyHtml = true;
             this.IsUsingSSL = true;
         }
