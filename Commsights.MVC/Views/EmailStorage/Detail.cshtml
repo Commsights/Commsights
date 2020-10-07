@@ -20,9 +20,9 @@
                             </button>
                         </div>
                         <div class='col-md-1'>
-                            <button style="width:100%;" type="submit" title="Send" class="btn btn-success" onclick="onSendMail()">
+                            <a onclick="onSendMail()" title="Send" style="width:100%; cursor:pointer; color:white;" class="btn btn-success">
                                 <span class="fas fa-paper-plane"></span>
-                            </button>
+                            </a>
                         </div>
                         <div class='col-md-1'>
                             <a onclick="javascript:OpenWindowByURL('/EmailStorage/Preview/@Model.ID');" title="Preview" style="width:100%; cursor:pointer; color:white;" class="btn btn-success">
