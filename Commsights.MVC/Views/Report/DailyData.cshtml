@@ -42,12 +42,17 @@
                         </button>
                     </div>
                     <div class='col-sm-1'>
+                        <button type="button" class="btn btn-success" title="Preview" onclick="onPreview()">
+                            <span class="fas fa-print"></span>
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" title="Excel" onclick="onExcel()">
                             <span class="fas fa-file-excel"></span>
                         </button>
                     </div>
                     <div class='col-sm-1'>
-                        <button type="button" class="btn btn-info" title="Preview" onclick="onPreview()">
+                        <button type="button" class="btn btn-info" title="Next" onclick="onNext()">
                             <span class="fas fa-arrow-right"></span>
                         </button>
                     </div>
@@ -55,8 +60,7 @@
                 <br />
                 <div class="row">
                     <div id="DataMain" class='col-sm-12'></div>
-                </div>
-                <br />
+                </div>               
                 @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ProductDataTransfer>()
 .Name("ProductDataTransfer")
 .Columns(columns =>
@@ -278,7 +282,7 @@
         GetByIndustryIDAndParrentIDToList();
         $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
     }
-    function onPreview() {
+    function onNext() {
         var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
         var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
         var datePublishEndValue = toDate02($("#DatePublishEnd").val());
@@ -288,6 +292,17 @@
         datePublishEndValue = datePublishEndValue.replace("/", "-");
         var url = "/Report/DailyPreview?industryID=" + industryIDValue + "&datePublishBeginString=" + datePublishBeginValue + "&datePublishEndString=" + datePublishEndValue;
         window.location.replace(url);
+    }
+    function onPreview() {
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
+        var datePublishEndValue = toDate02($("#DatePublishEnd").val());
+        datePublishBeginValue = datePublishBeginValue.replace("/", "-");
+        datePublishBeginValue = datePublishBeginValue.replace("/", "-");
+        datePublishEndValue = datePublishEndValue.replace("/", "-");
+        datePublishEndValue = datePublishEndValue.replace("/", "-");
+        var url = "/Report/DailyPrintPreviewByIndustryIDAndDatePublishBeginAndDatePublishEnd?industryID=" + industryIDValue + "&datePublishBeginString=" + datePublishBeginValue + "&datePublishEndString=" + datePublishEndValue;
+        OpenWindowByURL(url);
     }
     function onExcel() {
         BeginRequestHandler();

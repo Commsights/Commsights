@@ -1,0 +1,44 @@
+﻿@{ Layout = "~/Views/Shared/_LayoutWindowPrintPreview.cshtml";
+
+    ViewData["Title"] = "Repoer daily preview";
+}
+
+@model Commsights.MVC.Models.BaseViewModel
+<style>
+    body {
+        margin: 0px; /* this affects the margin on the content before sending to printer */
+        font-family: 'Times New Roman';
+    }
+
+    * {
+        -webkit-print-color-adjust: exact !important; /*Chrome, Safari */
+        color-adjust: exact !important; /*Firefox*/
+    }
+
+    .border, .border td, .border th {
+        border-color: #000000;
+        border-style: solid;
+        border-width: 1px;
+        padding: 4px;      
+    }
+
+    .border {
+        border-collapse: collapse;
+    }
+
+        .border th {
+            text-align: center;
+        }
+
+        .border td {
+            text-align: right;
+        }
+
+        .border .text {
+            text-align: left;
+        }
+</style>
+
+<div style="width: 1400px; min-height: 960px; padding: 40px; margin: auto; background-color: #ffffff;">
+    @Html.Raw(Model.Content)
+</div>

@@ -119,6 +119,48 @@ namespace Commsights.MVC.Controllers
             _reportRepository.UpdateProductByDatePublishBeginAndDatePublishEndAndIndustryID(model.DatePublishBegin, model.DatePublishEnd, model.IndustryID);
             return View(model);
         }
+        public IActionResult DailyData(int industryID, string datePublishBeginString, string datePublishEndString)
+        {
+            BaseViewModel model = new BaseViewModel();
+            model.DatePublishBegin = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            model.DatePublishEnd = DateTime.Now;
+            model.IndustryID = AppGlobal.IndustryID;
+            int day = 0;
+            int month = 0;
+            int year = 0;
+            if (industryID > 0)
+            {
+                model.IndustryID = industryID;
+            }
+            if (!string.IsNullOrEmpty(datePublishBeginString))
+            {
+                try
+                {
+                    day = int.Parse(datePublishBeginString.Split('-')[2]);
+                    month = int.Parse(datePublishBeginString.Split('-')[1]);
+                    year = int.Parse(datePublishBeginString.Split('-')[0]);
+                    model.DatePublishBegin = new DateTime(year, month, day);
+                }
+                catch
+                {
+                }
+            }
+            if (!string.IsNullOrEmpty(datePublishEndString))
+            {
+                try
+                {
+                    day = int.Parse(datePublishEndString.Split('-')[2]);
+                    month = int.Parse(datePublishEndString.Split('-')[1]);
+                    year = int.Parse(datePublishEndString.Split('-')[0]);
+                    model.DatePublishEnd = new DateTime(year, month, day);
+                }
+                catch
+                {
+                }
+            }
+            _reportRepository.UpdateProductByDatePublishBeginAndDatePublishEndAndIndustryID(model.DatePublishBegin, model.DatePublishEnd, model.IndustryID);
+            return View(model);
+        }
         public IActionResult DailyPreview(int industryID, string datePublishBeginString, string datePublishEndString)
         {
             int day = 0;
@@ -223,6 +265,129 @@ namespace Commsights.MVC.Controllers
                 model = _productSearchRepository.GetDataTransferByID(ID);
                 model = InitializationReportDailyHTML(model, "ReportDailySub.html");
             }
+            return View(model);
+        }
+        public IActionResult DailyPrintPreviewByIndustryIDAndDatePublishBeginAndDatePublishEnd(int industryID, string datePublishBeginString, string datePublishEndString)
+        {
+            DateTime datePublishBegin = DateTime.Now;
+            DateTime datePublishEnd = DateTime.Now;
+            int day = 0;
+            int month = 0;
+            int year = 0;
+            if (!string.IsNullOrEmpty(datePublishBeginString))
+            {
+                try
+                {
+                    day = int.Parse(datePublishBeginString.Split('-')[2]);
+                    month = int.Parse(datePublishBeginString.Split('-')[1]);
+                    year = int.Parse(datePublishBeginString.Split('-')[0]);
+                    datePublishBegin = new DateTime(year, month, day);
+                }
+                catch
+                {
+                }
+            }
+            if (!string.IsNullOrEmpty(datePublishEndString))
+            {
+                try
+                {
+                    day = int.Parse(datePublishEndString.Split('-')[2]);
+                    month = int.Parse(datePublishEndString.Split('-')[1]);
+                    year = int.Parse(datePublishEndString.Split('-')[0]);
+                    datePublishEnd = new DateTime(year, month, day);
+                }
+                catch
+                {
+                }
+            }
+            BaseViewModel model = new BaseViewModel();
+            List<Config> listDailyReportColumn = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.DailyReportColumn);
+            List<ProductDataTransfer> listData = _reportRepository.GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
+            StringBuilder txt = new StringBuilder();
+            txt.AppendLine(@"<div style='text-align: center;'>DAILY REPORT (" + DateTime.Now.ToString("dd/MM/yyyy") + ")</div>");
+            txt.AppendLine(@"<table class='border' width='1300px' style='font-size:11; font-family: Times New Roman;'>");
+            txt.AppendLine(@"<thead>");
+            int column = 1;
+            foreach (Config item in listDailyReportColumn)
+            {
+                txt.AppendLine(@"<th style='color: #ffffff; background-color: #c00000;'>" + item.CodeName + "</th>");
+                column = column + 1;
+            }
+            txt.AppendLine(@"<thead>");
+            txt.AppendLine(@"<tbody>");
+            int index = 0;
+            for (int row = 4; row <= listData.Count + 3; row++)
+            {
+                txt.AppendLine(@"<tr>");
+                for (int i = 1; i < column; i++)
+                {
+                    if (i == 1)
+                    {
+                        txt.AppendLine(@"<td style='text-align: right;'>" + listData[index].DatePublishString + "</td>");
+                    }
+                    if (i == 2)
+                    {
+                        txt.AppendLine(@"<td>" + listData[index].ArticleTypeName + "</td>");
+                    }
+                    if (i == 3)
+                    {
+                        txt.AppendLine(@"<td>" + listData[index].SegmentName + "</td>");
+                    }
+                    if (i == 4)
+                    {
+                        txt.AppendLine(@"<td></td>");
+
+                    }
+                    if (i == 5)
+                    {
+                        txt.AppendLine(@"<td>" + listData[index].CompanyName + "</td>");
+                    }
+                    if (i == 6)
+                    {
+                        txt.AppendLine(@"<td>" + listData[index].ProductName + "</td>");
+                    }
+                    if (i == 7)
+                    {
+                        txt.AppendLine(@"<td>" + listData[index].AssessName + "</td>");
+                    }
+                    if (i == 8)
+                    {
+                        string url = "<a style='color: blue; cursor: pointer;' target='_blank' href='" + listData[index].URLCode + "' title='" + listData[index].Title + "'>" + listData[index].Title + "</a>";
+                        txt.AppendLine(@"<td>" + url + "</td>");
+                    }
+                    if (i == 9)
+                    {
+                        string url = "<a style='color: blue; cursor: pointer;' target='_blank' href='" + listData[index].URLCode + "' title='" + listData[index].TitleEnglish + "'>" + listData[index].TitleEnglish + "</a>";
+                        txt.AppendLine(@"<td>" + url + "</td>");
+                    }
+                    if (i == 10)
+                    {
+                        txt.AppendLine(@"<td>" + listData[index].Media + "</td>");
+                    }
+                    if (i == 11)
+                    {
+                        txt.AppendLine(@"<td>" + listData[index].MediaType + "</td>");
+                    }
+                    if (i == 12)
+                    {
+                        txt.AppendLine(@"<td>" + listData[index].Page + "</td>");
+                    }
+                    if (i == 13)
+                    {
+                        txt.AppendLine(@"<td style='text-align: right;'>" + listData[index].AdvertisementValue + "</td>");
+                    }
+                    if (i == 14)
+                    {
+                        txt.AppendLine(@"<td>" + listData[index].Description + "|" + listData[index].DescriptionEnglish + "</td>");
+                    }
+
+                }
+                txt.AppendLine(@"</tr>");
+                index = index + 1;
+            }
+            txt.AppendLine(@"<tbody>");
+            txt.AppendLine(@"</table>");
+            model.Content = txt.ToString();
             return View(model);
         }
         public IActionResult SendMailReportDailyByProductSearchID(int productSearchID)
