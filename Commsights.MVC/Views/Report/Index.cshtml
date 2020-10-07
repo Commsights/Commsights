@@ -35,17 +35,22 @@
                             )
                     </div>
                     <div class='col-sm-1'>
-                        <button type="button" class="btn btn-success" onclick="onSearch()">
+                        <button type="button" class="btn btn-success" title="Search" onclick="onSearch()">
                             <span class="fas fa-search"></span>
                         </button>
                     </div>
                     <div class='col-sm-1'>
-                        <button type="button" class="btn btn-danger" onclick="onDelete()">
+                        <button type="button" class="btn btn-danger" title="Delete" onclick="onDelete()">
                             <span class="fas fa-trash-alt"></span>
                         </button>
                     </div>
                     <div class='col-sm-1'>
-                        <button type="button" class="btn btn-info" onclick="onPreview()">
+                        <button type="button" class="btn btn-success" title="Excel" onclick="onExcel()">
+                            <span class="fas fa-file-excel"></span>
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" title="Preview" onclick="onPreview()">
                             <span class="fas fa-arrow-right"></span>
                         </button>
                     </div>
@@ -164,7 +169,7 @@
                 data: {
                     industryID: industryIDValue,
                     datePublishBegin: datePublishBeginValue,
-                    datePublishEnd: datePublishEndValue                    
+                    datePublishEnd: datePublishEndValue
                 },
                 success: function () { }
             }).done(() => {
@@ -286,5 +291,18 @@
         datePublishEndValue = datePublishEndValue.replace("/", "-");
         var url = "/Report/DailyPreview?industryID=" + industryIDValue + "&datePublishBeginString=" + datePublishBeginValue + "&datePublishEndString=" + datePublishEndValue;
         window.location.replace(url);
+    }
+    function onExcel() {
+        BeginRequestHandler();
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
+        var datePublishEndValue = toDate02($("#DatePublishEnd").val());
+        datePublishBeginValue = datePublishBeginValue.replace("/", "-");
+        datePublishBeginValue = datePublishBeginValue.replace("/", "-");
+        datePublishEndValue = datePublishEndValue.replace("/", "-");
+        datePublishEndValue = datePublishEndValue.replace("/", "-");
+        var url = "/Report/ExportExcelReportDailyByDatePublishBeginAndDatePublishEndAndIndustryID?industryID=" + industryIDValue + "&datePublishBeginString=" + datePublishBeginValue + "&datePublishEndString=" + datePublishEndValue;
+        window.location.replace(url);
+        EndRequestHandler();
     }
 </script>

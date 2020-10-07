@@ -572,11 +572,11 @@ namespace Commsights.MVC.Controllers
                                     {
                                         if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
                                         {
-                                            workSheet.Cells[row, 10].Value = listData[index].Description;
+                                            workSheet.Cells[row, i].Value = listData[index].Description;
                                         }
                                         else
                                         {
-                                            workSheet.Cells[row, 10].Value = listData[index].DescriptionEnglish;
+                                            workSheet.Cells[row, i].Value = listData[index].DescriptionEnglish;
                                         }
                                         workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                                         workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
@@ -1536,6 +1536,179 @@ namespace Commsights.MVC.Controllers
             }
             model.Note = html;
             return model;
+        }
+        public IActionResult ExportExcelReportDailyByDatePublishBeginAndDatePublishEndAndIndustryID(CancellationToken cancellationToken, string datePublishBeginString, string datePublishEndString, int industryID)
+        {
+            DateTime datePublishBegin = DateTime.Now;
+            DateTime datePublishEnd = DateTime.Now;
+            int day = 0;
+            int month = 0;
+            int year = 0;
+            if (!string.IsNullOrEmpty(datePublishBeginString))
+            {
+                try
+                {
+                    day = int.Parse(datePublishBeginString.Split('-')[2]);
+                    month = int.Parse(datePublishBeginString.Split('-')[1]);
+                    year = int.Parse(datePublishBeginString.Split('-')[0]);
+                    datePublishBegin = new DateTime(year, month, day);
+                }
+                catch
+                {
+                }
+            }
+            if (!string.IsNullOrEmpty(datePublishEndString))
+            {
+                try
+                {
+                    day = int.Parse(datePublishEndString.Split('-')[2]);
+                    month = int.Parse(datePublishEndString.Split('-')[1]);
+                    year = int.Parse(datePublishEndString.Split('-')[0]);
+                    datePublishEnd = new DateTime(year, month, day);
+                }
+                catch
+                {
+                }
+            }
+            string excelName = @"ReportDaily_" + AppGlobal.DateTimeCode + ".xlsx";
+            var stream = new MemoryStream();
+            Color color = Color.FromArgb(int.Parse("#c00000".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));
+            List<Config> listDailyReportColumn = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.DailyReportColumn);
+            List<ProductDataTransfer> listData = _reportRepository.GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
+            using (var package = new ExcelPackage(stream))
+            {
+                var workSheet = package.Workbook.Worksheets.Add("Sheet1");
+                workSheet.Cells[1, 5].Value = "DAILY REPORT (" + DateTime.Now.ToString("dd/MM/yyyy") + ")";
+                workSheet.Cells[1, 5].Style.Font.Bold = true;
+                workSheet.Cells[1, 5].Style.Font.Size = 12;
+                workSheet.Cells[1, 5].Style.Font.Name = "Times New Roman";
+                workSheet.Cells[1, 5].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                int column = 1;
+                foreach (Config item in listDailyReportColumn)
+                {
+                    workSheet.Cells[3, column].Value = item.CodeName;
+                    workSheet.Cells[3, column].Style.Font.Bold = true;
+                    workSheet.Cells[3, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    workSheet.Cells[3, column].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                    workSheet.Cells[3, column].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    workSheet.Cells[3, column].Style.Fill.BackgroundColor.SetColor(color);
+                    workSheet.Cells[3, column].Style.Font.Name = "Times New Roman";
+                    workSheet.Cells[3, column].Style.Font.Size = 11;
+                    workSheet.Cells[3, column].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    workSheet.Cells[3, column].Style.Border.Top.Color.SetColor(Color.Black);
+                    workSheet.Cells[3, column].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    workSheet.Cells[3, column].Style.Border.Left.Color.SetColor(Color.Black);
+                    workSheet.Cells[3, column].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    workSheet.Cells[3, column].Style.Border.Right.Color.SetColor(Color.Black);
+                    workSheet.Cells[3, column].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    workSheet.Cells[3, column].Style.Border.Bottom.Color.SetColor(Color.Black);
+                    column = column + 1;
+                }
+                int index = 0;
+                for (int row = 4; row <= listData.Count + 3; row++)
+                {
+                    for (int i = 1; i < column; i++)
+                    {
+                        if (i == 1)
+                        {
+                            workSheet.Cells[row, i].Value = listData[index].DatePublishString;
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        }
+                        if (i == 2)
+                        {
+                            workSheet.Cells[row, i].Value = listData[index].ArticleTypeName;
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        }
+                        if (i == 3)
+                        {
+                            workSheet.Cells[row, i].Value = listData[index].SegmentName;
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        }
+                        if (i == 4)
+                        {
+                            workSheet.Cells[row, i].Value = "";
+                        }
+                        if (i == 5)
+                        {
+                            workSheet.Cells[row, i].Value = listData[index].CompanyName;
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        }
+                        if (i == 6)
+                        {
+                            workSheet.Cells[row, i].Value = listData[index].ProductName;
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        }
+                        if (i == 7)
+                        {
+                            workSheet.Cells[row, i].Value = listData[index].AssessName;
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        }
+                        if (i == 8)
+                        {
+                            workSheet.Cells[row, i].Value = listData[index].Title;
+                            if (!string.IsNullOrEmpty(listData[index].Title))
+                            {
+                                workSheet.Cells[row, i].Hyperlink = new Uri(listData[index].URLCode);
+                                workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                            }
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        }
+                        if (i == 9)
+                        {
+                            workSheet.Cells[row, i].Value = listData[index].TitleEnglish;
+                            if (!string.IsNullOrEmpty(listData[index].TitleEnglish))
+                            {
+                                workSheet.Cells[row, i].Hyperlink = new Uri(listData[index].URLCode);
+                                workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                            }
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        }
+                        if (i == 10)
+                        {
+                            workSheet.Cells[row, i].Value = listData[index].Media;
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        }
+                        if (i == 11)
+                        {
+                            workSheet.Cells[row, i].Value = listData[index].MediaType;
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        }
+                        if (i == 12)
+                        {
+                            workSheet.Cells[row, i].Value = listData[index].Page;
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        }
+                        if (i == 13)
+                        {
+                            workSheet.Cells[row, i].Value = listData[index].AdvertisementValue;
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        }
+                        if (i == 14)
+                        {
+                            workSheet.Cells[row, i].Value = listData[index].Description + "|" + listData[index].DescriptionEnglish;
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        }                        
+                        workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
+                        workSheet.Cells[row, i].Style.Font.Size = 11;
+                        workSheet.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[row, i].Style.Border.Top.Color.SetColor(Color.Black);
+                        workSheet.Cells[row, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[row, i].Style.Border.Left.Color.SetColor(Color.Black);
+                        workSheet.Cells[row, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[row, i].Style.Border.Right.Color.SetColor(Color.Black);
+                        workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
+                    }
+                    index = index + 1;
+                }
+                for (int i = 1; i < column; i++)
+                {
+                    workSheet.Column(i).AutoFit();
+                }
+                package.Save();
+            }
+            stream.Position = 0;
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
         }
         public IActionResult Daily()
         {
@@ -3038,7 +3211,7 @@ namespace Commsights.MVC.Controllers
                                                                         membership.Initialization(InitType.Insert, RequestUserID);
                                                                         _membershipRepository.Create(membership);
                                                                         MembershipPermission membershipPermission = new MembershipPermission();
-                                                                        membershipPermission.MembershipID = company.ID;
+                                                                        membershipPermission.MembershipID = membership.ID;
                                                                         membershipPermission.IndustryID = baseViewModel.IndustryIDUploadScan;
                                                                         membershipPermission.Code = AppGlobal.Industry;
                                                                         membershipPermission.Initialization(InitType.Insert, RequestUserID);
@@ -3629,9 +3802,6 @@ namespace Commsights.MVC.Controllers
             }
             return RedirectToAction(action, controller);
         }
-
-
-
         public ActionResult UploadAdValue()
         {
             string action = "Upload";
