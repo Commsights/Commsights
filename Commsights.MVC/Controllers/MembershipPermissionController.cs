@@ -17,9 +17,9 @@ namespace Commsights.MVC.Controllers
 {
     public class MembershipPermissionController : BaseController
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IMembershipPermissionRepository _membershipPermissionRepository;
-        public MembershipPermissionController(IHostingEnvironment hostingEnvironment, IMembershipPermissionRepository membershipPermissionRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
+        public MembershipPermissionController(IWebHostEnvironment hostingEnvironment, IMembershipPermissionRepository membershipPermissionRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
             _hostingEnvironment = hostingEnvironment;
             _membershipPermissionRepository = membershipPermissionRepository;

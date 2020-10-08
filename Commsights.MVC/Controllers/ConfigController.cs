@@ -18,10 +18,10 @@ namespace Commsights.MVC.Controllers
 {
     public class ConfigController : BaseController
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IConfigRepository _configResposistory;
 
-        public ConfigController(IHostingEnvironment hostingEnvironment, IConfigRepository configResposistory, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
+        public ConfigController(IWebHostEnvironment hostingEnvironment, IConfigRepository configResposistory, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
             _hostingEnvironment = hostingEnvironment;
             _configResposistory = configResposistory;

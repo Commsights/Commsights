@@ -23,7 +23,7 @@ namespace Commsights.MVC.Controllers
 {
     public class ProductController : BaseController
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IProductRepository _productRepository;
         private readonly IProductPropertyRepository _productPropertyRepository;
         private readonly IConfigRepository _configResposistory;
@@ -31,7 +31,7 @@ namespace Commsights.MVC.Controllers
         private readonly IMembershipPermissionRepository _membershipPermissionRepository;
         private readonly IProductSearchRepository _productSearchRepository;
         private readonly IProductSearchPropertyRepository _productSearchPropertyRepository;
-        public ProductController(IHostingEnvironment hostingEnvironment, IProductRepository productRepository, IProductPropertyRepository productPropertyRepository, IProductSearchRepository productSearchRepository, IProductSearchPropertyRepository productSearchPropertyRepository, IConfigRepository configResposistory, IMembershipRepository membershipRepository, IMembershipPermissionRepository membershipPermissionRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
+        public ProductController(IWebHostEnvironment hostingEnvironment, IProductRepository productRepository, IProductPropertyRepository productPropertyRepository, IProductSearchRepository productSearchRepository, IProductSearchPropertyRepository productSearchPropertyRepository, IConfigRepository configResposistory, IMembershipRepository membershipRepository, IMembershipPermissionRepository membershipPermissionRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
             _hostingEnvironment = hostingEnvironment;
             _productRepository = productRepository;

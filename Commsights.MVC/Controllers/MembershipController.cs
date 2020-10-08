@@ -22,12 +22,12 @@ namespace Commsights.MVC.Controllers
 {
     public class MembershipController : BaseController
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IMembershipRepository _membershipRepository;
         private readonly IMembershipPermissionRepository _membershipPermissionRepository;
         private readonly IConfigRepository _configResposistory;
 
-        public MembershipController(IHostingEnvironment hostingEnvironment, IMembershipPermissionRepository membershipPermissionRepository, IMembershipRepository membershipRepository, IConfigRepository configResposistory, ICompositeViewEngine viewEngine, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
+        public MembershipController(IWebHostEnvironment hostingEnvironment, IMembershipPermissionRepository membershipPermissionRepository, IMembershipRepository membershipRepository, IConfigRepository configResposistory, ICompositeViewEngine viewEngine, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
             _hostingEnvironment = hostingEnvironment;
             _membershipRepository = membershipRepository;

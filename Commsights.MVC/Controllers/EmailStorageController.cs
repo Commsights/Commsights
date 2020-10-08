@@ -21,11 +21,11 @@ namespace Commsights.MVC.Controllers
 {
     public class EmailStorageController : BaseController
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IEmailStorageRepository _emailStorageRepository;
         private readonly IEmailStoragePropertyRepository _emailStoragePropertyRepository;
         private readonly IMailService _mailService;
-        public EmailStorageController(IHostingEnvironment hostingEnvironment, IMailService mailService, IEmailStorageRepository emailStorageRepository, IEmailStoragePropertyRepository emailStoragePropertyRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
+        public EmailStorageController(IWebHostEnvironment hostingEnvironment, IMailService mailService, IEmailStorageRepository emailStorageRepository, IEmailStoragePropertyRepository emailStoragePropertyRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
             _hostingEnvironment = hostingEnvironment;
             _emailStorageRepository = emailStorageRepository;
