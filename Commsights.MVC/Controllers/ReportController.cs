@@ -1851,7 +1851,7 @@ namespace Commsights.MVC.Controllers
                 workSheet.Cells[1, 5].Style.Font.Bold = true;
                 workSheet.Cells[1, 5].Style.Font.Size = 12;
                 workSheet.Cells[1, 5].Style.Font.Name = "Times New Roman";
-                workSheet.Cells[1, 5].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;                
+                workSheet.Cells[1, 5].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                 workSheet.Cells[1, 5].Style.Font.Color.SetColor(color);
                 int rowExcel = 2;
                 if (listDataISummary.Count > 0)
@@ -1860,7 +1860,7 @@ namespace Commsights.MVC.Controllers
                     workSheet.Cells[rowExcel, 1].Style.Font.Bold = true;
                     workSheet.Cells[rowExcel, 1].Style.Font.Size = 12;
                     workSheet.Cells[rowExcel, 1].Style.Font.Name = "Times New Roman";
-                    workSheet.Cells[rowExcel, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;                    
+                    workSheet.Cells[rowExcel, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                     workSheet.Cells[rowExcel, 1].Style.Font.Color.SetColor(colorTitle);
                     workSheet.Cells[rowExcel, 1, rowExcel, 3].Merge = true;
                     rowExcel = 3;
@@ -2287,7 +2287,10 @@ namespace Commsights.MVC.Controllers
                 }
 
             }
-            _reportRepository.UpdateByCompanyIDAndTitleAndProductPropertyIDAndRequestUserID(model.CompanyID.Value, model.Title, model.ID, RequestUserID);
+            if (model.CompanyID != null)
+            {
+                _reportRepository.UpdateByCompanyIDAndTitleAndProductPropertyIDAndRequestUserID(model.CompanyID.Value, model.Title, model.ID, RequestUserID);
+            }
             string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
             return Json(note);
         }
