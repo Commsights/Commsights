@@ -897,7 +897,7 @@ namespace Commsights.MVC.Controllers
             }
             catch (Exception e)
             {
-
+                string message = e.Message;
             }
             return RedirectToAction("CustomerFiles", "Membership", new { ID = model.MembershipID });
         }

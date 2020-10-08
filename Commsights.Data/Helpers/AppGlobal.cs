@@ -2019,6 +2019,7 @@ namespace Commsights.Data.Helpers
             }
             catch (Exception e)
             {
+                string message = e.Message;
             }
         }
         public void GetAuthorFromURL(Product product)

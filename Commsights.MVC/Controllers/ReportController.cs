@@ -439,6 +439,7 @@ namespace Commsights.MVC.Controllers
                 }
                 catch (Exception e)
                 {
+                    string message = e.Message;
                 }
             }
             string note = AppGlobal.Success + " - " + AppGlobal.SendMailSuccess;
@@ -465,6 +466,7 @@ namespace Commsights.MVC.Controllers
                     }
                     catch (Exception e)
                     {
+                        string message = e.Message;
                     }
                 }
             }
@@ -2262,7 +2264,7 @@ namespace Commsights.MVC.Controllers
                     }
                     catch (Exception e)
                     {
-
+                        string message = e.Message;
                     }
                 }
                 product.Initialization(InitType.Update, RequestUserID);
@@ -3618,7 +3620,7 @@ namespace Commsights.MVC.Controllers
                                                     }
                                                     catch (Exception e)
                                                     {
-
+                                                        string message = e.Message;
                                                     }
                                                 }
                                             }
@@ -3869,6 +3871,7 @@ namespace Commsights.MVC.Controllers
                                                     }
                                                     catch (Exception e)
                                                     {
+                                                        string message = e.Message;
                                                     }
                                                 }
                                             }
@@ -4142,6 +4145,7 @@ namespace Commsights.MVC.Controllers
                                                     }
                                                     catch (Exception e)
                                                     {
+                                                        string message = e.Message;
                                                     }
                                                 }
                                             }

@@ -416,8 +416,7 @@ namespace Commsights.MVC.Controllers
             Initialization(model, 1);
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
-            int result = 0;
-            bool check = false;
+            int result = 0;            
             //Membership membership = _membershipRepository.GetByAccount(model.Account);
             //if (membership == null)
             //{
