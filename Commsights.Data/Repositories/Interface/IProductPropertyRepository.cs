@@ -8,6 +8,7 @@ namespace Commsights.Data.Repositories
 {
     public interface IProductPropertyRepository : IRepository<ProductProperty>
     {
+        public bool IsExist(ProductProperty model);
         public string InsertItemsByID(int ID);
         public string UpdateItemsWithParentIDIsZero();
         public bool IsExistByProductIDAndCodeAndCompanyID(int productID, string code, int companyID);

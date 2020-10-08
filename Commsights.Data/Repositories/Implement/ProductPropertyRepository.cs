@@ -23,6 +23,10 @@ namespace Commsights.Data.Repositories
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyUpdateItemsWithParentIDIsZero");
             return result;
         }
+        public bool IsExist(ProductProperty model)
+        {
+            return _context.ProductProperty.FirstOrDefault(item => item.ParentID == model.ParentID && item.Code.Equals(model.Code) && item.CompanyID == model.CompanyID && item.IndustryID == model.IndustryID) == null ? true : false;
+        }
         public bool IsExistByProductIDAndCodeAndCompanyID(int productID, string code, int companyID)
         {
             return _context.ProductProperty.FirstOrDefault(item => item.ProductID == productID && item.Code.Equals(code) && item.CompanyID == companyID) == null ? true : false;

@@ -3538,7 +3538,10 @@ namespace Commsights.MVC.Controllers
                                                                             productProperty.CompanyID = company.ID;
                                                                             productProperty.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
                                                                             productProperty.Code = AppGlobal.Company;
-                                                                            _productPropertyRepository.Create(productProperty);
+                                                                            if (_productPropertyRepository.IsExist(productProperty) == true)
+                                                                            {
+                                                                                _productPropertyRepository.Create(productProperty);
+                                                                            }
                                                                         }
                                                                     }
                                                                     else
@@ -3552,7 +3555,10 @@ namespace Commsights.MVC.Controllers
                                                                         productProperty.CompanyID = company.ID;
                                                                         productProperty.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
                                                                         productProperty.Code = AppGlobal.Company;
-                                                                        _productPropertyRepository.Create(productProperty);
+                                                                        if (_productPropertyRepository.IsExist(productProperty) == true)
+                                                                        {
+                                                                            _productPropertyRepository.Create(productProperty);
+                                                                        }
                                                                     }
                                                                 }
 
@@ -3571,7 +3577,10 @@ namespace Commsights.MVC.Controllers
                                                                 productProperty.AssessID = AppGlobal.AssessID;
                                                                 productProperty.Code = AppGlobal.Industry;
                                                                 productProperty.IndustryID = baseViewModel.IndustryIDUploadScan;
-                                                                _productPropertyRepository.Create(productProperty);
+                                                                if (_productPropertyRepository.IsExist(productProperty) == true)
+                                                                {
+                                                                    _productPropertyRepository.Create(productProperty);
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -3880,7 +3889,10 @@ namespace Commsights.MVC.Controllers
                                                                             productProperty.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
                                                                             productProperty.Code = AppGlobal.Company;
                                                                             productProperty.IndustryID = item.IndustryID;
-                                                                            _productPropertyRepository.Create(productProperty);
+                                                                            if (_productPropertyRepository.IsExist(productProperty) == true)
+                                                                            {
+                                                                                _productPropertyRepository.Create(productProperty);
+                                                                            }
                                                                         }
                                                                     }
                                                                     else
@@ -3894,7 +3906,10 @@ namespace Commsights.MVC.Controllers
                                                                         productProperty.CompanyID = membership.ID;
                                                                         productProperty.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
                                                                         productProperty.Code = AppGlobal.Company;
-                                                                        _productPropertyRepository.Create(productProperty);
+                                                                        if (_productPropertyRepository.IsExist(productProperty) == true)
+                                                                        {
+                                                                            _productPropertyRepository.Create(productProperty);
+                                                                        }
                                                                     }
                                                                 }
                                                             }
@@ -3912,7 +3927,10 @@ namespace Commsights.MVC.Controllers
                                                                 productProperty.ParentID = product.ID;
                                                                 productProperty.GUICode = product.GUICode;
                                                                 productProperty.IndustryID = baseViewModel.IndustryIDUploadAndiSource;
-                                                                _productPropertyRepository.Create(productProperty);
+                                                                if (_productPropertyRepository.IsExist(productProperty) == true)
+                                                                {
+                                                                    _productPropertyRepository.Create(productProperty);
+                                                                }
                                                             }
                                                             _productPropertyRepository.Initialization();
                                                         }
@@ -4161,8 +4179,11 @@ namespace Commsights.MVC.Controllers
                                                                         {
                                                                             listProductProperty[m].IndustryID = baseViewModel.IndustryIDUploadYounet;
                                                                         }
-                                                                    }
-                                                                    _productPropertyRepository.Range(listProductProperty);
+                                                                        if (_productPropertyRepository.IsExist(listProductProperty[m]) == true)
+                                                                        {
+                                                                            _productPropertyRepository.Create(listProductProperty[m]);
+                                                                        }
+                                                                    }                                                                    
                                                                     _productPropertyRepository.Initialization();
                                                                 }
                                                             }
@@ -4402,7 +4423,10 @@ namespace Commsights.MVC.Controllers
                                                                                 productProperty.CompanyID = company.ID;
                                                                                 productProperty.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
                                                                                 productProperty.Code = AppGlobal.Company;
-                                                                                _productPropertyRepository.Create(productProperty);
+                                                                                if (_productPropertyRepository.IsExist(productProperty) == true)
+                                                                                {
+                                                                                    _productPropertyRepository.Create(productProperty);
+                                                                                }
                                                                             }
                                                                         }
                                                                         else
@@ -4416,7 +4440,10 @@ namespace Commsights.MVC.Controllers
                                                                             productProperty.CompanyID = company.ID;
                                                                             productProperty.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
                                                                             productProperty.Code = AppGlobal.Company;
-                                                                            _productPropertyRepository.Create(productProperty);
+                                                                            if (_productPropertyRepository.IsExist(productProperty) == true)
+                                                                            {
+                                                                                _productPropertyRepository.Create(productProperty);
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
@@ -4434,7 +4461,10 @@ namespace Commsights.MVC.Controllers
                                                                     productProperty.AssessID = assessID;
                                                                     productProperty.Code = AppGlobal.Industry;
                                                                     productProperty.IndustryID = baseViewModel.IndustryIDUploadGoogleSearch;
-                                                                    _productPropertyRepository.Create(productProperty);
+                                                                    if (_productPropertyRepository.IsExist(productProperty) == true)
+                                                                    {
+                                                                        _productPropertyRepository.Create(productProperty);
+                                                                    }
                                                                 }
                                                                 _productPropertyRepository.Initialization();
                                                             }
