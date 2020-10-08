@@ -69,7 +69,7 @@ namespace Commsights.Data.Repositories
         }
         public List<ProductProperty> GetByParentIDAndCodeToList(int parentID, string code)
         {
-            return _context.ProductProperty.Where(item => item.ParentID == parentID && item.Code.Equals(code)).OrderBy(item => item.ID).ToList();
+            return _context.ProductProperty.Where(item => item.ParentID == parentID && item.Code.Equals(code)).OrderBy(item => item.DateUpdated).ToList();
         }
         public ProductProperty GetByID001(int ID)
         {

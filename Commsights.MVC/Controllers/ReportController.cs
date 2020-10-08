@@ -2242,7 +2242,7 @@ namespace Commsights.MVC.Controllers
                             workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                         }
                         if (i == 7)
-                        {                            
+                        {
                             if (listData[index].AssessID != null)
                             {
                                 workSheet.Cells[row, i].Value = _configResposistory.GetByID(listData[index].AssessID.Value).Note;
@@ -2564,7 +2564,6 @@ namespace Commsights.MVC.Controllers
                         _configResposistory.Update(media.ID, media);
                     }
                 }
-
             }
             if (model.CompanyID != null)
             {
@@ -3517,7 +3516,6 @@ namespace Commsights.MVC.Controllers
                                                                         {
                                                                             ProductProperty productProperty = new ProductProperty();
                                                                             productProperty.Initialization(InitType.Insert, RequestUserID);
-                                                                            productProperty.IsData = true;
                                                                             productProperty.ParentID = product.ID;
                                                                             productProperty.GUICode = product.GUICode;
                                                                             productProperty.AssessID = AppGlobal.AssessID;
@@ -3532,7 +3530,6 @@ namespace Commsights.MVC.Controllers
                                                                     {
                                                                         ProductProperty productProperty = new ProductProperty();
                                                                         productProperty.Initialization(InitType.Insert, RequestUserID);
-                                                                        productProperty.IsData = true;
                                                                         productProperty.ParentID = product.ID;
                                                                         productProperty.GUICode = product.GUICode;
                                                                         productProperty.AssessID = AppGlobal.AssessID;
@@ -3553,7 +3550,6 @@ namespace Commsights.MVC.Controllers
                                                             {
                                                                 ProductProperty productProperty = new ProductProperty();
                                                                 productProperty.Initialization(InitType.Insert, RequestUserID);
-                                                                productProperty.IsData = true;
                                                                 productProperty.ParentID = product.ID;
                                                                 productProperty.GUICode = product.GUICode;
                                                                 productProperty.ArticleTypeID = AppGlobal.TinNganhID;
@@ -3625,6 +3621,10 @@ namespace Commsights.MVC.Controllers
                                                     Product model = new Product();
                                                     model.Initialization(InitType.Insert, RequestUserID);
                                                     model.AssessID = AppGlobal.AssessID;
+                                                    if (workSheet.Cells[i, 11].Value != null)
+                                                    {
+                                                        model.Page = workSheet.Cells[i, 11].Value.ToString().Trim();
+                                                    }
                                                     try
                                                     {
                                                         if (workSheet.Cells[i, 1].Value != null)
@@ -3681,11 +3681,20 @@ namespace Commsights.MVC.Controllers
                                                         if (workSheet.Cells[i, 8].Value != null)
                                                         {
                                                             string mediaTitle = workSheet.Cells[i, 8].Value.ToString().Trim();
+                                                            mediaTitle = AppGlobal.ToUpperFirstLetter(mediaTitle);
                                                             string mediaType = "Online";
                                                             string code = AppGlobal.Website;
                                                             if (workSheet.Cells[i, 9].Value != null)
                                                             {
                                                                 mediaType = workSheet.Cells[i, 9].Value.ToString().Trim();
+                                                                if (mediaType.Contains("TV") == true)
+                                                                {
+                                                                    mediaType = "TV";
+                                                                }
+                                                                if (mediaType.Contains("Online") == true)
+                                                                {
+                                                                    mediaType = "Online";
+                                                                }
                                                             }
                                                             if (mediaType.Contains("Online") == false)
                                                             {
@@ -3848,7 +3857,6 @@ namespace Commsights.MVC.Controllers
                                                                         {
                                                                             ProductProperty productProperty = new ProductProperty();
                                                                             productProperty.Initialization(InitType.Insert, RequestUserID);
-                                                                            productProperty.IsData = true;
                                                                             productProperty.AssessID = product.AssessID;
                                                                             productProperty.ParentID = product.ID;
                                                                             productProperty.GUICode = product.GUICode;
@@ -3863,7 +3871,6 @@ namespace Commsights.MVC.Controllers
                                                                     {
                                                                         ProductProperty productProperty = new ProductProperty();
                                                                         productProperty.Initialization(InitType.Insert, RequestUserID);
-                                                                        productProperty.IsData = true;
                                                                         productProperty.AssessID = product.AssessID;
                                                                         productProperty.ParentID = product.ID;
                                                                         productProperty.GUICode = product.GUICode;
@@ -3883,7 +3890,6 @@ namespace Commsights.MVC.Controllers
                                                             {
                                                                 ProductProperty productProperty = new ProductProperty();
                                                                 productProperty.Initialization(InitType.Insert, RequestUserID);
-                                                                productProperty.IsData = true;
                                                                 productProperty.Code = AppGlobal.Industry;
                                                                 productProperty.ArticleTypeID = AppGlobal.TinNganhID;
                                                                 productProperty.AssessID = product.AssessID;
@@ -4129,7 +4135,6 @@ namespace Commsights.MVC.Controllers
                                                                     }
                                                                     for (int m = 0; m < listProductProperty.Count; m++)
                                                                     {
-                                                                        listProductProperty[m].IsData = true;
                                                                         listProductProperty[m].ParentID = model.ID;
                                                                         listProductProperty[m].AssessID = model.AssessID;
                                                                         if (listProductProperty[m].IndustryID > 0)
@@ -4372,7 +4377,6 @@ namespace Commsights.MVC.Controllers
                                                                             {
                                                                                 ProductProperty productProperty = new ProductProperty();
                                                                                 productProperty.Initialization(InitType.Insert, RequestUserID);
-                                                                                productProperty.IsData = true;
                                                                                 productProperty.ParentID = product.ID;
                                                                                 productProperty.GUICode = product.GUICode;
                                                                                 productProperty.AssessID = assessID;
@@ -4387,7 +4391,6 @@ namespace Commsights.MVC.Controllers
                                                                         {
                                                                             ProductProperty productProperty = new ProductProperty();
                                                                             productProperty.Initialization(InitType.Insert, RequestUserID);
-                                                                            productProperty.IsData = true;
                                                                             productProperty.ParentID = product.ID;
                                                                             productProperty.GUICode = product.GUICode;
                                                                             productProperty.AssessID = assessID;
@@ -4407,7 +4410,6 @@ namespace Commsights.MVC.Controllers
                                                                 {
                                                                     ProductProperty productProperty = new ProductProperty();
                                                                     productProperty.Initialization(InitType.Insert, RequestUserID);
-                                                                    productProperty.IsData = true;
                                                                     productProperty.ParentID = product.ID;
                                                                     productProperty.GUICode = product.GUICode;
                                                                     productProperty.ArticleTypeID = AppGlobal.TinNganhID;

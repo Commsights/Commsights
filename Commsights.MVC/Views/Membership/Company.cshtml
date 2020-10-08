@@ -58,7 +58,7 @@
     model.Field(t => t.ID).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetCompetitorToList", "Membership"))
+.Read(t => t.Action("GetByCompanyToList", "Membership"))
 .Destroy(t => t.Action("Delete", "Membership"))
 )
 )

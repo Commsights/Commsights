@@ -66,16 +66,17 @@ namespace Commsights.Data.Repositories
             return _context.Config.Where(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.Active.Equals(active) && item.IsMenuLeft.Equals(isMenuLeft)).OrderBy(item => item.ID).ToList();
         }
         public string UpdateByGroupNameAndCodeAndTitleAndColor(string groupName, string code, string title, int color)
-        {           
+        {
             SqlParameter[] parameters =
                        {
                 new SqlParameter("@GroupName",groupName),
                 new SqlParameter("@Code",code),
                 new SqlParameter("@Title",title),
                 new SqlParameter("@Color",color)
-            };          
+            };
             return SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ConfigUpdateByGroupNameAndCodeAndTitleAndColor", parameters);
         }
+
         public List<ConfigDataTransfer> GetDataTransferParentByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active)
         {
             List<ConfigDataTransfer> list = new List<ConfigDataTransfer>();
@@ -93,6 +94,13 @@ namespace Commsights.Data.Repositories
                 list[i].Parent.ID = list[i].ParentID;
                 list[i].Parent.TextName = list[i].ParentName;
             }
+            return list;
+        }
+        public List<Config> ToUpperFirstLetter()
+        {
+            List<Config> list = new List<Config>();
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigToUpperFirstLetter");
+            list = SQLHelper.ToList<Config>(dt);
             return list;
         }
         public List<ConfigDataTransfer> GetDataTransferWebsiteByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active)

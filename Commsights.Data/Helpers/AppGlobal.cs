@@ -1859,6 +1859,26 @@ namespace Commsights.Data.Helpers
             content = content.Trim();
             return content;
         }
+        public static string ToUpperFirstLetter(string title)
+        {
+            if (!string.IsNullOrEmpty(title))
+            {
+                string result = "";
+                string[] words = title.Split(' ');
+                foreach (string word in words)
+                {
+                    if (word.Trim() != "")
+                    {
+                        if (word.Length > 1)
+                            result += word.Substring(0, 1).ToUpper() + word.Substring(1).ToLower() + " ";
+                        else
+                            result += word.ToUpper() + " ";
+                    }
+                }
+                title = result;
+            }
+            return title;
+        }
         public static string SetName(string fileName)
         {
             string fileNameReturn = fileName;
@@ -1976,6 +1996,8 @@ namespace Commsights.Data.Helpers
                 html = webClient.DownloadString(model.ImageThumbnail);
                 if (html.Contains(@"andi.vn"))
                 {
+                    string html01 = html;
+                    html = html.Replace(@"~", @"A");
                     model.IsVideo = false;
                     string content = html;
                     if (content.Contains(@"onclick=""showVideo('"))
@@ -2014,7 +2036,7 @@ namespace Commsights.Data.Helpers
                     }
                 }
                 else
-                {       
+                {
                 }
             }
             catch (Exception e)
