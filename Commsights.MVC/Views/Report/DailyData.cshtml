@@ -5,7 +5,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="card card-primary">            
+        <div class="card card-primary">
             <div class="card-body">
                 <div class="row">
                     <div class='col-sm-2'>
@@ -65,7 +65,7 @@
                 <br />
                 <div class="row">
                     <div id="DataMain" class='col-sm-12'></div>
-                </div>               
+                </div>
                 @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ProductDataTransfer>()
 .Name("ProductDataTransfer")
 .Columns(columns =>
@@ -83,7 +83,7 @@
     columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.Description).Title("Summary").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
-    columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Title).Title("Headline (Vie)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.DatePublish).Title("Date").Format("{0:dd/MM/yyyy}").Width(120).HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.Media).Title("Media").Width(200);
     columns.Bound(t => t.AdvertisementValue).Title("Ad Value").Width(200).HtmlAttributes(new { @class = "text-right" });
@@ -125,6 +125,7 @@
 .Model(model =>
 {
     model.Id(t => t.ID);
+    model.Field(t => t.Title).Editable(false);
     model.Field(t => t.DatePublish).Editable(false);
     model.Field(t => t.Media).Editable(false);
     model.Field(t => t.MediaType).Editable(false);

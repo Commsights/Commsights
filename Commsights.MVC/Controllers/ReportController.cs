@@ -2007,7 +2007,14 @@ namespace Commsights.MVC.Controllers
                             workSheet.Cells[row, i].Value = listData[index].Title;
                             if (!string.IsNullOrEmpty(listData[index].Title))
                             {
-                                workSheet.Cells[row, i].Hyperlink = new Uri(listData[index].URLCode);
+                                try
+                                {
+                                    workSheet.Cells[row, i].Hyperlink = new Uri(listData[index].URLCode);
+                                }
+                                catch
+                                {
+
+                                }
                                 workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
                             }
                             workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
@@ -2017,7 +2024,14 @@ namespace Commsights.MVC.Controllers
                             workSheet.Cells[row, i].Value = listData[index].TitleEnglish;
                             if (!string.IsNullOrEmpty(listData[index].TitleEnglish))
                             {
-                                workSheet.Cells[row, i].Hyperlink = new Uri(listData[index].URLCode);
+                                try
+                                {
+                                    workSheet.Cells[row, i].Hyperlink = new Uri(listData[index].URLCode);
+                                }
+                                catch
+                                {
+
+                                }
                                 workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
                             }
                             workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
