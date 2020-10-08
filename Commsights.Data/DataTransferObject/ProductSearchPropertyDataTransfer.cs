@@ -54,12 +54,15 @@ namespace Commsights.Data.DataTransferObject
             get
             {
                 string result = "";
-                result = AdvertisementValue.Value.ToString("N0");
+                if (AdvertisementValue != null)
+                {
+                    result = ((decimal)AdvertisementValue.Value).ToString("N0");
+                }
                 return result;
             }
         }
         public string Page { get; set; }
-        public string DescriptionEnglish { get; set; }        
+        public string DescriptionEnglish { get; set; }
         public ModelTemplate ArticleType { get; set; }
         public ModelTemplate Company { get; set; }
         public ModelTemplate AssessType { get; set; }

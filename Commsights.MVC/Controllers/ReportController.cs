@@ -424,7 +424,7 @@ namespace Commsights.MVC.Controllers
                     }
                     if (i == 13)
                     {
-                        txt.AppendLine(@"<td style='text-align: right;'>" + listData[index].AdvertisementValue + "</td>");
+                        txt.AppendLine(@"<td style='text-align: right;'>" + listData[index].AdvertisementValueString + "</td>");
                     }
                     if (i == 14)
                     {
@@ -2053,7 +2053,7 @@ namespace Commsights.MVC.Controllers
                         }
                         if (i == 13)
                         {
-                            workSheet.Cells[row, i].Value = listData[index].AdvertisementValue;
+                            workSheet.Cells[row, i].Value = listData[index].AdvertisementValueString;
                             workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         }
                         if (i == 14)
@@ -2304,7 +2304,7 @@ namespace Commsights.MVC.Controllers
                         }
                         if (i == 13)
                         {
-                            workSheet.Cells[row, i].Value = listData[index].AdvertisementValue;
+                            workSheet.Cells[row, i].Value = listData[index].AdvertisementValueString;
                             workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         }
                         if (i == 14)
@@ -3403,6 +3403,7 @@ namespace Commsights.MVC.Controllers
                                                             parent = new Config();
                                                             parent.Title = mediaTitle;
                                                             parent.CodeName = mediaTitle;
+                                                            parent.Color = AppGlobal.AdvertisementValue;
                                                             if (workSheet.Cells[i, 12].Value != null)
                                                             {
                                                                 string type = workSheet.Cells[i, 12].Value.ToString().Trim();
@@ -3722,6 +3723,7 @@ namespace Commsights.MVC.Controllers
                                                                 parent.Code = code;
                                                                 parent.Title = mediaTitle;
                                                                 parent.CodeName = mediaTitle;
+                                                                parent.Color = AppGlobal.AdvertisementValue;
                                                                 Config parentOfParent = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.WebsiteType, mediaType);
                                                                 if (parentOfParent == null)
                                                                 {
@@ -4011,6 +4013,7 @@ namespace Commsights.MVC.Controllers
                                                                 parent.CodeName = source;
                                                                 parent.Title = source;
                                                                 parent.URLFull = source;
+                                                                parent.Color = AppGlobal.AdvertisementValue;
                                                                 _configResposistory.Create(parent);
                                                             }
                                                             model.ParentID = parent.ID;
@@ -4321,6 +4324,7 @@ namespace Commsights.MVC.Controllers
                                                                     website.Title = model.FileName;
                                                                     website.URLFull = model.FileName;
                                                                     website.ParentID = AppGlobal.ParentID;
+                                                                    website.Color = AppGlobal.AdvertisementValue;
                                                                     website.Initialization(InitType.Insert, RequestUserID);
                                                                     _configResposistory.Create(website);
                                                                 }

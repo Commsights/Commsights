@@ -28,7 +28,7 @@ namespace Commsights.Data.DataTransferObject
                 string result = "";
                 if (AdvertisementValue != null)
                 {
-                    result = AdvertisementValue.Value.ToString("N0");
+                    result = ((decimal)AdvertisementValue.Value).ToString("N0");
                 }
                 return result;
             }
