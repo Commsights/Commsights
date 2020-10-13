@@ -27,7 +27,7 @@ namespace Commsights.Data.DataTransferObject
                 string result = "";
                 if (DatePublish != null)
                 {
-                    result = DatePublish.Value.ToString("MM/dd/yyyy");
+                    result = DatePublish.ToString("MM/dd/yyyy");
                 }
                 return result;
             }
