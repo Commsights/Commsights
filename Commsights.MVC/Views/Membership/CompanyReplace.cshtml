@@ -1,0 +1,77 @@
+﻿@{ ViewData["Title"] = "Setup - Company replace"; }
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Setup - Company replace</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class='form-group'>
+                            <label for='Company'>Company source</label>
+                            @(Html.Kendo().DropDownList()
+                                    .Name("CompanySource")
+                                   .DataValueField("ID")
+                                   .DataTextField("TransferName")
+                                   .HtmlAttributes(new {@class = "form-control" })
+                                    .Filter(FilterType.Contains)
+                                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetAllCompanyToList", "Membership")))
+                                    )
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class='form-group'>
+                            <label for='Customer'>Company replace</label>
+                            @(Html.Kendo().DropDownList()
+                                    .Name("CompanyReplace")
+                                   .DataValueField("ID")
+                                   .DataTextField("TransferName")
+                                   .HtmlAttributes(new {@class = "form-control" })
+                                    .Filter(FilterType.Contains)
+                                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetAllCompanyToList", "Membership")))
+                                    )
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class='form-group'>
+                            <label for='Replace'>Replace</label>    
+                            <button type="button" class="btn btn-success" onclick="onReplace()">
+                                <span class="fas fa-tools"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+<script>
+    function onReplace() {
+        BeginRequestHandler();        
+        var companyIDSourceValue = $("#CompanySource").data("kendoDropDownList").value();
+        var companyIDReplaceValue = $("#CompanyReplace").data("kendoDropDownList").value();
+        $.ajax(
+            {
+                type: "POST",
+                datatype: "JSON",
+                url: '@Url.Action("ReplaceCompanyIDSourceToCompanyIDReplace", "Membership")',
+                data: { companyIDSource: companyIDSourceValue, companyIDReplace: companyIDReplaceValue },
+                success: function (result) {                    
+                    EndRequestHandler();
+                    var messageType = result.split('-')[0];
+                    var note = result.split('-')[1];
+                    var notification = $("#Notification").data("kendoNotification");
+                    notification.show(note, messageType);
+                },
+                error: function (jqXHR, exception) { },
+                complete: function () { },
+            });
+    }
+</script>

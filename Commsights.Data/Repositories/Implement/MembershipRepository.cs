@@ -1,4 +1,5 @@
-﻿using Commsights.Data.Helpers;
+﻿using Commsights.Data.DataTransferObject;
+using Commsights.Data.Helpers;
 using Commsights.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,26 @@ namespace Commsights.Data.Repositories
         public MembershipRepository(CommsightsContext context) : base(context)
         {
             _context = context;
+        }
+        public string ReplaceCompanyIDToCustomerID(int companyID, int customerID)
+        {
+
+            SqlParameter[] parameters =
+                  {
+                new SqlParameter("@CompanyID",companyID),
+                new SqlParameter("@CustomerID",customerID),
+            };
+            return SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_MembershipReplaceCompanyIDToCustomerID", parameters);
+        }
+        public string ReplaceCompanyIDSourceToCompanyIDReplace(int companyIDSource, int companyIDReplace)
+        {
+
+            SqlParameter[] parameters =
+                  {
+                new SqlParameter("@CompanyIDSource",companyIDSource),
+                new SqlParameter("@CompanyIDReplace",companyIDReplace),
+            };
+            return SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_MembershipReplaceCompanyIDSourceToCompanyIDReplace", parameters);
         }
         public List<Membership> GetByIndustryIDToList(int industryID)
         {
@@ -62,14 +83,41 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<MembershipDataTransfer> GetDataTransferByParentIDToList(int parentID)
+        {
+            List<MembershipDataTransfer> list = new List<MembershipDataTransfer>();
+            if (parentID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@ParentID",parentID)
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectDataTransferByParentID", parameters);
+                list = SQLHelper.ToList<MembershipDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<MembershipDataTransfer> GetAllCompanyToList()
+        {
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectAllCompany");
+            return SQLHelper.ToList<MembershipDataTransfer>(dt);
+        }
         public List<Membership> GetByCompanyToList()
         {
             return _context.Membership.Where(item => (item.ParentID == AppGlobal.ParentIDCustomer || item.ParentID == AppGlobal.ParentIDCompetitor) && (item.Active == true)).OrderBy(item => item.Account).ToList();
         }
+        public List<Membership> GetByCompanyFullToList()
+        {
+            return _context.Membership.Where(item => (item.ParentID == AppGlobal.ParentIDCustomer || item.ParentID == AppGlobal.ParentIDCompetitor)).OrderBy(item => item.Account).ToList();
+        }
+        public List<Membership> GetByCompetitorFullToList()
+        {
+            return _context.Membership.Where(item => (item.ParentID == AppGlobal.ParentIDCompetitor)).OrderBy(item => item.Account).ToList();
+        }
         public List<Membership> GetCustomerToList()
         {
             return _context.Membership.Where(item => (item.ParentID == AppGlobal.ParentIDCustomer) && (item.Active == true)).OrderBy(item => item.Account).ToList();
-        }       
+        }
         public List<Membership> GetCompetitorToList()
         {
             return _context.Membership.Where(item => (item.ParentID == AppGlobal.ParentIDCompetitor) && (item.Active == true)).OrderBy(item => item.Account).ToList();
@@ -78,7 +126,6 @@ namespace Commsights.Data.Repositories
         {
             return _context.Membership.Where(item => item.ParentID == AppGlobal.ParentIDEmployee).OrderBy(item => item.Account).ToList();
         }
-
         public bool IsExistAccount(string account)
         {
             var membership = _context.Membership.FirstOrDefault(user => user.Account.Equals(account));
@@ -145,17 +192,46 @@ namespace Commsights.Data.Repositories
         }
         public Membership GetByAccount(string account)
         {
+            string search = account.ToLower();
             Membership membership = new Membership();
             if (!string.IsNullOrEmpty(account))
             {
-                membership = _context.Membership.FirstOrDefault(item => item.Account.ToLower() == account.ToLower());
+                membership = _context.Membership.FirstOrDefault(item => item.Account.ToLower() == search);
                 if (membership == null)
                 {
-                    membership = _context.Membership.FirstOrDefault(item => item.FullName.ToLower() == account.ToLower());
+                    membership = _context.Membership.FirstOrDefault(item => item.FullName.ToLower() == search);
                 }
                 if (membership == null)
                 {
-                    membership = _context.Membership.FirstOrDefault(item => item.Website.ToLower() == account.ToLower());
+                    membership = _context.Membership.FirstOrDefault(item => item.Website.ToLower() == search);
+                }
+                if (membership == null)
+                {
+                    membership = _context.Membership.FirstOrDefault(item => item.ShortName.ToLower() == search);
+                }
+                if (membership == null)
+                {
+                    membership = _context.Membership.FirstOrDefault(item => item.EnglishName.ToLower() == search);
+                }
+                if (membership == null)
+                {
+                    membership = _context.Membership.FirstOrDefault(item => item.Account.Contains(search));
+                }
+                if (membership == null)
+                {
+                    membership = _context.Membership.FirstOrDefault(item => item.FullName.Contains(search));
+                }
+                if (membership == null)
+                {
+                    membership = _context.Membership.FirstOrDefault(item => item.Website.Contains(search));
+                }
+                if (membership == null)
+                {
+                    membership = _context.Membership.FirstOrDefault(item => item.ShortName.Contains(search));
+                }
+                if (membership == null)
+                {
+                    membership = _context.Membership.FirstOrDefault(item => item.EnglishName.Contains(search));
                 }
             }
             return membership;

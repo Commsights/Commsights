@@ -96,6 +96,14 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult CompanyToCustomer()
+        {
+            return View();
+        }
+        public IActionResult CompanyReplace()
+        {
+            return View();
+        }
         public IActionResult Customer()
         {
             return View();
@@ -124,6 +132,7 @@ namespace Commsights.MVC.Controllers
             {
                 membership = _membershipRepository.GetByID(ID);
             }
+            membership.CategoryID = ID;
             return View(membership);
         }
         public IActionResult CustomerDetailWindow(int ID)
@@ -142,6 +151,7 @@ namespace Commsights.MVC.Controllers
             {
                 membership = _membershipRepository.GetByID(ID);
             }
+            membership.CategoryID = ID;
             return View(membership);
         }
         public IActionResult Employee()
@@ -209,7 +219,21 @@ namespace Commsights.MVC.Controllers
             var data = _membershipRepository.GetAllToList();
             return Json(data.ToDataSourceResult(request));
         }
-
+        public ActionResult GetByCompetitorFullToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _membershipRepository.GetByCompetitorFullToList();
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetByCompanyFullToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _membershipRepository.GetByCompanyFullToList();
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetAllCompanyToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _membershipRepository.GetAllCompanyToList();
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetCompetitorToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _membershipRepository.GetCompetitorToList();
@@ -223,6 +247,16 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetCustomerToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _membershipRepository.GetCustomerToList();
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCustomerDataTransferToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _membershipRepository.GetDataTransferByParentIDToList(AppGlobal.ParentIDCustomer);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCompetitorDataTransferToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _membershipRepository.GetDataTransferByParentIDToList(AppGlobal.ParentIDCompetitor);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetByCompanyToList([DataSourceRequest] DataSourceRequest request)
@@ -249,6 +283,7 @@ namespace Commsights.MVC.Controllers
         {
             return Json(_membershipRepository.GetByIndustryIDAndParrentIDToList(industryID, AppGlobal.ParentIDCustomer));
         }
+
         [AcceptVerbs("Post")]
         public IActionResult SaveCompany(Membership model)
         {
@@ -416,7 +451,7 @@ namespace Commsights.MVC.Controllers
             Initialization(model, 1);
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
-            int result = 0;            
+            int result = 0;
             //Membership membership = _membershipRepository.GetByAccount(model.Account);
             //if (membership == null)
             //{
@@ -469,6 +504,18 @@ namespace Commsights.MVC.Controllers
             Response.Cookies.Delete("Password");
             HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+        public IActionResult ReplaceCompanyIDToCustomerID(int companyID, int customerID)
+        {
+            string note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            _membershipRepository.ReplaceCompanyIDToCustomerID(companyID, customerID);
+            return Json(note);
+        }
+        public IActionResult ReplaceCompanyIDSourceToCompanyIDReplace(int companyIDSource, int companyIDReplace)
+        {
+            string note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            _membershipRepository.ReplaceCompanyIDSourceToCompanyIDReplace(companyIDSource, companyIDReplace);
+            return Json(note);
         }
     }
 }

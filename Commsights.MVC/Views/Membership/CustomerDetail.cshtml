@@ -12,7 +12,19 @@
                 <form asp-action="SaveCustomer" asp-controller="Membership">
                     @Html.HiddenFor(Model => Model.ID)
                     <div class="row">
-                        <div class='col-md-8'>
+                        <div class='col-md-7'>
+                            @(Html.Kendo().DropDownListFor(Model => Model.CategoryID)
+                                   .DataValueField("ID")
+                                   .DataTextField("TransferName")
+                                   .HtmlAttributes(new {@class = "form-control" })
+                                    .Filter(FilterType.Contains)
+                                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCustomerDataTransferToList", "Membership")))
+                                    )
+                        </div>
+                        <div class='col-md-1'>
+                            <a style="width:100%; cursor:pointer; color:#ffffff;" title="Tìm" onclick="onSearch()" class="btn btn-success">
+                                <span class="fas fa-search"></span>
+                            </a>
                         </div>
                         <div class='col-md-1'>
                             <button style="width:100%;" type="submit" title="Save" class="btn btn-primary">
@@ -900,5 +912,11 @@
     function filterConfig_SegmentByIndustry(e) {
         var parentIDValue = $("#Industry").data("kendoDropDownList").value();
         return { parentID: parentIDValue };
+    }
+
+    function onSearch() {
+        var IDValue = $("#CategoryID").data("kendoDropDownList").value();
+        var url = "/Membership/CustomerDetail/" + IDValue;
+        window.location.replace(url);
     }
 </script>

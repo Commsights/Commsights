@@ -27,6 +27,22 @@ namespace Commsights.Data.Helpers
         #endregion
 
         #region AppSettings 
+        public static int DailyReportColumnSegmentID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DailyReportColumnSegmentID").Value);
+            }
+        }
+        public static int DailyReportColumnSubCatID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DailyReportColumnSubCatID").Value);
+            }
+        }
         public static int DailyReportColumnDatePublishID
         {
             get
