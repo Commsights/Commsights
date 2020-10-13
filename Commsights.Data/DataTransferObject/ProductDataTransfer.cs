@@ -20,6 +20,18 @@ namespace Commsights.Data.DataTransferObject
                 return result;
             }
         }
+        public string DatePublishStringEnglish
+        {
+            get
+            {
+                string result = "";
+                if (DatePublish != null)
+                {
+                    result = DatePublish.Value.ToString("MM/dd/yyyy");
+                }
+                return result;
+            }
+        }
         public int? AdvertisementValue { get; set; }
         public string AdvertisementValueString
         {
@@ -35,10 +47,13 @@ namespace Commsights.Data.DataTransferObject
         }
         public string Media { get; set; }
         public string MediaType { get; set; }
+        public string MediaTypeVietnamese { get; set; }
         public string Summary { get; set; }
         public int Point { get; set; }
         public string ArticleTypeName { get; set; }
+        public string ArticleTypeNameVietnamese { get; set; }
         public string AssessName { get; set; }
+        public string AssessNameVietnamese { get; set; }
         public string CompanyName { get; set; }
         public string SegmentName { get; set; }
         public string IndustryName { get; set; }

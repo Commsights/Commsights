@@ -354,7 +354,6 @@ namespace Commsights.MVC.Controllers
                 txt.AppendLine(@"<td style='text-align: center;'>" + no + "</td>");
                 for (int i = 1; i < column; i++)
                 {
-                    string articleTypeNote = _configResposistory.GetByID(listData[index].ArticleTypeID.Value).Note;
                     if (i == 1)
                     {
                         txt.AppendLine(@"<td style='text-align: right;'>" + listData[index].DatePublishString + "</td>");
@@ -363,11 +362,8 @@ namespace Commsights.MVC.Controllers
                     {
                         txt.AppendLine(@"<td style='text-align: left;'>");
                         txt.AppendLine(@"" + listData[index].ArticleTypeName + "");
-                        if (listData[index].ArticleTypeID != null)
-                        {
-                            txt.AppendLine(@"<br/>");
-                            txt.AppendLine(@"(" + articleTypeNote + ")");
-                        }
+                        txt.AppendLine(@"<br/>");
+                        txt.AppendLine(@"(" + listData[index].ArticleTypeNameVietnamese + ")");
                         txt.AppendLine(@"</td>");
                     }
                     if (i == 3)
@@ -391,11 +387,8 @@ namespace Commsights.MVC.Controllers
                         else
                         {
                             txt.AppendLine(@"" + listData[index].ArticleTypeName + "");
-                            if (listData[index].ArticleTypeID != null)
-                            {
-                                txt.AppendLine(@"<br/>");
-                                txt.AppendLine(@"(" + articleTypeNote + ")");
-                            }
+                            txt.AppendLine(@"<br/>");
+                            txt.AppendLine(@"(" + listData[index].ArticleTypeNameVietnamese + ")");
                         }
                         txt.AppendLine(@"</td>");
                     }
@@ -407,11 +400,8 @@ namespace Commsights.MVC.Controllers
                     {
                         txt.AppendLine(@"<td style='text-align: left;'>");
                         txt.AppendLine(@"" + listData[index].AssessName + "");
-                        if (listData[index].AssessID != null)
-                        {
-                            txt.AppendLine(@"<br/>");
-                            txt.AppendLine(@"(" + _configResposistory.GetByID(listData[index].AssessID.Value).Note + ")");
-                        }
+                        txt.AppendLine(@"<br/>");
+                        txt.AppendLine(@"(" + listData[index].AssessNameVietnamese + ")");
                         txt.AppendLine(@"</td>");
                     }
                     if (i == 8)
@@ -430,7 +420,11 @@ namespace Commsights.MVC.Controllers
                     }
                     if (i == 11)
                     {
-                        txt.AppendLine(@"<td style='text-align: left;'>" + listData[index].MediaType + "</td>");
+                        txt.AppendLine(@"<td style='text-align: left;'>");
+                        txt.AppendLine(@"" + listData[index].MediaType + "");
+                        txt.AppendLine(@"<br/>");
+                        txt.AppendLine(@"(" + listData[index].MediaTypeVietnamese + ")");
+                        txt.AppendLine(@"</td>");
                     }
                     if (i == 12)
                     {
@@ -759,7 +753,7 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnDatePublishID > 0) && (DailyReportColumnDatePublishIDSortOrder == i))
                                     {
-                                        workSheet.Cells[row, i].Value = listData[index].DatePublishString;
+                                        workSheet.Cells[row, i].Value = listData[index].DatePublishStringEnglish;
                                         workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                                         workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
                                         workSheet.Cells[row, i].Style.Font.Size = 11;
@@ -774,7 +768,14 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnCategoryID > 0) && (DailyReportColumnCategoryIDSortOrder == i))
                                     {
-                                        workSheet.Cells[row, i].Value = listData[index].ArticleTypeName;
+                                        if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
+                                        {
+                                            workSheet.Cells[row, i].Value = listData[index].ArticleTypeNameVietnamese;
+                                        }
+                                        else
+                                        {
+                                            workSheet.Cells[row, i].Value = listData[index].ArticleTypeName;
+                                        }
                                         workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                                         workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
                                         workSheet.Cells[row, i].Style.Font.Size = 11;
@@ -796,7 +797,14 @@ namespace Commsights.MVC.Controllers
                                         }
                                         else
                                         {
-                                            workSheet.Cells[row, i].Value = listData[index].ArticleTypeName;
+                                            if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
+                                            {
+                                                workSheet.Cells[row, i].Value = listData[index].ArticleTypeNameVietnamese;
+                                            }
+                                            else
+                                            {
+                                                workSheet.Cells[row, i].Value = listData[index].ArticleTypeName;
+                                            }
                                         }
                                         workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                                         workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
@@ -812,7 +820,14 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnSentimentID > 0) && (DailyReportColumnSentimentIDSortOrder == i))
                                     {
-                                        workSheet.Cells[row, i].Value = listData[index].AssessName;
+                                        if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
+                                        {
+                                            workSheet.Cells[row, i].Value = listData[index].AssessNameVietnamese;
+                                        }
+                                        else
+                                        {
+                                            workSheet.Cells[row, i].Value = listData[index].AssessName;
+                                        }
                                         if (listData[index].AssessID == AppGlobal.NegativeID)
                                         {
                                             workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Red);
@@ -886,7 +901,14 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnMediaTypeID > 0) && (DailyReportColumnMediaTypeIDSortOrder == i))
                                     {
-                                        workSheet.Cells[row, i].Value = listData[index].MediaType;
+                                        if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
+                                        {
+                                            workSheet.Cells[row, i].Value = listData[index].MediaTypeVietnamese;
+                                        }
+                                        else
+                                        {
+                                            workSheet.Cells[row, i].Value = listData[index].MediaType;
+                                        }
                                         workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                                         workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
                                         workSheet.Cells[row, i].Style.Font.Size = 11;
@@ -1191,26 +1213,72 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnDatePublishID > 0) && (DailyReportColumnDatePublishIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>" + data.DatePublishString + "</td>");
+                                        reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>" + data.DatePublishStringEnglish + "</td>");
                                     }
                                     if ((DailyReportColumnCategoryID > 0) && (DailyReportColumnCategoryIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>" + data.ArticleTypeName + "</td>");
+                                        if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
+                                        {
+                                            reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>" + data.ArticleTypeNameVietnamese + "</td>");
+                                        }
+                                        else
+                                        {
+                                            reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>" + data.ArticleTypeName + "</td>");
+                                        }
                                     }
                                     if ((DailyReportColumnCompanyID > 0) && (DailyReportColumnCompanyIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>" + data.CompanyName + "</td>");
+                                        reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>");
+                                        if (!string.IsNullOrEmpty(data.CompanyName))
+                                        {
+                                            reportData.AppendLine(@"" + data.CompanyName);
+                                        }
+                                        else
+                                        {
+                                            if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
+                                            {
+                                                reportData.AppendLine(@"" + data.ArticleTypeNameVietnamese);
+                                            }
+                                            else
+                                            {
+                                                reportData.AppendLine(@"" + data.ArticleTypeName);
+                                            }
+                                        }
+                                        reportData.AppendLine(@"</td>");
+                                        if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
+                                        {
+                                            reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>" + data.ArticleTypeNameVietnamese + "</td>");
+                                        }
+                                        else
+                                        {
+                                            reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>" + data.ArticleTypeName + "</td>");
+                                        }
+
                                     }
                                     if ((DailyReportColumnSentimentID > 0) && (DailyReportColumnSentimentIDSortOrder == i))
                                     {
                                         reportData.Append(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;'>");
-                                        if (data.AssessID == AppGlobal.NegativeID)
+                                        if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
                                         {
-                                            reportData.Append(@"<span style='color:red;'>" + data.AssessName + "</span>");
+                                            if (data.AssessID == AppGlobal.NegativeID)
+                                            {
+                                                reportData.Append(@"<span style='color:red;'>" + data.AssessNameVietnamese + "</span>");
+                                            }
+                                            else
+                                            {
+                                                reportData.Append(@"" + data.AssessNameVietnamese);
+                                            }
                                         }
                                         else
                                         {
-                                            reportData.Append(@"" + data.AssessName);
+                                            if (data.AssessID == AppGlobal.NegativeID)
+                                            {
+                                                reportData.Append(@"<span style='color:red;'>" + data.AssessName + "</span>");
+                                            }
+                                            else
+                                            {
+                                                reportData.Append(@"" + data.AssessName);
+                                            }
                                         }
                                         reportData.Append(@"</td>");
                                     }
@@ -1246,7 +1314,15 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnMediaTypeID > 0) && (DailyReportColumnMediaTypeIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;'>" + data.MediaType + "</td>");
+                                        if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
+                                        {
+                                            reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;'>" + data.MediaTypeVietnamese + "</td>");
+                                        }
+                                        else
+                                        {
+                                            reportData.AppendLine(@"<td style='width: 100px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 4px;white-space: nowrap;'>" + data.MediaType + "</td>");
+                                        }
+
                                     }
                                     if ((DailyReportColumnPageID > 0) && (DailyReportColumnPageIDSortOrder == i))
                                     {
@@ -1375,7 +1451,7 @@ namespace Commsights.MVC.Controllers
                                 {
                                     if ((DailyReportColumnDatePublishID > 0) && (DailyReportColumnDatePublishIDSortOrder == i))
                                     {
-                                        workSheet.Cells[row, i].Value = listData[index].DatePublishString;
+                                        workSheet.Cells[row, i].Value = listData[index].DatePublishStringEnglish;
                                         workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                                         workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
                                         workSheet.Cells[row, i].Style.Font.Size = 11;
@@ -1390,7 +1466,14 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnCategoryID > 0) && (DailyReportColumnCategoryIDSortOrder == i))
                                     {
-                                        workSheet.Cells[row, i].Value = listData[index].ArticleTypeName;
+                                        if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
+                                        {
+                                            workSheet.Cells[row, i].Value = listData[index].ArticleTypeNameVietnamese;
+                                        }
+                                        else
+                                        {
+                                            workSheet.Cells[row, i].Value = listData[index].ArticleTypeName;
+                                        }                                        
                                         workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                                         workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
                                         workSheet.Cells[row, i].Style.Font.Size = 11;
@@ -1405,7 +1488,22 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnCompanyID > 0) && (DailyReportColumnCompanyIDSortOrder == i))
                                     {
-                                        workSheet.Cells[row, i].Value = listData[index].CompanyName;
+                                        
+                                        if(!string.IsNullOrEmpty(listData[index].CompanyName))
+                                        {
+                                            workSheet.Cells[row, i].Value = listData[index].CompanyName;
+                                        }    
+                                        else
+                                        {
+                                            if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
+                                            {
+                                                workSheet.Cells[row, i].Value = listData[index].ArticleTypeNameVietnamese;
+                                            }
+                                            else
+                                            {
+                                                workSheet.Cells[row, i].Value = listData[index].ArticleTypeName;
+                                            }
+                                        }    
                                         workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                                         workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
                                         workSheet.Cells[row, i].Style.Font.Size = 11;
@@ -1420,7 +1518,14 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnSentimentID > 0) && (DailyReportColumnSentimentIDSortOrder == i))
                                     {
-                                        workSheet.Cells[row, i].Value = listData[index].AssessName;
+                                        if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
+                                        {
+                                            workSheet.Cells[row, i].Value = listData[index].AssessNameVietnamese;
+                                        }
+                                        else
+                                        {
+                                            workSheet.Cells[row, i].Value = listData[index].AssessName;
+                                        }
                                         if (listData[index].AssessID == AppGlobal.NegativeID)
                                         {
                                             workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Red);
@@ -1494,7 +1599,14 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnMediaTypeID > 0) && (DailyReportColumnMediaTypeIDSortOrder == i))
                                     {
-                                        workSheet.Cells[row, i].Value = listData[index].MediaType;
+                                        if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
+                                        {
+                                            workSheet.Cells[row, i].Value = listData[index].MediaTypeVietnamese;
+                                        }
+                                        else
+                                        {
+                                            workSheet.Cells[row, i].Value = listData[index].MediaType;
+                                        }                                        
                                         workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                                         workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
                                         workSheet.Cells[row, i].Style.Font.Size = 11;
@@ -1813,11 +1925,18 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnDatePublishID > 0) && (DailyReportColumnDatePublishIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 80px; height:20px; text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.DatePublishString + "</td>");
+                                        reportData.AppendLine(@"<td style='width: 80px; height:20px; text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.DatePublishStringEnglish + "</td>");
                                     }
                                     if ((DailyReportColumnCategoryID > 0) && (DailyReportColumnCategoryIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 80px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.ArticleTypeName + "</td>");
+                                        if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
+                                        {
+                                            reportData.AppendLine(@"<td style='width: 80px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.ArticleTypeNameVietnamese + "</td>");
+                                        }
+                                        else
+                                        {
+                                            reportData.AppendLine(@"<td style='width: 80px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.ArticleTypeName + "</td>");
+                                        }
                                     }
                                     if ((DailyReportColumnCompanyID > 0) && (DailyReportColumnCompanyIDSortOrder == i))
                                     {
@@ -1828,21 +1947,43 @@ namespace Commsights.MVC.Controllers
                                         }
                                         else
                                         {
-                                            reportData.AppendLine(@"" + data.ArticleTypeName);
+                                            if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
+                                            {
+                                                reportData.AppendLine(@"" + data.ArticleTypeNameVietnamese);
+                                            }
+                                            else
+                                            {
+                                                reportData.AppendLine(@"" + data.ArticleTypeName);
+                                            }
                                         }
                                         reportData.AppendLine(@"</td>");
                                     }
                                     if ((DailyReportColumnSentimentID > 0) && (DailyReportColumnSentimentIDSortOrder == i))
                                     {
                                         reportData.Append(@"<td style='width: 80px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>");
-                                        if (data.AssessID == AppGlobal.NegativeID)
+                                        if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
                                         {
-                                            reportData.Append(@"<span style='color:red;'>" + data.AssessName + "</span>");
+                                            if (data.AssessID == AppGlobal.NegativeID)
+                                            {
+                                                reportData.Append(@"<span style='color:red;'>" + data.AssessNameVietnamese + "</span>");
+                                            }
+                                            else
+                                            {
+                                                reportData.Append(@"" + data.AssessNameVietnamese);
+                                            }
                                         }
                                         else
                                         {
-                                            reportData.Append(@"" + data.AssessName);
+                                            if (data.AssessID == AppGlobal.NegativeID)
+                                            {
+                                                reportData.Append(@"<span style='color:red;'>" + data.AssessName + "</span>");
+                                            }
+                                            else
+                                            {
+                                                reportData.Append(@"" + data.AssessName);
+                                            }
                                         }
+
                                         reportData.Append(@"</td>");
                                     }
                                     if ((DailyReportColumnHeadlineVietnameseID > 0) && (DailyReportColumnHeadlineVietnameseIDSortOrder == i))
@@ -1877,7 +2018,14 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnMediaTypeID > 0) && (DailyReportColumnMediaTypeIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 80px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.MediaType + "</td>");
+                                        if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
+                                        {
+                                            reportData.AppendLine(@"<td style='width: 80px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.MediaTypeVietnamese + "</td>");
+                                        }
+                                        else
+                                        {
+                                            reportData.AppendLine(@"<td style='width: 80px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.MediaType + "</td>");
+                                        }
                                     }
                                     if ((DailyReportColumnPageID > 0) && (DailyReportColumnPageIDSortOrder == i))
                                     {
@@ -2089,7 +2237,7 @@ namespace Commsights.MVC.Controllers
                     {
                         if (i == 1)
                         {
-                            workSheet.Cells[row, i].Value = listData[index].DatePublishString;
+                            workSheet.Cells[row, i].Value = listData[index].DatePublishStringEnglish;
                             workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         }
                         if (i == 2)
@@ -2343,24 +2491,16 @@ namespace Commsights.MVC.Controllers
                 rowExcel = rowExcel + 1;
                 for (int row = rowExcel; row <= listData.Count + rowExcel - 1; row++)
                 {
-                    string articleTypeNote = _configResposistory.GetByID(listData[index].ArticleTypeID.Value).Note;
                     for (int i = 1; i < column; i++)
                     {
                         if (i == 1)
                         {
-                            workSheet.Cells[row, i].Value = listData[index].DatePublishString;
+                            workSheet.Cells[row, i].Value = listData[index].DatePublishStringEnglish;
                             workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         }
                         if (i == 2)
                         {
-                            if (listData[index].ArticleTypeID != null)
-                            {
-                                workSheet.Cells[row, i].Value = articleTypeNote;
-                            }
-                            else
-                            {
-                                workSheet.Cells[row, i].Value = listData[index].ArticleTypeName;
-                            }
+                            workSheet.Cells[row, i].Value = listData[index].ArticleTypeNameVietnamese;
                             workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                         }
                         if (i == 3)
@@ -2380,14 +2520,7 @@ namespace Commsights.MVC.Controllers
                             }
                             else
                             {
-                                if (listData[index].ArticleTypeID != null)
-                                {
-                                    workSheet.Cells[row, i].Value = articleTypeNote;
-                                }
-                                else
-                                {
-                                    workSheet.Cells[row, i].Value = listData[index].ArticleTypeName;
-                                }
+                                workSheet.Cells[row, i].Value = listData[index].ArticleTypeNameVietnamese;
                             }
                             workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                         }
@@ -2435,7 +2568,7 @@ namespace Commsights.MVC.Controllers
                         }
                         if (i == 11)
                         {
-                            workSheet.Cells[row, i].Value = listData[index].MediaType;
+                            workSheet.Cells[row, i].Value = listData[index].MediaTypeVietnamese;
                             workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                         }
                         if (i == 12)

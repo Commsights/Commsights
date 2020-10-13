@@ -42,10 +42,13 @@ namespace Commsights.Data.DataTransferObject
         public string Media { get; set; }
         public string MediaURLFull { get; set; }
         public string MediaType { get; set; }
+        public string MediaTypeVietnamese { get; set; }
         public string ChannelName { get; set; }
         public string ArticleTypeName { get; set; }
+        public string ArticleTypeNameVietnamese { get; set; }        
         public string CompanyName { get; set; }
         public string AssessName { get; set; }
+        public string AssessNameVietnamese { get; set; }
         public string ProductName { get; set; }
         public string IndustryName { get; set; }
         public int? AdvertisementValue { get; set; }
