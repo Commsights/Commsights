@@ -60,7 +60,7 @@
     model.Field(t => t.ID).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetCustomerToList", "Membership"))
+.Read(t => t.Action("GetCustomerFullToList", "Membership"))
 .Destroy(t => t.Action("Delete", "Membership"))
 )
 )

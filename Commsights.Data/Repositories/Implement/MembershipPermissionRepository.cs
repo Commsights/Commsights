@@ -51,7 +51,7 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@Active",active),
             };
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectDataTransferDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndActive", parameters);
-                list = SQLHelper.ToList<MembershipPermission>(dt);                
+                list = SQLHelper.ToList<MembershipPermission>(dt);
             }
             return list;
         }
@@ -65,7 +65,7 @@ namespace Commsights.Data.Repositories
         }
         public MembershipPermission GetByProductName(string productName)
         {
-            return _context.MembershipPermission.FirstOrDefault(item => item.ProductName.Equals(productName));
+            return _context.MembershipPermission.FirstOrDefault(item => item.ProductName.ToLower() == productName.ToLower());
         }
         public MembershipPermission GetByMembershipIDAndAndCodeAndActive(int membershipID, string code, bool active)
         {

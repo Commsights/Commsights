@@ -16,9 +16,23 @@
                                    .DataValueField("ID")
                                    .DataTextField("TransferName")
                                    .HtmlAttributes(new {@class = "form-control" })
+                                   .Events(e => e.DataBound("onCompanySourceDataBound").Change("onCompanySourceChange"))
                                     .Filter(FilterType.Contains)
                                    .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetAllCompanyToList", "Membership")))
                                     )
+                        </div>
+                        <div class='form-group'>
+                            <label for='Account'>Account</label>
+                            <input type="text" id="CompanySourceAccount" disabled class="form-control" />
+                        </div>
+                        <div class='form-group'>
+                            <label for='FullName'>Full name</label>
+                            <input type="text" id="CompanySourceFullName" disabled class="form-control" />
+                        </div>
+                        <div class='form-group'>
+                            <a id="CompanySourceNote" href="#" target="_blank" title="Detail" style="width:100%; cursor:pointer; color:#ffffff;" class="btn btn-success">
+                                <span class="fas fa-external-link-alt"></span>
+                            </a>
                         </div>
                     </div>
                     <div class="col-md-5">
@@ -29,22 +43,36 @@
                                    .DataValueField("ID")
                                    .DataTextField("TransferName")
                                    .HtmlAttributes(new {@class = "form-control" })
+                                   .Events(e => e.DataBound("onCompanyReplaceDataBound").Change("onCompanyReplaceChange"))
                                     .Filter(FilterType.Contains)
                                    .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetAllCompanyToList", "Membership")))
                                     )
                         </div>
+                        <div class='form-group'>
+                            <label for='Account'>Account</label>
+                            <input type="text" id="CompanyReplaceAccount" disabled class="form-control" />
+                        </div>
+                        <div class='form-group'>
+                            <label for='FullName'>Full name</label>
+                            <input type="text" id="CompanyReplaceFullName" disabled class="form-control" />
+                        </div>
+                        <div class='form-group'>
+                            <a id="CompanyReplaceNote" href="#" target="_blank" title="Detail" style="width:100%; cursor:pointer; color:#ffffff;" class="btn btn-success">
+                                <span class="fas fa-external-link-alt"></span>
+                            </a>
+                        </div>
                     </div>
                     <div class="col-md-1">
                         <div class='form-group'>
-                            <label for='Replace'>Replace</label>    
-                            <button type="button" class="btn btn-success" onclick="onReplace()">
+                            <label for='Replace'>Replace</label>
+                            <button type="button" class="btn btn-primary" onclick="onReplace()">
                                 <span class="fas fa-tools"></span>
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </div>        
     </div>
 </div>
 @(Html.Kendo().Notification()
@@ -54,7 +82,7 @@
 )
 <script>
     function onReplace() {
-        BeginRequestHandler();        
+        BeginRequestHandler();
         var companyIDSourceValue = $("#CompanySource").data("kendoDropDownList").value();
         var companyIDReplaceValue = $("#CompanyReplace").data("kendoDropDownList").value();
         $.ajax(
@@ -63,7 +91,7 @@
                 datatype: "JSON",
                 url: '@Url.Action("ReplaceCompanyIDSourceToCompanyIDReplace", "Membership")',
                 data: { companyIDSource: companyIDSourceValue, companyIDReplace: companyIDReplaceValue },
-                success: function (result) {                    
+                success: function (result) {
                     EndRequestHandler();
                     var messageType = result.split('-')[0];
                     var note = result.split('-')[1];
@@ -73,5 +101,53 @@
                 error: function (jqXHR, exception) { },
                 complete: function () { },
             });
+    }
+    function onCompanySourceChange() {
+        var companyIDSourceValue = $("#CompanySource").data("kendoDropDownList").value();
+         $.ajax(
+            {
+                type: "POST",
+                datatype: "JSON",
+                url: '@Url.Action("GetByID", "Membership")',
+                 data: { ID: companyIDSourceValue },
+                 success: function (result) {
+                     $("#CompanySourceAccount").val(result["Account"]);
+                     $("#CompanySourceFullName").val(result["FullName"]);
+                     $("#CompanySourceNote").attr("href", result["Note"]);
+                },
+                error: function (jqXHR, exception) { }
+            });
+    }
+    function onCompanySourceDataBound() {
+        var company = $("#CompanySource").data("kendoDropDownList");
+        var companyLength = company.dataSource.data().length;
+        if (companyLength > 0) {
+            company.select(0);
+            company.trigger("change");
+        }
+    }
+    function onCompanyReplaceChange() {
+        var companyIDReplaceValue = $("#CompanyReplace").data("kendoDropDownList").value();
+         $.ajax(
+            {
+                type: "POST",
+                datatype: "JSON",
+                url: '@Url.Action("GetByID", "Membership")',
+                 data: { ID: companyIDReplaceValue },
+                 success: function (result) {
+                    $("#CompanyReplaceAccount").val(result["Account"]);
+                    $("#CompanyReplaceFullName").val(result["FullName"]);
+                    $("#CompanyReplaceNote").attr("href", result["Note"]);
+                },
+                error: function (jqXHR, exception) { }
+            });
+    }
+    function onCompanyReplaceDataBound() {
+        var company = $("#CompanyReplace").data("kendoDropDownList");
+        var companyLength = company.dataSource.data().length;
+        if (companyLength > 0) {
+            company.select(0);
+            company.trigger("change");
+        }
     }
 </script>

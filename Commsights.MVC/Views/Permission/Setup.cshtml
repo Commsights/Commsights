@@ -1,0 +1,76 @@
+﻿@{ ViewData["Title"] = "Setup"; }
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Setup</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class='form-group'>
+                            <label for='Replace'>Chỉnh tên báo</label>
+                            <button type="button" class="btn btn-primary" onclick="onUpdatePressList()">
+                                <span class="fas fa-save"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class='form-group'>
+                            <label for='Replace'>Chỉnh tên bài viết</label>
+                            <button type="button" class="btn btn-primary" onclick="onUpdateProduct()">
+                                <span class="fas fa-save"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>        
+    </div>
+</div>
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+<script>
+    function onUpdatePressList() {
+        BeginRequestHandler();
+        $.ajax(
+            {
+                type: "POST",
+                datatype: "JSON",
+                url: '@Url.Action("UpdatePressList", "Permission")',
+                data: {  },
+                success: function (result) {
+                    EndRequestHandler();
+                    var messageType = result.split('-')[0];
+                    var note = result.split('-')[1];
+                    var notification = $("#Notification").data("kendoNotification");
+                    notification.show(note, messageType);
+                },
+                error: function (jqXHR, exception) { },
+                complete: function () { },
+            });
+    }
+    function onUpdateProduct() {
+        BeginRequestHandler();
+        $.ajax(
+            {
+                type: "POST",
+                datatype: "JSON",
+                url: '@Url.Action("UpdateProduct", "Permission")',
+                data: {  },
+                success: function (result) {
+                    EndRequestHandler();
+                    var messageType = result.split('-')[0];
+                    var note = result.split('-')[1];
+                    var notification = $("#Notification").data("kendoNotification");
+                    notification.show(note, messageType);
+                },
+                error: function (jqXHR, exception) { },
+                complete: function () { },
+            });
+    }
+</script>

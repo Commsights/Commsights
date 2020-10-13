@@ -214,6 +214,16 @@ namespace Commsights.MVC.Controllers
         {
             return RedirectToAction("CustomerDetail", new { ID = 0 });
         }
+        public IActionResult GetByID(int ID)
+        {
+            Membership model = _membershipRepository.GetByID(ID);
+            model.Note = "/Membership/CompanyDetail/" + ID;
+            if (model.ParentID == AppGlobal.ParentIDCustomer)
+            {
+                model.Note = "/Membership/CustomerDetail/" + ID;
+            }
+            return Json(model);
+        }
         public ActionResult GetAllToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _membershipRepository.GetAllToList();
@@ -247,6 +257,11 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetCustomerToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _membershipRepository.GetCustomerToList();
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCustomerFullToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _membershipRepository.GetCustomerFullToList();
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetCustomerDataTransferToList([DataSourceRequest] DataSourceRequest request)

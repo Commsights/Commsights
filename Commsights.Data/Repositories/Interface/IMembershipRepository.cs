@@ -21,6 +21,7 @@ namespace Commsights.Data.Repositories
         public List<Membership> GetByCompanyFullToList();        
         public List<Membership> GetByIndustryIDToList(int industryID);
         public List<Membership> GetCustomerToList();
+        public List<Membership> GetCustomerFullToList();
         public List<Membership> GetCompetitorToList();
         public List<Membership> GetByCompetitorFullToList();
         public List<Membership> GetEmployeeToList();

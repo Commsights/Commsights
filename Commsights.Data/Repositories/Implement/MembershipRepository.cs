@@ -118,6 +118,10 @@ namespace Commsights.Data.Repositories
         {
             return _context.Membership.Where(item => (item.ParentID == AppGlobal.ParentIDCustomer) && (item.Active == true)).OrderBy(item => item.Account).ToList();
         }
+        public List<Membership> GetCustomerFullToList()
+        {
+            return _context.Membership.Where(item => (item.ParentID == AppGlobal.ParentIDCustomer)).OrderBy(item => item.Account).ToList();
+        }
         public List<Membership> GetCompetitorToList()
         {
             return _context.Membership.Where(item => (item.ParentID == AppGlobal.ParentIDCompetitor) && (item.Active == true)).OrderBy(item => item.Account).ToList();

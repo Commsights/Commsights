@@ -301,7 +301,6 @@ namespace Commsights.MVC.Controllers
                 }
             }
             BaseViewModel model = new BaseViewModel();
-
             List<Config> listDailyReportColumn = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.DailyReportColumn);
             List<ProductDataTransfer> listData = _reportRepository.GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
             List<ProductDataTransfer> listDataISummary = listData.Where(item => item.IsSummary == true).ToList();
@@ -435,7 +434,7 @@ namespace Commsights.MVC.Controllers
                     }
                     if (i == 12)
                     {
-                        txt.AppendLine(@"<td style='text-align: left;'>" + listData[index].Page + "</td>");
+                        txt.AppendLine(@"<td style='text-align: right;'>" + listData[index].Page + "</td>");
                     }
                     if (i == 13)
                     {
@@ -451,7 +450,6 @@ namespace Commsights.MVC.Controllers
                         txt.AppendLine(@"(" + descriptionEnglish + ")");
                         txt.AppendLine(@"</div></td>");
                     }
-
                 }
                 txt.AppendLine(@"</tr>");
                 index = index + 1;
@@ -1883,7 +1881,7 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnPageID > 0) && (DailyReportColumnPageIDSortOrder == i))
                                     {
-                                        reportData.AppendLine(@"<td style='width: 80px; height:20px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.Page + "</td>");
+                                        reportData.AppendLine(@"<td style='width: 80px; height:20px; text-align: right; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'>" + data.Page + "</td>");
                                     }
                                     if ((DailyReportColumnAdvertisementID > 0) && (DailyReportColumnAdvertisementIDSortOrder == i))
                                     {
@@ -2177,7 +2175,7 @@ namespace Commsights.MVC.Controllers
                         if (i == 12)
                         {
                             workSheet.Cells[row, i].Value = listData[index].Page;
-                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         }
                         if (i == 13)
                         {
@@ -2443,7 +2441,7 @@ namespace Commsights.MVC.Controllers
                         if (i == 12)
                         {
                             workSheet.Cells[row, i].Value = listData[index].Page;
-                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         }
                         if (i == 13)
                         {
@@ -3525,7 +3523,7 @@ namespace Commsights.MVC.Controllers
                                                             model.Title = workSheet.Cells[i, 8].Value.ToString().Trim();
                                                             if (model.Title.Equals(model.Title.ToUpper()))
                                                             {
-                                                                model.Title = model.Title.ToLower();
+                                                                model.Title = AppGlobal.ToUpperFirstLetter(model.Title);
                                                             }
                                                             if (workSheet.Cells[i, 8].Hyperlink != null)
                                                             {
@@ -3829,7 +3827,7 @@ namespace Commsights.MVC.Controllers
                                                             model.Title = workSheet.Cells[i, 5].Value.ToString().Trim();
                                                             if (model.Title.Equals(model.Title.ToUpper()))
                                                             {
-                                                                model.Title = model.Title.ToLower();
+                                                                model.Title = AppGlobal.ToUpperFirstLetter(model.Title);
                                                             }
                                                             if (workSheet.Cells[i, 5].Hyperlink != null)
                                                             {
@@ -3843,7 +3841,7 @@ namespace Commsights.MVC.Controllers
                                                             model.TitleEnglish = workSheet.Cells[i, 6].Value.ToString().Trim();
                                                             if (model.TitleEnglish.Equals(model.TitleEnglish.ToUpper()))
                                                             {
-                                                                model.TitleEnglish = model.TitleEnglish.ToLower();
+                                                                model.TitleEnglish = AppGlobal.ToUpperFirstLetter(model.TitleEnglish);
                                                             }
                                                         }
                                                         if (workSheet.Cells[i, 7].Value != null)
@@ -4198,7 +4196,7 @@ namespace Commsights.MVC.Controllers
                                                             model.Title = workSheet.Cells[i, 14].Value.ToString().Trim();
                                                             if (model.Title.Equals(model.Title.ToUpper()))
                                                             {
-                                                                model.Title = model.Title.ToLower();
+                                                                model.Title = AppGlobal.ToUpperFirstLetter(model.Title);
                                                             }
                                                         }
                                                         if (workSheet.Cells[i, 15].Value != null)
@@ -4444,7 +4442,7 @@ namespace Commsights.MVC.Controllers
                                                             model.Title = workSheet.Cells[i, 4].Value.ToString().Trim();
                                                             if (model.Title.Equals(model.Title.ToUpper()))
                                                             {
-                                                                model.Title = model.Title.ToLower();
+                                                                model.Title = AppGlobal.ToUpperFirstLetter(model.Title);
                                                             }
                                                             if (workSheet.Cells[i, 4].Hyperlink != null)
                                                             {
@@ -4456,7 +4454,7 @@ namespace Commsights.MVC.Controllers
                                                             model.TitleEnglish = workSheet.Cells[i, 5].Value.ToString().Trim();
                                                             if (model.TitleEnglish.Equals(model.TitleEnglish.ToUpper()))
                                                             {
-                                                                model.TitleEnglish = model.TitleEnglish.ToLower();
+                                                                model.TitleEnglish = AppGlobal.ToUpperFirstLetter(model.TitleEnglish);
                                                             }
                                                             if (workSheet.Cells[i, 5].Hyperlink != null)
                                                             {
@@ -4503,6 +4501,28 @@ namespace Commsights.MVC.Controllers
                                                             }
                                                             if (product.ID > 0)
                                                             {
+                                                                int membershipPermissionProductID = 0;
+                                                                int membershipPermissionSegmentID = 0;
+                                                                if (workSheet.Cells[i, 10].Value != null)
+                                                                {
+                                                                    string productName = workSheet.Cells[i, 10].Value.ToString().Trim();
+                                                                    MembershipPermission membershipPermission = _membershipPermissionRepository.GetByProductName(productName);
+                                                                    if (membershipPermission != null)
+                                                                    {
+                                                                        membershipPermissionProductID = membershipPermission.ID;
+                                                                        membershipPermissionSegmentID = membershipPermission.SegmentID.Value;
+                                                                    }
+                                                                }
+
+                                                                if (workSheet.Cells[i, 9].Value != null)
+                                                                {
+                                                                    string segmentName = workSheet.Cells[i, 9].Value.ToString().Trim();
+                                                                    Config config = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Segment, segmentName);
+                                                                    if (config != null)
+                                                                    {
+                                                                        membershipPermissionSegmentID = config.ID;
+                                                                    }
+                                                                }
                                                                 int assessID = AppGlobal.AssessID;
                                                                 if (workSheet.Cells[i, 3].Value != null)
                                                                 {
@@ -4564,6 +4584,9 @@ namespace Commsights.MVC.Controllers
                                                                             {
                                                                                 ProductProperty productProperty = new ProductProperty();
                                                                                 productProperty.Initialization(InitType.Insert, RequestUserID);
+                                                                                productProperty.ProductID = membershipPermissionProductID;
+                                                                                productProperty.SegmentID = membershipPermissionSegmentID;
+                                                                                productProperty.ParentID = product.ID;
                                                                                 productProperty.ParentID = product.ID;
                                                                                 productProperty.GUICode = product.GUICode;
                                                                                 productProperty.AssessID = assessID;
@@ -4581,6 +4604,8 @@ namespace Commsights.MVC.Controllers
                                                                         {
                                                                             ProductProperty productProperty = new ProductProperty();
                                                                             productProperty.Initialization(InitType.Insert, RequestUserID);
+                                                                            productProperty.ProductID = membershipPermissionProductID;
+                                                                            productProperty.SegmentID = membershipPermissionSegmentID;
                                                                             productProperty.ParentID = product.ID;
                                                                             productProperty.GUICode = product.GUICode;
                                                                             productProperty.AssessID = assessID;
@@ -4603,6 +4628,8 @@ namespace Commsights.MVC.Controllers
                                                                 {
                                                                     ProductProperty productProperty = new ProductProperty();
                                                                     productProperty.Initialization(InitType.Insert, RequestUserID);
+                                                                    productProperty.ProductID = membershipPermissionProductID;
+                                                                    productProperty.SegmentID = membershipPermissionSegmentID;
                                                                     productProperty.ParentID = product.ID;
                                                                     productProperty.GUICode = product.GUICode;
                                                                     productProperty.ArticleTypeID = AppGlobal.TinNganhID;
