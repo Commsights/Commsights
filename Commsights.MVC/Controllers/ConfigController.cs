@@ -176,9 +176,22 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult MediaTier()
+        {
+            return View();
+        }
+        public IActionResult MediaTierAndWebsite()
+        {
+            return View();
+        }
         public ActionResult GetAllToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _configResposistory.GetAllToList();
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetMediaToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetMediaToList();
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetByParentIDToList([DataSourceRequest] DataSourceRequest request, int parentID)
@@ -193,6 +206,15 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetReportTypeToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.ReportType);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetDataTransferTierByTierIDAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, int tierID, int industryID)
+        {
+            if (industryID != AppGlobal.TierID02)
+            {
+                industryID = 0;
+            }
+            var data = _configResposistory.GetDataTransferTierByTierIDAndIndustryIDToList(tierID, industryID);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetColorToList([DataSourceRequest] DataSourceRequest request)
@@ -239,6 +261,11 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetArticleTypeToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.ArticleType).Where(item => item.ParentID == 0);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetMediaTierToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.MediaTier).Where(item => item.ParentID == 0);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetDataTransferPressListByGroupNameAndCodeToList([DataSourceRequest] DataSourceRequest request)
@@ -300,6 +327,61 @@ namespace Commsights.MVC.Controllers
         {
             var data = _configResposistory.GetDataTransferWebsiteByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
             return Json(data.ToDataSourceResult(request));
+        }
+        public IActionResult CreateTierByTierIDAndIndustryID(ConfigDataTransfer model, int tierID, int industryID)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.Tier;
+            model.ParentID = model.Parent.ID;
+            model.TierID = tierID;
+            model.IndustryID = industryID;
+            if (industryID != AppGlobal.TierID02)
+            {
+                model.IndustryID = 0;
+            }
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            if (model.ParentID > 0)
+            {
+                result = _configResposistory.Create(model);
+            }
+            else
+            {
+                model.Note = model.Note.Replace(@";", @",");
+                foreach (string mediaTitle in model.Note.Split(','))
+                {
+                    Config parent = new Config();
+                    string mediaTitle001 = mediaTitle.Trim();
+                    if (!string.IsNullOrEmpty(mediaTitle001))
+                    {
+                        parent = _configResposistory.GetByGroupNameAndCodeAndTitle(AppGlobal.CRM, AppGlobal.Website, mediaTitle001);
+                        if (parent == null)
+                        {
+                            parent = _configResposistory.GetByGroupNameAndCodeAndTitle(AppGlobal.CRM, AppGlobal.PressList, mediaTitle001);
+                        }
+                    }
+                    if (parent != null)
+                    {
+                        Config config = new Config();
+                        config = model;
+                        config.ParentID = parent.ID;                        
+                        config.Note = "";
+                        config.ID = 0;
+                        result = _configResposistory.Create(config);
+                    }
+                }
+            }
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
         }
         public IActionResult CreateEmailStorageCategory(Config model)
         {
@@ -445,6 +527,29 @@ namespace Commsights.MVC.Controllers
             Initialization(model);
             model.GroupName = AppGlobal.CRM;
             model.Code = AppGlobal.AssessType;
+            model.ParentID = 0;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            if (_configResposistory.IsValidByGroupNameAndCodeAndCodeName(model.GroupName, model.Code, model.CodeName) == true)
+            {
+                result = _configResposistory.Create(model);
+            }
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateMediaTier(Config model)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.MediaTier;
             model.ParentID = 0;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
@@ -773,6 +878,23 @@ namespace Commsights.MVC.Controllers
             else
             {
                 note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult UpdateMediaTier(ConfigDataTransfer model)
+        {
+            Initialization(model);
+            string note = AppGlobal.InitString;
+            model.ParentID = model.Parent.ID;
+            model.Initialization(InitType.Update, RequestUserID);
+            int result = _configResposistory.Update(model.ID, model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
             }
             return Json(note);
         }

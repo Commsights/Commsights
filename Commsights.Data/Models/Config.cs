@@ -23,6 +23,8 @@ namespace Commsights.Data.Models
         public int? LanguageID { get; set; }
         public int? FrequencyID { get; set; }
         public int? ColorTypeID { get; set; }
+        public int? IndustryID { get; set; }
+        public int? TierID { get; set; }
         public void Initialization()
         {
             if (!string.IsNullOrEmpty(this.Title))

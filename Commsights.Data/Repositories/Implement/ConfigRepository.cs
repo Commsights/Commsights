@@ -57,6 +57,10 @@ namespace Commsights.Data.Repositories
         {
             return _context.Config.Where(item => item.GroupName.Equals(groupName) && item.Code.Equals(code)).OrderBy(item => item.CodeName).OrderBy(item => item.SortOrder).ThenBy(item => item.CodeName).ToList();
         }
+        public List<Config> GetMediaToList()
+        {
+            return _context.Config.Where(item => item.GroupName.Equals(AppGlobal.CRM) && (item.Code.Equals(AppGlobal.Website) || item.Code.Equals(AppGlobal.PressList))).OrderBy(item => item.Title).ToList();
+        }
         public List<Config> GetByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active)
         {
             return _context.Config.Where(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.Active.Equals(active)).OrderBy(item => item.SortOrder).ToList();
@@ -145,6 +149,25 @@ namespace Commsights.Data.Repositories
             };
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectDisplayByGroupNameAndCodeAndActive", parameters);
             list = SQLHelper.ToList<ConfigDataTransfer>(dt);
+            return list;
+
+        }
+        public List<ConfigDataTransfer> GetDataTransferTierByTierIDAndIndustryIDToList(int tierID, int industryID)
+        {
+            List<ConfigDataTransfer> list = new List<ConfigDataTransfer>();
+            SqlParameter[] parameters =
+                        {
+                new SqlParameter("@TierID",tierID),
+                new SqlParameter("@IndustryID",industryID),                
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectDataTransferTierByTierIDAndIndustryID", parameters);
+            list = SQLHelper.ToList<ConfigDataTransfer>(dt);
+            for (int i = 0; i < list.Count; i++)
+            {              
+                list[i].Parent = new ModelTemplate();
+                list[i].Parent.ID = list[i].ParentID;
+                list[i].Parent.TextName = list[i].ParentName;              
+            }
             return list;
 
         }

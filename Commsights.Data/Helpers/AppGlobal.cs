@@ -215,6 +215,22 @@ namespace Commsights.Data.Helpers
                 return builder.Build().GetSection("AppSettings").GetSection("CommsightsWebsiteDisplay").Value;
             }
         }
+        public static string Tier
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Tier").Value;
+            }
+        }
+        public static string MediaTier
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("MediaTier").Value;
+            }
+        }
         public static string URLCode
         {
             get
@@ -341,6 +357,14 @@ namespace Commsights.Data.Helpers
             {
                 var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                 return int.Parse(builder.Build().GetSection("AppSettings").GetSection("AdvertisementValue").Value);
+            }
+        }
+        public static int TierID02
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("TierID02").Value);
             }
         }
         public static int Hour
