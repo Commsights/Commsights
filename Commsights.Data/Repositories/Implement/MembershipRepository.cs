@@ -18,6 +18,16 @@ namespace Commsights.Data.Repositories
         {
             _context = context;
         }
+        public Membership GetByCodeAndFullName(string code, string fullName)
+        {
+            Membership model = null;
+            MembershipPermission membershipPermission = _context.MembershipPermission.FirstOrDefault(item => item.Code.Equals(code) && item.FullName.Equals(fullName));
+            if (membershipPermission != null)
+            {
+                model = _context.Membership.FirstOrDefault(item => item.ID == membershipPermission.MembershipID);
+            }
+            return model;
+        }
         public string ReplaceCompanyIDToCustomerID(int companyID, int customerID)
         {
 

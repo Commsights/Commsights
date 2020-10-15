@@ -3790,6 +3790,10 @@ namespace Commsights.MVC.Controllers
                                                                     Membership company = _membershipRepository.GetByAccount(companyName);
                                                                     if (company == null)
                                                                     {
+                                                                        company = _membershipRepository.GetByCodeAndFullName(AppGlobal.CompanyName, companyName);
+                                                                    }
+                                                                    if (company == null)
+                                                                    {
                                                                         company = new Membership();
                                                                         company.Active = true;
                                                                         company.Account = companyName;
@@ -4136,6 +4140,10 @@ namespace Commsights.MVC.Controllers
                                                                 else
                                                                 {
                                                                     Membership membership = _membershipRepository.GetByAccount(company);
+                                                                    if (membership == null)
+                                                                    {
+                                                                        membership = _membershipRepository.GetByCodeAndFullName(AppGlobal.CompanyName, company);
+                                                                    }
                                                                     if (membership == null)
                                                                     {
                                                                         membership = new Membership();
@@ -4700,6 +4708,10 @@ namespace Commsights.MVC.Controllers
                                                                     else
                                                                     {
                                                                         Membership company = _membershipRepository.GetByAccount(companyName);
+                                                                        if (company == null)
+                                                                        {
+                                                                            company = _membershipRepository.GetByCodeAndFullName(AppGlobal.CompanyName, companyName);
+                                                                        }
                                                                         if (company == null)
                                                                         {
                                                                             company = new Membership();

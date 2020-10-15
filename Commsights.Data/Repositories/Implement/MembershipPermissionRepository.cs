@@ -30,6 +30,18 @@ namespace Commsights.Data.Repositories
         {
             return _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.Code.Equals(code)).OrderBy(item => item.DateUpdated).ToList();
         }
+        public List<MembershipPermission> GetByCodeAndFullNameToList(string code, string fullName)
+        {
+            return _context.MembershipPermission.Where(item => item.Code.Equals(code) && item.FullName.Equals(fullName)).ToList();
+        }
+        public MembershipPermission GetByCodeAndFullName(string code, string fullName)
+        {
+            return _context.MembershipPermission.FirstOrDefault(item => item.Code.Equals(code) && item.FullName.Equals(fullName));
+        }
+        public MembershipPermission GetByCodeAndFullNameContains(string code, string fullName)
+        {
+            return _context.MembershipPermission.FirstOrDefault(item => item.Code.Equals(code) && item.FullName.Contains(fullName));
+        }
         public List<MembershipPermission> GetByMembershipIDAndIndustryIDAndCodeToList(int membershipID, int industryID, string code)
         {
             return _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.IndustryID == industryID && item.Code.Equals(code)).ToList();

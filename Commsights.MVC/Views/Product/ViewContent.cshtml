@@ -10,7 +10,7 @@
         <div class="text-center" style="margin:auto; margin:0px;">
             @if (Model.Product.IsVideo == true)
             {
-                <video width="800" height="450" controls>
+                <video width="1000" height="600" controls>
                     <source src="@Model.Product.Image" type="video/mp4">
                 </video>
             }
@@ -18,11 +18,10 @@
             {
                 foreach (Commsights.Data.Models.ProductProperty item in Model.ListProductProperty)
                 {
-                    <div class="row">
-                        <img src="@item.Note" class="img-thumbnail" />
-                    </div>
+                    <img src="@item.Note" class="img-thumbnail" width="100%" />
+                    <br />
                 }
             }
-        </div>       
+        </div>
     </div>
 </div>
