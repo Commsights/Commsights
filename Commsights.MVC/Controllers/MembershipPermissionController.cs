@@ -55,6 +55,11 @@ namespace Commsights.MVC.Controllers
             var data = _membershipPermissionRepository.GetByMembershipIDToList(membershipID);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetByMembershipIDAndCompanyNameToList([DataSourceRequest] DataSourceRequest request, int membershipID)
+        {
+            var data = _membershipPermissionRepository.GetByMembershipIDAndCodeToList(membershipID, AppGlobal.CompanyName);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetDataTransferMembershipByIndustryIDAndCodeToList([DataSourceRequest] DataSourceRequest request, int industryID)
         {
             var data = _membershipPermissionRepository.GetDataTransferMembershipByIndustryIDAndCodeToList(industryID, AppGlobal.Industry);
@@ -138,6 +143,16 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetDataTransferCompanyByMembershipIDAndIndustryIDAndCodeToList([DataSourceRequest] DataSourceRequest request, int membershipID, int industryID)
         {
             var data = _membershipPermissionRepository.GetDataTransferCompanyByMembershipIDAndIndustryIDAndCodeToList(membershipID, industryID, AppGlobal.Competitor);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetByMembershipIDAndIndustryIDAndContactToList([DataSourceRequest] DataSourceRequest request, int membershipID, int industryID)
+        {
+            var data = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCodeToList(membershipID, industryID, AppGlobal.Contact).OrderBy(item => item.Email);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetByMembershipIDAndIndustryIDAndDailyReportColumnToList([DataSourceRequest] DataSourceRequest request, int membershipID, int industryID)
+        {
+            var data = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCodeToList(membershipID, industryID, AppGlobal.DailyReportColumn).OrderBy(item => item.SortOrder);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetByMembershipIDAndIndustryIDAndProductToList([DataSourceRequest] DataSourceRequest request, int membershipID, int industryID)
@@ -311,7 +326,7 @@ namespace Commsights.MVC.Controllers
                         membershipPermission.MembershipID = model.MembershipID;
                         membershipPermission.IndustryID = model.IndustryID;
                         membershipPermission.SegmentID = model.SegmentID;
-                        membershipPermission.ProductName = product.Trim();                       
+                        membershipPermission.ProductName = product.Trim();
                         result = result + _membershipPermissionRepository.Create(membershipPermission);
                     }
                 }
@@ -391,6 +406,27 @@ namespace Commsights.MVC.Controllers
                     membershipPermission.Initialization(InitType.Insert, RequestUserID);
                     result = result + _membershipPermissionRepository.Create(membershipPermission);
                 }
+            }
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateCompanyName(MembershipPermission model, int membershipID)
+        {
+            model.MembershipID = membershipID;
+            model.Code = AppGlobal.CompanyName;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            if (membershipID > 0)
+            {
+                result = _membershipPermissionRepository.Create(model);
             }
             if (result > 0)
             {

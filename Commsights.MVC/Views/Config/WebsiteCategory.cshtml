@@ -20,8 +20,7 @@
     columns.Bound(t => t.Parent.TextName).EditorTemplateName("Config_WebsiteType").Title("Media type").Width(200);
     columns.Bound(t => t.Country.TextName).EditorTemplateName("Config_Country").Title("Country").Width(200);
     columns.Bound(t => t.Language.TextName).EditorTemplateName("Config_Language").Title("Language").Width(200);
-    columns.Bound(t => t.Frequency.TextName).EditorTemplateName("Config_Frequency").Title("Frequency").Width(200);
-    columns.Bound(t => t.ColorType.TextName).EditorTemplateName("Config_ColorType").Title("Color type").Width(200);
+    columns.Bound(t => t.Frequency.TextName).EditorTemplateName("Config_Frequency").Title("Frequency").Width(200);    
     columns.Bound(t => t.SortOrder).Title("Sort order").Width(200);
     columns.Bound(t => t.ID).Title("ID").Width(100);
 })
@@ -62,8 +61,7 @@
     model.Field(t => t.Country).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
     model.Field(t => t.Language).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
     model.Field(t => t.Parent).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
-    model.Field(t => t.Frequency).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
-    model.Field(t => t.ColorType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Field(t => t.Frequency).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());    
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetDataTransferWebsiteByGroupNameAndCodeAndActiveToList", "Config"))

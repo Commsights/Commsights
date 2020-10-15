@@ -1,4 +1,4 @@
-﻿@{ Layout = "~/Views/Shared/_LayoutWindow100.cshtml"; ViewData["Title"] = "View content"; }
+﻿@{ Layout = "~/Views/Shared/_LayoutWindow100.cshtml"; ViewData["Title"] = @Model.Product.Title; }
 
 @model Commsights.MVC.Models.ProductViewContentViewModel
 
@@ -18,7 +18,9 @@
             {
                 foreach (Commsights.Data.Models.ProductProperty item in Model.ListProductProperty)
                 {
-                    <img src="@item.Note" class="img-thumbnail" />
+                    <div class="row">
+                        <img src="@item.Note" class="img-thumbnail" />
+                    </div>
                 }
             }
         </div>       

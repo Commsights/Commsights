@@ -32,7 +32,7 @@ namespace Commsights.Data.Repositories
         }
         public List<MembershipPermission> GetByMembershipIDAndIndustryIDAndCodeToList(int membershipID, int industryID, string code)
         {
-            return _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.IndustryID == industryID && item.Code.Equals(code)).OrderBy(item => item.DateUpdated).ToList();
+            return _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.IndustryID == industryID && item.Code.Equals(code)).ToList();
         }
         public List<MembershipPermission> GetDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndActiveToList(int membershipID, int industryID, string code, bool active)
         {
@@ -625,7 +625,7 @@ namespace Commsights.Data.Repositories
                         model.MembershipID = membershipID;
                         model.IndustryID = industryID;
                         model.Code = code;
-                        model.SortOrder = 0;
+                        model.SortOrder = config.SortOrder;
                         model.Active = false;
                         model.CategoryID = config.ID;
                         model.Email = config.CodeName;

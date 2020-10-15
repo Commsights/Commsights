@@ -12,7 +12,7 @@
                 <form asp-action="SaveCustomer" asp-controller="Membership">
                     @Html.HiddenFor(Model => Model.ID)
                     <div class="row">
-                        <div class='col-md-7'>
+                        <div class='col-md-6'>
                             @(Html.Kendo().DropDownListFor(Model => Model.CategoryID)
                                    .DataValueField("ID")
                                    .DataTextField("TransferName")
@@ -25,6 +25,8 @@
                             <a style="width:100%; cursor:pointer; color:#ffffff;" title="Tìm" onclick="onSearch()" class="btn btn-success">
                                 <span class="fas fa-search"></span>
                             </a>
+                        </div>
+                        <div class='col-md-1'>
                         </div>
                         <div class='col-md-1'>
                             <button style="width:100%;" type="submit" title="Save" class="btn btn-primary">
@@ -144,6 +146,60 @@
         </div>
         <div class="card card-primary">
             <div class="card-header">
+                <h3 class="card-title">Name</h3>
+            </div>
+            <div class="card-body">
+                @(Html.Kendo().Grid<Commsights.Data.Models.MembershipPermission>()
+.Name("MembershipPermissionCompanyName")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
+    columns.Bound(t => t.FullName).Title("Name").Width(400).HtmlAttributes(new { style="width:100%;" });
+})
+.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
+.ToolBar(toolBar => toolBar.Search())
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid" })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.ID);
+})
+.Events(t => { t.RequestEnd("onGridRequestEndMembershipPermissionCompanyName"); })
+.Read(t => t.Action("GetByMembershipIDAndCompanyNameToList", "MembershipPermission").Data("filterMembershipPermissionIndustry"))
+.Destroy(t => t.Action("Delete", "MembershipPermission"))
+.Create(t => t.Action("CreateCompanyName", "MembershipPermission").Data("filterMembershipPermissionIndustry"))
+.Update(t => t.Action("Update", "MembershipPermission"))
+)
+)
+            </div>
+        </div>
+        <div class="card card-primary">
+            <div class="card-header">
                 <h3 class="card-title">Industry</h3>
             </div>
             <div class="card-body">
@@ -233,7 +289,11 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.ReportType.TextName).EditorTemplateName("Config_ReportType").Title("Report").Width(200);
+    columns.Bound(t => t.IsDaily).Title("Daily").Width(70);
+    columns.Bound(t => t.IsWeekly).Title("Weekly").Width(70);
+    columns.Bound(t => t.IsMonthly).Title("Monthly").Width(70);
+    columns.Bound(t => t.IsQuarterly).Title("Quarterly").Width(70);
+    columns.Bound(t => t.IsYearly).Title("Yearly").Width(70);
     columns.Bound(t => t.Email).Title("Email").Width(200);
     columns.Bound(t => t.FullName).Title("Contact").Width(200);
     columns.Bound(t => t.Phone).Title("Phone").Width(200);
@@ -274,7 +334,7 @@
     model.Field(t => t.ReportType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEndContact"); })
-.Read(t => t.Action("GetDataTransferContactByMembershipIDAndIndustryIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
+.Read(t => t.Action("GetByMembershipIDAndIndustryIDAndContactToList", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
 .Create(t => t.Action("CreateDataTransferContact", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
 .Update(t => t.Action("UpdateDataTransferContact", "MembershipPermission"))
@@ -575,7 +635,7 @@
         </div>
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Daily report column (Starting from 1)</h3>
+                <h3 class="card-title">Report column (Starting from 1)</h3>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -591,9 +651,12 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.Active).Title("Select").Width(100);
+    columns.Bound(t => t.IsDaily).Title("Daily").Width(100);
+    columns.Bound(t => t.IsWeekly).Title("Weekly").Width(100);
+    columns.Bound(t => t.IsMonthly).Title("Monthly").Width(100);
+    columns.Bound(t => t.IsQuarterly).Title("Quarterly").Width(100);
+    columns.Bound(t => t.IsYearly).Title("Yearly").Width(100);
     columns.Bound(t => t.SortOrder).Title("Sort").Width(200);
-    columns.Bound(t => t.FullName).Title("Upload").Width(200);
     columns.Bound(t => t.Email).Title("English").Width(200);
     columns.Bound(t => t.Phone).Title("Vietnamese").Width(200);
 })
@@ -626,10 +689,10 @@
 .PageSize(1000)
 .Model(model =>
 {
-    model.Id(t => t.ID);    
+    model.Id(t => t.ID);
 })
 .Events(t => { t.RequestEnd("onGridRequestEndDailyReportColumn"); })
-.Read(t => t.Action("GetDataTransferDailyReportColumnByMembershipIDAndIndustryIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
+.Read(t => t.Action("GetByMembershipIDAndIndustryIDAndDailyReportColumnToList", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
 .Update(t => t.Action("UpdateDataTransferDailyReportSectionOrColumn", "MembershipPermission"))
 )
 )
@@ -704,6 +767,17 @@
 )
 
 <script>
+    //Company Name
+    function onGridRequestEndMembershipPermissionCompanyName(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            var response = e.response;
+            var messageType = response.split('-')[0];
+            var note = response.split('-')[1];
+            var notification = $("#Notification").data("kendoNotification");
+            notification.show(note, messageType);
+            $("#MembershipPermissionCompanyName").data("kendoGrid").dataSource.read();
+        }
+    }
     //Indusstry DropDownList
     function onIndustryDataBound() {
         var control = $("#Industry").data("kendoDropDownList");

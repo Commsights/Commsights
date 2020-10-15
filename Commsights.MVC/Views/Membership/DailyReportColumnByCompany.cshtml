@@ -1,16 +1,13 @@
-﻿@{ ViewData["Title"] = "Daily report column by company"; }
+﻿@{ ViewData["Title"] = "Report column by company"; }
 
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Customer - Daily report column by company</h3>
+                <h3 class="card-title">Customer - Report column by company</h3>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class='col-sm-1'>
-                        Company
-                    </div>
+                <div class="row">                   
                     <div class='col-sm-6'>
                         @(Html.Kendo().DropDownList()
                      .Name("Customer")
@@ -22,7 +19,7 @@
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCustomerToList", "Membership")))
                             )
                     </div>
-                    <div class='col-sm-2'>
+                    <div class='col-sm-1'>
                         <button type="button" class="btn btn-primary" onclick="onInitializationDailyReportColumn()">
                             <span class="fas fa-sync-alt"></span>
                         </button>
@@ -34,10 +31,14 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.Active).Title("Select").Width(100);
+    columns.Bound(t => t.IsDaily).Title("Daily").Width(50);
+    columns.Bound(t => t.IsWeekly).Title("Weekly").Width(50);
+    columns.Bound(t => t.IsMonthly).Title("Monthly").Width(50);
+    columns.Bound(t => t.IsQuarterly).Title("Quarterly").Width(50);
+    columns.Bound(t => t.IsYearly).Title("Yearly").Width(50);
     columns.Bound(t => t.SortOrder).Title("Sort").Width(200);
-    columns.Bound(t => t.DailyReportColumnName).Title("Daily report column").Width(200);
-    columns.Bound(t => t.DailyReportColumnNote).Title("Vietnamese").Width(200);
+    columns.Bound(t => t.Email).Title("English").Width(200);
+    columns.Bound(t => t.Phone).Title("Vietnamese").Width(200);
 })
 .Editable(editable => editable.Mode(GridEditMode.InLine))
 .Sortable()
@@ -68,13 +69,11 @@
 .PageSize(1000)
 .Model(model =>
 {
-    model.Id(t => t.ID);
-    model.Field(t => t.DailyReportColumnName).Editable(false);
-    model.Field(t => t.DailyReportColumnNote).Editable(false);
+    model.Id(t => t.ID);    
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetDataTransferDailyReportColumnByMembershipIDAndDailyReportColumnToList", "MembershipPermission").Data("filterMembershipPermission"))
-.Update(t => t.Action("UpdateDataTransferDailyReportSectionOrColumn", "MembershipPermission"))
+.Read(t => t.Action("GetByMembershipIDAndIndustryIDAndContactToList", "MembershipPermission").Data("filterMembershipPermission"))
+.Update(t => t.Action("UpdateDataTransferContact", "MembershipPermission"))
 )
 )
             </div>

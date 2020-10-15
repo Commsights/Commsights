@@ -131,10 +131,7 @@ namespace Commsights.Data.Repositories
                 list[i].Language.TextName = list[i].LanguageName;
                 list[i].Frequency = new ModelTemplate();
                 list[i].Frequency.ID = list[i].FrequencyID;
-                list[i].Frequency.TextName = list[i].FrequencyName;
-                list[i].ColorType = new ModelTemplate();
-                list[i].ColorType.ID = list[i].ColorTypeID;
-                list[i].ColorType.TextName = list[i].ColorTypeName;
+                list[i].Frequency.TextName = list[i].FrequencyName;              
             }
             return list;
         }

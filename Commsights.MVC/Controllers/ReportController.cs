@@ -1473,7 +1473,7 @@ namespace Commsights.MVC.Controllers
                                         else
                                         {
                                             workSheet.Cells[row, i].Value = listData[index].ArticleTypeName;
-                                        }                                        
+                                        }
                                         workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                                         workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
                                         workSheet.Cells[row, i].Style.Font.Size = 11;
@@ -1488,11 +1488,11 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnCompanyID > 0) && (DailyReportColumnCompanyIDSortOrder == i))
                                     {
-                                        
-                                        if(!string.IsNullOrEmpty(listData[index].CompanyName))
+
+                                        if (!string.IsNullOrEmpty(listData[index].CompanyName))
                                         {
                                             workSheet.Cells[row, i].Value = listData[index].CompanyName;
-                                        }    
+                                        }
                                         else
                                         {
                                             if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
@@ -1503,7 +1503,7 @@ namespace Commsights.MVC.Controllers
                                             {
                                                 workSheet.Cells[row, i].Value = listData[index].ArticleTypeName;
                                             }
-                                        }    
+                                        }
                                         workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                                         workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
                                         workSheet.Cells[row, i].Style.Font.Size = 11;
@@ -1606,7 +1606,7 @@ namespace Commsights.MVC.Controllers
                                         else
                                         {
                                             workSheet.Cells[row, i].Value = listData[index].MediaType;
-                                        }                                        
+                                        }
                                         workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                                         workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
                                         workSheet.Cells[row, i].Style.Font.Size = 11;
@@ -4118,6 +4118,11 @@ namespace Commsights.MVC.Controllers
                                                                         listProductPropertyURLCode[j].AssessID = product.AssessID;
                                                                     }
                                                                     _productPropertyRepository.Range(listProductPropertyURLCode);
+                                                                }
+                                                                if (product.IsVideo == true)
+                                                                {
+                                                                    product.URLCode = AppGlobal.DomainMain + "Product/ViewContent/" + product.ID;
+                                                                    _productRepository.Update(product.ID, product);
                                                                 }
                                                             }
                                                             bool isCompany = true;

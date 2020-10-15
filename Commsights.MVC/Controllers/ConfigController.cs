@@ -366,10 +366,13 @@ namespace Commsights.MVC.Controllers
                     {
                         Config config = new Config();
                         config = model;
-                        config.ParentID = parent.ID;                        
+                        config.ParentID = parent.ID;
                         config.Note = "";
                         config.ID = 0;
-                        result = _configResposistory.Create(config);
+                        if (config.ParentID > 0)
+                        {
+                            result = _configResposistory.Create(config);
+                        }
                     }
                 }
             }

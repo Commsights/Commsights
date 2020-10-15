@@ -25,5 +25,10 @@ namespace Commsights.Data.Models
         public string Email { get; set; }
         public string Phone { get; set; }
         public int? LanguageID { get; set; }
+        public bool? IsDaily { get; set; }
+        public bool? IsWeekly { get; set; }
+        public bool? IsMonthly { get; set; }
+        public bool? IsQuarterly { get; set; }
+        public bool? IsYearly { get; set; }
     }
 }

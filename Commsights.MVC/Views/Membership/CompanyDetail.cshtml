@@ -12,8 +12,8 @@
                 <form asp-action="SaveCompany" asp-controller="Membership">
                     @Html.HiddenFor(Model => Model.ID)
                     <div class="row">
-                        <div class='col-md-8'>
-                            @(Html.Kendo().DropDownListFor(Model => Model.CategoryID)                                    
+                        <div class='col-md-6'>
+                            @(Html.Kendo().DropDownListFor(Model => Model.CategoryID)
                                    .DataValueField("ID")
                                    .DataTextField("TransferName")
                                    .HtmlAttributes(new {@class = "form-control" })
@@ -25,6 +25,8 @@
                             <a style="width:100%; cursor:pointer; color:#ffffff;" title="Tìm" onclick="onSearch()" class="btn btn-success">
                                 <span class="fas fa-search"></span>
                             </a>
+                        </div>
+                        <div class='col-md-2'>                           
                         </div>
                         <div class='col-md-1'>
                             <button style="width:100%;" type="submit" title="Save" class="btn btn-primary">
