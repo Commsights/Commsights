@@ -762,6 +762,7 @@ namespace Commsights.Data.Repositories
             List<Membership> listCompany = _membershipRepository.GetByCompanyToList();
             for (int i = 0; i < listCompany.Count; i++)
             {
+                List<MembershipPermission> listCompanyName = _membershipPermissionRepository.GetByMembershipIDAndCodeToList(listCompany[i].ID, AppGlobal.CompanyName);
                 if (!string.IsNullOrEmpty(listCompany[i].Account))
                 {
                     keyword = listCompany[i].Account.Trim();
@@ -773,13 +774,47 @@ namespace Commsights.Data.Repositories
                         companyID = listCompany[i].ID;
                         listCompanyID.Add(companyID);
                     }
+                    else
+                    {
+                        foreach (MembershipPermission membershipPermission in listCompanyName)
+                        {
+
+                            if (product.Title.Contains(membershipPermission.FullName))
+                            {
+                                check = check + AppGlobal.CheckContentAndKeyword(product.Title, keyword);
+                                title = true;
+                                companyID = listCompany[i].ID;
+                                listCompanyID.Add(companyID);
+                            }
+                        }
+                    }
                     if (product.Description.Contains(keyword))
                     {
                         check = check + AppGlobal.CheckContentAndKeyword(product.Description, keyword);
                     }
+                    else
+                    {
+                        foreach (MembershipPermission membershipPermission in listCompanyName)
+                        {
+                            if (product.Description.Contains(membershipPermission.FullName))
+                            {
+                                check = check + AppGlobal.CheckContentAndKeyword(product.Description, keyword);
+                            }
+                        }
+                    }
                     if (product.ContentMain.Contains(keyword))
                     {
                         check = check + AppGlobal.CheckContentAndKeyword(product.ContentMain, keyword);
+                    }
+                    else
+                    {
+                        foreach (MembershipPermission membershipPermission in listCompanyName)
+                        {
+                            if (product.ContentMain.Contains(membershipPermission.FullName))
+                            {
+                                check = check + AppGlobal.CheckContentAndKeyword(product.Description, keyword);
+                            }
+                        }
                     }
                     if (check > 0)
                     {
