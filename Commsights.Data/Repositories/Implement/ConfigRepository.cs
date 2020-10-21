@@ -61,6 +61,36 @@ namespace Commsights.Data.Repositories
         {
             return _context.Config.Where(item => item.GroupName.Equals(AppGlobal.CRM) && (item.Code.Equals(AppGlobal.Website) || item.Code.Equals(AppGlobal.PressList))).OrderBy(item => item.Title).ToList();
         }
+        public List<Config> GetMediaByGroupNameAndActiveToList(string groupName, bool active)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),                
+                new SqlParameter("@Active",active)
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectMediaByGroupNameAndActive", parameters);
+            list = SQLHelper.ToList<Config>(dt);           
+            return list;
+        }
+        public List<Config> GetMediaByGroupNameToList(string groupName)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),                
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectMediaByGroupNameAndActive", parameters);
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
+        public List<Config> GetMediaFullToList()
+        {
+            List<Config> list = new List<Config>();            
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectMedia");
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
         public List<Config> GetByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active)
         {
             return _context.Config.Where(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.Active.Equals(active)).OrderBy(item => item.SortOrder).ToList();

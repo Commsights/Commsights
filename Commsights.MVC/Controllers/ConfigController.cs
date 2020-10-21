@@ -95,6 +95,7 @@ namespace Commsights.MVC.Controllers
             {
                 model.ColorTypeID = model.ColorType.ID;
             }
+            model.Active = true;
         }
         public IActionResult Index()
         {
@@ -192,6 +193,21 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetMediaToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _configResposistory.GetMediaToList();
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetMediaFullToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetMediaFullToList();
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetMediaByGroupNameAndActiveToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetMediaByGroupNameAndActiveToList(AppGlobal.CRM, true);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetMediaByGroupNameToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetMediaByGroupNameToList(AppGlobal.CRM);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetByParentIDToList([DataSourceRequest] DataSourceRequest request, int parentID)

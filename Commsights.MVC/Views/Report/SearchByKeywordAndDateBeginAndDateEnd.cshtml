@@ -1,0 +1,121 @@
+﻿@{ ViewData["Title"] = "Search"; }
+
+@model Commsights.Data.Models.ProductSearch
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Data - Search</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class='col-sm-2'>
+                        @(Html.Kendo().DatePickerFor(Model => Model.DatePublishBegin)
+                                     .Format("dd/MM/yyyy")
+                                     .HtmlAttributes(new { @class = "form-control", title = "Begin" })
+                                     .DateInput()
+                                )
+                    </div>
+                    <div class='col-sm-2'>
+                        @(Html.Kendo().DatePickerFor(Model => Model.DatePublishEnd)
+                                     .Format("dd/MM/yyyy")
+                                     .HtmlAttributes(new { @class = "form-control", title = "End" })
+                                     .DateInput()
+                                )
+                    </div>
+                    <div class='col-sm-4'>
+                        <input id="Search" name="Search" class="form-control" placeholder="Search" type="text" value="" />
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-success" onclick="onSearch()">
+                            <span class="fa fa-search"></span>
+                        </button>
+                    </div>
+                </div>
+                <br />
+                @(Html.Kendo().Grid<Commsights.Data.Models.Product>()
+.Name("Product")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" });}).Width(120);    
+    columns.Bound(t => t.Active).Title("Select").Width(100);
+    columns.Bound(t => t.DatePublish).Title("Date").Format("{0: MM/dd/yyyy}").Width(120).HtmlAttributes(new { @class = "text-right" });
+    columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(1000);
+    columns.Bound(t => t.Description).Title("Summary").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });    
+})
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid" })
+.Search(search => { search.Field(f => f.Title); search.Field(f => f.URLCode); search.Field(f => f.Description); })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.ID);
+    model.Field(t => t.ID).Editable(false);
+    model.Field(t => t.DateUpdated).Editable(false);
+    model.Field(t => t.DatePublish).Editable(false);
+})
+.Events(t => { t.RequestEnd("onGridRequestEnd"); })
+.Read(t => t.Action("GetBySearchAndDatePublishBeginAndDatePublishEndToList", "Product").Data("filterProduct"))
+.Update(t => t.Action("Update", "Product"))
+)
+)
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+<script>
+    function onGridRequestEnd(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            var response = e.response;
+            var messageType = response.split('-')[0];
+            var note = response.split('-')[1];
+            var notification = $("#Notification").data("kendoNotification");
+            notification.show(note, messageType);
+            $("#Product").data("kendoGrid").dataSource.read();
+        }
+    }
+    function filterProduct(e) {
+        var searchValue = $("#Search").val();
+        var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
+        var datePublishEndValue = toDate02($("#DatePublishEnd").val());
+        return { search: searchValue, datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue };
+    }
+    function onSearch() {
+        $("#Product").data("kendoGrid").dataSource.read();
+    }
+</script>

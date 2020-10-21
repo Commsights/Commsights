@@ -18,6 +18,8 @@ namespace Commsights.Data.Repositories
         public Config GetByGroupNameAndCodeAndParentID(string groupName, string code, int parentID);
         public List<Config> GetByCodeToList(string code);
         public List<Config> GetByGroupNameAndCodeToList(string groupName, string code);
+        public List<Config> GetMediaByGroupNameToList(string groupName);
+        public List<Config> GetMediaByGroupNameAndActiveToList(string groupName, bool active);
         public List<Config> GetByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active);
         public List<Config> GetByGroupNameAndCodeAndActiveAndIsMenuLeftToList(string groupName, string code, bool active, bool isMenuLeft);
         public List<ConfigDataTransfer> GetDataTransferParentByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active);
@@ -25,6 +27,7 @@ namespace Commsights.Data.Repositories
         public List<ConfigDataTransfer> GetDataTransferPressListByGroupNameAndCodeToList(string groupName, string code);
         public List<ConfigDataTransfer> GetDataTransferWebsiteByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active);
         public List<Config> GetMediaToList();
+        public List<Config> GetMediaFullToList();
         public List<ConfigDataTransfer> GetDataTransferTierByTierIDAndIndustryIDToList(int tierID, int industryID);
     }
 }
