@@ -10,6 +10,7 @@ namespace Commsights.Data.Repositories
     {
         public bool IsExist(ProductProperty model);
         public string InsertItemsByID(int ID);
+        public string InsertItemByID(int ID);
         public string UpdateItemsWithParentIDIsZero();
         public bool IsExistByProductIDAndCodeAndCompanyID(int productID, string code, int companyID);
         public bool IsExistByGUICodeAndCodeAndCompanyID(string gUICode, string code, int companyID);

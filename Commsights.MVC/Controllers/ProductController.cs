@@ -148,6 +148,7 @@ namespace Commsights.MVC.Controllers
         {
             ProductViewContentViewModel model = new ProductViewContentViewModel();
             model.Product = new Product();
+            model.Product.Title = "";
             model.ListProductProperty = new List<ProductProperty>();
             if (ID > 0)
             {

@@ -165,5 +165,13 @@ namespace Commsights.Data.Repositories
             };
             return SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertItemsByID", parameters);
         }
+        public string InsertItemByID(int ID)
+        {
+            SqlParameter[] parameters =
+                      {
+                new SqlParameter("@ID",ID),
+            };
+            return SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertItemByID", parameters);
+        }
     }
 }

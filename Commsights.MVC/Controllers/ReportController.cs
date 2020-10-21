@@ -2879,10 +2879,10 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult CopyProductPropertyByID(int ID)
         {
-            _productPropertyRepository.InsertItemsByID(ID);
+            _productPropertyRepository.InsertItemByID(ID);
             string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
             return Json(note);
-        }
+        }     
         public IActionResult DeleteProductAndProductProperty(ProductDataTransfer model)
         {
             int result = _productPropertyRepository.Delete(model.ID);
