@@ -28,6 +28,7 @@ namespace Commsights.Data.Repositories
         public List<ConfigDataTransfer> GetDataTransferWebsiteByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active);
         public List<Config> GetMediaToList();
         public List<Config> GetMediaFullToList();
+        public List<Config> GetAll001ToList();
         public List<ConfigDataTransfer> GetDataTransferTierByTierIDAndIndustryIDToList(int tierID, int industryID);
     }
 }

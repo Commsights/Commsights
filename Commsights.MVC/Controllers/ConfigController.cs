@@ -185,6 +185,11 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public ActionResult GetAll001ToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetAll001ToList();
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetAllToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _configResposistory.GetAllToList();

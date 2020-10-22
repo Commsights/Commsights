@@ -66,11 +66,11 @@ namespace Commsights.Data.Repositories
             List<Config> list = new List<Config>();
             SqlParameter[] parameters =
                        {
-                new SqlParameter("@GroupName",groupName),                
+                new SqlParameter("@GroupName",groupName),
                 new SqlParameter("@Active",active)
             };
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectMediaByGroupNameAndActive", parameters);
-            list = SQLHelper.ToList<Config>(dt);           
+            list = SQLHelper.ToList<Config>(dt);
             return list;
         }
         public List<Config> GetMediaByGroupNameToList(string groupName)
@@ -78,7 +78,7 @@ namespace Commsights.Data.Repositories
             List<Config> list = new List<Config>();
             SqlParameter[] parameters =
                        {
-                new SqlParameter("@GroupName",groupName),                
+                new SqlParameter("@GroupName",groupName),
             };
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectMediaByGroupNameAndActive", parameters);
             list = SQLHelper.ToList<Config>(dt);
@@ -86,7 +86,7 @@ namespace Commsights.Data.Repositories
         }
         public List<Config> GetMediaFullToList()
         {
-            List<Config> list = new List<Config>();            
+            List<Config> list = new List<Config>();
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectMedia");
             list = SQLHelper.ToList<Config>(dt);
             return list;
@@ -161,7 +161,7 @@ namespace Commsights.Data.Repositories
                 list[i].Language.TextName = list[i].LanguageName;
                 list[i].Frequency = new ModelTemplate();
                 list[i].Frequency.ID = list[i].FrequencyID;
-                list[i].Frequency.TextName = list[i].FrequencyName;              
+                list[i].Frequency.TextName = list[i].FrequencyName;
             }
             return list;
         }
@@ -185,15 +185,15 @@ namespace Commsights.Data.Repositories
             SqlParameter[] parameters =
                         {
                 new SqlParameter("@TierID",tierID),
-                new SqlParameter("@IndustryID",industryID),                
+                new SqlParameter("@IndustryID",industryID),
             };
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectDataTransferTierByTierIDAndIndustryID", parameters);
             list = SQLHelper.ToList<ConfigDataTransfer>(dt);
             for (int i = 0; i < list.Count; i++)
-            {              
+            {
                 list[i].Parent = new ModelTemplate();
                 list[i].Parent.ID = list[i].ParentID;
-                list[i].Parent.TextName = list[i].ParentName;              
+                list[i].Parent.TextName = list[i].ParentName;
             }
             return list;
 
@@ -226,6 +226,13 @@ namespace Commsights.Data.Repositories
                 list[i].ColorType.ID = list[i].ColorTypeID;
                 list[i].ColorType.TextName = list[i].ColorTypeName;
             }
+            return list;
+        }
+        public List<Config> GetAll001ToList()
+        {
+            List<Config> list = new List<Config>();            
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectAllItems");
+            list = SQLHelper.ToList<Config>(dt);
             return list;
         }
     }

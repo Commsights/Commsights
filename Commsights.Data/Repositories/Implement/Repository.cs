@@ -99,7 +99,7 @@ namespace Commsights.Data.Repositories
         }
         public List<T> GetAllToList()
         {
-            var result = _context.Set<T>().OrderByDescending(model => model.DateUpdated).ToList();
+            var result = _context.Set<T>().OrderByDescending(model => model.ID).ToList();
             return result ?? new List<T>();
         }
         public List<T> GetByParentIDToList(int parentID)

@@ -2890,7 +2890,7 @@ namespace Commsights.MVC.Controllers
             _productPropertyRepository.InsertItemByID(ID);
             string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
             return Json(note);
-        }     
+        }
         public IActionResult DeleteProductAndProductProperty(ProductDataTransfer model)
         {
             int result = _productPropertyRepository.Delete(model.ID);
@@ -3688,6 +3688,8 @@ namespace Commsights.MVC.Controllers
                                                         if (parent == null)
                                                         {
                                                             parent = new Config();
+                                                            parent.GroupName = AppGlobal.CRM;
+                                                            parent.Code = AppGlobal.PressList;
                                                             parent.Title = mediaTitle;
                                                             parent.CodeName = mediaTitle;
                                                             parent.Color = AppGlobal.AdvertisementValue;
@@ -3698,6 +3700,8 @@ namespace Commsights.MVC.Controllers
                                                                 if (mediaType == null)
                                                                 {
                                                                     mediaType = new Config();
+                                                                    mediaType.GroupName = AppGlobal.CRM;
+                                                                    mediaType.Code = AppGlobal.WebsiteType;
                                                                     mediaType.CodeName = type;
                                                                     mediaType.Initialization(InitType.Insert, RequestUserID);
                                                                     _configResposistory.Create(mediaType);
@@ -3707,10 +3711,12 @@ namespace Commsights.MVC.Controllers
                                                             if (workSheet.Cells[i, 13].Value != null)
                                                             {
                                                                 string type = workSheet.Cells[i, 13].Value.ToString().Trim();
-                                                                Config country = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.WebsiteType, type);
+                                                                Config country = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Country, type);
                                                                 if (country == null)
                                                                 {
                                                                     country = new Config();
+                                                                    country.GroupName = AppGlobal.CRM;
+                                                                    country.Code = AppGlobal.Country;
                                                                     country.CodeName = type;
                                                                     country.Initialization(InitType.Insert, RequestUserID);
                                                                     _configResposistory.Create(country);
@@ -3720,10 +3726,12 @@ namespace Commsights.MVC.Controllers
                                                             if (workSheet.Cells[i, 16].Value != null)
                                                             {
                                                                 string type = workSheet.Cells[i, 16].Value.ToString().Trim();
-                                                                Config language = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.WebsiteType, type);
+                                                                Config language = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Language, type);
                                                                 if (language == null)
                                                                 {
                                                                     language = new Config();
+                                                                    language.GroupName = AppGlobal.CRM;
+                                                                    language.Code = AppGlobal.Language;
                                                                     language.CodeName = type;
                                                                     language.Initialization(InitType.Insert, RequestUserID);
                                                                     _configResposistory.Create(language);
@@ -3733,10 +3741,12 @@ namespace Commsights.MVC.Controllers
                                                             if (workSheet.Cells[i, 17].Value != null)
                                                             {
                                                                 string type = workSheet.Cells[i, 17].Value.ToString().Trim();
-                                                                Config frequency = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.WebsiteType, type);
+                                                                Config frequency = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Frequency, type);
                                                                 if (frequency == null)
                                                                 {
                                                                     frequency = new Config();
+                                                                    frequency.GroupName = AppGlobal.CRM;
+                                                                    frequency.Code = AppGlobal.Frequency;
                                                                     frequency.CodeName = type;
                                                                     frequency.Initialization(InitType.Insert, RequestUserID);
                                                                     _configResposistory.Create(frequency);
@@ -3746,10 +3756,12 @@ namespace Commsights.MVC.Controllers
                                                             if (workSheet.Cells[i, 21].Value != null)
                                                             {
                                                                 string type = workSheet.Cells[i, 21].Value.ToString().Trim();
-                                                                Config colorType = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.WebsiteType, type);
+                                                                Config colorType = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Color, type);
                                                                 if (colorType == null)
                                                                 {
                                                                     colorType = new Config();
+                                                                    colorType.GroupName = AppGlobal.CRM;
+                                                                    colorType.Code = AppGlobal.Color;
                                                                     colorType.CodeName = type;
                                                                     colorType.Initialization(InitType.Insert, RequestUserID);
                                                                     _configResposistory.Create(colorType);
@@ -4041,6 +4053,8 @@ namespace Commsights.MVC.Controllers
                                                                     if (frequency == null)
                                                                     {
                                                                         frequency = new Config();
+                                                                        frequency.GroupName = AppGlobal.CRM;
+                                                                        frequency.Code = AppGlobal.Frequency;
                                                                         frequency.CodeName = frequencyName;
                                                                         frequency.Initialization(InitType.Insert, RequestUserID);
                                                                         _configResposistory.Create(frequency);
@@ -4326,6 +4340,8 @@ namespace Commsights.MVC.Controllers
                                                             if (parent == null)
                                                             {
                                                                 parent = new Config();
+                                                                parent.GroupName = AppGlobal.CRM;
+                                                                parent.Code = AppGlobal.Website;
                                                                 parent.Initialization(InitType.Insert, RequestUserID);
                                                                 parent.ParentID = AppGlobal.ParentID;
                                                                 parent.CodeName = source;
