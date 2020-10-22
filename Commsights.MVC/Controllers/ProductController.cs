@@ -387,6 +387,82 @@ namespace Commsights.MVC.Controllers
                 }
             }
         }
+        public void ParseRSSNoFilterProduct(List<Product> list, Config item)
+        {
+            XmlDocument rssXmlDoc = new XmlDocument();
+            rssXmlDoc.Load(item.URLFull.Trim());
+            XmlNodeList rssNodes = rssXmlDoc.SelectNodes("rss/channel/item");
+            StringBuilder rssContent = new StringBuilder();
+            foreach (XmlNode rssNode in rssNodes)
+            {
+                Product product = new Product();
+                this.InitializationProduct(product);
+                product.ParentID = item.ParentID;
+                product.CategoryID = item.ID;
+                product.Source = "Auto";
+                XmlNode rssSubNode = rssNode.SelectSingleNode("title");
+                product.Title = rssSubNode != null ? rssSubNode.InnerText : "";
+                product.MetaTitle = AppGlobal.SetName(product.Title);
+                product.MetaTitle = AppGlobal.SetName(product.Title);
+                rssSubNode = rssNode.SelectSingleNode("link");
+                product.URLCode = rssSubNode != null ? rssSubNode.InnerText : "";
+                switch (product.ParentID)
+                {
+                    case 301:
+                        rssSubNode = rssNode.SelectSingleNode("id");
+                        product.URLCode = rssSubNode != null ? rssSubNode.InnerText : "";
+                        break;
+                }
+                AppGlobal.GetURL(product);
+                //this.GetAuthorFromURL(product);
+                rssSubNode = rssNode.SelectSingleNode("description");
+                product.Description = rssSubNode != null ? rssSubNode.InnerText : "";
+                switch (product.ParentID)
+                {
+                    case 301:
+                        rssSubNode = rssNode.SelectSingleNode("id");
+                        product.URLCode = rssSubNode != null ? rssSubNode.InnerText : "";
+                        rssSubNode = rssNode.SelectSingleNode("summary");
+                        product.Description = rssSubNode != null ? rssSubNode.InnerText : "";
+                        break;
+                }
+                rssSubNode = rssNode.SelectSingleNode("pubDate");
+                string pubDate = rssSubNode != null ? rssSubNode.InnerText : "";
+                try
+                {
+                    product.DatePublish = DateTime.Parse(pubDate);
+                }
+                catch
+                {
+                    product.DatePublish = DateTime.Now;
+                }
+                if (!string.IsNullOrEmpty(product.Title))
+                {
+                    product.Title = product.Title.Trim();
+                }
+                if (!string.IsNullOrEmpty(product.Description))
+                {
+                    product.Description = AppGlobal.RemoveHTMLTags(product.Description);
+                    product.Description = product.Description.Trim();
+                }
+                if (!string.IsNullOrEmpty(product.URLCode))
+                {
+                    product.URLCode = product.URLCode.Trim();
+                }
+                if (!string.IsNullOrEmpty(product.Author))
+                {
+                    product.Author = product.Author.Trim();
+                }
+                if ((product.DatePublish.Year > 2019) && (product.DatePublish.Month > 6))
+                {
+                    if (_productRepository.IsValid(product.URLCode) == true)
+                    {
+                        product.ContentMain = AppGlobal.GetContentByURL(product.URLCode, product.ParentID.Value);
+                        list.Add(product);
+                    }
+                }
+            }
+        }
         public IActionResult ScanFull()
         {
             //Product product = new Product();
@@ -421,7 +497,107 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
             return Json(note);
         }
-        
-     
+        public IActionResult ScanWebsite(int websiteID)
+        {
+            List<Config> listConfig = _configResposistory.GetByParentIDToList(websiteID);
+            foreach (Config item in listConfig)
+            {
+                if (item.IsMenuLeft == true)
+                {
+                    List<Product> list = new List<Product>();
+                    try
+                    {
+                        this.ParseRSS(list, item);
+                    }
+                    catch (Exception e)
+                    {
+                        string message = e.Message;
+                    }
+                    if (list.Count > 0)
+                    {
+                        _productRepository.AddRange(list);
+                        _productPropertyRepository.UpdateItemsWithParentIDIsZero();
+                    }
+                }
+            }
+            string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
+            return Json(note);
+        }
+        public IActionResult ScanFullNoFilterProduct()
+        {
+            List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveAndIsMenuLeftToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, false, true);
+            foreach (Config item in listConfig)
+            {
+                if (item.IsMenuLeft == true)
+                {
+                    List<Product> list = new List<Product>();
+                    try
+                    {
+                        this.ParseRSSNoFilterProduct(list, item);
+                    }
+                    catch (Exception e)
+                    {
+                        string message = e.Message;
+                    }
+                    if (list.Count > 0)
+                    {
+                        _productRepository.AddRange(list);
+                        _productPropertyRepository.UpdateItemsWithParentIDIsZero();
+                    }
+                }
+            }
+            string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
+            return Json(note);
+        }
+        public IActionResult ScanWebsiteNoFilterProduct(int websiteID)
+        {
+            List<Config> listConfig = _configResposistory.GetByParentIDToList(websiteID);
+            foreach (Config item in listConfig)
+            {
+                if (item.IsMenuLeft == true)
+                {
+                    List<Product> list = new List<Product>();
+                    try
+                    {
+                        this.ParseRSSNoFilterProduct(list, item);
+                    }
+                    catch (Exception e)
+                    {
+                        string message = e.Message;
+                    }
+                    if (list.Count > 0)
+                    {
+                        _productRepository.AddRange(list);
+                        _productPropertyRepository.UpdateItemsWithParentIDIsZero();
+                    }
+                }
+            }
+            string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
+            return Json(note);
+        }
+        public void ScanWebsiteNoFilterProductVoid(int websiteID)
+        {
+            List<Config> listConfig = _configResposistory.GetByParentIDToList(websiteID);
+            foreach (Config item in listConfig)
+            {
+                if (item.IsMenuLeft == true)
+                {
+                    List<Product> list = new List<Product>();
+                    try
+                    {
+                        this.ParseRSSNoFilterProduct(list, item);
+                    }
+                    catch (Exception e)
+                    {
+                        string message = e.Message;
+                    }
+                    if (list.Count > 0)
+                    {
+                        _productRepository.AddRange(list);
+                        _productPropertyRepository.UpdateItemsWithParentIDIsZero();
+                    }
+                }
+            }
+        }
     }
 }

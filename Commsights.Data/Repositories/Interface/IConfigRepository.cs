@@ -24,11 +24,13 @@ namespace Commsights.Data.Repositories
         public List<Config> GetByGroupNameAndCodeAndActiveAndIsMenuLeftToList(string groupName, string code, bool active, bool isMenuLeft);
         public List<ConfigDataTransfer> GetDataTransferParentByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active);
         public List<ConfigDataTransfer> GetDataTransferChildrenCountByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active);
+        public List<ConfigDataTransfer> GetDataTransferChildrenCountByGroupNameAndCodeAndActiveAndIsMenuLeftToList(string groupName, string code, bool active, bool isMenuLeft);
         public List<ConfigDataTransfer> GetDataTransferPressListByGroupNameAndCodeToList(string groupName, string code);
         public List<ConfigDataTransfer> GetDataTransferWebsiteByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active);
         public List<Config> GetMediaToList();
         public List<Config> GetMediaFullToList();
         public List<Config> GetAll001ToList();
         public List<ConfigDataTransfer> GetDataTransferTierByTierIDAndIndustryIDToList(int tierID, int industryID);
+        public List<Config> GetByParentIDAndGroupNameAndCodeToList(int parentID, string groupName, string code);
     }
 }

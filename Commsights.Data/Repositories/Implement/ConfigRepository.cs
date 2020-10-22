@@ -61,6 +61,10 @@ namespace Commsights.Data.Repositories
         {
             return _context.Config.Where(item => item.GroupName.Equals(AppGlobal.CRM) && (item.Code.Equals(AppGlobal.Website) || item.Code.Equals(AppGlobal.PressList))).OrderBy(item => item.Title).ToList();
         }
+        public List<Config> GetByParentIDAndGroupNameAndCodeToList(int parentID, string groupName, string code)
+        {
+            return _context.Config.Where(item => item.GroupName.Equals(AppGlobal.CRM) && item.Code.Equals(AppGlobal.Website) && item.ParentID == parentID).OrderBy(item => item.ID).ToList();
+        }
         public List<Config> GetMediaByGroupNameAndActiveToList(string groupName, bool active)
         {
             List<Config> list = new List<Config>();
@@ -179,6 +183,21 @@ namespace Commsights.Data.Repositories
             return list;
 
         }
+        public List<ConfigDataTransfer> GetDataTransferChildrenCountByGroupNameAndCodeAndActiveAndIsMenuLeftToList(string groupName, string code, bool active, bool isMenuLeft)
+        {
+            List<ConfigDataTransfer> list = new List<ConfigDataTransfer>();
+            SqlParameter[] parameters =
+                        {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@Active",active),
+                new SqlParameter("@IsMenuLeft",isMenuLeft),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectDisplayByGroupNameAndCodeAndActiveAndIsMenuLeft", parameters);
+            list = SQLHelper.ToList<ConfigDataTransfer>(dt);
+            return list;
+
+        }
         public List<ConfigDataTransfer> GetDataTransferTierByTierIDAndIndustryIDToList(int tierID, int industryID)
         {
             List<ConfigDataTransfer> list = new List<ConfigDataTransfer>();
@@ -230,7 +249,7 @@ namespace Commsights.Data.Repositories
         }
         public List<Config> GetAll001ToList()
         {
-            List<Config> list = new List<Config>();            
+            List<Config> list = new List<Config>();
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectAllItems");
             list = SQLHelper.ToList<Config>(dt);
             return list;

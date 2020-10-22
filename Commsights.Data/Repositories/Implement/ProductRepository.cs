@@ -95,7 +95,7 @@ namespace Commsights.Data.Repositories
                 search = search.Trim();
                 datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
                 datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
-                list = _context.Product.Where(item => (item.Title.Contains(search) || item.TitleEnglish.Contains(search) || item.Description.Contains(search)) && (datePublishBegin <= item.DatePublish && item.DatePublish <= datePublishEnd)).OrderBy(item => item.Title).ThenByDescending(item => item.DatePublish).ToList();
+                list = _context.Product.Where(item => (item.Title.Contains(search) || item.TitleEnglish.Contains(search) || item.Description.Contains(search)) && (datePublishBegin <= item.DatePublish && item.DatePublish <= datePublishEnd) && ((item.Source == "Auto") || (item.Source == "Google"))).OrderBy(item => item.Title).ThenByDescending(item => item.DatePublish).ToList();
             }
             return list;
         }
@@ -216,6 +216,20 @@ namespace Commsights.Data.Repositories
                 list = SQLHelper.ToList<ProductDataTransfer>(dt);
             }
 
+            return list;
+        }
+        public List<Product> GetByIDListToList(string iDList)
+        {
+            List<Product> list = new List<Product>();
+            if (!string.IsNullOrEmpty(iDList))
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@IDList",iDList),
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectByIDList", parameters);
+                list = SQLHelper.ToList<Product>(dt);
+            }
             return list;
         }
         public List<ProductDataTransfer> GetDataTransferCompanyByDatePublishAndArticleTypeIDToList(DateTime datePublish, int articleTypeID)
@@ -830,7 +844,11 @@ namespace Commsights.Data.Repositories
                             product.CompanyID = listCompany[i].ID;
                         }
                         productProperty.CompanyID = listCompany[i].ID;
-                        productProperty.IndustryID = _membershipPermissionRepository.GetByMembershipIDAndAndCodeAndActive(productProperty.CompanyID.Value, AppGlobal.Industry, true).IndustryID;
+                        MembershipPermission membershipPermissionIndustry = _membershipPermissionRepository.GetByMembershipIDAndAndCodeAndActive(productProperty.CompanyID.Value, AppGlobal.Industry, true);
+                        if (membershipPermissionIndustry != null)
+                        {
+                            productProperty.IndustryID = membershipPermissionIndustry.IndustryID;
+                        }
                         if (_productPropertyRepository.IsExistByGUICodeAndCodeAndCompanyID(productProperty.GUICode, productProperty.Code, productProperty.CompanyID.Value) == false)
                         {
                             listProductProperty.Add(productProperty);

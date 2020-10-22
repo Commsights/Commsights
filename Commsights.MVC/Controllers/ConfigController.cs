@@ -224,6 +224,15 @@ namespace Commsights.MVC.Controllers
             }
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetWebsiteByParentIDAndGroupNameAndCodeToList([DataSourceRequest] DataSourceRequest request, int parentID)
+        {
+            List<Config> data = new List<Config>();
+            if (parentID > 0)
+            {
+                data = _configResposistory.GetByParentIDAndGroupNameAndCodeToList(parentID, AppGlobal.CRM, AppGlobal.Website);
+            }
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetReportTypeToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.ReportType);
@@ -334,10 +343,24 @@ namespace Commsights.MVC.Controllers
             var data = _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetWebisteAndActiveAndIsMenuLeftToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeAndActiveAndIsMenuLeftToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true, true);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetDataTransferChildrenWebisteAndActiveToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _configResposistory.GetDataTransferChildrenCountByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
             return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetDataTransferChildrenCountByGroupNameAndCodeAndActiveAndIsMenuLeftToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetDataTransferChildrenCountByGroupNameAndCodeAndActiveAndIsMenuLeftToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true, true);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public List<ConfigDataTransfer> GetConfigDataTransferByGroupNameAndCodeAndActiveAndIsMenuLeftToList()
+        {
+            return _configResposistory.GetDataTransferChildrenCountByGroupNameAndCodeAndActiveAndIsMenuLeftToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true, true);
         }
         public ActionResult GetDataTransferParentByGroupNameAndCodeAndActiveToList([DataSourceRequest] DataSourceRequest request)
         {

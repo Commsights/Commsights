@@ -2,6 +2,7 @@
 
 @model Commsights.Data.Models.ProductSearch
 
+@Html.HiddenFor(Model => Model.ID)
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
@@ -32,19 +33,25 @@
                             <span class="fa fa-search"></span>
                         </button>
                     </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-success" title="Excel English" onclick="onExcel()">
+                            <span class="fas fa-file-excel"></span>
+                        </button>
+                    </div>
                 </div>
                 <br />
                 @(Html.Kendo().Grid<Commsights.Data.Models.Product>()
 .Name("Product")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" });}).Width(120);    
-    columns.Bound(t => t.Active).Title("Select").Width(100);
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" });}).Width(150);
+    columns.Select().Width(50);
     columns.Bound(t => t.DatePublish).Title("Date").Format("{0: MM/dd/yyyy}").Width(120).HtmlAttributes(new { @class = "text-right" });
     columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(1000);
     columns.Bound(t => t.Description).Title("Summary").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
-    columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });    
+    columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.URLCode).Title("URL").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
 })
 .Editable(editable => editable.Mode(GridEditMode.InLine))
 .Sortable()
@@ -71,6 +78,7 @@
 )
 .HtmlAttributes(new { @class = "KendoGrid" })
 .Search(search => { search.Field(f => f.Title); search.Field(f => f.URLCode); search.Field(f => f.Description); })
+.Events(ev => ev.Change("onGridChange"))
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
@@ -117,5 +125,14 @@
     }
     function onSearch() {
         $("#Product").data("kendoGrid").dataSource.read();
+    }
+    function onExcel() {
+        var IDListValue = $("#ID").val();        
+        $.post("/Report/ExportExcelReportDailyByIDList", { IDList: IDListValue }, function (result) {            
+            window.location.replace(result);
+        });        
+    }
+    function onGridChange(arg) {
+        $("#ID").val(this.selectedKeyNames().join(";"));
     }
 </script>

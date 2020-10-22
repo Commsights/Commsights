@@ -1,4 +1,4 @@
-﻿@{ ViewData["Title"] = "Article original"; }
+﻿@{ ViewData["Title"] = "Scan"; }
 
 @model Commsights.MVC.Models.BaseViewModel
 
@@ -6,48 +6,58 @@
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Data - Article original</h3>
+                <h3 class="card-title">Data - Scan</h3>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class='col-sm-3'>
+                    <div class='col-sm-4'>
                         @(Html.Kendo().DropDownList()
                      .Name("Website")
                      .DataValueField("ID")
-                     .DataTextField("Title")
+                     .DataTextField("DisplayName")
                      .HtmlAttributes(new { @class = "form-control" })
-                      .Events(e => e.DataBound("onWebsiteDataBound"))
+                      .Events(e => e.DataBound("onWebsiteDataBound").Change("onWebsiteChange"))
                        .Filter(FilterType.StartsWith)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetWebisteAndActiveToList", "Config")))
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferChildrenCountByGroupNameAndCodeAndActiveAndIsMenuLeftToList", "Config")))
                             )
                     </div>
-                    <div class='col-sm-2'>
-                        @(Html.Kendo().DatePickerFor(Model => Model.DatePublish)
-                                     .Format("dd/MM/yyyy")
-                                     .HtmlAttributes(new { @class = "form-control", title = "Date publish" })
-                                     .DateInput()
-                                )
-                    </div>
-                    <div class='col-sm-1'>
-                        <button type="button" class="btn btn-success" onclick="onSearch()">
-                            <span class="fa fa-search"></span>
+                    <div class='col-sm-4'>
+                        <button type="button" class="btn btn-primary" onclick="onScanWebsite()">
+                            <span class="fas fa-sync-alt"></span> Scan website
                         </button>
                     </div>
-                    <div class='col-sm-2'>
-                        <button type="button" class="btn btn-primary" onclick="onScanFull()">
-                            <span class="fas fa-sync-alt"></span> Scan
+                    <div class='col-sm-4'>
+                        <button type="button" class="btn btn-primary" onclick="onScanWebsiteNoFilterProduct()">
+                            <span class="fas fa-sync-alt"></span> Scan website no filter
                         </button>
                     </div>
                 </div>
                 <br />
-                @(Html.Kendo().Grid<Commsights.Data.Models.Product>()
-.Name("Product")
+                <div class="row">
+                    <div class='col-sm-4'>
+                        <button type="button" class="btn btn-primary" onclick="onScanAutoNoFilterProduct()">
+                            <span class="fas fa-sync-alt"></span> Scan auto no filter
+                        </button>
+                    </div>
+                    <div class='col-sm-4'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFull()">
+                            <span class="fas fa-sync-alt"></span> Scan full
+                        </button>
+                    </div>
+                    <div class='col-sm-4'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProduct()">
+                            <span class="fas fa-sync-alt"></span> Scan full no filter
+                        </button>
+                    </div>
+                </div>
+                @(Html.Kendo().Grid<Commsights.Data.Models.Config>()
+.Name("Config")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.DatePublish).Title("Publish").Width(200);
-    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""#=URLCode#"");' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Title + URL").Width(1000);
-    columns.Bound(t => t.Description).Title("Description").Width(2000);    
+    columns.Bound(t => t.IsMenuLeft).Title("Is RSS").Width(100);
+    columns.Bound(t => t.Title).Title("Title").Width(200);
+    columns.Bound(t => t.URLFull).Title("URLFull").Width(400);
+    columns.Bound(t => t.SortOrder).Title("Sort order").Width(200);
 })
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
@@ -74,20 +84,15 @@
 .FileName("Config.pdf")
 )
 .HtmlAttributes(new { @class = "KendoGrid" })
-.Search(search => { search.Field(f => f.Title); search.Field(f => f.URLCode); search.Field(f => f.Description); })
+.Search(search => { search.Field(f => f.Title); search.Field(f => f.URLFull);})
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
 .Model(model =>
 {
     model.Id(t => t.ID);
-    model.Field(t => t.DatePublish).Editable(false);
-    model.Field(t => t.Title).Editable(false);
-    model.Field(t => t.URLCode).Editable(false);
 })
-.Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetByParentIDAndDatePublishToList", "Product").Data("filterProduct"))
-.Update(t => t.Action("Update", "Product"))
+.Read(t => t.Action("GetWebsiteByParentIDAndGroupNameAndCodeToList", "Config").Data("filterConfig"))
 )
 )
             </div>
@@ -103,20 +108,9 @@
     .Width(400)
 )
 <script>
-    function onGridRequestEnd(e) {
-        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
-            var response = e.response;
-            var messageType = response.split('-')[0];
-            var note = response.split('-')[1];
-            var notification = $("#Notification").data("kendoNotification");
-            notification.show(note, messageType);
-            $("#Product").data("kendoGrid").dataSource.read();
-        }
-    }
-    function filterProduct(e) {
+    function filterConfig(e) {
         var parentIDValue = $("#Website").data("kendoDropDownList").value();
-        var datePublishValue = toDate02($("#DatePublish").val());
-        return { parentID: parentIDValue, datePublish: datePublishValue };
+        return { parentID: parentIDValue };
 
     }
     function onWebsiteDataBound() {
@@ -127,8 +121,8 @@
             control.trigger("change");
         }
     }
-    function onSearch() {
-        $("#Product").data("kendoGrid").dataSource.read();
+    function onWebsiteChange() {
+        $("#Config").data("kendoGrid").dataSource.read();
     }
     function onScanFull() {
         BeginRequestHandler();
@@ -144,6 +138,92 @@
              var notification = $("#Notification").data("kendoNotification");
              notification.show(note, messageType);
          });
+        return false;
+    }
+    function onScanWebsite() {
+        var websiteIDValue = $("#Website").data("kendoDropDownList").value();
+        BeginRequestHandler();
+         $.ajax({
+            url: '@Url.Action("ScanWebsite", "Product")',
+             type: 'GET',
+             data: {
+                 websiteID: websiteIDValue,
+             },
+            cache: false
+         }).done(function (e) {
+             EndRequestHandler();
+             var response = e;
+             var messageType = response.split('-')[0];
+             var note = response.split('-')[1];
+             var notification = $("#Notification").data("kendoNotification");
+             notification.show(note, messageType);
+         });
+        return false;
+    }
+    function onScanFullNoFilterProduct() {
+        BeginRequestHandler();
+         $.ajax({
+            url: '@Url.Action("ScanFullNoFilterProduct", "Product")',
+            type: 'GET',
+            cache: false
+         }).done(function (e) {
+             EndRequestHandler();
+             var response = e;
+             var messageType = response.split('-')[0];
+             var note = response.split('-')[1];
+             var notification = $("#Notification").data("kendoNotification");
+             notification.show(note, messageType);
+         });
+        return false;
+    }
+    function onScanWebsiteNoFilterProduct() {
+        var websiteIDValue = $("#Website").data("kendoDropDownList").value();
+        BeginRequestHandler();
+         $.ajax({
+            url: '@Url.Action("ScanWebsiteNoFilterProduct", "Product")',
+             type: 'GET',
+             data: {
+                 websiteID: websiteIDValue,
+             },
+            cache: false
+         }).done(function (e) {
+             EndRequestHandler();
+             var response = e;
+             var messageType = response.split('-')[0];
+             var note = response.split('-')[1];
+             var notification = $("#Notification").data("kendoNotification");
+             notification.show(note, messageType);
+         });
+        return false;
+    }
+    function onScanAutoNoFilterProduct() {
+       BeginRequestHandler();
+       $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetConfigDataTransferByGroupNameAndCodeAndActiveAndIsMenuLeftToList", "Config")",
+            data: {
+            },
+           success: function (Config) {
+               for (var index in Config) {
+                   $(Config[index]).each(function (iRec, item) {
+                        $.ajax({
+                            type: 'GET',
+                            url: "@Url.Action("ScanWebsiteNoFilterProductVoid", "Product")",
+                            data: {
+                                websiteID: item.ID
+                            },
+                           success: function () {                                
+                           }
+                        }).done(() => {
+
+                        });
+                   });
+               }
+               EndRequestHandler();
+           }
+        }).done(() => {
+            
+        });
         return false;
     }
 </script>

@@ -4913,5 +4913,209 @@ namespace Commsights.MVC.Controllers
 
             return RedirectToAction(action, controller);
         }
+
+        public string ExportExcelReportDailyByIDList(CancellationToken cancellationToken, string IDList)
+        {
+            string excelName = @"Search_" + AppGlobal.DateTimeCode + ".xlsx";
+            var streamExport = new MemoryStream();
+            using (var package = new ExcelPackage(streamExport))
+            {
+                Color color = Color.FromArgb(int.Parse("#c00000".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));
+                var workSheet = package.Workbook.Worksheets.Add("Sheet1");
+                workSheet.Cells[1, 1].Value = "Date";
+                workSheet.Cells[1, 1].Style.Font.Bold = true;
+                workSheet.Cells[1, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 1].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[1, 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(color);
+                workSheet.Cells[1, 1].Style.Font.Name = "Times New Roman";
+                workSheet.Cells[1, 1].Style.Font.Size = 11;
+                workSheet.Cells[1, 1].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 1].Style.Border.Top.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 1].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 1].Style.Border.Left.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 1].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 1].Style.Border.Right.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 1].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 1].Style.Border.Bottom.Color.SetColor(Color.Black);
+
+                workSheet.Cells[1, 2].Value = "Company";
+                workSheet.Cells[1, 2].Style.Font.Bold = true;
+                workSheet.Cells[1, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 2].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[1, 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[1, 2].Style.Fill.BackgroundColor.SetColor(color);
+                workSheet.Cells[1, 2].Style.Font.Name = "Times New Roman";
+                workSheet.Cells[1, 2].Style.Font.Size = 11;
+                workSheet.Cells[1, 2].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 2].Style.Border.Top.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 2].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 2].Style.Border.Left.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 2].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 2].Style.Border.Right.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 2].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 2].Style.Border.Bottom.Color.SetColor(Color.Black);
+
+                workSheet.Cells[1, 3].Value = "Sentiment";
+                workSheet.Cells[1, 3].Style.Font.Bold = true;
+                workSheet.Cells[1, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 3].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[1, 3].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[1, 3].Style.Fill.BackgroundColor.SetColor(color);
+                workSheet.Cells[1, 3].Style.Font.Name = "Times New Roman";
+                workSheet.Cells[1, 3].Style.Font.Size = 11;
+                workSheet.Cells[1, 3].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 3].Style.Border.Top.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 3].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 3].Style.Border.Left.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 3].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 3].Style.Border.Right.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 3].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 3].Style.Border.Bottom.Color.SetColor(Color.Black);
+
+                workSheet.Cells[1, 4].Value = "Headline (Vie)";
+                workSheet.Cells[1, 4].Style.Font.Bold = true;
+                workSheet.Cells[1, 4].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 4].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[1, 4].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[1, 4].Style.Fill.BackgroundColor.SetColor(color);
+                workSheet.Cells[1, 4].Style.Font.Name = "Times New Roman";
+                workSheet.Cells[1, 4].Style.Font.Size = 11;
+                workSheet.Cells[1, 4].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 4].Style.Border.Top.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 4].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 4].Style.Border.Left.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 4].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 4].Style.Border.Right.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 4].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 4].Style.Border.Bottom.Color.SetColor(Color.Black);
+
+                workSheet.Cells[1, 5].Value = "Headline (Eng)";
+                workSheet.Cells[1, 5].Style.Font.Bold = true;
+                workSheet.Cells[1, 5].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 5].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[1, 5].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[1, 5].Style.Fill.BackgroundColor.SetColor(color);
+                workSheet.Cells[1, 5].Style.Font.Name = "Times New Roman";
+                workSheet.Cells[1, 5].Style.Font.Size = 11;
+                workSheet.Cells[1, 5].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 5].Style.Border.Top.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 5].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 5].Style.Border.Left.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 5].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 5].Style.Border.Right.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 5].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 5].Style.Border.Bottom.Color.SetColor(Color.Black);
+
+                workSheet.Cells[1, 6].Value = "URL";
+                workSheet.Cells[1, 6].Style.Font.Bold = true;
+                workSheet.Cells[1, 6].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 6].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[1, 6].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[1, 6].Style.Fill.BackgroundColor.SetColor(color);
+                workSheet.Cells[1, 6].Style.Font.Name = "Times New Roman";
+                workSheet.Cells[1, 6].Style.Font.Size = 11;
+                workSheet.Cells[1, 6].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 6].Style.Border.Top.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 6].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 6].Style.Border.Left.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 6].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 6].Style.Border.Right.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 6].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 6].Style.Border.Bottom.Color.SetColor(Color.Black);
+
+                workSheet.Cells[1, 7].Value = "Content";
+                workSheet.Cells[1, 7].Style.Font.Bold = true;
+                workSheet.Cells[1, 7].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 7].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[1, 7].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[1, 7].Style.Fill.BackgroundColor.SetColor(color);
+                workSheet.Cells[1, 7].Style.Font.Name = "Times New Roman";
+                workSheet.Cells[1, 7].Style.Font.Size = 11;
+                workSheet.Cells[1, 7].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 7].Style.Border.Top.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 7].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 7].Style.Border.Left.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 7].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 7].Style.Border.Right.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 7].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 7].Style.Border.Bottom.Color.SetColor(Color.Black);
+
+                workSheet.Cells[1, 8].Value = "Author";
+                workSheet.Cells[1, 8].Style.Font.Bold = true;
+                workSheet.Cells[1, 8].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 8].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[1, 8].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[1, 8].Style.Fill.BackgroundColor.SetColor(color);
+                workSheet.Cells[1, 8].Style.Font.Name = "Times New Roman";
+                workSheet.Cells[1, 8].Style.Font.Size = 11;
+                workSheet.Cells[1, 8].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 8].Style.Border.Top.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 8].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 8].Style.Border.Left.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 8].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 8].Style.Border.Right.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 8].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 8].Style.Border.Bottom.Color.SetColor(Color.Black);
+
+                workSheet.Cells[1, 9].Value = "Segment";
+                workSheet.Cells[1, 9].Style.Font.Bold = true;
+                workSheet.Cells[1, 9].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 9].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[1, 9].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[1, 9].Style.Fill.BackgroundColor.SetColor(color);
+                workSheet.Cells[1, 9].Style.Font.Name = "Times New Roman";
+                workSheet.Cells[1, 9].Style.Font.Size = 11;
+                workSheet.Cells[1, 9].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 9].Style.Border.Top.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 9].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 9].Style.Border.Left.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 9].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 9].Style.Border.Right.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 9].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 9].Style.Border.Bottom.Color.SetColor(Color.Black);
+
+                workSheet.Cells[1, 10].Value = "Product";
+                workSheet.Cells[1, 10].Style.Font.Bold = true;
+                workSheet.Cells[1, 10].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 10].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[1, 10].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[1, 10].Style.Fill.BackgroundColor.SetColor(color);
+                workSheet.Cells[1, 10].Style.Font.Name = "Times New Roman";
+                workSheet.Cells[1, 10].Style.Font.Size = 11;
+                workSheet.Cells[1, 10].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 10].Style.Border.Top.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 10].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 10].Style.Border.Left.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 10].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 10].Style.Border.Right.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 10].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 10].Style.Border.Bottom.Color.SetColor(Color.Black);
+                if (!string.IsNullOrEmpty(IDList))
+                {
+                    List<Product> listData = _productRepository.GetByIDListToList(IDList);
+                }
+                workSheet.Column(1).AutoFit();
+                workSheet.Column(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                workSheet.Column(2).AutoFit();
+                workSheet.Column(3).AutoFit();
+                workSheet.Column(4).AutoFit();
+                workSheet.Column(5).AutoFit();
+                workSheet.Column(6).AutoFit();
+                workSheet.Column(7).AutoFit();
+                workSheet.Column(8).AutoFit();
+                workSheet.Column(9).AutoFit();
+                workSheet.Column(10).AutoFit();
+                package.Save();
+            }
+            streamExport.Position = 0;
+            var physicalPathCreate = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.FTPDownloadReprotDaily, excelName);
+            using (var stream = new FileStream(physicalPathCreate, FileMode.Create))
+            {
+                streamExport.CopyTo(stream);
+            }
+            string result = AppGlobal.DomainSub + AppGlobal.URLDownloadReprotDaily + excelName;
+            return result;
+        }
     }
 }

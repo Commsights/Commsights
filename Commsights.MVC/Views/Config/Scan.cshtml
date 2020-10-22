@@ -71,7 +71,7 @@
     model.Id(t => t.ID);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetByParentIDToList", "Config").Data("filterConfig"))
+.Read(t => t.Action("GetWebsiteByParentIDAndGroupNameAndCodeToList", "Config").Data("filterConfig"))
 .Destroy(t => t.Action("Delete", "Config"))
 .Create(t => t.Action("CreateWebiste", "Config").Data("filterConfigCreateWebiste"))
 .Update(t => t.Action("Update", "Config"))
