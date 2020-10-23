@@ -18,7 +18,7 @@
                      .HtmlAttributes(new { @class = "form-control" })
                       .Events(e => e.DataBound("onWebsiteDataBound").Change("onWebsiteChange"))
                        .Filter(FilterType.StartsWith)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferChildrenCountByGroupNameAndCodeAndActiveAndIsMenuLeftToList", "Config")))
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferWebsiteByGroupNameAndCodeAndActiveToList", "Config")))
                             )
                     </div>
                     <div class='col-sm-4'>
@@ -40,13 +40,13 @@
                         </button>
                     </div>
                     <div class='col-sm-4'>
-                        <button type="button" class="btn btn-primary" onclick="onScanFull()">
-                            <span class="fas fa-sync-alt"></span> Scan full
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProduct()">
+                            <span class="fas fa-sync-alt"></span> Scan full no filter
                         </button>
                     </div>
                     <div class='col-sm-4'>
-                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProduct()">
-                            <span class="fas fa-sync-alt"></span> Scan full no filter
+                        <button type="button" class="btn btn-primary" onclick="onScanFull()">
+                            <span class="fas fa-sync-alt"></span> Scan full
                         </button>
                     </div>
                 </div>

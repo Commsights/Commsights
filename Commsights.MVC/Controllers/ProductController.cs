@@ -576,6 +576,7 @@ namespace Commsights.MVC.Controllers
                                 string title = AppGlobal.RemoveHTMLTags(itemA);
                                 if (!string.IsNullOrEmpty(title))
                                 {
+                                    title = title.Replace(@"&nbsp;", @"");
                                     title = title.Trim();
                                     itemA = itemA.Replace(@"href=""", @"~");
                                     if (itemA.Split('~').Length > 1)
@@ -600,14 +601,23 @@ namespace Commsights.MVC.Controllers
                                                 {
                                                     html001 = html001.Split('~')[1];
                                                 }
-                                                html001 = html001.Replace(@"<h1", @"~<h1");
+                                                html001 = html001.Replace(@"</h1>", @"</h1>~");
                                                 if (html001.Split('~').Length > 1)
                                                 {
                                                     html001 = html001.Split('~')[1];
                                                 }
-                                                html001 = html001.Replace(@"<footer>", @"~<footer>");
+                                                html001 = html001.Replace(@"<footer", @"~<footer");
                                                 html001 = html001.Split('~')[0];
-                                                string content = AppGlobal.RemoveHTMLTags(html001);
+                                                html001 = html001.Replace(@"<p", @"~<p");
+                                                html001 = html001.Replace(@"</p>", @"</p>~");
+                                                string content = "";
+                                                foreach (string content001 in html001.Split('~'))
+                                                {
+                                                    if (content001.Contains("</p>"))
+                                                    {
+                                                        content = content + " " + AppGlobal.RemoveHTMLTags(content001);
+                                                    }
+                                                }
                                                 Product product = new Product();
                                                 product.ParentID = config.ID;
                                                 product.CategoryID = config.ID;

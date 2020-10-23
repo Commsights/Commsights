@@ -409,7 +409,8 @@ namespace Commsights.MVC.Controllers
                             string title = AppGlobal.RemoveHTMLTags(itemA);
                             if (!string.IsNullOrEmpty(title))
                             {
-                                title = title.Trim();
+                                title = title.Replace(@"&nbsp;", @"");
+                                title = title.Trim();                                
                                 itemA = itemA.Replace(@"href=""", @"~");
                                 if (itemA.Split('~').Length > 1)
                                 {
@@ -437,7 +438,7 @@ namespace Commsights.MVC.Controllers
                         }
                     }
                 }
-                catch
+                catch (Exception e)
                 {
 
                 }
@@ -910,7 +911,7 @@ namespace Commsights.MVC.Controllers
             return Json(note);
         }
 
-       
+
 
         public IActionResult CreateWebisteDataTransfer(ConfigDataTransfer model)
         {

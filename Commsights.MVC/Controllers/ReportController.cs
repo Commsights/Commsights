@@ -5091,11 +5091,28 @@ namespace Commsights.MVC.Controllers
                 workSheet.Cells[1, 10].Style.Border.Right.Color.SetColor(Color.Black);
                 workSheet.Cells[1, 10].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                 workSheet.Cells[1, 10].Style.Border.Bottom.Color.SetColor(Color.Black);
+
+                workSheet.Cells[1, 11].Value = "Media";
+                workSheet.Cells[1, 11].Style.Font.Bold = true;
+                workSheet.Cells[1, 11].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 11].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[1, 11].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[1, 11].Style.Fill.BackgroundColor.SetColor(color);
+                workSheet.Cells[1, 11].Style.Font.Name = "Times New Roman";
+                workSheet.Cells[1, 11].Style.Font.Size = 11;
+                workSheet.Cells[1, 11].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 11].Style.Border.Top.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 11].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 11].Style.Border.Left.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 11].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 11].Style.Border.Right.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 11].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 11].Style.Border.Bottom.Color.SetColor(Color.Black);
                 if (!string.IsNullOrEmpty(IDList))
                 {
-                    List<Product> listData = _productRepository.GetByIDListToList(IDList);
+                    List<ProductDataTransfer> listData = _productRepository.GetByIDListToList(IDList);
                     int row = 2;
-                    foreach (Product item in listData)
+                    foreach (ProductDataTransfer item in listData)
                     {
                         for (int column = 1; column < 11; column++)
                         {
@@ -5131,6 +5148,9 @@ namespace Commsights.MVC.Controllers
                                 case 7:
                                     workSheet.Cells[row, column].Value = item.Description;
                                     break;
+                                case 11:
+                                    workSheet.Cells[row, column].Value = item.Media;
+                                    break;
                             }
                             workSheet.Cells[row, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                             workSheet.Cells[row, column].Style.Font.Name = "Times New Roman";
@@ -5143,7 +5163,7 @@ namespace Commsights.MVC.Controllers
                             workSheet.Cells[row, column].Style.Border.Right.Color.SetColor(Color.Black);
                             workSheet.Cells[row, column].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                             workSheet.Cells[row, column].Style.Border.Bottom.Color.SetColor(Color.Black);
-                        }    
+                        }
 
                         row = row + 1;
                     }
@@ -5159,6 +5179,7 @@ namespace Commsights.MVC.Controllers
                 workSheet.Column(8).AutoFit();
                 workSheet.Column(9).AutoFit();
                 workSheet.Column(10).AutoFit();
+                workSheet.Column(11).AutoFit();
                 package.Save();
             }
             streamExport.Position = 0;

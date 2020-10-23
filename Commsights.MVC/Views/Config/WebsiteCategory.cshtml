@@ -12,7 +12,7 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/Config/WebsiteScan?ID=#=ID#"");' title='Sub' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("").Width(70);
+    columns.Template(@"<a target='_blank' href='/Config/WebsiteScan?ID=#=ID#' title='Sub' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("").Width(70);
     columns.Bound(t => t.IsMenuLeft).Title("RSS").Width(100);
     columns.Bound(t => t.CountChildren).Title("Count").Width(100).HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.Title).Title("Title").Width(300);

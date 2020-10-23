@@ -95,7 +95,7 @@ namespace Commsights.Data.Repositories
                 search = search.Trim();
                 datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
                 datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
-                list = _context.Product.Where(item => (item.Title.Contains(search) || item.TitleEnglish.Contains(search) || item.Description.Contains(search)) && (datePublishBegin <= item.DatePublish && item.DatePublish <= datePublishEnd) && ((item.Source == AppGlobal.SourceAuto) || (item.Source == AppGlobal.SourceGoogle))).OrderByDescending(item => item.DatePublish).ThenBy(item => item.Title).ToList();
+                list = _context.Product.Where(item => (item.Title.Contains(search) || item.TitleEnglish.Contains(search) || item.Description.Contains(search)) && (datePublishBegin <= item.DatePublish && item.DatePublish <= datePublishEnd) && ((item.Source == AppGlobal.SourceAuto) || (item.Source == AppGlobal.SourceGoogle))).OrderByDescending(item => item.DatePublish).ThenBy(item => item.Title).ToList();                
             }
             return list;
         }
@@ -218,9 +218,9 @@ namespace Commsights.Data.Repositories
 
             return list;
         }
-        public List<Product> GetByIDListToList(string iDList)
+        public List<ProductDataTransfer> GetByIDListToList(string iDList)
         {
-            List<Product> list = new List<Product>();
+            List<ProductDataTransfer> list = new List<ProductDataTransfer>();
             if (!string.IsNullOrEmpty(iDList))
             {
                 SqlParameter[] parameters =
@@ -228,7 +228,7 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@IDList",iDList),
             };
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectByIDList", parameters);
-                list = SQLHelper.ToList<Product>(dt);
+                list = SQLHelper.ToList<ProductDataTransfer>(dt);
             }
             return list;
         }

@@ -6,16 +6,16 @@
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">@Model.Title</h3>
+                <h3 class="card-title"><a target="_blank" title="@Model.Title" href="@Model.URLFull" style="color:white; cursor:pointer;">@Model.Title</a></h3>
             </div>
             <div class="card-body">
                 @(Html.Kendo().Grid<Commsights.Data.Models.Config>()
 .Name("Config")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);    
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
     columns.Bound(t => t.Title).Title("Title").Width(200);
-    columns.Bound(t => t.URLFull).Title("URLFull").Width(400);    
+    columns.Bound(t => t.URLFull).Title("URLFull").Width(400);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
