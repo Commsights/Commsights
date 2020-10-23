@@ -127,10 +127,12 @@
         $("#Product").data("kendoGrid").dataSource.read();
     }
     function onExcel() {
+        BeginRequestHandler();
         var IDListValue = $("#ID").val();        
         $.post("/Report/ExportExcelReportDailyByIDList", { IDList: IDListValue }, function (result) {            
             window.location.replace(result);
         });        
+        EndRequestHandler();
     }
     function onGridChange(arg) {
         $("#ID").val(this.selectedKeyNames().join(";"));

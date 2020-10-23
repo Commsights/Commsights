@@ -81,8 +81,8 @@ namespace Commsights.MVC.Controllers
         {
             ProductSearch model = new ProductSearch();
             DateTime now = DateTime.Now;
-            model.DatePublishBegin = new DateTime(now.Year, now.Month, 1);
-            model.DatePublishEnd = new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month));
+            model.DatePublishBegin = new DateTime(now.Year, now.Month, now.AddDays(-7).Day);
+            model.DatePublishEnd = new DateTime(now.Year, now.Month, now.Day);
             return View(model);
         }
         public IActionResult Index(int industryID, string datePublishBeginString, string datePublishEndString)
@@ -5094,6 +5094,59 @@ namespace Commsights.MVC.Controllers
                 if (!string.IsNullOrEmpty(IDList))
                 {
                     List<Product> listData = _productRepository.GetByIDListToList(IDList);
+                    int row = 2;
+                    foreach (Product item in listData)
+                    {
+                        for (int column = 1; column < 11; column++)
+                        {
+                            switch (column)
+                            {
+                                case 1:
+                                    workSheet.Cells[row, column].Value = item.DatePublish.ToString("MM/dd/yyyy");
+                                    break;
+                                case 4:
+                                    workSheet.Cells[row, column].Value = item.Title;
+                                    if (!string.IsNullOrEmpty(item.Title))
+                                    {
+                                        workSheet.Cells[row, column].Hyperlink = new Uri(item.URLCode);
+                                        workSheet.Cells[row, column].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                                    }
+                                    break;
+                                case 5:
+                                    workSheet.Cells[row, column].Value = item.TitleEnglish;
+                                    if (!string.IsNullOrEmpty(item.TitleEnglish))
+                                    {
+                                        workSheet.Cells[row, column].Hyperlink = new Uri(item.URLCode);
+                                        workSheet.Cells[row, column].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                                    }
+                                    break;
+                                case 6:
+                                    if (!string.IsNullOrEmpty(item.URLCode))
+                                    {
+                                        workSheet.Cells[row, column].Value = item.URLCode;
+                                        workSheet.Cells[row, column].Hyperlink = new Uri(item.URLCode);
+                                        workSheet.Cells[row, column].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                                    }
+                                    break;
+                                case 7:
+                                    workSheet.Cells[row, column].Value = item.Description;
+                                    break;
+                            }
+                            workSheet.Cells[row, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                            workSheet.Cells[row, column].Style.Font.Name = "Times New Roman";
+                            workSheet.Cells[row, column].Style.Font.Size = 11;
+                            workSheet.Cells[row, column].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                            workSheet.Cells[row, column].Style.Border.Top.Color.SetColor(Color.Black);
+                            workSheet.Cells[row, column].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                            workSheet.Cells[row, column].Style.Border.Left.Color.SetColor(Color.Black);
+                            workSheet.Cells[row, column].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                            workSheet.Cells[row, column].Style.Border.Right.Color.SetColor(Color.Black);
+                            workSheet.Cells[row, column].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                            workSheet.Cells[row, column].Style.Border.Bottom.Color.SetColor(Color.Black);
+                        }    
+
+                        row = row + 1;
+                    }
                 }
                 workSheet.Column(1).AutoFit();
                 workSheet.Column(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
