@@ -18,6 +18,8 @@ using Microsoft.AspNetCore.Hosting;
 using OfficeOpenXml;
 using Commsights.Data.DataTransferObject;
 using System.Diagnostics.Eventing.Reader;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace Commsights.MVC.Controllers
 {
@@ -212,7 +214,7 @@ namespace Commsights.MVC.Controllers
             var data = _productRepository.GetDataTransferByProductSearchIDToList(productSearchID);
             return Json(data.ToDataSourceResult(request));
         }
-        
+
         public IActionResult CreateDataTransfer(ProductDataTransfer model, int productSearchID)
         {
             Initialization(model);
