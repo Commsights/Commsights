@@ -525,78 +525,115 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult ScanFullNoFilterProduct()
         {
-            List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveAndIsMenuLeftToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, false, true);
+            List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
             foreach (Config item in listConfig)
             {
-                if (item.IsMenuLeft == true)
-                {
-                    List<Product> list = new List<Product>();
-                    try
-                    {
-                        this.ParseRSSNoFilterProduct(list, item);
-                    }
-                    catch (Exception e)
-                    {
-                        string message = e.Message;
-                    }
-                    if (list.Count > 0)
-                    {
-                        _productRepository.AddRange(list);
-                        _productPropertyRepository.UpdateItemsWithParentIDIsZero();
-                    }
-                }
+                this.CreateProductScanWebsiteNoFilterProduct(item);
             }
             string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
             return Json(note);
         }
         public IActionResult ScanWebsiteNoFilterProduct(int websiteID)
         {
-            List<Config> listConfig = _configResposistory.GetByParentIDToList(websiteID);
-            foreach (Config item in listConfig)
+            if (websiteID > 0)
             {
-                if (item.IsMenuLeft == true)
-                {
-                    List<Product> list = new List<Product>();
-                    try
-                    {
-                        this.ParseRSSNoFilterProduct(list, item);
-                    }
-                    catch (Exception e)
-                    {
-                        string message = e.Message;
-                    }
-                    if (list.Count > 0)
-                    {
-                        _productRepository.AddRange(list);
-                        _productPropertyRepository.UpdateItemsWithParentIDIsZero();
-                    }
-                }
+                Config config = _configResposistory.GetByID(websiteID);
+                this.CreateProductScanWebsiteNoFilterProduct(config);
             }
             string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
             return Json(note);
         }
-        public void ScanWebsiteNoFilterProductVoid(int websiteID)
+        public void CreateProductScanWebsiteNoFilterProduct(Config config)
         {
-            List<Config> listConfig = _configResposistory.GetByParentIDToList(websiteID);
-            foreach (Config item in listConfig)
+            if (config != null)
             {
-                if (item.IsMenuLeft == true)
+                List<Config> listConfig = _configResposistory.GetByParentIDAndGroupNameAndCodeToList(config.ID, AppGlobal.CRM, AppGlobal.Website);
+                foreach (Config item in listConfig)
                 {
-                    List<Product> list = new List<Product>();
+                    WebClient webClient = new WebClient();
+                    webClient.Encoding = System.Text.Encoding.UTF8;
+                    string html = "";
                     try
                     {
-                        this.ParseRSSNoFilterProduct(list, item);
+                        html = webClient.DownloadString(item.URLFull);
+                        html = html.Replace(@"<body", @"~<body");
+                        if (html.Split('~').Length > 1)
+                        {
+                            html = html.Split('~')[1];
+                        }
+                        html = html.Replace(@"'", @"""");
+                        html = html.Replace(@"</a>", @"</a>~");
+                        html = html.Replace(@"<a", @"~<a");
+                        for (int i = 1; i < html.Split('~').Length; i++)
+                        {
+                            string itemA = html.Split('~')[i];
+                            if (itemA.Contains("href"))
+                            {
+                                string title = AppGlobal.RemoveHTMLTags(itemA);
+                                if (!string.IsNullOrEmpty(title))
+                                {
+                                    title = title.Trim();
+                                    itemA = itemA.Replace(@"href=""", @"~");
+                                    if (itemA.Split('~').Length > 1)
+                                    {
+                                        itemA = itemA.Split('~')[1];
+                                        itemA = itemA.Split('"')[0];
+                                        string url = itemA;
+                                        if (!string.IsNullOrEmpty(url))
+                                        {
+                                            if (itemA.Contains("http") == false)
+                                            {
+                                                itemA = config.URLFull + itemA;
+                                                itemA = itemA.Replace(@"//", @"/");
+                                            }
+                                            if (_productRepository.IsValid(url) == true)
+                                            {
+                                                WebClient webClient001 = new WebClient();
+                                                webClient001.Encoding = System.Text.Encoding.UTF8;
+                                                string html001 = webClient001.DownloadString(url);
+                                                html001 = html001.Replace(@"<body", @"~<body");
+                                                if (html001.Split('~').Length > 1)
+                                                {
+                                                    html001 = html001.Split('~')[1];
+                                                }
+                                                html001 = html001.Replace(@"<h1", @"~<h1");
+                                                if (html001.Split('~').Length > 1)
+                                                {
+                                                    html001 = html001.Split('~')[1];
+                                                }
+                                                html001 = html001.Replace(@"<footer>", @"~<footer>");
+                                                html001 = html001.Split('~')[0];
+                                                string content = AppGlobal.RemoveHTMLTags(html001);
+                                                Product product = new Product();
+                                                product.ParentID = config.ID;
+                                                product.CategoryID = config.ID;
+                                                product.Source = AppGlobal.SourceAuto;
+                                                product.Title = title;
+                                                product.Description = content;
+                                                product.ContentMain = content;
+                                                product.URLCode = url;
+                                                product.DatePublish = DateTime.Now;
+                                                product.Initialization(InitType.Insert, RequestUserID);
+                                                _productRepository.Create(product);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     catch (Exception e)
                     {
-                        string message = e.Message;
-                    }
-                    if (list.Count > 0)
-                    {
-                        _productRepository.AddRange(list);
-                        _productPropertyRepository.UpdateItemsWithParentIDIsZero();
                     }
                 }
+            }
+        }
+        public void ScanWebsiteNoFilterProductVoid(int websiteID)
+        {
+            if (websiteID > 0)
+            {
+                Config config = _configResposistory.GetByID(websiteID);
+                this.CreateProductScanWebsiteNoFilterProduct(config);
             }
         }
     }

@@ -95,7 +95,7 @@ namespace Commsights.Data.Repositories
                 search = search.Trim();
                 datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
                 datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
-                list = _context.Product.Where(item => (item.Title.Contains(search) || item.TitleEnglish.Contains(search) || item.Description.Contains(search)) && (datePublishBegin <= item.DatePublish && item.DatePublish <= datePublishEnd) && ((item.Source == "Auto"))).OrderByDescending(item => item.DatePublish).ThenBy(item => item.Title).ToList();
+                list = _context.Product.Where(item => (item.Title.Contains(search) || item.TitleEnglish.Contains(search) || item.Description.Contains(search)) && (datePublishBegin <= item.DatePublish && item.DatePublish <= datePublishEnd) && ((item.Source == AppGlobal.SourceAuto) || (item.Source == AppGlobal.SourceGoogle))).OrderByDescending(item => item.DatePublish).ThenBy(item => item.Title).ToList();
             }
             return list;
         }
@@ -108,7 +108,7 @@ namespace Commsights.Data.Repositories
             }
             else
             {
-                item = new Product();
+                item = null;
             }
             return item == null ? true : false;
         }

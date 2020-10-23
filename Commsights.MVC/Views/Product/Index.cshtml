@@ -206,23 +206,14 @@
            success: function (Config) {
                for (var index in Config) {
                    $(Config[index]).each(function (iRec, item) {
-                        $.ajax({
-                            type: 'GET',
-                            url: "@Url.Action("ScanWebsiteNoFilterProductVoid", "Product")",
-                            data: {
-                                websiteID: item.ID
-                            },
-                           success: function () {                                
-                           }
-                        }).done(() => {
-
-                        });
+                       var url = '/Product/ScanWebsiteNoFilterProductVoid?websiteID=' + item.ID;
+                       window.open(url, '_blank');
                    });
                }
                EndRequestHandler();
            }
         }).done(() => {
-            
+
         });
         return false;
     }

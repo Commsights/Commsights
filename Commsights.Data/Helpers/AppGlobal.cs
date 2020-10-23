@@ -191,6 +191,46 @@ namespace Commsights.Data.Helpers
                 return "<a target='_blank' href='" + GoogleMapURLFUll + "' title='" + AddressReport + "'>" + AddressReport + "</a>";
             }
         }
+        public static string SourceAuto
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("SourceAuto").Value;
+            }
+        }
+        public static string SourceGoogle
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("SourceGoogle").Value;
+            }
+        }
+        public static string SourceScan
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("SourceScan").Value;
+            }
+        }
+        public static string SourceAndi
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("SourceAndi").Value;
+            }
+        }
+        public static string SourceYounet
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("SourceYounet").Value;
+            }
+        }
         public static string EmailSupport
         {
             get
@@ -1875,6 +1915,7 @@ namespace Commsights.Data.Helpers
         }
         public static List<string> SetEmailContact(string content)
         {
+            content = content.Replace(@",",@";");
             List<string> list = new List<string>();
             foreach (string contact in content.Split(';'))
             {

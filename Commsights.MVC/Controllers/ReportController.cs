@@ -3612,7 +3612,7 @@ namespace Commsights.MVC.Controllers
                     {
                         string fileExtension = Path.GetExtension(file.FileName);
                         string fileName = Path.GetFileNameWithoutExtension(file.FileName);
-                        fileName = "Scan";
+                        fileName = AppGlobal.SourceScan;
                         fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
                         var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.FTPUploadExcel, fileName);
                         using (var stream = new FileStream(physicalPath, FileMode.Create))
@@ -3634,7 +3634,7 @@ namespace Commsights.MVC.Controllers
                                                 for (int i = 2; i <= totalRows; i++)
                                                 {
                                                     Product model = new Product();
-                                                    model.Source = "Scan";
+                                                    model.Source = AppGlobal.SourceScan;
                                                     model.Initialization(InitType.Insert, RequestUserID);
                                                     model.GUICode = AppGlobal.InitGuiCode;
                                                     try
@@ -3923,7 +3923,7 @@ namespace Commsights.MVC.Controllers
                     {
                         string fileExtension = Path.GetExtension(file.FileName);
                         string fileName = Path.GetFileNameWithoutExtension(file.FileName);
-                        fileName = "AndiSource";
+                        fileName = AppGlobal.SourceAndi;
                         fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
                         var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.FTPUploadExcel, fileName);
                         using (var stream = new FileStream(physicalPath, FileMode.Create))
@@ -4119,7 +4119,7 @@ namespace Commsights.MVC.Controllers
                                                         if (product == null)
                                                         {
                                                             model.GUICode = AppGlobal.InitGuiCode;
-                                                            model.Source = "Andi";
+                                                            model.Source = AppGlobal.SourceAndi;
                                                             model.MetaTitle = AppGlobal.SetName(model.Title);
                                                             _productRepository.Create(model);
                                                             product = model;
@@ -4286,7 +4286,7 @@ namespace Commsights.MVC.Controllers
                     {
                         string fileExtension = Path.GetExtension(file.FileName);
                         string fileName = Path.GetFileNameWithoutExtension(file.FileName);
-                        fileName = "Younet";
+                        fileName = AppGlobal.SourceYounet;
                         fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
                         var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.FTPUploadExcel, fileName);
                         using (var stream = new FileStream(physicalPath, FileMode.Create))
@@ -4310,7 +4310,7 @@ namespace Commsights.MVC.Controllers
                                                     Product model = new Product();
                                                     model.Initialization(InitType.Insert, RequestUserID);
                                                     model.GUICode = AppGlobal.InitGuiCode;
-                                                    model.Source = "Younet";
+                                                    model.Source = AppGlobal.SourceYounet;
                                                     model.DatePublish = DateTime.Now;
                                                     model.ParentID = AppGlobal.WebsiteID;
                                                     model.CategoryID = AppGlobal.WebsiteID;
@@ -4542,7 +4542,7 @@ namespace Commsights.MVC.Controllers
                     {
                         string fileExtension = Path.GetExtension(file.FileName);
                         string fileName = Path.GetFileNameWithoutExtension(file.FileName);
-                        fileName = "GoogleSearch";
+                        fileName = AppGlobal.SourceGoogle;
                         fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
                         var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.FTPUploadExcel, fileName);
                         using (var stream = new FileStream(physicalPath, FileMode.Create))
@@ -4649,7 +4649,7 @@ namespace Commsights.MVC.Controllers
                                                             if (product == null)
                                                             {
                                                                 model.MetaTitle = AppGlobal.SetName(model.Title);
-                                                                model.Source = "Google";
+                                                                model.Source = AppGlobal.SourceGoogle;
                                                                 model.GUICode = AppGlobal.InitGuiCode;
                                                                 model.FileName = AppGlobal.SetDomainByURL(model.URLCode);
                                                                 Config website = _configResposistory.GetByGroupNameAndCodeAndTitle(AppGlobal.CRM, AppGlobal.Website, model.FileName);
