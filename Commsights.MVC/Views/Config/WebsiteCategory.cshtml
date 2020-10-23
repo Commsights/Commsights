@@ -12,7 +12,8 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.IsMenuLeft).Title("Is RSS").Width(100);
+    columns.Template(@"<a onclick='javascript:OpenWindowByURL(""/Config/WebsiteScan?ID=#=ID#"");' title='Sub' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("").Width(70);
+    columns.Bound(t => t.CountChildren).Title("Count").Width(100).HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.Title).Title("Title").Width(300);
     columns.Bound(t => t.URLFull).Title("URLFull").Width(300);
     columns.Bound(t => t.Color).Title("Ad value (Color)").Width(200).HtmlAttributes(new { @class = "text-right" });
@@ -20,7 +21,7 @@
     columns.Bound(t => t.Parent.TextName).EditorTemplateName("Config_WebsiteType").Title("Media type").Width(200);
     columns.Bound(t => t.Country.TextName).EditorTemplateName("Config_Country").Title("Country").Width(200);
     columns.Bound(t => t.Language.TextName).EditorTemplateName("Config_Language").Title("Language").Width(200);
-    columns.Bound(t => t.Frequency.TextName).EditorTemplateName("Config_Frequency").Title("Frequency").Width(200);    
+    columns.Bound(t => t.Frequency.TextName).EditorTemplateName("Config_Frequency").Title("Frequency").Width(200);
     columns.Bound(t => t.SortOrder).Title("Sort order").Width(200);
     columns.Bound(t => t.ID).Title("ID").Width(100);
 })
@@ -58,10 +59,11 @@
 {
     model.Id(t => t.ID);
     model.Field(t => t.ID).Editable(false);
+    model.Field(t => t.CountChildren).Editable(false);
     model.Field(t => t.Country).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
     model.Field(t => t.Language).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
     model.Field(t => t.Parent).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
-    model.Field(t => t.Frequency).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());    
+    model.Field(t => t.Frequency).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetDataTransferWebsiteByGroupNameAndCodeAndActiveToList", "Config"))

@@ -13,6 +13,7 @@ using Commsights.Data.DataTransferObject;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using OfficeOpenXml;
+using System.Net;
 
 namespace Commsights.MVC.Controllers
 {
@@ -184,6 +185,11 @@ namespace Commsights.MVC.Controllers
         public IActionResult MediaTierAndWebsite()
         {
             return View();
+        }
+        public IActionResult WebsiteScan(int ID)
+        {
+            Config model = _configResposistory.GetByID(ID);
+            return View(model);
         }
         public ActionResult GetAll001ToList([DataSourceRequest] DataSourceRequest request)
         {
@@ -370,6 +376,73 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetDataTransferWebsiteByGroupNameAndCodeAndActiveToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _configResposistory.GetDataTransferWebsiteByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetWebsiteScanByIDToList([DataSourceRequest] DataSourceRequest request, int parentID)
+        {
+            List<Config> list = new List<Config>();
+            Random random = new Random();
+            Config config = _configResposistory.GetByID(parentID);
+            if (config != null)
+            {
+                WebClient webClient = new WebClient();
+                webClient.Encoding = System.Text.Encoding.UTF8;
+                string html = "";
+                try
+                {
+                    html = webClient.DownloadString(config.URLFull);
+                    html = html.Replace(@"~", @"-");
+                    html = html.Replace(@"<body", @"~<body");
+                    if (html.Split('~').Length > 1)
+                    {
+                        html = html.Split('~')[1];
+                    }
+                    html = html.Replace(@"'", @"""");
+                    html = html.Replace(@"</a>", @"</a>~");
+                    html = html.Replace(@"<a", @"~<a");
+                    int length = html.Split('~').Length;
+                    for (int i = 1; i < length; i++)
+                    {
+                        string itemA = html.Split('~')[i];
+                        if (itemA.Contains("href"))
+                        {
+                            string title = AppGlobal.RemoveHTMLTags(itemA);
+                            if (!string.IsNullOrEmpty(title))
+                            {
+                                title = title.Trim();
+                                itemA = itemA.Replace(@"href=""", @"~");
+                                if (itemA.Split('~').Length > 1)
+                                {
+                                    itemA = itemA.Split('~')[1];
+                                    itemA = itemA.Split('"')[0];
+                                    string url = itemA;
+                                    if (!string.IsNullOrEmpty(url))
+                                    {
+                                        if (url.Contains("http") == false)
+                                        {
+                                            url = config.URLFull + url;
+                                            url = url.Replace(@"//", @"/");
+                                        }
+                                        if (url.Contains(config.Title))
+                                        {
+                                            Config item = new Config();
+                                            item.ID = random.Next(1000000);
+                                            item.Title = title;
+                                            item.URLFull = url;
+                                            list.Add(item);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+
+                }
+            }
+            var data = list;
             return Json(data.ToDataSourceResult(request));
         }
         public IActionResult CreateTierByTierIDAndIndustryID(ConfigDataTransfer model, int tierID, int industryID)
@@ -823,6 +896,7 @@ namespace Commsights.MVC.Controllers
                 //{
                 //    model.IsMenuLeft = parent.IsMenuLeft;
                 //}
+                model.ID = 0;
                 result = _configResposistory.Create(model);
             }
             if (result > 0)
@@ -835,6 +909,9 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
+
+       
+
         public IActionResult CreateWebisteDataTransfer(ConfigDataTransfer model)
         {
             Initialization(model);

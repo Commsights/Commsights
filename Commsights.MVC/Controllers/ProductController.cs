@@ -212,6 +212,7 @@ namespace Commsights.MVC.Controllers
             var data = _productRepository.GetDataTransferByProductSearchIDToList(productSearchID);
             return Json(data.ToDataSourceResult(request));
         }
+        
         public IActionResult CreateDataTransfer(ProductDataTransfer model, int productSearchID)
         {
             Initialization(model);
@@ -556,6 +557,7 @@ namespace Commsights.MVC.Controllers
                     try
                     {
                         html = webClient.DownloadString(item.URLFull);
+                        html = html.Replace(@"~", @"-");
                         html = html.Replace(@"<body", @"~<body");
                         if (html.Split('~').Length > 1)
                         {
@@ -581,10 +583,10 @@ namespace Commsights.MVC.Controllers
                                         string url = itemA;
                                         if (!string.IsNullOrEmpty(url))
                                         {
-                                            if (itemA.Contains("http") == false)
+                                            if (url.Contains("http") == false)
                                             {
-                                                itemA = config.URLFull + itemA;
-                                                itemA = itemA.Replace(@"//", @"/");
+                                                url = config.URLFull + url;
+                                                url = url.Replace(@"//", @"/");
                                             }
                                             if (_productRepository.IsValid(url) == true)
                                             {
