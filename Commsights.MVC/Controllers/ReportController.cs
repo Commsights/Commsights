@@ -761,8 +761,9 @@ namespace Commsights.MVC.Controllers
                                     }
                                     if ((DailyReportColumnDatePublishID > 0) && (DailyReportColumnDatePublishIDSortOrder == i))
                                     {
-                                        workSheet.Cells[row, i].Value = listData[index].DatePublishStringEnglish;
+                                        workSheet.Cells[row, i].Value = listData[index].DatePublish;
                                         workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                                        workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy";
                                         workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
                                         workSheet.Cells[row, i].Style.Font.Size = 11;
                                         workSheet.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
@@ -1459,8 +1460,9 @@ namespace Commsights.MVC.Controllers
                                 {
                                     if ((DailyReportColumnDatePublishID > 0) && (DailyReportColumnDatePublishIDSortOrder == i))
                                     {
-                                        workSheet.Cells[row, i].Value = listData[index].DatePublishStringEnglish;
+                                        workSheet.Cells[row, i].Value = listData[index].DatePublish;
                                         workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                                        workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy";
                                         workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
                                         workSheet.Cells[row, i].Style.Font.Size = 11;
                                         workSheet.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
@@ -2245,8 +2247,9 @@ namespace Commsights.MVC.Controllers
                     {
                         if (i == 1)
                         {
-                            workSheet.Cells[row, i].Value = listData[index].DatePublishStringEnglish;
+                            workSheet.Cells[row, i].Value = listData[index].DatePublish;
                             workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                            workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy";
                         }
                         if (i == 2)
                         {
@@ -2503,8 +2506,9 @@ namespace Commsights.MVC.Controllers
                     {
                         if (i == 1)
                         {
-                            workSheet.Cells[row, i].Value = listData[index].DatePublishStringEnglish;
+                            workSheet.Cells[row, i].Value = listData[index].DatePublish;
                             workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                            workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy";
                         }
                         if (i == 2)
                         {
