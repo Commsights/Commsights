@@ -5108,6 +5108,7 @@ namespace Commsights.MVC.Controllers
                 workSheet.Cells[1, 11].Style.Border.Right.Color.SetColor(Color.Black);
                 workSheet.Cells[1, 11].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                 workSheet.Cells[1, 11].Style.Border.Bottom.Color.SetColor(Color.Black);
+
                 if (!string.IsNullOrEmpty(IDList))
                 {
                     List<ProductDataTransfer> listData = _reportRepository.GetByIDListToList(IDList);
@@ -5119,7 +5120,8 @@ namespace Commsights.MVC.Controllers
                             switch (column)
                             {
                                 case 1:
-                                    workSheet.Cells[row, column].Value = item.DatePublish.ToString("MM/dd/yyyy");
+                                    workSheet.Cells[row, column].Value = item.DatePublish;
+                                    workSheet.Cells[row, column].Style.Numberformat.Format = "mm/dd/yyyy";
                                     break;
                                 case 4:
                                     workSheet.Cells[row, column].Value = item.Title;
@@ -5146,7 +5148,16 @@ namespace Commsights.MVC.Controllers
                                     }
                                     break;
                                 case 7:
-                                    workSheet.Cells[row, column].Value = item.Description;
+                                    workSheet.Cells[row, column].Value = ".";
+                                    break;
+                                case 8:
+                                    workSheet.Cells[row, column].Value = ".";
+                                    break;
+                                case 9:
+                                    workSheet.Cells[row, column].Value = ".";
+                                    break;
+                                case 10:
+                                    workSheet.Cells[row, column].Value = ".";
                                     break;
                                 case 11:
                                     workSheet.Cells[row, column].Value = item.Media;
@@ -5172,10 +5183,10 @@ namespace Commsights.MVC.Controllers
                 workSheet.Column(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                 workSheet.Column(2).AutoFit();
                 workSheet.Column(3).AutoFit();
-                workSheet.Column(4).AutoFit();
-                workSheet.Column(5).AutoFit();
-                workSheet.Column(6).AutoFit();
-                workSheet.Column(7).AutoFit();
+                workSheet.Column(4).Width = 50;
+                workSheet.Column(5).Width = 50;
+                workSheet.Column(6).Width = 50;
+                workSheet.Column(7).Width = 50;
                 workSheet.Column(8).AutoFit();
                 workSheet.Column(9).AutoFit();
                 workSheet.Column(10).AutoFit();

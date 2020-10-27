@@ -95,9 +95,24 @@ namespace Commsights.Data.Repositories
                 search = search.Trim();
                 datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
                 datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
-                list = _context.Product.Where(item => (item.Title.Contains(search) || item.TitleEnglish.Contains(search) || item.Description.Contains(search)) && (datePublishBegin <= item.DatePublish && item.DatePublish <= datePublishEnd) && ((item.Source == AppGlobal.SourceAuto) || (item.Source == AppGlobal.SourceGoogle))).OrderByDescending(item => item.DatePublish).ThenBy(item => item.Title).ToList();                
+                list = _context.Product.Where(item => (item.Title.Contains(search) || item.TitleEnglish.Contains(search) || item.Description.Contains(search)) && (datePublishBegin <= item.DatePublish && item.DatePublish <= datePublishEnd) && ((item.Source == AppGlobal.SourceAuto) || (item.Source == AppGlobal.SourceGoogle))).OrderByDescending(item => item.DatePublish).ThenBy(item => item.Title).ToList();
             }
             return list;
+        }
+        public List<Product> GetByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source)
+        {
+            datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+            datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+            SqlParameter[] parameters =
+            {
+                    new SqlParameter("@DatePublishBegin",datePublishBegin),
+                    new SqlParameter("@DatePublishEnd",datePublishEnd),
+                    new SqlParameter("@Search",search),
+                    new SqlParameter("@Source",source),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectByDatePublishBeginAndDatePublishEndAndSearchAndSource", parameters);
+            return SQLHelper.ToList<Product>(dt);
+
         }
         public bool IsValid(string url)
         {

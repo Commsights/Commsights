@@ -422,11 +422,18 @@ namespace Commsights.MVC.Controllers
                                         if (url.Contains("http") == false)
                                         {
                                             url = config.URLFull + url;
-                                            url = url.Replace(@"//", @"/");
+                                            string urlRoot = config.URLFull;
+                                            string lastChar = urlRoot[urlRoot.Length - 1].ToString();
+                                            if (lastChar.Contains(@"/") == true)
+                                            {
+                                                urlRoot = urlRoot.Substring(0, urlRoot.Length - 2);
+                                            }
+                                            url = urlRoot + url;
                                         }
                                         if (url.Contains(config.Title))
                                         {
                                             Config item = new Config();
+                                            item.Active = false;
                                             item.ID = random.Next(1000000);
                                             item.Title = title;
                                             item.URLFull = url;
@@ -895,6 +902,7 @@ namespace Commsights.MVC.Controllers
             model.ParentID = parentID;
             model.GroupName = AppGlobal.CRM;
             model.Code = AppGlobal.Website;
+            model.Active = false;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;

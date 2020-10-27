@@ -37,5 +37,6 @@ namespace Commsights.Data.Repositories
         public List<ProductDataTransfer> ReportDailyIndustryByDatePublishAndCompanyIDToList(DateTime datePublish, int companyID);
         public List<ProductDataTransfer> ReportDailyCompetitorByDatePublishAndCompanyIDToList(DateTime datePublish, int companyID);
         public List<ProductDataTransfer> GetByIDListToList(string iDList);
+        public List<Product> GetByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source);
     }
 }
