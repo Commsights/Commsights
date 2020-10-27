@@ -568,67 +568,83 @@ namespace Commsights.MVC.Controllers
                         html = html.Replace(@"'", @"""");
                         html = html.Replace(@"</a>", @"</a>~");
                         html = html.Replace(@"<a", @"~<a");
-                        for (int i = 1; i < html.Split('~').Length; i++)
+                        int length = html.Split('~').Length;
+                        for (int i = 1; i < length; i++)
                         {
                             string itemA = html.Split('~')[i];
-                            if (itemA.Contains("href"))
+                            if (itemA.Contains("</a>"))
                             {
-                                string title = AppGlobal.RemoveHTMLTags(itemA);
-                                if (!string.IsNullOrEmpty(title))
+                                if (itemA.Contains("href"))
                                 {
-                                    title = title.Replace(@"&nbsp;", @"");
-                                    title = title.Trim();
-                                    itemA = itemA.Replace(@"href=""", @"~");
-                                    if (itemA.Split('~').Length > 1)
+                                    string title = AppGlobal.RemoveHTMLTags(itemA);
+                                    if (!string.IsNullOrEmpty(title))
                                     {
-                                        itemA = itemA.Split('~')[1];
-                                        itemA = itemA.Split('"')[0];
-                                        string url = itemA;
-                                        if (!string.IsNullOrEmpty(url))
+                                        title = title.Replace(@"&nbsp;", @"");
+                                        title = title.Trim();
+                                        itemA = itemA.Replace(@"href=""", @"~");
+                                        if (itemA.Split('~').Length > 1)
                                         {
-                                            if (url.Contains("http") == false)
+                                            itemA = itemA.Split('~')[1];
+                                            itemA = itemA.Split('"')[0];
+                                            string url = itemA;
+                                            if (!string.IsNullOrEmpty(url))
                                             {
-                                                url = config.URLFull + url;
-                                                url = url.Replace(@"//", @"/");
-                                            }
-                                            if (_productRepository.IsValid(url) == true)
-                                            {
-                                                WebClient webClient001 = new WebClient();
-                                                webClient001.Encoding = System.Text.Encoding.UTF8;
-                                                string html001 = webClient001.DownloadString(url);
-                                                html001 = html001.Replace(@"<body", @"~<body");
-                                                if (html001.Split('~').Length > 1)
+                                                if (url.Contains("http") == false)
                                                 {
-                                                    html001 = html001.Split('~')[1];
-                                                }
-                                                html001 = html001.Replace(@"</h1>", @"</h1>~");
-                                                if (html001.Split('~').Length > 1)
-                                                {
-                                                    html001 = html001.Split('~')[1];
-                                                }
-                                                html001 = html001.Replace(@"<footer", @"~<footer");
-                                                html001 = html001.Split('~')[0];
-                                                html001 = html001.Replace(@"<p", @"~<p");
-                                                html001 = html001.Replace(@"</p>", @"</p>~");
-                                                string content = "";
-                                                foreach (string content001 in html001.Split('~'))
-                                                {
-                                                    if (content001.Contains("</p>"))
+                                                    string urlRoot = config.URLFull;
+                                                    string lastChar = urlRoot[urlRoot.Length - 1].ToString();
+                                                    if (lastChar.Contains(@"/") == true)
                                                     {
-                                                        content = content + " " + AppGlobal.RemoveHTMLTags(content001);
+                                                        urlRoot = urlRoot.Substring(0, urlRoot.Length - 2);
+                                                    }
+                                                    url = urlRoot + url;
+                                                }
+                                                if (_productRepository.IsValid(url) == true)
+                                                {
+                                                    try
+                                                    {
+                                                        WebClient webClient001 = new WebClient();
+                                                        webClient001.Encoding = System.Text.Encoding.UTF8;
+                                                        string html001 = webClient001.DownloadString(url);
+                                                        html001 = html001.Replace(@"~", @"-");
+                                                        html001 = html001.Replace(@"<body", @"~<body");
+                                                        if (html001.Split('~').Length > 1)
+                                                        {
+                                                            html001 = html001.Split('~')[1];
+                                                        }                                                        
+                                                        html001 = html001.Replace(@"<p", @"~<p");
+                                                        html001 = html001.Replace(@"</p>", @"</p>~");
+                                                        string description = "";
+                                                        string content = "";
+                                                        foreach (string content001 in html001.Split('~'))
+                                                        {
+                                                            if (content001.Contains("</p>"))
+                                                            {
+                                                                string content002 = AppGlobal.RemoveHTMLTags(content001);
+                                                                if (!string.IsNullOrEmpty(content002))
+                                                                {
+                                                                    description = description + " " + content002;
+                                                                    content = content + "<br/>" + content002;
+                                                                }
+                                                            }
+                                                        }
+                                                        Product product = new Product();
+                                                        product.ParentID = config.ID;
+                                                        product.CategoryID = item.ID;
+                                                        product.Source = AppGlobal.SourceAuto;
+                                                        product.Title = title;
+                                                        product.MetaTitle = AppGlobal.SetName(product.Title);
+                                                        product.Description = description;
+                                                        product.ContentMain = content;
+                                                        product.URLCode = url;
+                                                        product.DatePublish = DateTime.Now;
+                                                        product.Initialization(InitType.Insert, RequestUserID);
+                                                        _productRepository.Create(product);
+                                                    }
+                                                    catch (Exception e)
+                                                    {
                                                     }
                                                 }
-                                                Product product = new Product();
-                                                product.ParentID = config.ID;
-                                                product.CategoryID = item.ID;
-                                                product.Source = AppGlobal.SourceAuto;
-                                                product.Title = title;
-                                                product.Description = content;
-                                                product.ContentMain = content;
-                                                product.URLCode = url;
-                                                product.DatePublish = DateTime.Now;
-                                                product.Initialization(InitType.Insert, RequestUserID);
-                                                _productRepository.Create(product);
                                             }
                                         }
                                     }
