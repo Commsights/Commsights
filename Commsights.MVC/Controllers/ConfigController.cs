@@ -884,6 +884,14 @@ namespace Commsights.MVC.Controllers
         public IActionResult CreateWebiste(Config model, int parentID)
         {
             Initialization(model);
+            if(string.IsNullOrEmpty(model.Title))
+            {
+                model.Title = model.URLFull;
+            }
+            if (string.IsNullOrEmpty(model.URLFull))
+            {
+                model.URLFull = model.Title;
+            }
             model.ParentID = parentID;
             model.GroupName = AppGlobal.CRM;
             model.Code = AppGlobal.Website;

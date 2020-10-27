@@ -5110,11 +5110,11 @@ namespace Commsights.MVC.Controllers
                 workSheet.Cells[1, 11].Style.Border.Bottom.Color.SetColor(Color.Black);
                 if (!string.IsNullOrEmpty(IDList))
                 {
-                    List<ProductDataTransfer> listData = _productRepository.GetByIDListToList(IDList);
+                    List<ProductDataTransfer> listData = _reportRepository.GetByIDListToList(IDList);
                     int row = 2;
                     foreach (ProductDataTransfer item in listData)
                     {
-                        for (int column = 1; column < 11; column++)
+                        for (int column = 1; column < 12; column++)
                         {
                             switch (column)
                             {

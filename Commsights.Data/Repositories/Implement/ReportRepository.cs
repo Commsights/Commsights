@@ -473,5 +473,19 @@ namespace Commsights.Data.Repositories
             }
             return result;
         }
+        public List<ProductDataTransfer> GetByIDListToList(string iDList)
+        {
+            List<ProductDataTransfer> list = new List<ProductDataTransfer>();
+            if (!string.IsNullOrEmpty(iDList))
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@IDList",iDList),
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectByIDList", parameters);
+                list = SQLHelper.ToList<ProductDataTransfer>(dt);
+            }
+            return list;
+        }
     }
 }

@@ -32,5 +32,6 @@ namespace Commsights.Data.Repositories
         public ProductSearchDataTransfer GetByProductSearchID(int productSearchID);
         public string DeleteProductAndProductPropertyByDatePublishBeginAndDatePublishEndAndIndustryID(DateTime datePublishBegin, DateTime datePublishEnd, int industryID);
         public string DeleteProductSearchAndProductSearchPropertyByDatePublishBeginAndDatePublishEndAndIndustryIDAndHourSearch(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int hourSearch);
+        public List<ProductDataTransfer> GetByIDListToList(string iDList);
     }
 }

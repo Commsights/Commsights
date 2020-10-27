@@ -620,7 +620,7 @@ namespace Commsights.MVC.Controllers
                                                 }
                                                 Product product = new Product();
                                                 product.ParentID = config.ID;
-                                                product.CategoryID = config.ID;
+                                                product.CategoryID = item.ID;
                                                 product.Source = AppGlobal.SourceAuto;
                                                 product.Title = title;
                                                 product.Description = content;
