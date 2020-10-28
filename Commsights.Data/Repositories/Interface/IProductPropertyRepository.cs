@@ -24,5 +24,6 @@ namespace Commsights.Data.Repositories
         public ProductProperty GetByProductIDAndCodeAndCompanyID(int productID, string code, int companyID);
         public string Initialization();
         public ProductProperty GetByID001(int ID);
+        public List<ProductProperty> GetByParentIDAndCompanyIDAndArticleTypeIDToList(int parentID, int companyID, int articleTypeID);
     }
 }

@@ -2851,13 +2851,38 @@ namespace Commsights.MVC.Controllers
                 }
                 product.Initialization(InitType.Update, RequestUserID);
                 _productRepository.Update(product.ID, product);
-                foreach (Product item in _productRepository.GetByTitleToList(product.Title))
+                List<Product> listProduct = _productRepository.GetByTitleToList(product.Title);
+                foreach (Product item in listProduct)
                 {
                     item.TitleEnglish = product.TitleEnglish;
                     item.Description = product.Description;
                     item.DescriptionEnglish = product.DescriptionEnglish;
                     item.Initialization(InitType.Update, RequestUserID);
                     _productRepository.Update(item.ID, item);
+                }
+                switch (industryID)
+                {
+                    case 1448:
+                    case 3470:
+                    case 3741:
+                    case 3251:
+                        foreach (Product item in listProduct)
+                        {
+
+                            if (_productPropertyRepository.GetByParentIDAndCompanyIDAndArticleTypeIDToList(item.ID, productProperty.CompanyID.Value, productProperty.ArticleTypeID.Value).Count > 0)
+                            {
+
+                            }
+                            else
+                            {
+                                ProductProperty productProperty001 = productProperty;
+                                productProperty001.ID = 0;
+                                productProperty001.ParentID = item.ID;
+                                productProperty001.Initialization(InitType.Insert, RequestUserID);
+                                _productPropertyRepository.Create(productProperty001);
+                            }
+                        }
+                        break;
                 }
                 Config media = _configResposistory.GetByID(product.ParentID.Value);
                 if (media != null)
@@ -2874,6 +2899,7 @@ namespace Commsights.MVC.Controllers
             {
                 _reportRepository.UpdateByCompanyIDAndTitleAndProductPropertyIDAndRequestUserID(model.CompanyID.Value, model.Title, model.ID, RequestUserID);
             }
+
             string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
             return Json(note);
         }
