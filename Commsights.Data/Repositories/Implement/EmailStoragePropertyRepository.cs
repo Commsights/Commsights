@@ -21,7 +21,7 @@ namespace Commsights.Data.Repositories
         }
         public List<EmailStorageProperty> GetParentIDAndCodeToList(int parentID, string code)
         {
-            return _context.EmailStorageProperty.Where(item => item.ParentID == parentID && item.Code.Equals(code)).OrderBy(item => item.ID).ToList();
+            return _context.EmailStorageProperty.Where(item => item.ParentID == parentID && item.Code.Equals(code)).OrderByDescending(item => item.DateRead).ToList();
         }
         public List<EmailStoragePropertyDataTransfer> GetDataTransferByDatePublishBeginAndDatePublishEndToList(DateTime datePublishBegin, DateTime datePublishEnd)
         {

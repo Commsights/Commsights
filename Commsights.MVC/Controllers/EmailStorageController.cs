@@ -195,13 +195,16 @@ namespace Commsights.MVC.Controllers
                 mail.Username = model.EmailFrom;
                 mail.Password = model.Password;
                 mail.Display = model.Display;
-                //try
-                //{
-                _mailService.Send(mail);
-                //}
-                //catch (Exception e)
-                //{
-                //}
+                try
+                {
+                    _mailService.Send(mail);
+                    model.DateSend = DateTime.Now;
+                    model.Initialization(InitType.Update, RequestUserID);
+                    _emailStorageRepository.Update(model.ID, model);
+                }
+                catch (Exception e)
+                {
+                }
             }
             string note = AppGlobal.Success + " - " + AppGlobal.SendMailSuccess;
             return Json(note);

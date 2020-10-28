@@ -37,13 +37,12 @@
                 @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.EmailStorageDataTransfer>()
 .Name("EmailStorageDataTransfer")
 .Columns(columns =>
-{
+{    
     columns.Template(@"<a href='/EmailStorage/Detail?ID=#=ID#' class='btn btn-success' style='color:white;'><i class='fas fa-edit'></i></a>").Title("").Width(70).HtmlAttributes(new { style = "text-align:center;" });
+    columns.Bound(t => t.DateSend).Title("Send").Width(150).Format("{0:dd/MM/yyyy HH:mm:ss}").HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });
     columns.Bound(t => t.Subject).Title("Subject").Width(300);
     columns.Bound(t => t.CompanyName).Title("Company").Width(200);
-    columns.Bound(t => t.EmailTo).Title("Email To").Width(200);
-    columns.Bound(t => t.DateSend).Title("Send").Width(200).Format("{0:dd/MM/yyyy HH:mm:ss}").HtmlAttributes(new { @class = "text-right" });
-    columns.Bound(t => t.DateRead).Title("Read").Width(200).Format("{0:dd/MM/yyyy HH:mm:ss}").HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.EmailTo).Title("Email To").Width(500);
 })
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))

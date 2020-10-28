@@ -41,7 +41,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class='form-group'>
                                 <label for='Display'>Display</label>
                                 @(Html.TextBoxFor(Model => Model.Display, new { placeholder = "Display", @class = "form-control" }))
@@ -58,6 +58,8 @@
                                 <label for='Password'>Password</label>
                                 @(Html.TextBoxFor(Model => Model.Password, new { placeholder = "Password", @class = "form-control", @type = "password" }))
                             </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class='form-group'>
                                 <label for='EmailTo'>To</label>
                                 @(Html.TextBoxFor(Model => Model.EmailTo, new { placeholder = "To", @class = "form-control" }))
@@ -70,8 +72,12 @@
                                 <label for='EmailBCC'>BCC</label>
                                 @(Html.TextBoxFor(Model => Model.EmailBCC, new { placeholder = "BCC", @class = "form-control" }))
                             </div>
+                            <div class='form-group'>
+                                <label for='DateSend'>Date send</label>
+                                @(Html.TextBoxFor(Model => Model.DateSend, new { placeholder = "Date send", @class = "form-control", @disabled= "disabled" }))
+                            </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class='form-group'>
                                 <label for='IndustryID'>Industry</label>
                                 @(Html.Kendo().DropDownListFor(Model => Model.IndustryID)
@@ -104,14 +110,7 @@
                                    .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetEmailStorageCategoryToList", "Config")))
                                     )
                             </div>
-                            <div class='form-group'>
-                                <label for='DateSend'>Date send</label>
-                                @(Html.TextBoxFor(Model => Model.DateSend, new { placeholder = "Date send", @class = "form-control", @disabled= "disabled" }))
-                            </div>
-                            <div class='form-group'>
-                                <label for='DateRead'>Date read</label>
-                                @(Html.TextBoxFor(Model => Model.DateRead, new { placeholder = "Date read", @class = "form-control", @disabled = "disabled" }))
-                            </div>
+                           
                             <div class='form-group'>
                                 <label for='FileAttached'>Files attached</label>
                                 <table>
@@ -283,7 +282,7 @@
         var control = $("#IndustryID").data("kendoDropDownList");
         var controlLength = control.dataSource.data().length;
         if (controlLength > 0) {
-            if (ID == 0) {                
+            if (ID == 0) {
                 control.select(0);
             }
            control.trigger("change");
@@ -297,7 +296,7 @@
         var control = $("#CompanyID").data("kendoDropDownList");
         var controlLength = control.dataSource.data().length;
         if (controlLength > 0) {
-            if (ID == 0) {                
+            if (ID == 0) {
                 control.select(0);
             }
                 control.trigger("change");
