@@ -65,6 +65,7 @@ namespace Commsights.Service.Mail
                 }
                 if (!string.IsNullOrEmpty(mail.ToMail))
                 {
+                    mail.ToMail = mail.ToMail.Replace(@";", @",");
                     message.To.Add(mail.ToMail);
                 }
                 if (!string.IsNullOrEmpty(mail.CCMail))

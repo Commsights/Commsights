@@ -1,0 +1,59 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"] - @Commsights.Data.Helpers.AppGlobal.CMSTitle</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="description" content="@Commsights.Data.Helpers.AppGlobal.CMSTitle">
+    <meta name="keywords" content="@Commsights.Data.Helpers.AppGlobal.CMSTitle">
+    <meta name="author" content="@Commsights.Data.Helpers.AppGlobal.Title">
+    <link rel="apple-touch-icon" href="@Commsights.Data.Helpers.AppGlobal.LogoURLFull">
+    <link rel="shortcut icon" type="image/x-icon" href="@Commsights.Data.Helpers.AppGlobal.LogoURLFull">
+    <link rel="stylesheet" href="/css/print.css">
+    <link href="https://kendo.cdn.telerik.com/2020.2.617/styles/kendo.bootstrap-v4.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://kendo.cdn.telerik.com/2020.2.617/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2020.2.617/js/jszip.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2020.2.617/js/kendo.all.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2020.2.617/js/kendo.aspnetmvc.min.js"></script>
+    <script>        
+        function OpenWindowByURL(URLParamater, w = 1000, h = 800) {
+            var width = screen.width;
+            var height = screen.height;
+            var width01 = w;
+            var height01 = h;
+            var left = (width - width01) / 2;
+            var top = (height - height01) / 3;
+            var url = URLParamater;
+            window.open(url, '_blank', 'location=yes,height=' + height01 + ',width=' + width01 + ',scrollbars=yes,status=yes,toolbar=yes,top=' + top + ',left=' + left + '');
+        }     
+        function BeginRequestHandler() {
+            Slider();
+        }
+        function EndRequestHandler() {
+            $('#Dim').css("display", "none");
+            $('#BackGround').fadeTo("fast", 2);
+        }
+        function Slider() {
+            $('#Dim').css("display", "");
+            $('#Dim').css("z-index", "10");
+            $('#Dim').css("position", "absolute");
+            $('#Dim').css("top", ($(window).height() - $('#Dim').height()) / 2 + $(window).scrollTop() + "px");
+            $('#Dim').css("left", ($(window).width() - $('#Dim').width()) / 2 + $(window).scrollLeft() + "px");
+            $('#BackGround').fadeTo("fast", 0.5);
+            $('#Dim').focus();
+        }
+    </script>
+</head>
+<body id="BackGround" style="background-color:#808080;" onload="javascript:window.print();">
+    <div id="Dim" style="display: none;">
+        <div class="msgbox">
+            <img src="@Commsights.Data.Helpers.AppGlobal.LoadingURLFull" alt="Processing, please wait!"
+                 title="Processing, please wait!" width="200px" height="200px" />
+        </div>
+    </div>
+    @RenderBody()
+</body>
+</html>

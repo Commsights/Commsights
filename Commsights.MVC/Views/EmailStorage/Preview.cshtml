@@ -1,9 +1,9 @@
 ﻿@{
-    Layout = "~/Views/Shared/_LayoutWindowPrintPreview.cshtml";
+    Layout = "~/Views/Shared/_LayoutWindowPrintPreviewOpen.cshtml";
     ViewData["Title"] = Model.Subject + " - Email detail";
 }
 @model Commsights.Data.Models.EmailStorage
-<div style="width: 1000px; min-height: 1400px; padding: 40px; margin: auto; background-color: #ffffff;">
+<div style="width: 1000px; min-height: 1400px; padding: 40px; margin: auto; margin-top:0px; background-color: #ffffff;">
     <p>Display: <b>@Model.Display [@Model.EmailFrom]</b></p>
     <p>Subject: <b>@Model.Subject</b></p>
     <p>To: <b>@Model.EmailTo</b></p>
@@ -12,21 +12,15 @@
     <hr />
     <p><b>Download: @Html.Raw(Model.Note)</b></p>
     @Html.Raw(Model.EmailBody)
-    <br />
+    <hr />
     <div style="line-height:20px;">
-        ------------------------------------------------------------------------------------------------
-        <br />
         <img src="@Commsights.Data.Helpers.AppGlobal.Logo01URLFull" width="30%" height="30%" title="@Commsights.Data.Helpers.AppGlobal.CompanyTitleEnglish" alt="@Commsights.Data.Helpers.AppGlobal.CompanyTitleEnglish" />
         <br />
         @Html.Raw(Commsights.Data.Helpers.AppGlobal.GoogleMapHTML)
         <br />
-        Tel:  @Html.Raw(Commsights.Data.Helpers.AppGlobal.PhoneReportHTML)
-        <br />
-        Email:  @Html.Raw(Commsights.Data.Helpers.AppGlobal.EmailReportHTML)
-        <br />
-        Facebook: @Html.Raw(Commsights.Data.Helpers.AppGlobal.FacebookHTML)
-        <br />
-        Website:@Html.Raw(Commsights.Data.Helpers.AppGlobal.WebsiteHTML)
+        Tel:  @Html.Raw(Commsights.Data.Helpers.AppGlobal.PhoneReportHTML) -  Email:  @Html.Raw(Commsights.Data.Helpers.AppGlobal.EmailReportHTML)
+        <br />       
+        Facebook: @Html.Raw(Commsights.Data.Helpers.AppGlobal.FacebookHTML) - Website:@Html.Raw(Commsights.Data.Helpers.AppGlobal.WebsiteHTML)
     </div>
 </div>
 

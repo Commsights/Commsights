@@ -78,13 +78,13 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult Detail(int ID)
         {
-            EmailStorage model = new EmailStorage();            
+            EmailStorage model = new EmailStorage();
             model.Display = AppGlobal.MasterEmailDisplay;
             model.EmailFrom = AppGlobal.MasterEmailUser;
             model.Password = AppGlobal.MasterEmailPassword;
             if (ID > 0)
             {
-                model = _emailStorageRepository.GetByID(ID);     
+                model = _emailStorageRepository.GetByID(ID);
             }
             return View(model);
         }
@@ -96,6 +96,8 @@ namespace Commsights.MVC.Controllers
                 model = _emailStorageRepository.GetByID(ID);
                 StringBuilder txt = new StringBuilder();
                 List<EmailStorageProperty> list = _emailStoragePropertyRepository.GetParentIDAndCodeToList(model.ID, AppGlobal.File);
+                string url001 = Commsights.Data.Helpers.AppGlobal.Domain + "EmailStorage/PDF?ID=" + model.ID + "&email=" + model.EmailTo;
+                txt.AppendLine(@"<a target='_blank' href='" + url001 + "' title='PDF'>PDF</a>");
                 foreach (EmailStorageProperty item in list)
                 {
                     string url = Commsights.Data.Helpers.AppGlobal.Domain + "EmailStorage/Read?ID=" + item.ID + "&email=" + model.EmailTo;
@@ -123,6 +125,36 @@ namespace Commsights.MVC.Controllers
             }
             return Redirect(url);
         }
+        public IActionResult PDF(int ID, string email)
+        {
+            string url = Commsights.Data.Helpers.AppGlobal.Domain + "EmailStorage/Preview?ID=" + ID;
+            EmailStorageProperty model = new EmailStorageProperty();
+            if (ID > 0)
+            {
+                EmailStorageProperty read = new EmailStorageProperty();
+                read.DateRead = DateTime.Now;
+                read.Email = email;
+                read.ParentID = ID;
+                read.Code = AppGlobal.EmailStorage;
+                read.Initialization(InitType.Insert, RequestUserID);
+                _emailStoragePropertyRepository.Create(read);
+            }
+            return Redirect(url);
+        }
+        public void Hiden(int ID, string email)
+        {
+            EmailStorageProperty model = new EmailStorageProperty();
+            if (ID > 0)
+            {
+                EmailStorageProperty read = new EmailStorageProperty();
+                read.DateRead = DateTime.Now;
+                read.Email = email;
+                read.ParentID = ID;
+                read.Code = AppGlobal.EmailStorage;
+                read.Initialization(InitType.Insert, RequestUserID);
+                _emailStoragePropertyRepository.Create(read);
+            }
+        }
         public IActionResult SendMailByID(int ID)
         {
             EmailStorage model = _emailStorageRepository.GetByID(ID);
@@ -130,6 +162,8 @@ namespace Commsights.MVC.Controllers
             {
                 StringBuilder body = new StringBuilder();
                 StringBuilder txt = new StringBuilder();
+                string url001 = Commsights.Data.Helpers.AppGlobal.Domain + "EmailStorage/PDF?ID=" + model.ID + "&email=" + model.EmailTo;
+                txt.AppendLine(@"<a target='_blank' href='" + url001 + "' title='PDF'>PDF</a>");
                 List<EmailStorageProperty> list = _emailStoragePropertyRepository.GetParentIDAndCodeToList(model.ID, AppGlobal.File);
                 foreach (EmailStorageProperty item in list)
                 {
@@ -138,22 +172,18 @@ namespace Commsights.MVC.Controllers
                 }
                 body.AppendLine(@"<p><b>Download: " + txt.ToString() + "</b></p>");
                 body.AppendLine(@"" + model.EmailBody);
-                body.AppendLine(@"<br />");
+                body.AppendLine(@"<hr />");
                 body.AppendLine(@"<div style='line-height:20px;'>");
-                body.AppendLine(@"------------------------------------------------------------------------------------------------");
-                body.AppendLine(@"<br />");              
                 body.AppendLine(@"<img src='" + Commsights.Data.Helpers.AppGlobal.Logo01URLFull + "' width='30%' height='30%' title='" + Commsights.Data.Helpers.AppGlobal.CompanyTitleEnglish + "' alt='" + Commsights.Data.Helpers.AppGlobal.CompanyTitleEnglish + "' />");
                 body.AppendLine(@"<br />");
                 body.AppendLine(@"" + Commsights.Data.Helpers.AppGlobal.GoogleMapHTML);
                 body.AppendLine(@"<br />");
-                body.AppendLine(@"Tel:" + Commsights.Data.Helpers.AppGlobal.PhoneReportHTML);
+                body.AppendLine(@"Tel: " + Commsights.Data.Helpers.AppGlobal.PhoneReportHTML + " - Email: " + Commsights.Data.Helpers.AppGlobal.EmailReportHTML);
                 body.AppendLine(@"<br />");
-                body.AppendLine(@"Email: " + Commsights.Data.Helpers.AppGlobal.EmailReportHTML);
-                body.AppendLine(@"<br />");
-                body.AppendLine(@"Facebook: " + Commsights.Data.Helpers.AppGlobal.FacebookHTML);
-                body.AppendLine(@"<br />");
-                body.AppendLine(@"Website: " + Commsights.Data.Helpers.AppGlobal.WebsiteHTML);
+                body.AppendLine(@"Facebook: " + Commsights.Data.Helpers.AppGlobal.FacebookHTML + " - Website: " + Commsights.Data.Helpers.AppGlobal.WebsiteHTML);
                 body.AppendLine(@"</div>");
+                string url002 = Commsights.Data.Helpers.AppGlobal.Domain + "EmailStorage/Hiden?ID=" + model.ID + "&email=" + model.EmailTo;
+                body.AppendLine(@"<img src='" + url002 + "' height='0' width='0' title='" + Commsights.Data.Helpers.AppGlobal.CompanyTitleEnglish + "' alt='" + Commsights.Data.Helpers.AppGlobal.CompanyTitleEnglish + "'></img>");
                 Commsights.Service.Mail.Mail mail = new Service.Mail.Mail();
                 mail.Initialization();
                 mail.Content = body.ToString();
