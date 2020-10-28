@@ -78,14 +78,13 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult Detail(int ID)
         {
-            EmailStorage model = new EmailStorage();
-            model.IndustryID = AppGlobal.IndustryID;
+            EmailStorage model = new EmailStorage();            
             model.Display = AppGlobal.MasterEmailDisplay;
             model.EmailFrom = AppGlobal.MasterEmailUser;
             model.Password = AppGlobal.MasterEmailPassword;
             if (ID > 0)
             {
-                model = _emailStorageRepository.GetByID(ID);
+                model = _emailStorageRepository.GetByID(ID);     
             }
             return View(model);
         }

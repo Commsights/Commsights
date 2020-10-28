@@ -91,7 +91,7 @@
                                    .HtmlAttributes(new {@class = "form-control" })
                                    .Events(e => e.DataBound("onCompanyDataBound").Change("onCompanyChange"))
                                     .Filter(FilterType.StartsWith)
-                                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByIndustryIDAndParrentIDCustomerToList", "Membership").Data("filterMembership")))
+                                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByIndustryIDToList", "Membership").Data("filterMembership")))
                                     )
                             </div>
                             <div class='form-group'>
@@ -279,22 +279,28 @@
         return { industryID: industryIDValue };
     }
     function onIndustryDataBound() {
+        var ID = $("#ID").val();
         var control = $("#IndustryID").data("kendoDropDownList");
         var controlLength = control.dataSource.data().length;
         if (controlLength > 0) {
-            control.select(0);
-            control.trigger("change");
+            if (ID == 0) {                
+                control.select(0);
+            }
+           control.trigger("change");
         }
     }
     function onIndustryChange() {
         $("#CompanyID").data("kendoDropDownList").dataSource.read();
     }
     function onCompanyDataBound() {
+        var ID = $("#ID").val();
         var control = $("#CompanyID").data("kendoDropDownList");
         var controlLength = control.dataSource.data().length;
         if (controlLength > 0) {
-            control.select(0);
-            control.trigger("change");
+            if (ID == 0) {                
+                control.select(0);
+            }
+                control.trigger("change");
         }
     }
     function onCompanyChange() {
