@@ -174,6 +174,11 @@ namespace Commsights.MVC.Controllers
             var data = _productRepository.GetByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(datePublishBegin, datePublishEnd, search, AppGlobal.SourceAuto);
             return Json(data.ToDataSourceResult(request));
         }
+        public async Task<ActionResult> AsyncGetByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList([DataSourceRequest] DataSourceRequest request, string search, DateTime datePublishBegin, DateTime datePublishEnd)
+        {
+            var data = await _productRepository.AsyncGetByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(datePublishBegin, datePublishEnd, search, AppGlobal.SourceAuto);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetByParentIDAndDatePublishToList([DataSourceRequest] DataSourceRequest request, int parentID, DateTime datePublish)
         {
             var data = _productRepository.GetByParentIDAndDatePublishToList(parentID, datePublish);
@@ -611,7 +616,7 @@ namespace Commsights.MVC.Controllers
                                                         if (html001.Split('~').Length > 1)
                                                         {
                                                             html001 = html001.Split('~')[1];
-                                                        }                                                        
+                                                        }
                                                         html001 = html001.Replace(@"<p", @"~<p");
                                                         html001 = html001.Replace(@"</p>", @"</p>~");
                                                         string description = "";
@@ -639,7 +644,7 @@ namespace Commsights.MVC.Controllers
                                                         product.URLCode = url;
                                                         product.DatePublish = DateTime.Now;
                                                         product.Initialization(InitType.Insert, RequestUserID);
-                                                        _productRepository.Create(product);
+                                                        _productRepository.AsyncCreate(product);
                                                     }
                                                     catch (Exception e)
                                                     {

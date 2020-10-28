@@ -3,6 +3,7 @@ using Commsights.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Commsights.Data.Repositories
 {
@@ -33,5 +34,6 @@ namespace Commsights.Data.Repositories
         public string DeleteProductAndProductPropertyByDatePublishBeginAndDatePublishEndAndIndustryID(DateTime datePublishBegin, DateTime datePublishEnd, int industryID);
         public string DeleteProductSearchAndProductSearchPropertyByDatePublishBeginAndDatePublishEndAndIndustryIDAndHourSearch(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int hourSearch);
         public List<ProductDataTransfer> GetByIDListToList(string iDList);
+        public Task<List<ProductDataTransfer>> AsyncGetByIDListToList(string iDList);
     }
 }

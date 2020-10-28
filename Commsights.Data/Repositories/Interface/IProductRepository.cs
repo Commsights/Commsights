@@ -3,6 +3,7 @@ using Commsights.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Commsights.Data.Repositories
 {
@@ -38,5 +39,6 @@ namespace Commsights.Data.Repositories
         public List<ProductDataTransfer> ReportDailyCompetitorByDatePublishAndCompanyIDToList(DateTime datePublish, int companyID);
         public List<ProductDataTransfer> GetByIDListToList(string iDList);
         public List<Product> GetByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source);
+        public Task<List<Product>> AsyncGetByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source);
     }
 }

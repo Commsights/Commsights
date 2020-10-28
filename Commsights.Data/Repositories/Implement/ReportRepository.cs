@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Commsights.Data.Repositories
 {
@@ -484,6 +485,30 @@ namespace Commsights.Data.Repositories
             };
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectByIDList", parameters);
                 list = SQLHelper.ToList<ProductDataTransfer>(dt);
+            }
+            return list;
+        }
+        public async Task<List<ProductDataTransfer>> AsyncGetByIDListToList(string iDList)
+        {
+            List<ProductDataTransfer> list = new List<ProductDataTransfer>();
+            if (!string.IsNullOrEmpty(iDList))
+            {
+                SqlParameter[] parameters =
+                       {
+                new SqlParameter("@IDList",iDList),
+                };
+                DataTable dt = await SQLHelper.FillAsync(AppGlobal.ConectionString, "sp_ProductSelectByIDList", parameters);
+                foreach (DataRow row in dt.Rows)
+                {
+                    ProductDataTransfer item = new ProductDataTransfer();
+                    item.Media = row["Media"] == DBNull.Value ? "" : (string)row["Media"];
+                    item.DatePublish = row["DatePublish"] == DBNull.Value ? DateTime.Now : (DateTime)row["DatePublish"];
+                    item.Title = row["Title"] == DBNull.Value ? "" : (string)row["Title"];
+                    item.TitleEnglish = row["TitleEnglish"] == DBNull.Value ? "" : (string)row["TitleEnglish"];
+                    item.Description = row["Description"] == DBNull.Value ? "" : (string)row["Description"];
+                    item.URLCode = row["URLCode"] == DBNull.Value ? "" : (string)row["URLCode"];
+                    list.Add(item);
+                }
             }
             return list;
         }

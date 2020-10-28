@@ -90,7 +90,7 @@
     model.Field(t => t.DatePublish).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetBySearchAndDatePublishBeginAndDatePublishEndToList", "Product").Data("filterProduct"))
+.Read(t => t.Action("AsyncGetByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList", "Product").Data("filterProduct"))
 .Update(t => t.Action("Update", "Product"))
 )
 )
@@ -129,7 +129,7 @@
     function onExcel() {
         BeginRequestHandler();
         var IDListValue = $("#ID").val();        
-        $.post("/Report/ExportExcelReportDailyByIDList", { IDList: IDListValue }, function (result) {            
+        $.post("/Report/AsyncExportExcelReportDailyByIDList", { IDList: IDListValue }, function (result) {            
             window.location.replace(result);
             EndRequestHandler();
         });                
