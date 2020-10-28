@@ -5127,6 +5127,12 @@ namespace Commsights.MVC.Controllers
                                     workSheet.Cells[row, column].Value = item.DatePublish;
                                     workSheet.Cells[row, column].Style.Numberformat.Format = "mm/dd/yyyy";
                                     break;
+                                case 2:
+                                    workSheet.Cells[row, column].Value = ".";
+                                    break;
+                                case 3:
+                                    workSheet.Cells[row, column].Value = ".";
+                                    break;
                                 case 4:
                                     workSheet.Cells[row, column].Value = item.Title;
                                     if (!string.IsNullOrEmpty(item.Title))
@@ -5142,6 +5148,10 @@ namespace Commsights.MVC.Controllers
                                         workSheet.Cells[row, column].Hyperlink = new Uri(item.URLCode);
                                         workSheet.Cells[row, column].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
                                     }
+                                    else
+                                    {
+                                        workSheet.Cells[row, column].Value = ".";
+                                    }
                                     break;
                                 case 6:
                                     if (!string.IsNullOrEmpty(item.URLCode))
@@ -5152,7 +5162,7 @@ namespace Commsights.MVC.Controllers
                                     }
                                     break;
                                 case 7:
-                                    workSheet.Cells[row, column].Value = ".";
+                                    workSheet.Cells[row, column].Value = item.Description;
                                     break;
                                 case 8:
                                     workSheet.Cells[row, column].Value = ".";
