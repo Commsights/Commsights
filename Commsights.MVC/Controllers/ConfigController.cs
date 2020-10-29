@@ -189,6 +189,7 @@ namespace Commsights.MVC.Controllers
         public IActionResult WebsiteScan(int ID)
         {
             Config model = _configResposistory.GetByID(ID);
+            model.Note = "";
             return View(model);
         }
         public ActionResult GetAll001ToList([DataSourceRequest] DataSourceRequest request)
@@ -410,7 +411,7 @@ namespace Commsights.MVC.Controllers
                             if (!string.IsNullOrEmpty(title))
                             {
                                 title = title.Replace(@"&nbsp;", @"");
-                                title = title.Trim();                                
+                                title = title.Trim();
                                 itemA = itemA.Replace(@"href=""", @"~");
                                 if (itemA.Split('~').Length > 1)
                                 {
@@ -437,6 +438,7 @@ namespace Commsights.MVC.Controllers
                                             item.ID = random.Next(1000000);
                                             item.Title = title;
                                             item.URLFull = url;
+                                            item.Note = item.Title + "~" + item.URLFull;
                                             list.Add(item);
                                         }
                                     }
@@ -891,7 +893,7 @@ namespace Commsights.MVC.Controllers
         public IActionResult CreateWebiste(Config model, int parentID)
         {
             Initialization(model);
-            if(string.IsNullOrEmpty(model.Title))
+            if (string.IsNullOrEmpty(model.Title))
             {
                 model.Title = model.URLFull;
             }
@@ -1079,7 +1081,47 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
-
+        public IActionResult DeleteByParentIDAndGroupNameAndCode(int parentID)
+        {
+            string note = AppGlobal.InitString;
+            note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
+            List<Config> list = _configResposistory.GetByParentIDAndGroupNameAndCodeToList(parentID, AppGlobal.CRM, AppGlobal.Website);
+            _configResposistory.DeleteRange(list);
+            return Json(note);
+        }
+        public IActionResult SaveWebsiteScanItems(int parentID, string listValue)
+        {
+            string note = AppGlobal.InitString;
+            note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
+            foreach (string item in listValue.Split(';'))
+            {
+                if (item.Split('~').Length > 1)
+                {
+                    Config model = new Config();
+                    model.Title = item.Split('~')[0];
+                    model.URLFull = item.Split('~')[1];
+                    Initialization(model);
+                    if (string.IsNullOrEmpty(model.Title))
+                    {
+                        model.Title = model.URLFull;
+                    }
+                    if (string.IsNullOrEmpty(model.URLFull))
+                    {
+                        model.URLFull = model.Title;
+                    }
+                    model.ParentID = parentID;
+                    model.GroupName = AppGlobal.CRM;
+                    model.Code = AppGlobal.Website;
+                    model.Active = false;
+                    model.Initialization(InitType.Insert, RequestUserID);
+                    if (_configResposistory.IsValidByGroupNameAndCodeAndURL(model.GroupName, model.Code, model.URLFull) == true)
+                    {
+                        _configResposistory.Create(model);
+                    }
+                }
+            }
+            return Json(note);
+        }
         public ActionResult UploadPressList()
         {
             int result = 0;

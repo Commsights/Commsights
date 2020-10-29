@@ -179,6 +179,11 @@ namespace Commsights.MVC.Controllers
             var data = await _productRepository.AsyncGetByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(datePublishBegin, datePublishEnd, search, AppGlobal.SourceAuto);
             return Json(data.ToDataSourceResult(request));
         }
+        public async Task<ActionResult> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList([DataSourceRequest] DataSourceRequest request, string search, DateTime datePublishBegin, DateTime datePublishEnd)
+        {
+            var data = await _productRepository.AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(datePublishBegin, datePublishEnd, search, AppGlobal.SourceAuto);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetByParentIDAndDatePublishToList([DataSourceRequest] DataSourceRequest request, int parentID, DateTime datePublish)
         {
             var data = _productRepository.GetByParentIDAndDatePublishToList(parentID, datePublish);
@@ -604,50 +609,57 @@ namespace Commsights.MVC.Controllers
                                                     }
                                                     url = urlRoot + url;
                                                 }
-                                                if (_productRepository.IsValid(url) == true)
+                                                if ((url.Contains(";") == true) || (url.Contains("(") == true) || (url.Contains(")") == true) || (url.Contains("{") == true) || (url.Contains("}") == true))
                                                 {
-                                                    try
+
+                                                }
+                                                else
+                                                {
+                                                    if (_productRepository.IsValid(url) == true)
                                                     {
-                                                        WebClient webClient001 = new WebClient();
-                                                        webClient001.Encoding = System.Text.Encoding.UTF8;
-                                                        string html001 = webClient001.DownloadString(url);
-                                                        html001 = html001.Replace(@"~", @"-");
-                                                        html001 = html001.Replace(@"<body", @"~<body");
-                                                        if (html001.Split('~').Length > 1)
+                                                        try
                                                         {
-                                                            html001 = html001.Split('~')[1];
-                                                        }
-                                                        html001 = html001.Replace(@"<p", @"~<p");
-                                                        html001 = html001.Replace(@"</p>", @"</p>~");
-                                                        string description = "";
-                                                        string content = "";
-                                                        foreach (string content001 in html001.Split('~'))
-                                                        {
-                                                            if (content001.Contains("</p>"))
+                                                            WebClient webClient001 = new WebClient();
+                                                            webClient001.Encoding = System.Text.Encoding.UTF8;
+                                                            string html001 = webClient001.DownloadString(url);
+                                                            html001 = html001.Replace(@"~", @"-");
+                                                            html001 = html001.Replace(@"<body", @"~<body");
+                                                            if (html001.Split('~').Length > 1)
                                                             {
-                                                                string content002 = AppGlobal.RemoveHTMLTags(content001);
-                                                                if (!string.IsNullOrEmpty(content002))
+                                                                html001 = html001.Split('~')[1];
+                                                            }
+                                                            html001 = html001.Replace(@"<p", @"~<p");
+                                                            html001 = html001.Replace(@"</p>", @"</p>~");
+                                                            string description = "";
+                                                            string content = "";
+                                                            foreach (string content001 in html001.Split('~'))
+                                                            {
+                                                                if (content001.Contains("</p>"))
                                                                 {
-                                                                    description = description + " " + content002;
-                                                                    content = content + "<br/>" + content002;
+                                                                    string content002 = AppGlobal.RemoveHTMLTags(content001);
+                                                                    if (!string.IsNullOrEmpty(content002))
+                                                                    {
+                                                                        description = description + " " + content002;
+                                                                        content = content + "<br/>" + content002;
+                                                                    }
                                                                 }
                                                             }
+                                                            Product product = new Product();
+                                                            product.ParentID = config.ID;
+                                                            product.CategoryID = item.ID;
+                                                            product.Source = AppGlobal.SourceAuto;
+                                                            product.Title = title;
+                                                            product.MetaTitle = AppGlobal.SetName(product.Title);
+                                                            product.Description = description;
+                                                            product.ContentMain = content;
+                                                            product.URLCode = url;
+                                                            product.DatePublish = DateTime.Now;
+                                                            product.Initialization(InitType.Insert, RequestUserID);
+                                                            _productRepository.AsyncInsertSingleItem(product);
                                                         }
-                                                        Product product = new Product();
-                                                        product.ParentID = config.ID;
-                                                        product.CategoryID = item.ID;
-                                                        product.Source = AppGlobal.SourceAuto;
-                                                        product.Title = title;
-                                                        product.MetaTitle = AppGlobal.SetName(product.Title);
-                                                        product.Description = description;
-                                                        product.ContentMain = content;
-                                                        product.URLCode = url;
-                                                        product.DatePublish = DateTime.Now;
-                                                        product.Initialization(InitType.Insert, RequestUserID);
-                                                        _productRepository.AsyncCreate(product);
-                                                    }
-                                                    catch (Exception e)
-                                                    {
+                                                        catch (Exception e)
+                                                        {
+                                                        }
                                                     }
                                                 }
                                             }

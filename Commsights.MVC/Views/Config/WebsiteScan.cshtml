@@ -2,6 +2,7 @@
 
 @model Commsights.Data.Models.Config
 @Html.HiddenFor(Model => Model.ID)
+@Html.HiddenFor(Model => Model.Note)
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
@@ -9,13 +10,22 @@
                 <h3 class="card-title"><a target="_blank" title="@Model.Title" href="@Model.URLFull" style="color:white; cursor:pointer;">@Model.Title</a></h3>
             </div>
             <div class="card-body">
+                <div class="row">
+                    <div class='col-md-11'>
+                    </div>
+                    <div class='col-md-1'>
+                        <button type="button" class="btn btn-danger" onclick="onDelete()">
+                            <span class="fas fa-trash-alt"></span>
+                        </button>
+                    </div>
+                </div>
                 @(Html.Kendo().Grid<Commsights.Data.Models.Config>()
 .Name("Config")
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.Title).Title("Title").Width(300);
-    columns.Bound(t => t.URLFull).Title("URLFull").Width(300);
+    columns.Bound(t => t.Title).Title("Title").Width(200);
+    columns.Bound(t => t.URLFull).Title("URLFull").Width(400);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
@@ -70,11 +80,21 @@
                 <h3 class="card-title">URL</h3>
             </div>
             <div class="card-body">
+                <div class="row">
+                    <div class='col-md-11'>
+                    </div>
+                    <div class='col-md-1'>
+                        <button type="button" class="btn btn-primary" onclick="onSaveWebsiteScanItems()">
+                            <span class="fas fa-save"></span>
+                        </button>
+                    </div>
+                </div>
                 @(Html.Kendo().Grid<Commsights.Data.Models.Config>()
 .Name("ConfigURL")
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" });  }).Width(150);
+    columns.Select().Width(50);
     columns.Bound(t => t.Active).Title("Select").Width(100);
     columns.Bound(t => t.Title).Title("Title").Width(200);
     columns.Bound(t => t.URLFull).Title("URLFull").Width(400);
@@ -105,12 +125,13 @@
 )
 .HtmlAttributes(new { @class = "KendoGrid" })
 .Search(search => { search.Field(f => f.Title); search.Field(f => f.URLFull);})
+.Events(ev => ev.Change("onGridChange"))
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
 .Model(model =>
 {
-    model.Id(t => t.ID);
+    model.Id(t => t.Note);
 })
 .Events(t => { t.RequestEnd("onGridConfigURLRequestEnd"); })
 .Read(t => t.Action("GetWebsiteScanByIDToList", "Config").Data("filterConfig"))
@@ -151,5 +172,32 @@
     function filterConfig(e) {
         var parentIDValue = $("#ID").val();
         return { parentID: parentIDValue };
+    }
+    function onDelete() {
+        BeginRequestHandler();
+        var parentIDValue = $("#ID").val();
+            $.ajax({
+                type: 'GET',
+                url: "@Url.Action("DeleteByParentIDAndGroupNameAndCode", "Config")",
+                data: {
+                    parentID: parentIDValue
+                },
+                success: function () { }
+            }).done(() => {
+                $("#Config").data("kendoGrid").dataSource.read();
+                EndRequestHandler();
+            });
+    }
+    function onGridChange(arg) {
+        $("#Note").val(this.selectedKeyNames().join(";"));
+    }
+    function onSaveWebsiteScanItems() {
+        BeginRequestHandler();
+        var listValue = $("#Note").val();
+        var parentIDValue = $("#ID").val();
+        $.post("/Config/SaveWebsiteScanItems", { parentID: parentIDValue, listValue: listValue }, function (result) {   
+            $("#Config").data("kendoGrid").dataSource.read();
+            EndRequestHandler();
+        });
     }
 </script>

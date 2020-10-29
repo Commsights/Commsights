@@ -40,11 +40,11 @@
                     </div>
                 </div>
                 <br />
-                @(Html.Kendo().Grid<Commsights.Data.Models.Product>()
+                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ProductCompact>()
 .Name("Product")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" });}).Width(150);
+    //columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" });}).Width(150);
     columns.Select().Width(50);
     columns.Bound(t => t.DatePublish).Title("Date").Format("{0: MM/dd/yyyy}").Width(120).HtmlAttributes(new { @class = "text-right" });
     columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(1000);
@@ -86,11 +86,9 @@
 {
     model.Id(t => t.ID);
     model.Field(t => t.ID).Editable(false);
-    model.Field(t => t.DateUpdated).Editable(false);
-    model.Field(t => t.DatePublish).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("AsyncGetByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList", "Product").Data("filterProduct"))
+.Read(t => t.Action("AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList", "Product").Data("filterProduct"))
 .Update(t => t.Action("Update", "Product"))
 )
 )
@@ -128,11 +126,11 @@
     }
     function onExcel() {
         BeginRequestHandler();
-        var IDListValue = $("#ID").val();        
-        $.post("/Report/AsyncExportExcelReportDailyByIDList", { IDList: IDListValue }, function (result) {            
+        var IDListValue = $("#ID").val();
+        $.post("/Report/AsyncExportExcelReportDailyByIDList", { IDList: IDListValue }, function (result) {
             window.location.replace(result);
             EndRequestHandler();
-        });                
+        });
     }
     function onGridChange(arg) {
         $("#ID").val(this.selectedKeyNames().join(";"));
