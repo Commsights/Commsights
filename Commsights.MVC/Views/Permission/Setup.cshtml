@@ -24,6 +24,14 @@
                             </button>
                         </div>
                     </div>
+                    <div class="col-md-2">
+                        <div class='form-group'>
+                            <label for='Replace'>Website scan</label>
+                            <button type="button" class="btn btn-primary" onclick="onCreateWebsiteScan()">
+                                <span class="fas fa-save"></span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>        
@@ -61,6 +69,25 @@
                 type: "POST",
                 datatype: "JSON",
                 url: '@Url.Action("UpdateProduct", "Permission")',
+                data: {  },
+                success: function (result) {
+                    EndRequestHandler();
+                    var messageType = result.split('-')[0];
+                    var note = result.split('-')[1];
+                    var notification = $("#Notification").data("kendoNotification");
+                    notification.show(note, messageType);
+                },
+                error: function (jqXHR, exception) { },
+                complete: function () { },
+            });
+    }
+    function onCreateWebsiteScan() {
+        BeginRequestHandler();
+        $.ajax(
+            {
+                type: "POST",
+                datatype: "JSON",
+                url: '@Url.Action("CreateWebsiteScan", "Permission")',
                 data: {  },
                 success: function (result) {
                     EndRequestHandler();

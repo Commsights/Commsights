@@ -2175,9 +2175,14 @@ namespace Commsights.Data.Helpers
                         }
                         if (!string.IsNullOrEmpty(i.Text))
                         {
-                            if (i.Href.Contains(host))
+                            if ((i.Href.Contains(host) == true) && (i.Href.Contains(@";") == false) && (i.Href.Contains(@"(") == false) && (i.Href.Contains(@")") == false) && (i.Href.Contains(@"{") == false) && (i.Href.Contains(@"}") == false) && (i.Href.Contains(@"[") == false) && (i.Href.Contains(@"]") == false))
                             {
-                                list.Add(i);
+                                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(i.Href);
+                                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                                if (response.StatusCode == HttpStatusCode.OK)
+                                {
+                                    list.Add(i);
+                                }
                             }
                         }
                     }

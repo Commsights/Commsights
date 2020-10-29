@@ -61,5 +61,107 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
             return Json(note);
         }
+        public IActionResult CreateWebsiteScan()
+        {
+            List<Config> list = _configResposistory.GetByGroupNameAndCodeAndActiveToList(AppGlobal.CRM, AppGlobal.Website, true);
+            foreach (Config config in list)
+            {
+                if (config != null)
+                {
+                    _configResposistory.DeleteByParentIDAndGroupNameAndCode(config.ID, AppGlobal.CRM, AppGlobal.Website);
+                    try
+                    {
+                        string html = "";
+                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(config.URLFull);
+                        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            Stream receiveStream = response.GetResponseStream();
+                            StreamReader readStream = null;
+                            if (String.IsNullOrWhiteSpace(response.CharacterSet))
+                            {
+                                readStream = new StreamReader(receiveStream);
+                            }
+                            else
+                            {
+                                readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                            }
+                            html = readStream.ReadToEnd();
+                            response.Close();
+                            readStream.Close();
+                        }
+                        else
+                        {
+                            if (config.URLFull.Contains(@"http:") == true)
+                            {
+                                config.URLFull = config.URLFull.Replace(@"http:", @"https:");
+                            }
+                            else
+                            {
+                                config.URLFull = config.URLFull.Replace(@"https:", @"http:");
+                            }
+                            request = (HttpWebRequest)WebRequest.Create(config.URLFull);
+                            response = (HttpWebResponse)request.GetResponse();
+                            if (response.StatusCode == HttpStatusCode.OK)
+                            {
+                                _configResposistory.Update(config.ID, config);
+                                Stream receiveStream = response.GetResponseStream();
+                                StreamReader readStream = null;
+                                if (String.IsNullOrWhiteSpace(response.CharacterSet))
+                                {
+                                    readStream = new StreamReader(receiveStream);
+                                }
+                                else
+                                {
+                                    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                                }
+                                html = readStream.ReadToEnd();
+                                response.Close();
+                                readStream.Close();
+                            }
+                            else
+                            {
+                                _configResposistory.Delete(config.ID);
+                            }
+                        }
+                        List<LinkItem> listLinkItem = AppGlobal.LinkFinder(html, config.URLFull);
+                        foreach (LinkItem linkItem in listLinkItem)
+                        {
+                            Config item = new Config();
+                            item.ParentID = config.ID;
+                            item.GroupName = AppGlobal.CRM;
+                            item.Code = AppGlobal.Website;
+                            item.Active = false;
+                            item.Title = linkItem.Text;
+                            item.URLFull = linkItem.Href;
+                            item.Initialization(InitType.Insert, RequestUserID);
+                            if (_configResposistory.IsValidByGroupNameAndCodeAndURL(item.GroupName, item.Code, item.URLFull) == true)
+                            {
+                                try
+                                {
+                                    _configResposistory.Create(item);
+                                }
+                                catch (Exception e)
+                                {
+                                    item.Title = "";
+                                    try
+                                    {
+                                        _configResposistory.Create(item);
+                                    }
+                                    catch (Exception e1)
+                                    {
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                }
+            }
+            string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            return Json(note);
+        }
     }
 }

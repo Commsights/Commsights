@@ -254,5 +254,18 @@ namespace Commsights.Data.Repositories
             list = SQLHelper.ToList<Config>(dt);
             return list;
         }
+        public string DeleteByParentIDAndGroupNameAndCode(int parentID, string groupName, string code)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ParentID",parentID),
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+            };
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ConfigDeleteByParentIDAndGroupNameAndCode", parameters);
+
+            return result;
+        }
     }
 }
