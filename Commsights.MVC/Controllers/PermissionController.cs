@@ -140,6 +140,7 @@ namespace Commsights.MVC.Controllers
                             {
                                 try
                                 {
+                                    item.Title = item.Title.Trim();
                                     if (item.Title.Split(' ').Length < 7)
                                     {
                                         _configResposistory.Create(item);
