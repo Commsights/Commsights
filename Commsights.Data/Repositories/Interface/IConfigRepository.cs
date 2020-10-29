@@ -33,5 +33,6 @@ namespace Commsights.Data.Repositories
         public List<ConfigDataTransfer> GetDataTransferTierByTierIDAndIndustryIDToList(int tierID, int industryID);
         public List<Config> GetByParentIDAndGroupNameAndCodeToList(int parentID, string groupName, string code);
         public string DeleteByParentIDAndGroupNameAndCode(int parentID, string groupName, string code);
+        public List<Config> GetByIDListToList(string IDList);
     }
 }

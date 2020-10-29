@@ -64,6 +64,8 @@ namespace Commsights.MVC.Controllers
         public IActionResult CreateWebsiteScan()
         {
             List<Config> list = _configResposistory.GetByGroupNameAndCodeAndActiveToList(AppGlobal.CRM, AppGlobal.Website, true).OrderBy(item => item.Title).ToList();
+            //string IDList = "";
+            //List<Config> list = _configResposistory.GetByIDListToList(IDList).OrderBy(item => item.Title).ToList();
             foreach (Config config in list)
             {
                 if (config != null)
@@ -138,7 +140,10 @@ namespace Commsights.MVC.Controllers
                             {
                                 try
                                 {
-                                    _configResposistory.Create(item);
+                                    if (item.Title.Split(' ').Length < 7)
+                                    {
+                                        _configResposistory.Create(item);
+                                    }
                                 }
                                 catch (Exception e)
                                 {

@@ -267,5 +267,16 @@ namespace Commsights.Data.Repositories
 
             return result;
         }
+        public List<Config> GetByIDListToList(string IDList)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@IDList",IDList),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectByIDList", parameters);
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
     }
 }
