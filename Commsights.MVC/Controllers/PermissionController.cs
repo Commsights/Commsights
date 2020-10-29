@@ -63,11 +63,11 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult CreateWebsiteScan()
         {
-            List<Config> list = _configResposistory.GetByGroupNameAndCodeAndActiveToList(AppGlobal.CRM, AppGlobal.Website, true);
+            List<Config> list = _configResposistory.GetByGroupNameAndCodeAndActiveToList(AppGlobal.CRM, AppGlobal.Website, true).OrderBy(item => item.Title).ToList();
             foreach (Config config in list)
             {
                 if (config != null)
-                {                    
+                {
                     try
                     {
                         string html = "";
