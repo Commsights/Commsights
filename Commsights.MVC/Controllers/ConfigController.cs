@@ -392,59 +392,16 @@ namespace Commsights.MVC.Controllers
                 try
                 {
                     html = webClient.DownloadString(config.URLFull);
-                    html = html.Replace(@"~", @"-");
-                    html = html.Replace(@"<body", @"~<body");
-                    if (html.Split('~').Length > 1)
+                    List<LinkItem> listLinkItem = AppGlobal.LinkFinder(html, config.URLFull);
+                    foreach (LinkItem linkItem in listLinkItem)
                     {
-                        html = html.Split('~')[1];
-                    }
-                    html = html.Replace(@"'", @"""");
-                    html = html.Replace(@"</a>", @"</a>~");
-                    html = html.Replace(@"<a", @"~<a");
-                    int length = html.Split('~').Length;
-                    for (int i = 1; i < length; i++)
-                    {
-                        string itemA = html.Split('~')[i];
-                        if (itemA.Contains("href"))
-                        {
-                            string title = AppGlobal.RemoveHTMLTags(itemA);
-                            if (!string.IsNullOrEmpty(title))
-                            {
-                                title = title.Replace(@"&nbsp;", @"");
-                                title = title.Trim();
-                                itemA = itemA.Replace(@"href=""", @"~");
-                                if (itemA.Split('~').Length > 1)
-                                {
-                                    itemA = itemA.Split('~')[1];
-                                    itemA = itemA.Split('"')[0];
-                                    string url = itemA;
-                                    if (!string.IsNullOrEmpty(url))
-                                    {
-                                        if (url.Contains("http") == false)
-                                        {
-                                            url = config.URLFull + url;
-                                            string urlRoot = config.URLFull;
-                                            string lastChar = urlRoot[urlRoot.Length - 1].ToString();
-                                            if (lastChar.Contains(@"/") == true)
-                                            {
-                                                urlRoot = urlRoot.Substring(0, urlRoot.Length - 2);
-                                            }
-                                            url = urlRoot + url;
-                                        }
-                                        if (url.Contains(config.Title))
-                                        {
-                                            Config item = new Config();
-                                            item.Active = false;
-                                            item.ID = random.Next(1000000);
-                                            item.Title = title;
-                                            item.URLFull = url;
-                                            item.Note = item.Title + "~" + item.URLFull;
-                                            list.Add(item);
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        Config item = new Config();
+                        item.Active = false;
+                        item.ID = random.Next(1000000);
+                        item.Title = linkItem.Text;
+                        item.URLFull = linkItem.Href;
+                        item.Note = item.Title + "~" + item.URLFull;
+                        list.Add(item);
                     }
                 }
                 catch (Exception e)
@@ -452,7 +409,7 @@ namespace Commsights.MVC.Controllers
 
                 }
             }
-            var data = list;
+            var data = list.OrderBy(item => item.Title.Length);
             return Json(data.ToDataSourceResult(request));
         }
         public IActionResult CreateTierByTierIDAndIndustryID(ConfigDataTransfer model, int tierID, int industryID)
@@ -942,6 +899,8 @@ namespace Commsights.MVC.Controllers
             int result = 0;
             if (_configResposistory.IsValidByGroupNameAndCodeAndURL(model.GroupName, model.Code, model.URLFull) == true)
             {
+                Uri myUri = new Uri(model.URLFull);
+                model.Title = myUri.Host;
                 result = _configResposistory.Create(model);
             }
             if (result > 0)
@@ -1046,6 +1005,11 @@ namespace Commsights.MVC.Controllers
             Initialization(model);
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
+            if (model.Code == AppGlobal.Website)
+            {
+                Uri myUri = new Uri(model.URLFull);
+                model.Title = myUri.Host;
+            }
             int result = _configResposistory.Update(model.ID, model);
             if (result > 0)
             {

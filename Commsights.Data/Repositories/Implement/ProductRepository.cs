@@ -153,6 +153,7 @@ namespace Commsights.Data.Repositories
             List<ProductCompact> list = new List<ProductCompact>();
             if (!string.IsNullOrEmpty(search))
             {
+                search = search.Replace(@"""", @"");
                 datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
                 datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
                 SqlParameter[] parameters =

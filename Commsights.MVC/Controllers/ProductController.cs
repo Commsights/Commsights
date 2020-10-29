@@ -20,6 +20,7 @@ using Commsights.Data.DataTransferObject;
 using System.Diagnostics.Eventing.Reader;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 
 namespace Commsights.MVC.Controllers
 {
@@ -541,7 +542,7 @@ namespace Commsights.MVC.Controllers
             List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
             foreach (Config item in listConfig)
             {
-                this.CreateProductScanWebsiteNoFilterProduct(item);
+                this.CreateProductScanWebsiteNoFilterProduct001(item);
             }
             string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
             return Json(note);
@@ -551,10 +552,49 @@ namespace Commsights.MVC.Controllers
             if (websiteID > 0)
             {
                 Config config = _configResposistory.GetByID(websiteID);
-                this.CreateProductScanWebsiteNoFilterProduct(config);
+                this.CreateProductScanWebsiteNoFilterProduct001(config);
             }
+
+            //WebClient webClient = new WebClient();
+            //webClient.Encoding = System.Text.Encoding.UTF8;
+            //string html = "";
+            //try
+            //{
+            //    string urlAddress = "http://news.andi.vn/NewsDetail.aspx?12360051.435.2435552";
+            //    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
+            //    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            //    if (response.StatusCode == HttpStatusCode.OK)
+            //    {
+            //        Stream receiveStream = response.GetResponseStream();
+            //        StreamReader readStream = null;
+
+            //        if (String.IsNullOrWhiteSpace(response.CharacterSet))
+            //            readStream = new StreamReader(receiveStream);
+            //        else
+            //            readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+
+            //        string data = readStream.ReadToEnd();
+
+            //        response.Close();
+            //        readStream.Close();
+            //    }
+            //    //html = webClient.DownloadString("http://news.andi.vn/NewsDetail.aspx?12360051.435.2435552");
+            //}
+            //catch (Exception e)
+            //{
+            //}
             string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
             return Json(note);
+        }
+
+        public void ScanWebsiteNoFilterProductVoid(int websiteID)
+        {
+            if (websiteID > 0)
+            {
+                Config config = _configResposistory.GetByID(websiteID);
+                this.CreateProductScanWebsiteNoFilterProduct001(config);
+            }
         }
         public void CreateProductScanWebsiteNoFilterProduct(Config config)
         {
@@ -675,12 +715,51 @@ namespace Commsights.MVC.Controllers
                 }
             }
         }
-        public void ScanWebsiteNoFilterProductVoid(int websiteID)
+        public void CreateProductScanWebsiteNoFilterProduct001(Config config)
         {
-            if (websiteID > 0)
+            if (config != null)
             {
-                Config config = _configResposistory.GetByID(websiteID);
-                this.CreateProductScanWebsiteNoFilterProduct(config);
+                List<Config> listConfig = _configResposistory.GetByParentIDAndGroupNameAndCodeToList(config.ID, AppGlobal.CRM, AppGlobal.Website);
+                foreach (Config item in listConfig)
+                {
+                    WebClient webClient = new WebClient();
+                    webClient.Encoding = System.Text.Encoding.UTF8;
+                    string html = "";
+                    try
+                    {
+                        html = webClient.DownloadString(item.URLFull);
+                        List<LinkItem> list = AppGlobal.LinkFinder(html, config.URLFull);
+                        foreach (LinkItem linkItem in list)
+                        {
+                            if (_productRepository.IsValid(linkItem.Href) == true)
+                            {
+                                try
+                                {
+                                    WebClient webClient001 = new WebClient();
+                                    webClient001.Encoding = System.Text.Encoding.UTF8;
+                                    string html001 = webClient001.DownloadString(linkItem.Href);
+                                    Product product = new Product();
+                                    product.ParentID = config.ID;
+                                    product.CategoryID = config.ID;
+                                    product.Source = AppGlobal.SourceAuto;
+                                    product.Title = linkItem.Text;
+                                    product.MetaTitle = AppGlobal.SetName(product.Title);
+                                    product.URLCode = linkItem.Href;
+                                    product.DatePublish = DateTime.Now;
+                                    product.Initialization(InitType.Insert, RequestUserID);
+                                    AppGlobal.TagPFinder(html001, product);
+                                    _productRepository.AsyncInsertSingleItem(product);
+                                }
+                                catch (Exception e)
+                                {
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                }
             }
         }
     }

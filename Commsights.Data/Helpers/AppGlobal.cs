@@ -13,6 +13,11 @@ using System.Xml;
 
 namespace Commsights.Data.Helpers
 {
+    public struct LinkItem
+    {
+        public string Href;
+        public string Text;
+    }
     public class AppGlobal
     {
         #region Init
@@ -1915,7 +1920,7 @@ namespace Commsights.Data.Helpers
         }
         public static List<string> SetEmailContact(string content)
         {
-            content = content.Replace(@",",@";");
+            content = content.Replace(@",", @";");
             List<string> list = new List<string>();
             foreach (string contact in content.Split(';'))
             {
@@ -2140,6 +2145,82 @@ namespace Commsights.Data.Helpers
             {
                 string message = e.Message;
             }
+        }
+        public static List<LinkItem> LinkFinder(string html, string urlRoot)
+        {
+            List<LinkItem> list = new List<LinkItem>();
+            if (!string.IsNullOrEmpty(html))
+            {
+                Uri myUri = new Uri(urlRoot);
+                string host = myUri.Host;
+                MatchCollection m1 = Regex.Matches(html, @"(<a.*?>.*?</a>)", RegexOptions.Singleline);
+                foreach (Match m in m1)
+                {
+                    string value = m.Groups[1].Value;
+                    LinkItem i = new LinkItem();
+                    string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                    i.Text = t;
+                    Match m2 = Regex.Match(value, @"href=\""(.*?)\""", RegexOptions.Singleline);
+                    if (m2.Success)
+                    {
+                        i.Href = m2.Groups[1].Value;
+                        if (i.Href.Contains(@"http") == false)
+                        {
+                            string lastChar = urlRoot[urlRoot.Length - 1].ToString();
+                            if (lastChar.Contains(@"/") == true)
+                            {
+                                urlRoot = urlRoot.Substring(0, urlRoot.Length - 2);
+                            }
+                            i.Href = urlRoot + "" + i.Href;
+                        }
+                        if (!string.IsNullOrEmpty(i.Text))
+                        {
+                            if (i.Href.Contains(host))
+                            {
+                                list.Add(i);
+                            }
+                        }
+                    }
+                }
+            }
+            return list;
+        }
+        public static void TagPFinder(string html, Product product)
+        {
+            if (!string.IsNullOrEmpty(html))
+            {
+                MatchCollection m1 = Regex.Matches(html, @"(<p.*?>.*?</p>)", RegexOptions.Singleline);
+                foreach (Match m in m1)
+                {
+                    string value = m.Groups[1].Value;
+                    string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                    product.Description = product.Description + " " + t;
+                    product.ContentMain = product.ContentMain + "<br/>" + t;
+                }
+            }
+        }
+        public static List<LinkItem> ImgFinder(string html)
+        {
+            List<LinkItem> list = new List<LinkItem>();
+            if (!string.IsNullOrEmpty(html))
+            {
+                MatchCollection m1 = Regex.Matches(html, @"(<img.*?>)", RegexOptions.Singleline);
+                foreach (Match m in m1)
+                {
+                    LinkItem i = new LinkItem();
+                    string value = m.Groups[1].Value;
+                    Match m2 = Regex.Match(value, @"src=\""(.*?)\""", RegexOptions.Singleline);
+                    if (m2.Success)
+                    {
+                        i.Href = m2.Groups[1].Value;
+                        if (!string.IsNullOrEmpty(i.Href))
+                        {
+                            list.Add(i);
+                        }
+                    }
+                }
+            }
+            return list;
         }
         public void GetAuthorFromURL(Product product)
         {
