@@ -747,7 +747,8 @@ namespace Commsights.MVC.Controllers
                                     product.URLCode = linkItem.Href;
                                     product.DatePublish = DateTime.Now;
                                     product.Initialization(InitType.Insert, RequestUserID);
-                                    AppGlobal.TagPFinder(html001, product);
+                                    product.DatePublish = DateTime.Now;
+                                    AppGlobal.FinderContentAndDatePublish(html001, product);
                                     _productRepository.AsyncInsertSingleItem(product);
                                 }
                                 catch (Exception e)

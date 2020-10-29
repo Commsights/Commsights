@@ -67,8 +67,7 @@ namespace Commsights.MVC.Controllers
             foreach (Config config in list)
             {
                 if (config != null)
-                {
-                    _configResposistory.DeleteByParentIDAndGroupNameAndCode(config.ID, AppGlobal.CRM, AppGlobal.Website);
+                {                    
                     try
                     {
                         string html = "";

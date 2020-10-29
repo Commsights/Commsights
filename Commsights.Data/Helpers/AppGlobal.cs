@@ -2177,12 +2177,7 @@ namespace Commsights.Data.Helpers
                         {
                             if ((i.Href.Contains(host) == true) && (i.Href.Contains(@";") == false) && (i.Href.Contains(@"(") == false) && (i.Href.Contains(@")") == false) && (i.Href.Contains(@"{") == false) && (i.Href.Contains(@"}") == false) && (i.Href.Contains(@"[") == false) && (i.Href.Contains(@"]") == false))
                             {
-                                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(i.Href);
-                                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                                if (response.StatusCode == HttpStatusCode.OK)
-                                {
-                                    list.Add(i);
-                                }
+                                list.Add(i);
                             }
                         }
                     }
@@ -2190,7 +2185,7 @@ namespace Commsights.Data.Helpers
             }
             return list;
         }
-        public static void TagPFinder(string html, Product product)
+        public static void FinderContent(string html, Product product)
         {
             if (!string.IsNullOrEmpty(html))
             {
@@ -2201,6 +2196,72 @@ namespace Commsights.Data.Helpers
                     string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
                     product.Description = product.Description + " " + t;
                     product.ContentMain = product.ContentMain + "<br/>" + t;
+                }
+            }
+        }
+        public static void FinderContentAndDatePublish(string html, Product product)
+        {
+            if (!string.IsNullOrEmpty(html))
+            {
+                bool check = false;
+                MatchCollection m1 = Regex.Matches(html, @"(<p.*?>.*?</p>)", RegexOptions.Singleline);
+                for (int i = 0; i < m1.Count; i++)
+                {
+                    string value = m1[i].Groups[1].Value;
+                    string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                    try
+                    {
+                        t = t.Split(' ')[0];
+                        product.DatePublish = new DateTime(int.Parse(t.Split('/')[2]), int.Parse(t.Split('/')[1]), int.Parse(t.Split('/')[0]));
+                        check = true;
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            product.DatePublish = new DateTime(int.Parse(t.Split('/')[2]), int.Parse(t.Split('/')[0]), int.Parse(t.Split('/')[1]));
+                            check = true;
+                        }
+                        catch
+                        {
+                        }
+                    }
+                    if (check == true)
+                    {
+                        i = m1.Count;
+                    }
+                }
+                if (check == false)
+                {
+                    m1 = Regex.Matches(html, @"(<p.*?>.*?</p>)", RegexOptions.Singleline);
+                    for (int i = 0; i < m1.Count; i++)
+                    {
+                        string value = m1[i].Groups[1].Value;
+                        string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                        product.Description = product.Description + " " + t;
+                        product.ContentMain = product.ContentMain + "<br/>" + t;
+                        try
+                        {
+                            t = t.Split(' ')[0];
+                            product.DatePublish = new DateTime(int.Parse(t.Split('/')[2]), int.Parse(t.Split('/')[1]), int.Parse(t.Split('/')[0]));
+                            check = true;
+                        }
+                        catch
+                        {
+                            try
+                            {
+                                product.DatePublish = new DateTime(int.Parse(t.Split('/')[2]), int.Parse(t.Split('/')[0]), int.Parse(t.Split('/')[1]));
+                                check = true;
+                            }
+                            catch
+                            {
+                            }
+                        }
+                        if (check == true)
+                        {
+                            i = m1.Count;
+                        }
+                    }
                 }
             }
         }
