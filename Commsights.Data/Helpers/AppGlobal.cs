@@ -2153,6 +2153,8 @@ namespace Commsights.Data.Helpers
             {
                 Uri myUri = new Uri(urlRoot);
                 string host = myUri.Host;
+                string scheme = myUri.Scheme;
+                string localPath = myUri.LocalPath;
                 MatchCollection m1 = Regex.Matches(html, @"(<a.*?>.*?</a>)", RegexOptions.Singleline);
                 foreach (Match m in m1)
                 {
@@ -2164,21 +2166,43 @@ namespace Commsights.Data.Helpers
                     if (m2.Success)
                     {
                         i.Href = m2.Groups[1].Value;
-                        if (i.Href.Contains(@"http") == false)
+                    }
+                    else
+                    {
+                        string url = value.Replace(@"'", @"""");
+                        url = url.Replace(@"href=""", @"~");
+                        if (url.Split('~').Length > 1)
                         {
-                            string lastChar = urlRoot[urlRoot.Length - 1].ToString();
-                            if (lastChar.Contains(@"/") == true)
-                            {
-                                urlRoot = urlRoot.Substring(0, urlRoot.Length - 2);
-                            }
-                            i.Href = urlRoot + "" + i.Href;
+                            url = url.Split('~')[1];
+                            url = url.Split('"')[0];
+                            i.Href = url;
                         }
-                        if (!string.IsNullOrEmpty(i.Text))
+                    }
+                    if ((!string.IsNullOrEmpty(i.Href)) && (!string.IsNullOrEmpty(i.Text)))
+                    {
+                        if ((i.Href.Contains(@"http") == false) && (i.Href.Contains(@"#") == false) && (i.Href.Contains(@";") == false) && (i.Href.Contains(@"(") == false) && (i.Href.Contains(@")") == false) && (i.Href.Contains(@"{") == false) && (i.Href.Contains(@"}") == false) && (i.Href.Contains(@"[") == false) && (i.Href.Contains(@"]") == false))
                         {
-                            if ((i.Href.Contains(host) == true) && (i.Href.Contains(@";") == false) && (i.Href.Contains(@"(") == false) && (i.Href.Contains(@")") == false) && (i.Href.Contains(@"{") == false) && (i.Href.Contains(@"}") == false) && (i.Href.Contains(@"[") == false) && (i.Href.Contains(@"]") == false))
+                            string firstlyChar = i.Href[0].ToString();
+                            if (firstlyChar.Contains(@"/") == true)
                             {
-                                list.Add(i);
+                                i.Href = i.Href.Substring(1, urlRoot.Length - 1);
                             }
+                            if (localPath.Contains(@".") == true)
+                            {
+                                localPath = localPath.Split('.')[0];
+                            }
+                            string localPath001 = "";
+                            for (int j = 0; j < localPath.Split('/').Length - 1; j++)
+                            {
+                                localPath001 = localPath001 + "/" + localPath.Split('/')[j];
+                            }
+                            i.Href = host + localPath001 + "/" + i.Href;
+                            i.Href = i.Href.Replace(@"//", @"/");
+                            i.Href = scheme + "://" + i.Href;
+                        }
+                        if ((i.Href.Contains(@"#") == false) && (i.Href.Contains(@";") == false) && (i.Href.Contains(@"(") == false) && (i.Href.Contains(@")") == false) && (i.Href.Contains(@"{") == false) && (i.Href.Contains(@"}") == false) && (i.Href.Contains(@"[") == false) && (i.Href.Contains(@"]") == false))
+                        {
+                            list.Add(i);
                         }
                     }
                 }

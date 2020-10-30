@@ -234,6 +234,22 @@ namespace Commsights.Data.Repositories
         {
             return _context.Set<Product>().FirstOrDefault(item => item.ImageThumbnail.Equals(imageThumbnail));
         }
+        public Product GetByTitle(string title)
+        {
+            return _context.Set<Product>().FirstOrDefault(item => item.Title.Equals(title));
+        }
+        public Product GetByTitleAndSource(string title, string source)
+        {
+            return _context.Set<Product>().FirstOrDefault(item => item.Title.Equals(title) && item.Source.Equals(source));
+        }
+        public Product GetByProductID(int productID)
+        {
+            return _context.Set<Product>().FirstOrDefault(item => item.ProductID == productID);
+        }
+        public Product GetByPriceUnitID(int priceUnitID)
+        {
+            return _context.Set<Product>().FirstOrDefault(item => item.PriceUnitID == priceUnitID);
+        }
         public List<ProductDataTransfer> GetDataTransferByProductSearchIDToList(int productSearchID)
         {
             List<ProductDataTransfer> list = new List<ProductDataTransfer>();

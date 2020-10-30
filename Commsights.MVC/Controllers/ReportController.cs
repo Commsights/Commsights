@@ -4177,7 +4177,7 @@ namespace Commsights.MVC.Controllers
                                                                 }
                                                                 if (product.IsVideo == true)
                                                                 {
-                                                                    product.URLCode = AppGlobal.DomainMain + "Product/ViewContent/" + product.ID;                                                                    
+                                                                    product.URLCode = AppGlobal.DomainMain + "Product/ViewContent/" + product.ID;
                                                                 }
                                                                 else
                                                                 {
@@ -4858,6 +4858,91 @@ namespace Commsights.MVC.Controllers
                                                     catch (Exception e)
                                                     {
                                                         string message = e.Message;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+            if (string.IsNullOrEmpty(baseViewModel.ActionView))
+            {
+                baseViewModel.ActionView = "Upload";
+            }
+            return RedirectToAction(baseViewModel.ActionView);
+        }
+
+        public ActionResult UploadAndiBad(Commsights.MVC.Models.BaseViewModel baseViewModel)
+        {
+            try
+            {
+                if (Request.Form.Files.Count > 0)
+                {
+                    var file = Request.Form.Files[0];
+                    if (file == null || file.Length == 0)
+                    {
+                    }
+                    if (file != null)
+                    {
+                        string fileExtension = Path.GetExtension(file.FileName);
+                        string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                        fileName = AppGlobal.SourceAndi;
+                        fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
+                        var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.FTPUploadExcel, fileName);
+                        using (var stream = new FileStream(physicalPath, FileMode.Create))
+                        {
+                            file.CopyTo(stream);
+                            FileInfo fileLocation = new FileInfo(physicalPath);
+                            if (fileLocation.Length > 0)
+                            {
+                                if ((fileExtension == ".xlsx") || (fileExtension == ".xls"))
+                                {
+                                    using (ExcelPackage package = new ExcelPackage(stream))
+                                    {
+                                        if (package.Workbook.Worksheets.Count > 0)
+                                        {
+                                            ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
+                                            if (workSheet != null)
+                                            {
+                                                int totalRows = workSheet.Dimension.Rows;
+                                                for (int i = 2; i <= totalRows; i++)
+                                                {
+                                                    Product model = new Product();
+                                                    if (workSheet.Cells[i, 1].Value != null)
+                                                    {
+                                                        model.Title = workSheet.Cells[i, 1].Value.ToString().Trim();
+                                                        if (workSheet.Cells[i, 1].Hyperlink != null)
+                                                        {
+                                                            model.URLCode = workSheet.Cells[i, 1].Hyperlink.AbsoluteUri.Trim();
+                                                        }
+                                                    }
+                                                    if (workSheet.Cells[i, 2].Value != null)
+                                                    {
+                                                        model.URLCode = workSheet.Cells[i, 2].Value.ToString().Trim();
+                                                        if (workSheet.Cells[i, 2].Hyperlink != null)
+                                                        {
+                                                            model.URLCode = workSheet.Cells[i, 1].Hyperlink.AbsoluteUri.Trim();
+                                                        }
+                                                    }
+                                                    try
+                                                    {
+                                                        model.ID = int.Parse(model.URLCode.Split('/')[model.URLCode.Split('/').Length - 1]);
+                                                        Product product = _productRepository.GetByTitleAndSource(model.Title, AppGlobal.SourceAndi);
+                                                        if (product != null)
+                                                        {
+                                                            product.PriceUnitID = model.ID;
+                                                            _productRepository.Update(product.ID, product);
+                                                        }
+                                                    }
+                                                    catch (Exception e)
+                                                    {
                                                     }
                                                 }
                                             }

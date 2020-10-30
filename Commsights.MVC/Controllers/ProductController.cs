@@ -153,7 +153,19 @@ namespace Commsights.MVC.Controllers
             if (ID > 0)
             {
                 model.Product = _productRepository.GetByID(ID);
-                model.ListProductProperty = _productPropertyRepository.GetByParentIDAndCodeToList(ID, AppGlobal.URLCode);
+                if (model.Product != null)
+                {
+                    model.ListProductProperty = _productPropertyRepository.GetByParentIDAndCodeToList(model.Product.ID, AppGlobal.URLCode);
+                }
+
+            }
+            if (model.Product == null)
+            {
+                model.Product = _productRepository.GetByPriceUnitID(ID);
+                if (model.Product != null)
+                {
+                    model.ListProductProperty = _productPropertyRepository.GetByParentIDAndCodeToList(model.Product.ID, AppGlobal.URLCode);
+                }
             }
             if (model.Product == null)
             {
@@ -161,7 +173,6 @@ namespace Commsights.MVC.Controllers
                 model.Product.Title = "";
                 model.Product.IsVideo = true;
                 model.Product.Image = "";
-
             }
             if (model.ListProductProperty == null)
             {
