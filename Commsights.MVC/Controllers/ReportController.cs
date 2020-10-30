@@ -4177,9 +4177,15 @@ namespace Commsights.MVC.Controllers
                                                                 }
                                                                 if (product.IsVideo == true)
                                                                 {
-                                                                    product.URLCode = AppGlobal.DomainMain + "Product/ViewContent/" + product.ID;
-                                                                    _productRepository.Update(product.ID, product);
+                                                                    product.URLCode = AppGlobal.DomainMain + "Product/ViewContent/" + product.ID;                                                                    
                                                                 }
+                                                                else
+                                                                {
+                                                                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(product.URLCode);
+                                                                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                                                                    product.URLCode = response.ResponseUri.AbsoluteUri;
+                                                                }
+                                                                _productRepository.Update(product.ID, product);
                                                             }
                                                             bool isCompany = true;
                                                             if (workSheet.Cells[i, 3].Value != null)

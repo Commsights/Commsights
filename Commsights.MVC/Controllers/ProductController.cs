@@ -150,13 +150,22 @@ namespace Commsights.MVC.Controllers
         public IActionResult ViewContent(int ID)
         {
             ProductViewContentViewModel model = new ProductViewContentViewModel();
-            model.Product = new Product();
-            model.Product.Title = "";
-            model.ListProductProperty = new List<ProductProperty>();
             if (ID > 0)
             {
                 model.Product = _productRepository.GetByID(ID);
                 model.ListProductProperty = _productPropertyRepository.GetByParentIDAndCodeToList(ID, AppGlobal.URLCode);
+            }
+            if (model.Product == null)
+            {
+                model.Product = new Product();
+                model.Product.Title = "";
+                model.Product.IsVideo = true;
+                model.Product.Image = "";
+
+            }
+            if (model.ListProductProperty == null)
+            {
+                model.ListProductProperty = new List<ProductProperty>();
             }
             return View(model);
         }
@@ -555,34 +564,18 @@ namespace Commsights.MVC.Controllers
                 this.CreateProductScanWebsiteNoFilterProduct001(config);
             }
 
-            //WebClient webClient = new WebClient();
-            //webClient.Encoding = System.Text.Encoding.UTF8;
-            //string html = "";
+            //HttpWebRequest request;
+            //WebResponse response;
             //try
             //{
-            //    string urlAddress = "http://news.andi.vn/NewsDetail.aspx?12360051.435.2435552";
-            //    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
-            //    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-            //    if (response.StatusCode == HttpStatusCode.OK)
-            //    {
-            //        Stream receiveStream = response.GetResponseStream();
-            //        StreamReader readStream = null;
-
-            //        if (String.IsNullOrWhiteSpace(response.CharacterSet))
-            //            readStream = new StreamReader(receiveStream);
-            //        else
-            //            readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
-
-            //        string data = readStream.ReadToEnd();
-
-            //        response.Close();
-            //        readStream.Close();
-            //    }
-            //    //html = webClient.DownloadString("http://news.andi.vn/NewsDetail.aspx?12360051.435.2435552");
+            //    string urlAddress = "http://news.andi.vn/NewsDetail.aspx?12604079.349.2349875";
+            //    request = (HttpWebRequest)WebRequest.Create(urlAddress);
+            //    request.AllowAutoRedirect = true;
+            //    HttpWebResponse response001 = (HttpWebResponse)request.GetResponse();
             //}
-            //catch (Exception e)
+            //catch (WebException e)
             //{
+            //    response = e.Response;
             //}
             string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
             return Json(note);

@@ -168,5 +168,34 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
             return Json(note);
         }
+        public IActionResult UpdateAndi()
+        {
+            List<Product> list = _productRepository.GetByAndiToList();
+            foreach (Product product in list)
+            {
+                if (product.IsVideo == true)
+                {
+                    List<ProductProperty> listProductPropertyURLCode = new List<ProductProperty>();
+                    AppGlobal.GetURLByURLAndi(product, listProductPropertyURLCode, RequestUserID);
+                    product.URLCode = AppGlobal.DomainMain + "Product/ViewContent/" + product.ID;
+                }
+                else
+                {
+                    try
+                    {
+                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(product.URLCode);
+                        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                        product.URLCode = response.ResponseUri.AbsoluteUri;
+                    }
+                    catch (WebException e)
+                    {
+                        product.URLCode = e.Response.ResponseUri.AbsoluteUri;
+                    }
+                }
+                _productRepository.Update(product.ID, product);
+            }
+            string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            return Json(note);
+        }
     }
 }

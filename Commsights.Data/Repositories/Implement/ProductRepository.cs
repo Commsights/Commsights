@@ -61,6 +61,10 @@ namespace Commsights.Data.Repositories
         {
             return _context.Product.Where(item => item.CategoryID == CategoryID && item.DatePublish.Year == datePublish.Year && item.DatePublish.Month == datePublish.Month && item.DatePublish.Day == datePublish.Day).OrderByDescending(item => item.DateUpdated).ToList();
         }
+        public List<Product> GetByAndiToList()
+        {
+            return _context.Product.Where(item => item.Source == AppGlobal.SourceAndi && item.URLCode.Contains(AppGlobal.SourceAndi)).OrderByDescending(item => item.IsVideo).ToList();
+        }
         public List<Product> GetByParentIDAndDatePublishToList(int parentID, DateTime datePublish)
         {
             return _context.Product.Where(item => item.ParentID == parentID && item.DatePublish.Year == datePublish.Year && item.DatePublish.Month == datePublish.Month && item.DatePublish.Day == datePublish.Day).OrderByDescending(item => item.DateUpdated).ToList();

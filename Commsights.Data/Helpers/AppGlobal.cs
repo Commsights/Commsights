@@ -2096,13 +2096,13 @@ namespace Commsights.Data.Helpers
                 WebClient webClient = new WebClient();
                 webClient.Encoding = System.Text.Encoding.UTF8;
                 html = webClient.DownloadString(model.ImageThumbnail);
-                if (html.Contains(@"andi.vn"))
+                if (html.Contains(@"andi.vn") == true)
                 {
                     string html01 = html;
                     html = html.Replace(@"~", @"A");
                     model.IsVideo = false;
                     string content = html;
-                    if (content.Contains(@"onclick=""showVideo('"))
+                    if (content.Contains(@"onclick=""showVideo('") == true)
                     {
                         content = content.Replace(@"onclick=""showVideo('", @"~");
                         if (content.Split('~').Length > 1)
@@ -2124,7 +2124,7 @@ namespace Commsights.Data.Helpers
                         html = html.Replace(@"'", @"~");
                         foreach (string url in html.Split('~'))
                         {
-                            if (url.Contains(@"http://"))
+                            if (url.Contains(@"http://") == true)
                             {
                                 ProductProperty productProperty = new ProductProperty();
                                 productProperty.GUICode = model.GUICode;
