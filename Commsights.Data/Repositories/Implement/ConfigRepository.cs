@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Commsights.Data.Repositories
 {
@@ -277,6 +278,43 @@ namespace Commsights.Data.Repositories
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectByIDList", parameters);
             list = SQLHelper.ToList<Config>(dt);
             return list;
+        }
+        public async Task<string> AsyncInsertSingleItem(Config config)
+        {
+
+            SqlParameter[] parameters =
+            {
+new SqlParameter("@ID",config.ID),
+new SqlParameter("@UserCreated",config.UserCreated),
+new SqlParameter("@DateCreated",config.DateCreated),
+new SqlParameter("@UserUpdated",config.UserUpdated),
+new SqlParameter("@DateUpdated",config.DateUpdated),
+new SqlParameter("@ParentID",config.ParentID),
+new SqlParameter("@Note",config.Note),
+new SqlParameter("@Active",config.Active),
+new SqlParameter("@GroupName",config.GroupName),
+new SqlParameter("@Code",config.Code),
+new SqlParameter("@CodeName",config.CodeName),
+new SqlParameter("@CodeNameSub",config.CodeNameSub),
+new SqlParameter("@SortOrder",config.SortOrder),
+new SqlParameter("@Icon",config.Icon),
+new SqlParameter("@Controller",config.Controller),
+new SqlParameter("@Action",config.Action),
+new SqlParameter("@URLFull",config.URLFull),
+new SqlParameter("@URLSub",config.URLSub),
+new SqlParameter("@Title",config.Title),
+new SqlParameter("@IsMenuLeft",config.IsMenuLeft),
+new SqlParameter("@BlackWhite",config.BlackWhite),
+new SqlParameter("@Color",config.Color),
+new SqlParameter("@CountryID",config.CountryID),
+new SqlParameter("@LanguageID",config.LanguageID),
+new SqlParameter("@FrequencyID",config.FrequencyID),
+new SqlParameter("@ColorTypeID",config.ColorTypeID),
+new SqlParameter("@IndustryID",config.IndustryID),
+new SqlParameter("@TierID",config.TierID),
+};
+            string result = await SQLHelper.ExecuteNonQueryAsync(AppGlobal.ConectionString, "sp_ConfigInsertSingleItem", parameters);
+            return result;
         }
     }
 }

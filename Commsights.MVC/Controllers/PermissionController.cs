@@ -63,9 +63,9 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult CreateWebsiteScan()
         {
-            List<Config> list = _configResposistory.GetByGroupNameAndCodeAndActiveToList(AppGlobal.CRM, AppGlobal.Website, true).OrderBy(item => item.Title).ToList();
-            //string IDList = "";
-            //List<Config> list = _configResposistory.GetByIDListToList(IDList).OrderBy(item => item.Title).ToList();
+            //List<Config> list = _configResposistory.GetByGroupNameAndCodeAndActiveToList(AppGlobal.CRM, AppGlobal.Website, true).OrderBy(item => item.Title).ToList();
+            string IDList = "";
+            List<Config> list = _configResposistory.GetByIDListToList(IDList).OrderBy(item => item.Title).ToList();
             foreach (Config config in list)
             {
                 if (config != null)
@@ -143,7 +143,7 @@ namespace Commsights.MVC.Controllers
                                     item.Title = item.Title.Trim();
                                     if (item.Title.Split(' ').Length < 7)
                                     {
-                                        _configResposistory.Create(item);
+                                        _configResposistory.AsyncInsertSingleItem(item);
                                     }
                                 }
                                 catch (Exception e)
@@ -151,7 +151,7 @@ namespace Commsights.MVC.Controllers
                                     item.Title = "";
                                     try
                                     {
-                                        _configResposistory.Create(item);
+                                        _configResposistory.AsyncInsertSingleItem(item);
                                     }
                                     catch (Exception e1)
                                     {
