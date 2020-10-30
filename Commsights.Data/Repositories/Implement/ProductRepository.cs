@@ -240,7 +240,7 @@ namespace Commsights.Data.Repositories
         }
         public Product GetByTitleAndSource(string title, string source)
         {
-            return _context.Set<Product>().FirstOrDefault(item => item.Title.Equals(title) && item.Source.Equals(source));
+            return _context.Set<Product>().FirstOrDefault(item => item.Title.Equals(title) && item.Source.Equals(source) && (item.PriceUnitID == 0 || item.PriceUnitID == null));
         }
         public Product GetByProductID(int productID)
         {
