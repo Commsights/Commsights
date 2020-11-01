@@ -755,14 +755,16 @@ namespace Commsights.MVC.Controllers
                                     AppGlobal.FinderContentAndDatePublish(html001, product);
                                     _productRepository.AsyncInsertSingleItem(product);
                                 }
-                                catch (Exception e)
+                                catch (Exception e1)
                                 {
+                                    string mes1 = e1.Message;
                                 }
                             }
                         }
                     }
                     catch (Exception e)
                     {
+                        string mes = e.Message;
                     }
                 }
             }
