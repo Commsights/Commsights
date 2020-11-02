@@ -155,7 +155,7 @@ namespace Commsights.MVC.Controllers
                 model.Product = _productRepository.GetByID(ID);
                 if (model.Product != null)
                 {
-                    model.ListProductProperty = _productPropertyRepository.GetByParentIDAndCodeToList(model.Product.ID, AppGlobal.URLCode).OrderByDescending(item => item.DateCreated).ToList();
+                    model.ListProductProperty = _productPropertyRepository.GetByParentIDAndCodeToList(model.Product.ID, AppGlobal.URLCode).OrderBy(item => item.DateUpdated).ToList();
                 }
             }
             if (model.Product == null)
@@ -163,7 +163,7 @@ namespace Commsights.MVC.Controllers
                 model.Product = _productRepository.GetByPriceUnitID(ID);
                 if (model.Product != null)
                 {
-                    model.ListProductProperty = _productPropertyRepository.GetByParentIDAndCodeToList(model.Product.ID, AppGlobal.URLCode).OrderByDescending(item => item.DateCreated).ToList();
+                    model.ListProductProperty = _productPropertyRepository.GetByParentIDAndCodeToList(model.Product.ID, AppGlobal.URLCode).OrderBy(item => item.DateCreated).ToList();
                 }
             }
             if (model.Product == null)

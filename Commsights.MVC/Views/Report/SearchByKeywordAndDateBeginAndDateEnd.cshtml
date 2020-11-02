@@ -46,7 +46,7 @@
 {
     //columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" });}).Width(150);
     columns.Select().Width(50);
-    columns.Bound(t => t.DatePublish).Title("Date").Format("{0: MM/dd/yyyy}").Width(120).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.DatePublish).Title("Date").Format("{0: MM/dd/yyyy}").Width(120).HtmlAttributes(new { @class = "text-right" }).HeaderHtmlAttributes(new { @class = "text-center" });
     columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(1000);
     columns.Bound(t => t.Description).Title("Summary").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });

@@ -365,9 +365,9 @@ namespace Commsights.MVC.Controllers
             var data = _configResposistory.GetDataTransferChildrenCountByGroupNameAndCodeAndActiveAndIsMenuLeftToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true, true);
             return Json(data.ToDataSourceResult(request));
         }
-        public List<ConfigDataTransfer> GetConfigDataTransferByGroupNameAndCodeAndActiveAndIsMenuLeftToList()
+        public List<Config> GetWebsiteByGroupNameAndCodeAndActiveToList()
         {
-            return _configResposistory.GetDataTransferChildrenCountByGroupNameAndCodeAndActiveAndIsMenuLeftToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true, true);
+            return _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
         }
         public ActionResult GetDataTransferParentByGroupNameAndCodeAndActiveToList([DataSourceRequest] DataSourceRequest request)
         {

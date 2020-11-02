@@ -80,9 +80,10 @@ namespace Commsights.MVC.Controllers
         public IActionResult SearchByKeywordAndDateBeginAndDateEnd()
         {
             ProductSearch model = new ProductSearch();
-            DateTime now = DateTime.Now;
-            model.DatePublishBegin = new DateTime(now.Year, now.Month, now.AddDays(-7).Day);
-            model.DatePublishEnd = new DateTime(now.Year, now.Month, now.Day);
+            DateTime datePublishEnd = DateTime.Now;
+            DateTime datePublishBegin = datePublishEnd.AddDays(-7);
+            model.DatePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day);
+            model.DatePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day);
             return View(model);
         }
         public IActionResult Index(int industryID, string datePublishBeginString, string datePublishEndString)

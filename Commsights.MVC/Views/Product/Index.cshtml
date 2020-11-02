@@ -200,13 +200,13 @@
        BeginRequestHandler();
        $.ajax({
             type: 'GET',
-            url: "@Url.Action("GetConfigDataTransferByGroupNameAndCodeAndActiveAndIsMenuLeftToList", "Config")",
+            url: "@Url.Action("GetWebsiteByGroupNameAndCodeAndActiveToList", "Config")",
             data: {
             },
-           success: function (Config) {
+           success: function (Config) {               
                for (var index in Config) {
                    $(Config[index]).each(function (iRec, item) {
-                       var url = '/Product/ScanWebsiteNoFilterProductVoid?websiteID=' + item.ID;
+                       var url = '/Product/ScanWebsiteNoFilterProductVoid?websiteID=' + item.ID;                       
                        window.open(url, '_blank');
                    });
                }
