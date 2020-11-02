@@ -1,11 +1,8 @@
-﻿@{ Layout = "~/Views/Shared/_LayoutWindow100.cshtml"; ViewData["Title"] = @Model.Product.Title; }
+﻿@{ Layout = "~/Views/Shared/_LayoutWindow.cshtml"; ViewData["Title"] = @Model.Product.Title; }
 
 @model Commsights.MVC.Models.ProductViewContentViewModel
 
-<div class="card card-primary card-outline">
-    <div class="card-header">
-        <h5 class="card-title m-0">@Model.Product.Title</h5>
-    </div>
+<div class="card card-primary card-outline">  
     <div class="card-body">
         <div class="text-center" style="margin:auto; margin:0px;">
             @if (Model.Product.IsVideo == true)
@@ -18,7 +15,7 @@
             {
                 foreach (Commsights.Data.Models.ProductProperty item in Model.ListProductProperty)
                 {
-                    <img src="@item.Note" class="img-thumbnail" width="100%" />
+                    <img src="@item.Note" class="img-thumbnail" />
                     <br />
                 }
             }
