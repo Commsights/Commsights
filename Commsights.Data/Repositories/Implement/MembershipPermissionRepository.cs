@@ -50,6 +50,10 @@ namespace Commsights.Data.Repositories
         {
             return _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.IndustryID == industryID && item.Code.Equals(code) && item.Active == active).OrderBy(item => item.SortOrder).ToList();
         }
+        public List<MembershipPermission> GetDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndIsDailyToList(int membershipID, int industryID, string code, bool isDaily)
+        {
+            return _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.IndustryID == industryID && item.Code.Equals(code) && item.IsDaily == isDaily).OrderBy(item => item.SortOrder).ToList();
+        }
         public List<MembershipPermission> GetDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndActiveFormSQLToList(int membershipID, int industryID, string code, bool active)
         {
             List<MembershipPermission> list = new List<MembershipPermission>();

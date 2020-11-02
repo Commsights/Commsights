@@ -521,7 +521,7 @@ namespace Commsights.MVC.Controllers
             ProductSearchDataTransfer model = _productSearchRepository.GetDataTransferByID(ID);
             List<ProductSearchPropertyDataTransfer> listData = _reportRepository.ReportDailyByProductSearchIDToListToHTML(model.ID);
             List<ProductSearchPropertyDataTransfer> listDataISummary = listData.Where(item => item.IsSummary == true).ToList();
-            List<MembershipPermission> listDailyReportColumn = _membershipPermissionRepository.GetDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndActiveToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn, true);
+            List<MembershipPermission> listDailyReportColumn = _membershipPermissionRepository.GetDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndIsDailyToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn, true);
             List<MembershipPermission> listDailyReportSection = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCodeToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportSection);
             int DailyReportColumnSegmentID = 0;
             int DailyReportColumnSubCatID = 0;
@@ -631,7 +631,7 @@ namespace Commsights.MVC.Controllers
                             int column = 1;
                             foreach (MembershipPermission dailyReportColumn in listDailyReportColumn)
                             {
-                                if (dailyReportColumn.Active == true)
+                                if (dailyReportColumn.IsDaily == true)
                                 {
                                     if (dailyReportSection.LanguageID == AppGlobal.LanguageID)
                                     {
@@ -1016,7 +1016,7 @@ namespace Commsights.MVC.Controllers
         {
             List<ProductSearchPropertyDataTransfer> listData = _reportRepository.ReportDailyByProductSearchIDToListToHTML(model.ID);
             List<ProductSearchPropertyDataTransfer> listDataISummary = listData.Where(item => item.IsSummary == true).ToList();
-            List<MembershipPermission> listDailyReportColumn = _membershipPermissionRepository.GetDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndActiveToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn, true);
+            List<MembershipPermission> listDailyReportColumn = _membershipPermissionRepository.GetDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndIsDailyToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn, true);
             List<MembershipPermission> listDailyReportSection = _membershipPermissionRepository.GetByMembershipIDAndIndustryIDAndCodeToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportSection);
             int DailyReportColumnSegmentID = 0;
             int DailyReportColumnSubCatID = 0;
@@ -1121,7 +1121,7 @@ namespace Commsights.MVC.Controllers
                             reportData.AppendLine(@"<tr>");
                             foreach (MembershipPermission dailyReportColumn in listDailyReportColumn)
                             {
-                                if (dailyReportColumn.Active == true)
+                                if (dailyReportColumn.IsDaily == true)
                                 {
                                     if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnSegmentID)
                                     {
@@ -1812,7 +1812,7 @@ namespace Commsights.MVC.Controllers
                             int DailyReportColumnPageIDSortOrder = 0;
                             int DailyReportColumnAdvertisementIDSortOrder = 0;
                             int DailyReportColumnSummaryIDSortOrder = 0;
-                            List<MembershipPermission> listDailyReportColumn = _membershipPermissionRepository.GetDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndActiveToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn, true);
+                            List<MembershipPermission> listDailyReportColumn = _membershipPermissionRepository.GetDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndIsDailyToList(model.CompanyID.Value, model.IndustryID.Value, AppGlobal.DailyReportColumn, true).OrderBy(item => item.SortOrder).ToList();
                             if (listDataISummary.Count > 0)
                             {
                                 reportData.AppendLine(@"<b style='color: #ed7d31; font-size:14px;'>II - INFORMATION</b>");
@@ -1825,7 +1825,7 @@ namespace Commsights.MVC.Controllers
                             reportData.Append(@"<th style='text-align:center; background-color:#c00000; padding: 4px; border-color: #000000; border-style: solid;border-width: 1px; color:#ffffff;'></th>");
                             foreach (MembershipPermission dailyReportColumn in listDailyReportColumn)
                             {
-                                if (dailyReportColumn.Active == true)
+                                if (dailyReportColumn.IsDaily == true)
                                 {
                                     if (dailyReportColumn.CategoryID == AppGlobal.DailyReportColumnSegmentID)
                                     {
@@ -1924,7 +1924,7 @@ namespace Commsights.MVC.Controllers
                                 no = no + 1;
                                 reportData.AppendLine(@"<tr style='background-color:#ffffff;'>");
                                 reportData.AppendLine(@"<td style='width: 30px; text-align: left; border-color: #000000; border-style: solid;border-width: 1px;padding: 2px;'><a onclick='javascript:OpenWindowByURL(""/Report/ViewContent/" + data.ID + @""");' title='Edit' style='color:blue; cursor: pointer;'>Edit</td>");
-                                for (int i = 1; i < 12; i++)
+                                for (int i = 1; i < 13; i++)
                                 {
                                     if ((DailyReportColumnSegmentID > 0) && (DailyReportColumnSegmentIDSortOrder == i))
                                     {

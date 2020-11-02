@@ -203,18 +203,27 @@
             url: "@Url.Action("GetWebsiteByGroupNameAndCodeAndActiveToList", "Config")",
             data: {
             },
-           success: function (Config) {               
+           success: function (Config) {
                for (var index in Config) {
-                   $(Config[index]).each(function (iRec, item) {
-                       var url = '/Product/ScanWebsiteNoFilterProductVoid?websiteID=' + item.ID;                       
-                       window.open(url, '_blank');
-                   });
+                   setTimeout(function () {
+                       $(Config[index]).each(function (iRec, item) {
+                           var url = '/Product/ScanWebsiteNoFilterProductVoid?websiteID=' + item.ID;
+                           console.log(index);
+                           console.log(url);
+                           //window.open(url, '_blank');
+                       });
+                   }, index * 3000);                  
                }
                EndRequestHandler();
            }
         }).done(() => {
 
         });
+        return false;
+    }
+    function onOpenURL(url) {
+        alert(url);
+        //window.open(url, '_blank');
         return false;
     }
 </script>
