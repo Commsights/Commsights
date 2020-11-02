@@ -14,11 +14,11 @@
                         @(Html.Kendo().DropDownList()
                      .Name("Website")
                      .DataValueField("ID")
-                     .DataTextField("DisplayName")
+                     .DataTextField("Title")
                      .HtmlAttributes(new { @class = "form-control" })
                       .Events(e => e.DataBound("onWebsiteDataBound").Change("onWebsiteChange"))
                        .Filter(FilterType.StartsWith)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferWebsiteByGroupNameAndCodeAndActiveToList", "Config")))
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetWebsiteByGroupNameAndCodeAndActiveToList001", "Config")))
                             )
                     </div>
                     <div class='col-sm-4'>
@@ -209,7 +209,7 @@
                        setTimeout(function () {
                            var url = '/Product/ScanWebsiteNoFilterProductVoid?websiteID=' + item.ID;
                            window.open(url, '_blank');
-                       }, index * 5000);                          
+                       }, index * 3000);                          
                    });
                }
                EndRequestHandler();

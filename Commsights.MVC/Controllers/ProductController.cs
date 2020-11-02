@@ -150,12 +150,13 @@ namespace Commsights.MVC.Controllers
         public IActionResult ViewContent(int ID)
         {
             ProductViewContentViewModel model = new ProductViewContentViewModel();
+            List<ProductProperty> listProductProperty = new List<ProductProperty>();
             if (ID > 0)
             {
                 model.Product = _productRepository.GetByID(ID);
                 if (model.Product != null)
                 {
-                    model.ListProductProperty = _productPropertyRepository.GetByParentIDAndCodeToList(model.Product.ID, AppGlobal.URLCode).OrderBy(item => item.DateUpdated).ToList();
+                    listProductProperty = _productPropertyRepository.GetByParentIDAndCodeToList(model.Product.ID, AppGlobal.URLCode).OrderBy(item => item.Note).ToList();
                 }
             }
             if (model.Product == null)
@@ -163,8 +164,36 @@ namespace Commsights.MVC.Controllers
                 model.Product = _productRepository.GetByPriceUnitID(ID);
                 if (model.Product != null)
                 {
-                    model.ListProductProperty = _productPropertyRepository.GetByParentIDAndCodeToList(model.Product.ID, AppGlobal.URLCode).OrderBy(item => item.DateCreated).ToList();
+                    listProductProperty = _productPropertyRepository.GetByParentIDAndCodeToList(model.Product.ID, AppGlobal.URLCode).OrderBy(item => item.Note).ToList();
                 }
+            }
+            if (model.ListProductProperty == null)
+            {
+                model.ListProductProperty = new List<ProductProperty>();
+            }
+            if (model.Product.IsVideo == false)
+            {
+                ProductProperty header = listProductProperty.FirstOrDefault(item => item.Note.Contains("getHeader.ashx") == true);
+                if (header != null)
+                {
+                    ProductProperty productProperty01 = new ProductProperty();
+                    productProperty01.ID = 1;
+                    productProperty01.Note = header.Note;
+                    model.ListProductProperty.Add(productProperty01);
+                }
+                int no = 2;
+                foreach (ProductProperty item in listProductProperty)
+                {
+                    if (item.ID != header.ID)
+                    {
+                        ProductProperty productProperty02 = new ProductProperty();
+                        productProperty02.ID = no;
+                        productProperty02.Note = item.Note;
+                        model.ListProductProperty.Add(productProperty02);
+                        no = no + 1;
+                    }
+                }
+
             }
             if (model.Product == null)
             {
@@ -172,11 +201,7 @@ namespace Commsights.MVC.Controllers
                 model.Product.Title = "";
                 model.Product.IsVideo = true;
                 model.Product.Image = "";
-            }
-            if (model.ListProductProperty == null)
-            {
-                model.ListProductProperty = new List<ProductProperty>();
-            }
+            }            
             return View(model);
         }
         public ActionResult GetByCategoryIDAndDatePublishToList([DataSourceRequest] DataSourceRequest request, int CategoryID, DateTime datePublish)
