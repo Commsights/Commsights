@@ -205,14 +205,12 @@
             },
            success: function (Config) {
                for (var index in Config) {
-                   setTimeout(function () {
-                       $(Config[index]).each(function (iRec, item) {
+                   $(Config[index]).each(function (iRec, item) {
+                       setTimeout(function () {
                            var url = '/Product/ScanWebsiteNoFilterProductVoid?websiteID=' + item.ID;
-                           console.log(index);
-                           console.log(url);
-                           //window.open(url, '_blank');
-                       });
-                   }, index * 3000);                  
+                           window.open(url, '_blank');
+                       }, index * 5000);                          
+                   });
                }
                EndRequestHandler();
            }
@@ -220,10 +218,5 @@
 
         });
         return false;
-    }
-    function onOpenURL(url) {
-        alert(url);
-        //window.open(url, '_blank');
-        return false;
-    }
+    }   
 </script>
