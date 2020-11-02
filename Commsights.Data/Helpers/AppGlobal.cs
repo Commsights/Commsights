@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -2185,7 +2186,7 @@ namespace Commsights.Data.Helpers
                             string firstlyChar = i.Href[0].ToString();
                             if (firstlyChar.Contains(@"/") == true)
                             {
-                                i.Href = i.Href.Substring(1, urlRoot.Length - 1);
+                                i.Href = i.Href.Substring(1, i.Href.Length - 1);
                             }
                             if (localPath.Contains(@".") == true)
                             {
