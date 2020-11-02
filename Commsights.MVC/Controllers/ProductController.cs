@@ -155,16 +155,15 @@ namespace Commsights.MVC.Controllers
                 model.Product = _productRepository.GetByID(ID);
                 if (model.Product != null)
                 {
-                    model.ListProductProperty = _productPropertyRepository.GetByParentIDAndCodeToList(model.Product.ID, AppGlobal.URLCode);
+                    model.ListProductProperty = _productPropertyRepository.GetByParentIDAndCodeToList(model.Product.ID, AppGlobal.URLCode).OrderByDescending(item => item.DateCreated).ToList();
                 }
-
             }
             if (model.Product == null)
             {
                 model.Product = _productRepository.GetByPriceUnitID(ID);
                 if (model.Product != null)
                 {
-                    model.ListProductProperty = _productPropertyRepository.GetByParentIDAndCodeToList(model.Product.ID, AppGlobal.URLCode);
+                    model.ListProductProperty = _productPropertyRepository.GetByParentIDAndCodeToList(model.Product.ID, AppGlobal.URLCode).OrderByDescending(item => item.DateCreated).ToList();
                 }
             }
             if (model.Product == null)
