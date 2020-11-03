@@ -5612,7 +5612,7 @@ namespace Commsights.MVC.Controllers
                                     break;
                                 case 12:
                                     workSheet.Cells[row, column].Value = item.AdvertisementValue;
-                                    workSheet.Cells[row, column].Style.Numberformat.Format = "0";
+                                    workSheet.Cells[row, column].Style.Numberformat.Format = "#,##0";
                                     break;
                             }
                             workSheet.Cells[row, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
