@@ -83,7 +83,7 @@ namespace Commsights.MVC.Controllers
             DateTime datePublishEnd = DateTime.Now;
             DateTime datePublishBegin = datePublishEnd.AddDays(-7);
             model.DatePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day);
-            model.DatePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day);
+            model.DatePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day);           
             return View(model);
         }
         public IActionResult Index(int industryID, string datePublishBeginString, string datePublishEndString)
@@ -5530,13 +5530,30 @@ namespace Commsights.MVC.Controllers
                 workSheet.Cells[1, 11].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                 workSheet.Cells[1, 11].Style.Border.Bottom.Color.SetColor(Color.Black);
 
+                workSheet.Cells[1, 12].Value = "Ad value";
+                workSheet.Cells[1, 12].Style.Font.Bold = true;
+                workSheet.Cells[1, 12].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 12].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[1, 12].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[1, 12].Style.Fill.BackgroundColor.SetColor(color);
+                workSheet.Cells[1, 12].Style.Font.Name = "Times New Roman";
+                workSheet.Cells[1, 12].Style.Font.Size = 11;
+                workSheet.Cells[1, 12].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 12].Style.Border.Top.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 12].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 12].Style.Border.Left.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 12].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 12].Style.Border.Right.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 12].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 12].Style.Border.Bottom.Color.SetColor(Color.Black);
+
                 if (!string.IsNullOrEmpty(IDList))
                 {
                     List<ProductDataTransfer> listData = await _reportRepository.AsyncGetByIDListToList(IDList);
                     int row = 2;
                     foreach (ProductDataTransfer item in listData)
                     {
-                        for (int column = 1; column < 12; column++)
+                        for (int column = 1; column < 13; column++)
                         {
                             switch (column)
                             {
@@ -5593,6 +5610,10 @@ namespace Commsights.MVC.Controllers
                                 case 11:
                                     workSheet.Cells[row, column].Value = item.Media;
                                     break;
+                                case 12:
+                                    workSheet.Cells[row, column].Value = item.AdvertisementValue;
+                                    workSheet.Cells[row, column].Style.Numberformat.Format = "0";
+                                    break;
                             }
                             workSheet.Cells[row, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                             workSheet.Cells[row, column].Style.Font.Name = "Times New Roman";
@@ -5606,7 +5627,6 @@ namespace Commsights.MVC.Controllers
                             workSheet.Cells[row, column].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                             workSheet.Cells[row, column].Style.Border.Bottom.Color.SetColor(Color.Black);
                         }
-
                         row = row + 1;
                     }
                 }
@@ -5622,8 +5642,11 @@ namespace Commsights.MVC.Controllers
                 workSheet.Column(9).AutoFit();
                 workSheet.Column(10).AutoFit();
                 workSheet.Column(11).AutoFit();
+                workSheet.Column(12).AutoFit();
+                workSheet.Column(12).Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                 package.Save();
             }
+          
             streamExport.Position = 0;
             var physicalPathCreate = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.FTPDownloadReprotDaily, excelName);
             using (var stream = new FileStream(physicalPathCreate, FileMode.Create))

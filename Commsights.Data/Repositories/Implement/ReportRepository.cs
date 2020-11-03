@@ -501,6 +501,7 @@ namespace Commsights.Data.Repositories
                 foreach (DataRow row in dt.Rows)
                 {
                     ProductDataTransfer item = new ProductDataTransfer();
+                    item.AdvertisementValue = row["AdvertisementValue"] == DBNull.Value ? 0 : (int)row["AdvertisementValue"];
                     item.Media = row["Media"] == DBNull.Value ? "" : (string)row["Media"];
                     item.DatePublish = row["DatePublish"] == DBNull.Value ? DateTime.Now : (DateTime)row["DatePublish"];
                     item.Title = row["Title"] == DBNull.Value ? "" : (string)row["Title"];

@@ -25,8 +25,16 @@
                                      .DateInput()
                                 )
                     </div>
-                    <div class='col-sm-4'>
+                    <div class='col-sm-2'>
                         <input id="Search" name="Search" class="form-control" placeholder="Search" type="text" value="" />
+                    </div>
+                    <div class="col-md-2">
+                        <input type="checkbox" id="IsTitle" value="" checked="checked">
+                        <label for='IsTitle'>Headline</label>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="checkbox" id="IsDescription" value="" checked="checked">
+                        <label for='IsDescription'>Summary</label>
                     </div>
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" onclick="onSearch()">
@@ -88,7 +96,7 @@
     model.Field(t => t.ID).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList", "Product").Data("filterProduct"))
+.Read(t => t.Action("AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceToList", "Product").Data("filterProduct"))
 .Update(t => t.Action("Update", "Product"))
 )
 )
@@ -119,7 +127,9 @@
         var searchValue = $("#Search").val();
         var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
         var datePublishEndValue = toDate02($("#DatePublishEnd").val());
-        return { search: searchValue, datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue };
+        var isTitleValue = document.getElementById("IsTitle").checked;
+        var isDescriptionValue = document.getElementById("IsDescription").checked;
+        return { search: searchValue, datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, isTitle: isTitleValue, isDescription: isDescriptionValue };
     }
     function onSearch() {
         $("#Product").data("kendoGrid").dataSource.read();

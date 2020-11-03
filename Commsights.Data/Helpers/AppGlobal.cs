@@ -2203,7 +2203,39 @@ namespace Commsights.Data.Helpers
                         }
                         if ((i.Href.Contains(@"#") == false) && (i.Href.Contains(@";") == false) && (i.Href.Contains(@"(") == false) && (i.Href.Contains(@")") == false) && (i.Href.Contains(@"{") == false) && (i.Href.Contains(@"}") == false) && (i.Href.Contains(@"[") == false) && (i.Href.Contains(@"]") == false))
                         {
-                            list.Add(i);
+                            string year = DateTime.Now.Year.ToString();
+                            i.Text = i.Text.Trim();
+                            if (i.Text.Split(' ').Length > 1)
+                            {
+                                if ((i.Text.Length > 10) && (i.Text.Contains("/") == true) && (i.Text.Contains(year) == true))
+                                {                                    
+                                }
+                                else
+                                {
+                                    try
+                                    {
+                                        int number = int.Parse(i.Text);
+                                    }
+                                    catch
+                                    {
+                                        try
+                                        {
+                                            DateTime date = DateTime.Parse(i.Text);
+                                        }
+                                        catch
+                                        {
+                                            try
+                                            {
+                                                DateTime date = new DateTime(int.Parse(i.Text.Split('/')[2]), int.Parse(i.Text.Split('/')[1]), int.Parse(i.Text.Split('/')[0]));
+                                            }
+                                            catch
+                                            {
+                                                list.Add(i);
+                                            }
+                                        }
+                                    }
+                                }    
+                            }
                         }
                     }
                 }
@@ -2244,6 +2276,7 @@ namespace Commsights.Data.Helpers
                     {
                         string value = m1[i].Groups[1].Value;
                         string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                        t = t.Replace(@"-", @"/");
                         if ((!string.IsNullOrEmpty(t)) && (t.Contains(@"/") == true))
                         {
                             for (int j = 0; j < t.Split(' ').Length; j++)
@@ -2285,6 +2318,7 @@ namespace Commsights.Data.Helpers
                     {
                         string value = m1[i].Groups[1].Value;
                         string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                        t = t.Replace(@"-", @"/");
                         if ((!string.IsNullOrEmpty(t)) && (t.Contains(@"/") == true))
                         {
                             for (int j = 0; j < t.Split(' ').Length; j++)
@@ -2333,6 +2367,7 @@ namespace Commsights.Data.Helpers
                         }
                         if (check == false)
                         {
+                            t = t.Replace(@"-", @"/");
                             for (int j = 0; j < t.Split(' ').Length; j++)
                             {
                                 string date = t.Split(' ')[j];

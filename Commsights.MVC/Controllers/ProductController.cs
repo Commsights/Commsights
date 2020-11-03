@@ -201,7 +201,7 @@ namespace Commsights.MVC.Controllers
                 model.Product.Title = "";
                 model.Product.IsVideo = true;
                 model.Product.Image = "";
-            }            
+            }
             return View(model);
         }
         public ActionResult GetByCategoryIDAndDatePublishToList([DataSourceRequest] DataSourceRequest request, int CategoryID, DateTime datePublish)
@@ -227,6 +227,11 @@ namespace Commsights.MVC.Controllers
         public async Task<ActionResult> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList([DataSourceRequest] DataSourceRequest request, string search, DateTime datePublishBegin, DateTime datePublishEnd)
         {
             var data = await _productRepository.AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(datePublishBegin, datePublishEnd, search, AppGlobal.SourceAuto);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public async Task<ActionResult> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceToList([DataSourceRequest] DataSourceRequest request, string search, DateTime datePublishBegin, DateTime datePublishEnd, bool isTitle, bool isDescription)
+        {
+            var data = await _productRepository.AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceToList(datePublishBegin, datePublishEnd, search, AppGlobal.SourceAuto, isTitle, isDescription);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetByParentIDAndDatePublishToList([DataSourceRequest] DataSourceRequest request, int parentID, DateTime datePublish)
@@ -758,7 +763,7 @@ namespace Commsights.MVC.Controllers
                         html = webClient.DownloadString(item.URLFull);
                         List<LinkItem> list = AppGlobal.LinkFinder(html, config.URLFull);
                         foreach (LinkItem linkItem in list)
-                        {
+                        {                            
                             if (_productRepository.IsValid(linkItem.Href) == true)
                             {
                                 try

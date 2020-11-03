@@ -172,7 +172,66 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
-
+        public async Task<List<ProductCompact>> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source, bool isTitle, bool isDescription)
+        {
+            List<ProductCompact> list = new List<ProductCompact>();
+            if ((isTitle == true) && (isDescription == true))
+            {
+                list = await AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(datePublishBegin, datePublishEnd, search, source);
+            }
+            else
+            {
+                if (isTitle == true)
+                {
+                    list = await AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchTitleAndSourceToList(datePublishBegin, datePublishEnd, search, source);
+                }
+                if (isDescription == true)
+                {
+                    list = await AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchDescriptionAndSourceToList(datePublishBegin, datePublishEnd, search, source);
+                }
+            }
+            return list;
+        }
+        public async Task<List<ProductCompact>> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchTitleAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source)
+        {
+            List<ProductCompact> list = new List<ProductCompact>();
+            if (!string.IsNullOrEmpty(search))
+            {
+                search = search.Replace(@"""", @"");
+                datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+                datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@DatePublishBegin",datePublishBegin),
+                    new SqlParameter("@DatePublishEnd",datePublishEnd),
+                    new SqlParameter("@Search",search),
+                    new SqlParameter("@Source",source),
+                };
+                DataTable dt = await SQLHelper.FillAsync(AppGlobal.ConectionString, "sp_ProductSelectByDatePublishBeginAndDatePublishEndAndSearchTitleAndSource", parameters);
+                list = SQLHelper.ToList<ProductCompact>(dt);
+            }
+            return list;
+        }
+        public async Task<List<ProductCompact>> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchDescriptionAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source)
+        {
+            List<ProductCompact> list = new List<ProductCompact>();
+            if (!string.IsNullOrEmpty(search))
+            {
+                search = search.Replace(@"""", @"");
+                datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+                datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@DatePublishBegin",datePublishBegin),
+                    new SqlParameter("@DatePublishEnd",datePublishEnd),
+                    new SqlParameter("@Search",search),
+                    new SqlParameter("@Source",source),
+                };
+                DataTable dt = await SQLHelper.FillAsync(AppGlobal.ConectionString, "sp_ProductSelectByDatePublishBeginAndDatePublishEndAndSearchDescriptionAndSource", parameters);
+                list = SQLHelper.ToList<ProductCompact>(dt);
+            }
+            return list;
+        }
         public bool IsValid(string url)
         {
             Product item = null;
