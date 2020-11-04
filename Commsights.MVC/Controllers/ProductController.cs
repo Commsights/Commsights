@@ -763,7 +763,7 @@ namespace Commsights.MVC.Controllers
                         html = webClient.DownloadString(item.URLFull);
                         List<LinkItem> list = AppGlobal.LinkFinder(html, config.URLFull);
                         foreach (LinkItem linkItem in list)
-                        {                            
+                        {
                             if (_productRepository.IsValid(linkItem.Href) == true)
                             {
                                 try

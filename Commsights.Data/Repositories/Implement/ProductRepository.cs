@@ -63,7 +63,7 @@ namespace Commsights.Data.Repositories
         }
         public List<Product> GetByAndiToList()
         {
-            return _context.Product.Where(item => item.Source == AppGlobal.SourceAndi && item.URLCode.Contains(AppGlobal.SourceAndi)).OrderByDescending(item => item.IsVideo).ToList();
+            return _context.Product.Where(item => item.Source == AppGlobal.SourceAndi && item.URLCode.Contains("andi.vn")).OrderByDescending(item => item.IsVideo).ToList();
         }
         public List<Product> GetByParentIDAndDatePublishToList(int parentID, DateTime datePublish)
         {
@@ -103,6 +103,7 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+
         public List<Product> GetByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source)
         {
             List<Product> list = new List<Product>();
@@ -119,6 +120,32 @@ namespace Commsights.Data.Repositories
                 };
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectByDatePublishBeginAndDatePublishEndAndSearchAndSource", parameters);
                 list = SQLHelper.ToList<Product>(dt);
+            }
+            return list;
+        }
+        public async Task<List<Product>> AsyncGetByDatePublishBeginAndDatePublishEndAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string source)
+        {
+            List<Product> list = new List<Product>();
+            datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+            datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+            SqlParameter[] parameters =
+            {
+                    new SqlParameter("@DatePublishBegin",datePublishBegin),
+                    new SqlParameter("@DatePublishEnd",datePublishEnd),
+                    new SqlParameter("@Source",source),
+                };
+            DataTable dt = await SQLHelper.FillAsync(AppGlobal.ConectionString, "sp_ProductSelectByDatePublishBeginAndDatePublishEndAndSource", parameters);
+            foreach (DataRow row in dt.Rows)
+            {
+                Product item = new Product();
+                item.ID = row["ID"] == DBNull.Value ? 0 : (int)row["ID"];
+                item.DatePublish = row["DatePublish"] == DBNull.Value ? DateTime.Now : (DateTime)row["DatePublish"];
+                item.Title = row["Title"] == DBNull.Value ? "" : (string)row["Title"];
+                item.TitleEnglish = row["TitleEnglish"] == DBNull.Value ? "" : (string)row["TitleEnglish"];
+                item.Description = row["Description"] == DBNull.Value ? "" : (string)row["Description"];
+                item.DescriptionEnglish = row["DescriptionEnglish"] == DBNull.Value ? "" : (string)row["DescriptionEnglish"];
+                item.URLCode = row["URLCode"] == DBNull.Value ? "" : (string)row["URLCode"];
+                list.Add(item);
             }
             return list;
         }
@@ -152,6 +179,24 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<ProductCompact001> GetAllProductCompact001ToList()
+        {
+            List<ProductCompact001> list = new List<ProductCompact001>();
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectAll");
+            list = SQLHelper.ToList<ProductCompact001>(dt);
+            return list;
+        }
+        public List<ProductCompact001> GetProductCompactBySourceToList(string source)
+        {
+            List<ProductCompact001> list = new List<ProductCompact001>();
+            SqlParameter[] parameters =
+                {
+                    new SqlParameter("@Source",source),
+                };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectBySource", parameters);
+            list = SQLHelper.ToList<ProductCompact001>(dt);
+            return list;
+        }
         public async Task<List<ProductCompact>> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source)
         {
             List<ProductCompact> list = new List<ProductCompact>();
@@ -172,22 +217,45 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public async Task<List<ProductCompact>> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string source)
+        {
+            List<ProductCompact> list = new List<ProductCompact>();
+            datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+            datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+            SqlParameter[] parameters =
+            {
+                    new SqlParameter("@DatePublishBegin",datePublishBegin),
+                    new SqlParameter("@DatePublishEnd",datePublishEnd),
+                    new SqlParameter("@Source",source),
+                };
+            DataTable dt = await SQLHelper.FillAsync(AppGlobal.ConectionString, "sp_ProductSelectByDatePublishBeginAndDatePublishEndAndSource", parameters);
+            list = SQLHelper.ToList<ProductCompact>(dt);
+
+            return list;
+        }
         public async Task<List<ProductCompact>> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source, bool isTitle, bool isDescription)
         {
             List<ProductCompact> list = new List<ProductCompact>();
-            if ((isTitle == true) && (isDescription == true))
+            if (!string.IsNullOrEmpty(search))
             {
-                list = await AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(datePublishBegin, datePublishEnd, search, source);
-            }
-            else
-            {
-                if (isTitle == true)
+                if (search.Equals("*") == true)
                 {
-                    list = await AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchTitleAndSourceToList(datePublishBegin, datePublishEnd, search, source);
+                    list = await AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSourceToList(datePublishBegin, datePublishEnd, source);
                 }
-                if (isDescription == true)
+                if ((isTitle == true) && (isDescription == true))
                 {
-                    list = await AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchDescriptionAndSourceToList(datePublishBegin, datePublishEnd, search, source);
+                    list = await AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(datePublishBegin, datePublishEnd, search, source);
+                }
+                else
+                {
+                    if (isTitle == true)
+                    {
+                        list = await AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchTitleAndSourceToList(datePublishBegin, datePublishEnd, search, source);
+                    }
+                    if (isDescription == true)
+                    {
+                        list = await AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchDescriptionAndSourceToList(datePublishBegin, datePublishEnd, search, source);
+                    }
                 }
             }
             return list;
@@ -261,7 +329,7 @@ namespace Commsights.Data.Repositories
                     new SqlParameter("@URLCode",uRLCode),
             };
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectByURLCode", parameters);
-            return SQLHelper.ToList<ProductDataTransfer>(dt).FirstOrDefault();
+            return SQLHelper.ToList<Product>(dt).FirstOrDefault();
         }
         public Product GetByByDatePublishBeginAndDatePublishEndAndIndustryIDAndSourceID(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int sourceID)
         {

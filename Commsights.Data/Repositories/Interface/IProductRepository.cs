@@ -48,5 +48,7 @@ namespace Commsights.Data.Repositories
         public Product GetByTitle(string title);
         public Product GetByTitleAndSource(string title, string source);
         public Task<List<ProductCompact>> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source, bool isTitle, bool isDescription);
+        public List<ProductCompact001> GetAllProductCompact001ToList();
+        public List<ProductCompact001> GetProductCompactBySourceToList(string source);
     }
 }

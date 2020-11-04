@@ -19,6 +19,42 @@ namespace Commsights.Data.Helpers
         public string Href;
         public string Text;
     }
+    public class YearFinance
+    {
+        public int Display { get; set; }
+        public YearFinance()
+        {
+        }
+        public static List<YearFinance> GetAllToList()
+        {
+            List<YearFinance> list = new List<YearFinance>();
+            for (int i = AppGlobal.DateBegin; i <= AppGlobal.DateEnd; i++)
+            {
+                YearFinance model = new YearFinance();
+                model.Display = i;
+                list.Add(model);
+            }
+            return list;
+        }
+    }
+    public class MonthFinance
+    {
+        public int Display { get; set; }
+        public MonthFinance()
+        {
+        }
+        public static List<MonthFinance> GetAllToList()
+        {
+            List<MonthFinance> list = new List<MonthFinance>();
+            for (int i = 1; i <= 12; i++)
+            {
+                MonthFinance model = new MonthFinance();
+                model.Display = i;
+                list.Add(model);
+            }
+            return list;
+        }
+    }
     public class AppGlobal
     {
         #region Init
@@ -33,6 +69,62 @@ namespace Commsights.Data.Helpers
         #endregion
 
         #region AppSettings 
+        public static int DateBegin
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DateBegin").Value);
+            }
+        }
+        public static int DateEnd
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DateEnd").Value);
+            }
+        }
+        public static string CorpCopy
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("CorpCopy").Value;
+            }
+        }
+        public static string CategoryMain
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("CategoryMain").Value;
+            }
+        }
+        public static string CategorySub
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("CategorySub").Value;
+            }
+        }
+        public static string Feature
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Feature").Value;
+            }
+        }
+        public static string Sentiment
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Sentiment").Value;
+            }
+        }       
         public static int DailyReportColumnSegmentID
         {
             get
@@ -2201,14 +2293,15 @@ namespace Commsights.Data.Helpers
                             i.Href = i.Href.Replace(@"//", @"/");
                             i.Href = scheme + "://" + i.Href;
                         }
-                        if ((i.Href.Contains(@"#") == false) && (i.Href.Contains(@";") == false) && (i.Href.Contains(@"(") == false) && (i.Href.Contains(@")") == false) && (i.Href.Contains(@"{") == false) && (i.Href.Contains(@"}") == false) && (i.Href.Contains(@"[") == false) && (i.Href.Contains(@"]") == false))
+                        string extension = i.Href.Split('/')[i.Href.Split('/').Length - 1];
+                        if ((i.Href.Contains(@"/tim-kiem") == false) && (i.Href.Contains(@"?tim-kiem") == false) && (i.Href.Contains(@"/tin-lien-quan") == false) && (i.Href.Contains(@"?tin-lien-quan") == false) && (i.Href.Contains(@"?tu-khoa") == false) && (i.Href.Contains(@"/tu-khoa") == false) && (i.Href.Contains(@"?search") == false) && (i.Href.Contains(@"/search") == false) && (i.Href.Contains(@"?tag") == false) && (i.Href.Contains(@"/tag") == false) && (i.Href.Contains(@"/blogs") == false) && (i.Href.Contains(@"/danh-muc") == false) && (i.Href.Contains(@"#") == false) && (i.Href.Contains(@";") == false) && (i.Href.Contains(@"(") == false) && (i.Href.Contains(@")") == false) && (i.Href.Contains(@"{") == false) && (i.Href.Contains(@"}") == false) && (i.Href.Contains(@"[") == false) && (i.Href.Contains(@"]") == false))
                         {
                             string year = DateTime.Now.Year.ToString();
                             i.Text = i.Text.Trim();
                             if (i.Text.Split(' ').Length > 1)
                             {
                                 if ((i.Text.Length > 10) && (i.Text.Contains("/") == true) && (i.Text.Contains(year) == true))
-                                {                                    
+                                {
                                 }
                                 else
                                 {
@@ -2234,7 +2327,7 @@ namespace Commsights.Data.Helpers
                                             }
                                         }
                                     }
-                                }    
+                                }
                             }
                         }
                     }

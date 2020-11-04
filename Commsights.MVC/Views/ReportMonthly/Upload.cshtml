@@ -1,0 +1,87 @@
+﻿@{ ViewData["Title"] = "Upload"; }
+
+@model Commsights.Data.Models.ReportMonthly
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <a class="text-primary" asp-action="Data" asp-controller="ReportMonthly"><h1>Go to Monthly</h1></a>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Upload - Excel Monthly</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadDataReportMonthly", "ReportMonthly")'>
+                    <div class='col-sm-12'>
+                        <label for='Download'>Step 01: File excel template: </label>
+                        <a href="@Commsights.Data.Helpers.AppGlobal.URLDownloadExcel/ReportMonthly.xlsx" target="_blank">Download</a>
+                    </div>
+                    <div class='col-sm-12'>
+                        <label for='Ten'>Step 02: Select the excel file include data: </label>
+                        @(Html.Kendo().Upload()
+                                  .Name("UploadAndiSource")
+                            )
+                    </div>
+                    <div class='col-sm-12'>
+                        <label for='CompanyID'>Step 03: Select customer: </label>
+                        @(Html.Kendo().DropDownListFor(Model => Model.CompanyID)
+                           .DataValueField("ID")
+                           .DataTextField("Account")
+                           .HtmlAttributes(new { style = "width:100%;" })
+                          .Events(e => e.DataBound("onCompanyDataBound"))
+                          .Filter(FilterType.StartsWith)
+                           .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCustomerFullToList", "Membership")))
+                                )
+                    </div>
+                    <div class='col-sm-12'>
+                        <label for='CompanyID'>Step 04: Select year + month: </label>
+                        <table style="width:100%;">
+                            <tr>
+                                <td style="width:50%;">                                   
+                                        @(Html.Kendo().DropDownListFor(Model => Model.Year)
+                     .DataValueField("Display")
+                     .DataTextField("Display")
+                     .HtmlAttributes(new { @class = "form-control" })
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetYearFinanceToList", "AppGlobal")))
+                            )
+                                </td>
+                                <td style="width:50%;">
+
+                                    @(Html.Kendo().DropDownListFor(Model => Model.Month)
+                     .DataValueField("Display")
+                     .DataTextField("Display")
+                     .HtmlAttributes(new { @class = "form-control" })
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetMonthFinanceToList", "AppGlobal")))
+                            )
+
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                    <div class='col-sm-12'>
+                        <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function onCompanyDataBound() {
+        var control = $("#CompanyID").data("kendoDropDownList");
+        var controlLength = control.dataSource.data().length;
+        if (controlLength > 0) {
+            control.select(0);
+        }
+    }
+</script>

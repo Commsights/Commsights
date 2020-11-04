@@ -83,7 +83,7 @@ namespace Commsights.MVC.Controllers
             DateTime datePublishEnd = DateTime.Now;
             DateTime datePublishBegin = datePublishEnd.AddDays(-7);
             model.DatePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day);
-            model.DatePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day);           
+            model.DatePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day);
             return View(model);
         }
         public IActionResult Index(int industryID, string datePublishBeginString, string datePublishEndString)
@@ -857,9 +857,15 @@ namespace Commsights.MVC.Controllers
                                     if ((DailyReportColumnHeadlineVietnameseID > 0) && (DailyReportColumnHeadlineVietnameseIDSortOrder == i))
                                     {
                                         workSheet.Cells[row, i].Value = listData[index].Title;
-                                        if (!string.IsNullOrEmpty(listData[index].Title))
+                                        if ((!string.IsNullOrEmpty(listData[index].Title)) && (!string.IsNullOrEmpty(listData[index].URLCode)))
                                         {
-                                            workSheet.Cells[row, i].Hyperlink = new Uri(listData[index].URLCode);
+                                            try
+                                            {
+                                                workSheet.Cells[row, i].Hyperlink = new Uri(listData[index].URLCode);
+                                            }
+                                            catch
+                                            {
+                                            }
                                             workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
                                         }
                                         workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
@@ -877,7 +883,7 @@ namespace Commsights.MVC.Controllers
                                     if ((DailyReportColumnHeadlineEnglishID > 0) && (DailyReportColumnHeadlineEnglishIDSortOrder == i))
                                     {
                                         workSheet.Cells[row, i].Value = listData[index].TitleEnglish;
-                                        if (!string.IsNullOrEmpty(listData[index].TitleEnglish))
+                                        if ((!string.IsNullOrEmpty(listData[index].TitleEnglish)) && (!string.IsNullOrEmpty(listData[index].URLCode)))
                                         {
                                             workSheet.Cells[row, i].Hyperlink = new Uri(listData[index].URLCode);
                                             workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
@@ -1556,9 +1562,15 @@ namespace Commsights.MVC.Controllers
                                     if ((DailyReportColumnHeadlineVietnameseID > 0) && (DailyReportColumnHeadlineVietnameseIDSortOrder == i))
                                     {
                                         workSheet.Cells[row, i].Value = listData[index].Title;
-                                        if (!string.IsNullOrEmpty(listData[index].Title))
+                                        if ((!string.IsNullOrEmpty(listData[index].Title)) && (!string.IsNullOrEmpty(listData[index].Title)))
                                         {
-                                            workSheet.Cells[row, i].Hyperlink = new Uri(listData[index].URLCode);
+                                            try
+                                            {
+                                                workSheet.Cells[row, i].Hyperlink = new Uri(listData[index].URLCode);
+                                            }
+                                            catch
+                                            {
+                                            }
                                             workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
                                         }
                                         workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
@@ -1576,9 +1588,15 @@ namespace Commsights.MVC.Controllers
                                     if ((DailyReportColumnHeadlineEnglishID > 0) && (DailyReportColumnHeadlineEnglishIDSortOrder == i))
                                     {
                                         workSheet.Cells[row, i].Value = listData[index].TitleEnglish;
-                                        if (!string.IsNullOrEmpty(listData[index].TitleEnglish))
+                                        if ((!string.IsNullOrEmpty(listData[index].TitleEnglish)) && (!string.IsNullOrEmpty(listData[index].Title)))
                                         {
-                                            workSheet.Cells[row, i].Hyperlink = new Uri(listData[index].URLCode);
+                                            try
+                                            {
+                                                workSheet.Cells[row, i].Hyperlink = new Uri(listData[index].URLCode);
+                                            }
+                                            catch
+                                            {
+                                            }
                                             workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
                                         }
                                         workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
@@ -2291,7 +2309,7 @@ namespace Commsights.MVC.Controllers
                         if (i == 8)
                         {
                             workSheet.Cells[row, i].Value = listData[index].Title;
-                            if (!string.IsNullOrEmpty(listData[index].Title))
+                            if ((!string.IsNullOrEmpty(listData[index].Title)) && (!string.IsNullOrEmpty(listData[index].URLCode)))
                             {
                                 try
                                 {
@@ -2308,7 +2326,7 @@ namespace Commsights.MVC.Controllers
                         if (i == 9)
                         {
                             workSheet.Cells[row, i].Value = listData[index].TitleEnglish;
-                            if (!string.IsNullOrEmpty(listData[index].TitleEnglish))
+                            if ((!string.IsNullOrEmpty(listData[index].TitleEnglish)) && (!string.IsNullOrEmpty(listData[index].URLCode)))
                             {
                                 try
                                 {
@@ -2557,9 +2575,15 @@ namespace Commsights.MVC.Controllers
                         if (i == 8)
                         {
                             workSheet.Cells[row, i].Value = listData[index].Title;
-                            if (!string.IsNullOrEmpty(listData[index].Title))
+                            if ((!string.IsNullOrEmpty(listData[index].Title)) && (!string.IsNullOrEmpty(listData[index].URLCode)))
                             {
-                                workSheet.Cells[row, i].Hyperlink = new Uri(listData[index].URLCode);
+                                try
+                                {
+                                    workSheet.Cells[row, i].Hyperlink = new Uri(listData[index].URLCode);
+                                }
+                                catch
+                                {
+                                }
                                 workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
                             }
                             workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
@@ -2567,9 +2591,15 @@ namespace Commsights.MVC.Controllers
                         if (i == 9)
                         {
                             workSheet.Cells[row, i].Value = listData[index].TitleEnglish;
-                            if (!string.IsNullOrEmpty(listData[index].TitleEnglish))
+                            if ((!string.IsNullOrEmpty(listData[index].TitleEnglish)) && (!string.IsNullOrEmpty(listData[index].URLCode)))
                             {
-                                workSheet.Cells[row, i].Hyperlink = new Uri(listData[index].URLCode);
+                                try
+                                {
+                                    workSheet.Cells[row, i].Hyperlink = new Uri(listData[index].URLCode);
+                                }
+                                catch
+                                {
+                                }
                                 workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
                             }
                             workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
@@ -3895,7 +3925,6 @@ namespace Commsights.MVC.Controllers
                                                                         }
                                                                     }
                                                                 }
-
                                                             }
                                                             else
                                                             {
@@ -4182,9 +4211,16 @@ namespace Commsights.MVC.Controllers
                                                                 }
                                                                 else
                                                                 {
-                                                                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(product.URLCode);
-                                                                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                                                                    product.URLCode = response.ResponseUri.AbsoluteUri;
+                                                                    try
+                                                                    {
+                                                                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(product.URLCode);
+                                                                        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                                                                        product.URLCode = response.ResponseUri.AbsoluteUri;
+                                                                    }
+                                                                    catch (WebException e)
+                                                                    {
+                                                                        product.URLCode = e.Response.ResponseUri.AbsoluteUri;
+                                                                    }
                                                                 }
                                                                 _productRepository.Update(product.ID, product);
                                                             }
@@ -5646,7 +5682,7 @@ namespace Commsights.MVC.Controllers
                 workSheet.Column(12).Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                 package.Save();
             }
-          
+
             streamExport.Position = 0;
             var physicalPathCreate = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.FTPDownloadReprotDaily, excelName);
             using (var stream = new FileStream(physicalPathCreate, FileMode.Create))

@@ -53,8 +53,7 @@
                 @(Html.Kendo().Grid<Commsights.Data.Models.Config>()
 .Name("Config")
 .Columns(columns =>
-{
-    columns.Bound(t => t.IsMenuLeft).Title("Is RSS").Width(100);
+{    
     columns.Bound(t => t.Title).Title("Title").Width(200);
     columns.Bound(t => t.URLFull).Title("URLFull").Width(400);
     columns.Bound(t => t.SortOrder).Title("Sort order").Width(200);

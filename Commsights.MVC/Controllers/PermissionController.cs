@@ -55,9 +55,29 @@ namespace Commsights.MVC.Controllers
             List<Product> list = _productRepository.GetAllToList();
             foreach (Product item in list)
             {
-                item.Title = AppGlobal.ToUpperFirstLetter(item.Title);
-                _productRepository.Update(item.ID, item);
+                if (item.Source == AppGlobal.SourceAuto)
+                {
+                    string extension = item.URLCode.Split('/')[item.URLCode.Split('/').Length - 1];
+                    if (extension.Contains(@".") == true)
+                    {
+                        _productRepository.Delete(item.ID);
+                    }
+                }
+                //item.Title = AppGlobal.ToUpperFirstLetter(item.Title);
+                //_productRepository.Update(item.ID, item);
             }
+            //List<ProductCompact001> list = _productRepository.GetProductCompactBySourceToList(AppGlobal.SourceAuto);
+            //foreach (ProductCompact001 item in list)
+            //{
+            //    if (item.Source == AppGlobal.SourceAuto)
+            //    {
+            //        string extension = item.URLCode.Split('/')[item.URLCode.Split('/').Length - 1];
+            //        if (extension.Contains(@".") == false)
+            //        {
+            //            _productRepository.Delete(item.ID);
+            //        }
+            //    }
+            //}
             string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
             return Json(note);
         }
