@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Commsights.MVC.Models
 {
     public class BaseViewModel
-    {
+    {       
         public int ID { get; set; }
         public int IndustryID { get; set; }
         public string IndustryName { get; set; }
@@ -35,5 +35,7 @@ namespace Commsights.MVC.Models
         public string Action { get; set; }
         public string ActionView { get; set; }
         public string Content { get; set; }
+        public int YearFinance { get; set; }
+        public int MonthFinance { get; set; }
     }
 }

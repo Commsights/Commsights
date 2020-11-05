@@ -18,5 +18,6 @@ namespace Commsights.Data.Models
         public bool? IsMonthly { get; set; }
         public bool? IsQuarterly { get; set; }
         public bool? IsYearly { get; set; }
+        public int? IndustryID { get; set; }
     }
 }

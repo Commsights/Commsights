@@ -20,5 +20,9 @@ namespace Commsights.Data.Repositories
         {
             _context = context;
         }
+        public List<ReportMonthly> GetByYearAndMonthToList(int year, int month)
+        {
+            return _context.ReportMonthly.Where(item => item.Year == year && item.Month == month).OrderBy(item => item.Title).ToList();
+        }
     }
 }

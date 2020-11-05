@@ -377,6 +377,43 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<ProductDataTransfer> GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsDailyToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isDaily)
+        {
+            List<ProductDataTransfer> list = new List<ProductDataTransfer>();
+            if (industryID > 0)
+            {
+                datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+                datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+                SqlParameter[] parameters =
+                       {
+                    new SqlParameter("@DatePublishBegin",datePublishBegin),
+                    new SqlParameter("@DatePublishEnd",datePublishEnd),
+                    new SqlParameter("@IndustryID",industryID),
+                    new SqlParameter("@IsDaily",isDaily),
+                    };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportSelectProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsDaily", parameters);
+                list = SQLHelper.ToList<ProductDataTransfer>(dt);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    list[i].ArticleType = new ModelTemplate();
+                    list[i].ArticleType.ID = list[i].ArticleTypeID;
+                    list[i].ArticleType.TextName = list[i].ArticleTypeName;
+                    list[i].Company = new ModelTemplate();
+                    list[i].Company.ID = list[i].CompanyID;
+                    list[i].Company.TextName = list[i].CompanyName;
+                    list[i].AssessType = new ModelTemplate();
+                    list[i].AssessType.ID = list[i].AssessID;
+                    list[i].AssessType.TextName = list[i].AssessName;
+                    list[i].Segment = new ModelTemplate();
+                    list[i].Segment.ID = list[i].SegmentID;
+                    list[i].Segment.TextName = list[i].SegmentName;
+                    list[i].Product = new ModelTemplate();
+                    list[i].Product.ID = list[i].MembershipPermissionProductID;
+                    list[i].Product.TextName = list[i].ProductName;
+                }
+            }
+            return list;
+        }
         public ProductDataTransfer GetProductDataTransferByProductPropertyID(int productPropertyID)
         {
             ProductDataTransfer model = new ProductDataTransfer();

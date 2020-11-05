@@ -206,46 +206,37 @@ namespace Commsights.Data.Repositories
         }
         public Membership GetByAccount(string account)
         {
-            string search = account.ToLower();
             Membership membership = new Membership();
             if (!string.IsNullOrEmpty(account))
             {
-                membership = _context.Membership.FirstOrDefault(item => item.Account.ToLower() == search);
+                membership = _context.Membership.FirstOrDefault(item => item.Account.Contains(account));
                 if (membership == null)
                 {
-                    membership = _context.Membership.FirstOrDefault(item => item.FullName.ToLower() == search);
+                    membership = _context.Membership.FirstOrDefault(item => item.FullName.Contains(account));
                 }
                 if (membership == null)
                 {
-                    membership = _context.Membership.FirstOrDefault(item => item.Website.ToLower() == search);
+                    membership = _context.Membership.FirstOrDefault(item => item.Website.Contains(account));
                 }
                 if (membership == null)
                 {
-                    membership = _context.Membership.FirstOrDefault(item => item.ShortName.ToLower() == search);
+                    membership = _context.Membership.FirstOrDefault(item => item.ShortName.Contains(account));
                 }
                 if (membership == null)
                 {
-                    membership = _context.Membership.FirstOrDefault(item => item.EnglishName.ToLower() == search);
+                    membership = _context.Membership.FirstOrDefault(item => item.EnglishName.Contains(account));
                 }
                 if (membership == null)
                 {
-                    membership = _context.Membership.FirstOrDefault(item => item.Account.Contains(search));
-                }
-                if (membership == null)
-                {
-                    membership = _context.Membership.FirstOrDefault(item => item.FullName.Contains(search));
-                }
-                if (membership == null)
-                {
-                    membership = _context.Membership.FirstOrDefault(item => item.Website.Contains(search));
-                }
-                if (membership == null)
-                {
-                    membership = _context.Membership.FirstOrDefault(item => item.ShortName.Contains(search));
-                }
-                if (membership == null)
-                {
-                    membership = _context.Membership.FirstOrDefault(item => item.EnglishName.Contains(search));
+                    MembershipPermission membershipPermission = _context.MembershipPermission.FirstOrDefault(item => item.Code.Equals(AppGlobal.CompanyName) && item.FullName.Equals(account));
+                    if (membershipPermission == null)
+                    {
+                        membershipPermission = _context.MembershipPermission.FirstOrDefault(item => item.Code.Equals(AppGlobal.CompanyName) && item.FullName.Contains(account));
+                    }
+                    if (membershipPermission != null)
+                    {
+                        membership = _context.Membership.FirstOrDefault(item => item.ID == membershipPermission.MembershipID);
+                    }
                 }
             }
             return membership;

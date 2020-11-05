@@ -36,5 +36,6 @@ namespace Commsights.Data.Repositories
         public string DeleteByParentIDAndGroupNameAndCode(int parentID, string groupName, string code);
         public List<Config> GetByIDListToList(string IDList);
         public Task<string> AsyncInsertSingleItem(Config config);
+        public Config GetByGroupNameAndCodeAndParentIDAndTierID(string groupName, string code, int parentID, int tierID);
     }
 }

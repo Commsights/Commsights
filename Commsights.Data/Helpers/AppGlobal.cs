@@ -69,6 +69,70 @@ namespace Commsights.Data.Helpers
         #endregion
 
         #region AppSettings 
+        public static int AdValue
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("AdValue").Value);
+            }
+        }
+        public static int TierOtherID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("TierOtherID").Value);
+            }
+        }
+        public static int TierPortalID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("TierPortalID").Value);
+            }
+        }
+        public static int TierLocalMediaID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("TierLocalMediaID").Value);
+            }
+        }
+        public static int TierIndustryID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("TierIndustryID").Value);
+            }
+        }
+        public static int TierMassMediaID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("TierMassMediaID").Value);
+            }
+        }
+        public static int FeatureID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("FeatureID").Value);
+            }
+        }
+        public static int MentionID
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return int.Parse(builder.Build().GetSection("AppSettings").GetSection("MentionID").Value);
+            }
+        }
         public static int DateBegin
         {
             get
@@ -124,7 +188,7 @@ namespace Commsights.Data.Helpers
                 var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                 return builder.Build().GetSection("AppSettings").GetSection("Sentiment").Value;
             }
-        }       
+        }
         public static int DailyReportColumnSegmentID
         {
             get
@@ -2360,6 +2424,11 @@ namespace Commsights.Data.Helpers
                 {
                     htmlspan = htmlspan.Split('~')[1];
                 }
+                htmlspan = htmlspan.Replace(@"</h2>", @"~");
+                if (htmlspan.Split('~').Length > 1)
+                {
+                    htmlspan = htmlspan.Split('~')[1];
+                }
                 MatchCollection m1;
                 bool check = false;
                 if (check == false)
@@ -2450,14 +2519,19 @@ namespace Commsights.Data.Helpers
                 for (int i = 0; i < m1.Count; i++)
                 {
                     string value = m1[i].Groups[1].Value;
+                    if ((value.Contains(@"<img") == true) || (value.Contains(@"</a>") == true) || (value.Contains(@"<a") == true) || (value.Contains(@"href") == true) || (value.Contains(@"function()") == true) || (value.Contains(@"$(") == true))
+                    {
+
+                    }
+                    else
+                    {
+                        string t1 = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                        product.Description = product.Description + " " + t1;
+                        product.ContentMain = product.ContentMain + "<br/>" + t1;
+                    }
                     string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
                     if (!string.IsNullOrEmpty(t))
                     {
-                        if ((t.Contains(@"function()") == false) || (t.Contains(@"$(") == false))
-                        {
-                            product.Description = product.Description + " " + t;
-                            product.ContentMain = product.ContentMain + "<br/>" + t;
-                        }
                         if (check == false)
                         {
                             t = t.Replace(@"-", @"/");

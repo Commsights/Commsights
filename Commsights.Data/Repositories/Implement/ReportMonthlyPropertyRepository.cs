@@ -20,5 +20,23 @@ namespace Commsights.Data.Repositories
         {
             _context = context;
         }
+        public List<ReportMonthlyProperty> GetByParentID001ToList(int parentID)
+        {
+            return _context.ReportMonthlyProperty.Where(item => item.ParentID == parentID).OrderBy(item => item.ProductPropertyID).ToList();
+        }
+        public List<ReportMonthlyPropertyDataTransfer> GetReportMonthlyPropertyDataTransferByParentIDToList(int parentID)
+        {
+            List<ReportMonthlyPropertyDataTransfer> list = new List<ReportMonthlyPropertyDataTransfer>();
+            if (parentID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ParentID",parentID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlyPropertySelectReportMonthlyPropertyDataTransferByParentID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyPropertyDataTransfer>(dt);
+            }
+            return list;
+        }
     }
 }

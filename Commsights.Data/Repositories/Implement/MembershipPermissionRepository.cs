@@ -81,7 +81,11 @@ namespace Commsights.Data.Repositories
         }
         public MembershipPermission GetByProductName(string productName)
         {
-            return _context.MembershipPermission.FirstOrDefault(item => item.ProductName.ToLower() == productName.ToLower());
+            return _context.MembershipPermission.FirstOrDefault(item => item.ProductName.Contains(productName));
+        }
+        public MembershipPermission GetByCodeAndProductName(string code, string productName)
+        {
+            return _context.MembershipPermission.FirstOrDefault(item => item.Code.Equals(code) && item.ProductName.Contains(productName));
         }
         public MembershipPermission GetByMembershipIDAndAndCodeAndActive(int membershipID, string code, bool active)
         {

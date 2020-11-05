@@ -21,7 +21,7 @@ namespace Commsights.Data.Models
         public string CompanyName { get; set; }
         public int? CorpCopyID { get; set; }
         public string CorpCopy { get; set; }
-        public int? SOECompany { get; set; }
+        public decimal? SOECompany { get; set; }
         public int? FeatureCorpID { get; set; }
         public string FeatureCorp { get; set; }
         public int? AssessID { get; set; }
@@ -31,7 +31,7 @@ namespace Commsights.Data.Models
         public string ProductName_ProjectName { get; set; }
         public int? SegmentProductID { get; set; }
         public string SegmentProduct { get; set; }
-        public int? SOEProduct { get; set; }
+        public decimal? SOEProduct { get; set; }
         public int? FeatureProductID { get; set; }
         public string FeatureProduct { get; set; }
         public int? IndustryID { get; set; }
@@ -64,5 +64,9 @@ namespace Commsights.Data.Models
         public decimal? TierValue { get; set; }
         public decimal? PictureValue { get; set; }
         public decimal? MPS { get; set; }
+        public int? SentimentCorpID { get; set; }
+        public string SentimentCorp { get; set; }
+        public int? SentimentProductID { get; set; }
+        public string SentimentProduct { get; set; }
     }
 }

@@ -42,6 +42,7 @@ namespace Commsights.Data.Repositories
         public Task<List<Product>> AsyncGetByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source);
         public Task<List<ProductCompact>> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source);
         public Task<string> AsyncInsertSingleItem(Product product);
+        public Task<string> AsyncUpdateSingleItem(Product product);
         public List<Product> GetByAndiToList();
         public Product GetByProductID(int productID);
         public Product GetByPriceUnitID(int priceUnitID);

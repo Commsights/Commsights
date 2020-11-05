@@ -38,6 +38,14 @@ namespace Commsights.Data.Repositories
         public Config GetByGroupNameAndCodeAndCodeName(string groupName, string code, string codeName)
         {
             Config item = _context.Set<Config>().FirstOrDefault(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.CodeName.Equals(codeName));
+            if (item == null)
+            {
+                item = _context.Set<Config>().FirstOrDefault(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.Title.Equals(codeName));
+            }
+            if (item == null)
+            {
+                item = _context.Set<Config>().FirstOrDefault(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.Note.Equals(codeName));
+            }
             return item;
         }
         public Config GetByGroupNameAndCodeAndParentID(string groupName, string code, int parentID)
@@ -45,9 +53,22 @@ namespace Commsights.Data.Repositories
             Config item = _context.Set<Config>().FirstOrDefault(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.ParentID == parentID);
             return item;
         }
+        public Config GetByGroupNameAndCodeAndParentIDAndTierID(string groupName, string code, int parentID, int tierID)
+        {
+            Config item = _context.Set<Config>().FirstOrDefault(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.ParentID == parentID && item.TierID == tierID);
+            return item;
+        }
         public Config GetByGroupNameAndCodeAndTitle(string groupName, string code, string title)
         {
             Config item = _context.Set<Config>().FirstOrDefault(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.Title.Equals(title));
+            if (item == null)
+            {
+                item = _context.Set<Config>().FirstOrDefault(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.CodeName.Equals(title));
+            }
+            if (item == null)
+            {
+                item = _context.Set<Config>().FirstOrDefault(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.Note.Equals(title));
+            }
             return item;
         }
         public List<Config> GetByCodeToList(string code)
@@ -202,18 +223,21 @@ namespace Commsights.Data.Repositories
         public List<ConfigDataTransfer> GetDataTransferTierByTierIDAndIndustryIDToList(int tierID, int industryID)
         {
             List<ConfigDataTransfer> list = new List<ConfigDataTransfer>();
-            SqlParameter[] parameters =
-                        {
+            if (tierID > 0)
+            {
+                SqlParameter[] parameters =
+                            {
                 new SqlParameter("@TierID",tierID),
                 new SqlParameter("@IndustryID",industryID),
             };
-            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectDataTransferTierByTierIDAndIndustryID", parameters);
-            list = SQLHelper.ToList<ConfigDataTransfer>(dt);
-            for (int i = 0; i < list.Count; i++)
-            {
-                list[i].Parent = new ModelTemplate();
-                list[i].Parent.ID = list[i].ParentID;
-                list[i].Parent.TextName = list[i].ParentName;
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectDataTransferTierByTierIDAndIndustryID", parameters);
+                list = SQLHelper.ToList<ConfigDataTransfer>(dt);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    list[i].Parent = new ModelTemplate();
+                    list[i].Parent.ID = list[i].ParentID;
+                    list[i].Parent.TextName = list[i].ParentName;
+                }
             }
             return list;
 

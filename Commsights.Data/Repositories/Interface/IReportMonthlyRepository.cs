@@ -9,6 +9,6 @@ namespace Commsights.Data.Repositories
 {
     public interface IReportMonthlyRepository : IRepository<ReportMonthly>
     {
-        
+        public List<ReportMonthly> GetByYearAndMonthToList(int year, int month);
     }
 }

@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <a class="text-primary" asp-action="Data" asp-controller="ReportMonthly"><h1>Go to Monthly</h1></a>
+                <a class="text-primary" href="ReportMonthly/Monthly?ID=@Model.ID"><h1>Go to Monthly</h1></a>
             </div>
         </div>
     </div>
@@ -30,22 +30,33 @@
                             )
                     </div>
                     <div class='col-sm-12'>
-                        <label for='CompanyID'>Step 03: Select customer: </label>
+                        <label for='CompanyID'>Step 03: Select industry: </label>
+                        @(Html.Kendo().DropDownListFor(Model => Model.IndustryID)
+                           .DataValueField("ID")
+                           .DataTextField("CodeName")
+                           .HtmlAttributes(new { style = "width:100%;" })
+                          .Events(e => e.DataBound("onIndustryIDDataBound"))
+                          .Filter(FilterType.StartsWith)
+                           .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
+                                )
+                    </div>
+                    <div class='col-sm-12'>
+                        <label for='CompanyID'>Step 04: Select customer: </label>
                         @(Html.Kendo().DropDownListFor(Model => Model.CompanyID)
                            .DataValueField("ID")
                            .DataTextField("Account")
                            .HtmlAttributes(new { style = "width:100%;" })
-                          .Events(e => e.DataBound("onCompanyDataBound"))
+                          .Events(e => e.DataBound("onCompanyIDDataBound"))
                           .Filter(FilterType.StartsWith)
                            .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCustomerFullToList", "Membership")))
                                 )
                     </div>
                     <div class='col-sm-12'>
-                        <label for='CompanyID'>Step 04: Select year + month: </label>
+                        <label for='CompanyID'>Step 05: Select year + month: </label>
                         <table style="width:100%;">
                             <tr>
-                                <td style="width:50%;">                                   
-                                        @(Html.Kendo().DropDownListFor(Model => Model.Year)
+                                <td style="width:50%;">
+                                    @(Html.Kendo().DropDownListFor(Model => Model.Year)
                      .DataValueField("Display")
                      .DataTextField("Display")
                      .HtmlAttributes(new { @class = "form-control" })
@@ -64,7 +75,6 @@
                                 </td>
                             </tr>
                         </table>
-
                     </div>
                     <div class='col-sm-12'>
                         <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload</button>
@@ -76,8 +86,14 @@
 </div>
 
 <script>
-
-    function onCompanyDataBound() {
+    function onIndustryIDDataBound() {
+        var control = $("#IndustryID").data("kendoDropDownList");
+        var controlLength = control.dataSource.data().length;
+        if (controlLength > 0) {
+            control.select(0);
+        }
+    }
+    function onCompanyIDDataBound() {
         var control = $("#CompanyID").data("kendoDropDownList");
         var controlLength = control.dataSource.data().length;
         if (controlLength > 0) {

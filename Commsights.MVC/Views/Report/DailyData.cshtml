@@ -139,7 +139,7 @@
     model.Field(t => t.Product).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList", "Report").Data("filterProduct"))
+.Read(t => t.Action("GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsDailyToList", "Report").Data("filterProduct"))
 .Destroy(t => t.Action("DeleteProductAndProductProperty", "Report"))
 .Update(t => t.Action("UpdateDataTransfer", "Report").Data("filterProduct"))))
             </div>

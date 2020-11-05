@@ -50,5 +50,6 @@ namespace Commsights.Data.Repositories
         public MembershipPermission GetByCodeAndFullName(string code, string fullName);
         public MembershipPermission GetByCodeAndFullNameContains(string code, string fullName);
         public List<MembershipPermission> GetDailyReportColumnByMembershipIDAndIndustryIDAndCodeAndIsDailyToList(int membershipID, int industryID, string code, bool isDaily);
+        public MembershipPermission GetByCodeAndProductName(string code, string productName);
     }
 }

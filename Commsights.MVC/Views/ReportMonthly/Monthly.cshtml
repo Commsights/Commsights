@@ -1,1 +1,111 @@
 ﻿@{ ViewData["Title"] = "Monthly"; }
+
+@model Commsights.Data.Models.ReportMonthly
+@Html.HiddenFor(Model => Model.ID)
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Monthly</h3>
+            </div>
+            <div class="card-body">
+                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ReportMonthlyPropertyDataTransfer>()
+.Name("ReportMonthlyPropertyDataTransfer")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
+    columns.Bound(t => t.Source).Title("Source").Width(100);
+    columns.Bound(t => t.CategoryMain).Title("Main category").Width(200);
+    columns.Bound(t => t.CategorySub).Title("Sub category").Width(200);
+    columns.Bound(t => t.CompanyName).Title("Company").Width(200);
+    columns.Bound(t => t.CorpCopy).Title("Corp Copy").Width(200);
+    columns.Bound(t => t.SOECompany).Title("SOE (%)").Width(100).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.FeatureCorp).Title("Feature").Width(100);
+    columns.Bound(t => t.SentimentCorp).Title("Sentiment").Width(200);
+    columns.Bound(t => t.SegmentProduct).Title("Segment Product").Width(200);
+    columns.Bound(t => t.ProductName_ProjectName).Title("Product name").Width(200);
+    columns.Bound(t => t.SOEProduct).Title("SOE (%)").Width(100).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.FeatureProduct).Title("Feature").Width(100);
+    columns.Bound(t => t.SentimentProduct).Title("Sentiment").Width(200);
+    columns.Bound(t => t.TierCommsights).Title("Tier CommSights").Width(200);
+    columns.Bound(t => t.TierCustomer).Title("Tier Customer").Width(200);
+    columns.Bound(t => t.SpokePersonName).Title("Spoke person name").Width(200);
+    columns.Bound(t => t.SpokePersonTitle).Title("Spoke person title").Width(200);
+    columns.Bound(t => t.ToneValue).Title("Tone value").Width(150).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.HeadlineValue).Title("Headline value").Width(150).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.SpokePersonValue).Title("Spoke person value").Width(200).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.FeatureValue).Title("Feature value").Width(150).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.TierValue).Title("Tier value").Width(150).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.PictureValue).Title("Picture value").Width(150).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.MPS).Title("MPS").Width(100).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.ROME_Corp_VND).Title("ROME Corp").Width(150).Format("{0:N0}").HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.ROME_Product_VND).Title("ROME Product").Width(150).Format("{0:N0}").HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.DatePublish).Title("Date").Width(150).Format("{0:MM/dd/yyyy}").HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.Page).Title("Page").Width(100).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.Author).Title("Journalist").Width(150);
+    columns.Bound(t => t.Media).Title("Media").Width(300);
+    columns.Bound(t => t.MediaType).Title("Type").Width(100);
+    columns.Bound(t => t.AdValue).Title("AdValue").Format("{0:N0}").Width(100).HtmlAttributes(new { @class = "text-right" });
+    columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(1000);
+    columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=TitleEnglish#' style='color: blue; cursor: pointer;'>#=TitleEnglish#</a>").Title("Headline (Eng)").Width(1000);
+    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
+})
+.ToolBar(toolBar => toolBar.Search())
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid" })
+.Search(search => { })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.ID);
+})
+.Events(t => { t.RequestEnd("onGridRequestEnd"); })
+.Read(t => t.Action("GetReportMonthlyPropertyDataTransferByParentIDToList", "ReportMonthly").Data("filterReportMonthlyProperty"))
+.Destroy(t => t.Action("DeleteReportMonthlyProperty", "ReportMonthly"))
+)
+)
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function onGridRequestEnd(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            var response = e.response;
+            var messageType = response.split('-')[0];
+            var note = response.split('-')[1];
+            var notification = $("#Notification").data("kendoNotification");
+            notification.show(note, messageType);
+            $("#ReportMonthlyPropertyDataTransfer").data("kendoGrid").dataSource.read();
+        }
+    }
+    function filterReportMonthlyProperty(e) {
+        var parentIDValue = $("#ID").val();        
+        return { parentID: parentIDValue};
+    }
+</script>

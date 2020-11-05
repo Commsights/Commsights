@@ -353,7 +353,7 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetSentimentToList([DataSourceRequest] DataSourceRequest request)
         {
-            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Segment);
+            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Sentiment);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetSegmentToList([DataSourceRequest] DataSourceRequest request)
@@ -677,7 +677,7 @@ namespace Commsights.MVC.Controllers
         {
             Initialization(model);
             model.GroupName = AppGlobal.CRM;
-            model.Code = AppGlobal.Segment;
+            model.Code = AppGlobal.Sentiment;
             model.ParentID = 0;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);

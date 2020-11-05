@@ -9,6 +9,7 @@ namespace Commsights.Data.Repositories
 {
     public interface IReportMonthlyPropertyRepository : IRepository<ReportMonthlyProperty>
     {
-        
+        public List<ReportMonthlyProperty> GetByParentID001ToList(int parentID);
+        public List<ReportMonthlyPropertyDataTransfer> GetReportMonthlyPropertyDataTransferByParentIDToList(int parentID);
     }
 }
