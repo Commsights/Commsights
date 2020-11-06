@@ -1,48 +1,74 @@
-﻿@{ ViewData["Title"] = "Monthly Data"; }
+﻿@{ ViewData["Title"] = Model.Title + " - Data"; }
 
-@model Commsights.MVC.Models.BaseViewModel
-
+@model Commsights.Data.Models.ReportMonthly
+@Html.HiddenFor(Model => Model.ID)
+<div>
+    | <a href="/ReportMonthly/MonthlyReport?ID=@Model.ID" class="text-success" title="Report">Report</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Industry</a> |
+    <a href="/ReportMonthly/MonthlyIndustryCount?ID=@Model.ID" class="text-success" title="Industry">Industry Count</a> |
+    <a href="/ReportMonthly/MonthlyCompanyCount?ID=@Model.ID" class="text-success" title="Company">Company Count</a> |
+    <a href="/ReportMonthly/MonthlyFeatureIndustry?ID=@Model.ID" class="text-success" title="Feature-Mention">Feature-Mention</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Sentiment</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Channel</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Media Tiers</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Category</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Trendline</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Campaign</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Key Stories</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Brand Growth</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Product segment</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Top titles</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Scorecard</a> |
+    <a href="/ReportMonthly/MonthlyData?ID=@Model.ID" class="text-success" title="Data">Data</a> |
+</div>
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Monthly</h3>
+                <h3 class="card-title">@Model.Title - Data</h3>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class='col-sm-2'>
-                        @(Html.Kendo().DropDownListFor(Model => Model.YearFinance)
-                     .DataValueField("Display")
-                     .DataTextField("Display")
-                     .HtmlAttributes(new { @class = "form-control" })
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetYearFinanceToList", "AppGlobal")))
-                            )
-                    </div>
-                    <div class='col-sm-2'>
-                        @(Html.Kendo().DropDownListFor(Model => Model.MonthFinance)
-                     .DataValueField("Display")
-                     .DataTextField("Display")
-                     .HtmlAttributes(new { @class = "form-control" })
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetMonthFinanceToList", "AppGlobal")))
-                            )
-                    </div>
-                    <div class='col-sm-2'>
-                        <button type="button" class="btn btn-primary" onclick="onSearch()">
-                            <span class="fas fa-search"></span>
-                        </button>
-                    </div>
-                </div>
-                <br />
-                @(Html.Kendo().Grid<Commsights.Data.Models.ReportMonthly>()
-.Name("ReportMonthly")
+
+                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ReportMonthlyPropertyDataTransfer>()
+.Name("ReportMonthlyPropertyDataTransfer")
 .Columns(columns =>
 {
     columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
-    columns.Template(@"<a href='/ReportMonthly/Monthly?ID=#=ID#' class='btn btn-success' style='color:white;'><i class='fas fa-edit'></i></a>").Title("").Width(70).HtmlAttributes(new { style = "text-align:center;" });
-    columns.Bound(t => t.DateUpdated).Title("Upload").Width(200).HtmlAttributes(new { style = "text-align: right;" }).Format("{0:MM/dd/yyyy HH:mm:ss}");
-    columns.Bound(t => t.Year).Title("Year").Width(100).HtmlAttributes(new { style = "text-align: right;" });
-    columns.Bound(t => t.Month).Title("Month").Width(100).HtmlAttributes(new { style = "text-align: right;" });
-    columns.Bound(t => t.Title).Title("Title").Width(1000).HtmlAttributes(new { style = "font-weight: bold;" }); ;
+    columns.Bound(t => t.Source).Title("Source").Width(100);
+    columns.Bound(t => t.CategoryMain).Title("Main category").Width(200);
+    columns.Bound(t => t.CategorySub).Title("Sub category").Width(200);
+    columns.Bound(t => t.CompanyName).Title("Company").Width(200);
+    columns.Bound(t => t.CorpCopy).Title("Corp Copy").Width(200);
+    columns.Bound(t => t.SOECompany).Title("SOE (%)").Width(100).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.FeatureCorp).Title("Feature").Width(100);
+    columns.Bound(t => t.SentimentCorp).Title("Sentiment").Width(200);
+    columns.Bound(t => t.SegmentProduct).Title("Segment Product").Width(200);
+    columns.Bound(t => t.ProductName_ProjectName).Title("Product name").Width(200);
+    columns.Bound(t => t.SOEProduct).Title("SOE (%)").Width(100).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.FeatureProduct).Title("Feature").Width(100);
+    columns.Bound(t => t.SentimentProduct).Title("Sentiment").Width(200);
+    columns.Bound(t => t.TierCommsights).Title("Tier CommSights").Width(200);
+    columns.Bound(t => t.TierCustomer).Title("Tier Customer").Width(200);
+    columns.Bound(t => t.SpokePersonName).Title("Spoke person name").Width(200);
+    columns.Bound(t => t.SpokePersonTitle).Title("Spoke person title").Width(200);
+    columns.Bound(t => t.ToneValue).Title("Tone value").Width(150).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.HeadlineValue).Title("Headline value").Width(150).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.SpokePersonValue).Title("Spoke person value").Width(200).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.FeatureValue).Title("Feature value").Width(150).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.TierValue).Title("Tier value").Width(150).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.PictureValue).Title("Picture value").Width(150).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.MPS).Title("MPS").Width(100).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.ROME_Corp_VND).Title("ROME Corp").Width(150).Format("{0:N0}").HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.ROME_Product_VND).Title("ROME Product").Width(150).Format("{0:N0}").HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.DatePublish).Title("Date").Width(150).Format("{0:MM/dd/yyyy}").HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.Page).Title("Page").Width(100).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.Author).Title("Journalist").Width(150);
+    columns.Bound(t => t.Media).Title("Media").Width(300);
+    columns.Bound(t => t.MediaType).Title("Type").Width(100);
+    columns.Bound(t => t.AdValue).Title("AdValue").Format("{0:N0}").Width(150).HtmlAttributes(new { @class = "text-right" });
+    columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(1000);
+    columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=TitleEnglish#' style='color: blue; cursor: pointer;'>#=TitleEnglish#</a>").Title("Headline (Eng)").Width(1000);
+    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
 })
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
@@ -69,17 +95,17 @@
 .FileName("Config.pdf")
 )
 .HtmlAttributes(new { @class = "KendoGrid" })
-.Search(search => { search.Field(f => f.Title);})
+.Search(search => { })
 .DataSource(dataSource => dataSource
 .Ajax()
-.PageSize(1000)
+.PageSize(10000)
 .Model(model =>
 {
     model.Id(t => t.ID);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetByYearAndMonthToList", "ReportMonthly").Data("filterReportMonthly"))
-.Destroy(t => t.Action("Delete", "ReportMonthly"))
+.Read(t => t.Action("GetReportMonthlyPropertyDataTransferByParentIDToList", "ReportMonthly").Data("filterReportMonthlyProperty"))
+.Destroy(t => t.Action("DeleteReportMonthlyProperty", "ReportMonthly"))
 )
 )
             </div>
@@ -87,12 +113,6 @@
     </div>
 </div>
 
-
-@(Html.Kendo().Notification()
-    .Name("Notification")
-    .Position(p => p.Pinned(true).Top(30).Right(30))
-    .Width(400)
-)
 <script>
     function onGridRequestEnd(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
@@ -101,15 +121,11 @@
             var note = response.split('-')[1];
             var notification = $("#Notification").data("kendoNotification");
             notification.show(note, messageType);
-            $("#ReportMonthly").data("kendoGrid").dataSource.read();
+            $("#ReportMonthlyPropertyDataTransfer").data("kendoGrid").dataSource.read();
         }
     }
-    function onSearch() {
-        $("#ReportMonthly").data("kendoGrid").dataSource.read();
-    }
-    function filterReportMonthly(e) {
-        var yearValue = $("#YearFinance").data("kendoDropDownList").value();
-        var monthValue = $("#MonthFinance").data("kendoDropDownList").value();
-        return { year: yearValue, month: monthValue };
+    function filterReportMonthlyProperty(e) {
+        var parentIDValue = $("#ID").val();
+        return { parentID: parentIDValue };
     }
 </script>

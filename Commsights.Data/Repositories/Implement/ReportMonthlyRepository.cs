@@ -24,5 +24,103 @@ namespace Commsights.Data.Repositories
         {
             return _context.ReportMonthly.Where(item => item.Year == year && item.Month == month).OrderBy(item => item.Title).ToList();
         }
+        public List<ReportMonthlyIndustryDataTransfer> GetIndustryByIDToList(int ID)
+        {
+            List<ReportMonthlyIndustryDataTransfer> list = new List<ReportMonthlyIndustryDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectIndustryByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyIndustryDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyIndustryDataTransfer> GetIndustryByIDWithoutSUMToList(int ID)
+        {
+            List<ReportMonthlyIndustryDataTransfer> list = new List<ReportMonthlyIndustryDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectIndustryWithoutSUMByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyIndustryDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyIndustryDataTransfer> GetIndustryByID001ToList(int ID)
+        {
+            List<ReportMonthlyIndustryDataTransfer> list = new List<ReportMonthlyIndustryDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectIndustry001ByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyIndustryDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyIndustryDataTransfer> GetIndustryByID001WithoutSUMToList(int ID)
+        {
+            List<ReportMonthlyIndustryDataTransfer> list = new List<ReportMonthlyIndustryDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectIndustry001WithoutSUMByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyIndustryDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyIndustryDataTransfer> GetCompanyByIDToList(int ID)
+        {
+            List<ReportMonthlyIndustryDataTransfer> list = new List<ReportMonthlyIndustryDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectCompanyByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyIndustryDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyIndustryDataTransfer> GetFeatureIndustryByIDToList(int ID)
+        {
+            List<ReportMonthlyIndustryDataTransfer> list = new List<ReportMonthlyIndustryDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectFeatureIndustryByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyIndustryDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyIndustryDataTransfer> GetFeatureIndustryWithoutSUMByIDToList(int ID)
+        {
+            List<ReportMonthlyIndustryDataTransfer> list = new List<ReportMonthlyIndustryDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectFeatureIndustryWithoutSUMByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyIndustryDataTransfer>(dt);
+            }
+            return list;
+        }
     }
 }

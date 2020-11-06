@@ -2970,6 +2970,7 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
             return Json(note);
         }
+
         public IActionResult UpdateByIndustryIDAndDatePublishBeginAndDatePublishEndAndAllData(int industryID, DateTime datePublishBegin, DateTime datePublishEnd, bool allData)
         {
             if (allData == true)
@@ -5709,6 +5710,11 @@ namespace Commsights.MVC.Controllers
                 streamExport.CopyTo(stream);
             }
             string result = AppGlobal.DomainSub + AppGlobal.URLDownloadReprotDaily + excelName;
+            return result;
+        }
+        public string DeleteByDatePublishBeginAndDatePublishEndAndIndustryIDAndIDList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, string IDList)
+        {
+            string result = "";
             return result;
         }
     }

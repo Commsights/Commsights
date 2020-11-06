@@ -10,5 +10,12 @@ namespace Commsights.Data.Repositories
     public interface IReportMonthlyRepository : IRepository<ReportMonthly>
     {
         public List<ReportMonthly> GetByYearAndMonthToList(int year, int month);
+        public List<ReportMonthlyIndustryDataTransfer> GetIndustryByIDToList(int ID);
+        public List<ReportMonthlyIndustryDataTransfer> GetIndustryByIDWithoutSUMToList(int ID);
+        public List<ReportMonthlyIndustryDataTransfer> GetIndustryByID001ToList(int ID);
+        public List<ReportMonthlyIndustryDataTransfer> GetIndustryByID001WithoutSUMToList(int ID);
+        public List<ReportMonthlyIndustryDataTransfer> GetCompanyByIDToList(int ID);
+        public List<ReportMonthlyIndustryDataTransfer> GetFeatureIndustryByIDToList(int ID);
+        public List<ReportMonthlyIndustryDataTransfer> GetFeatureIndustryWithoutSUMByIDToList(int ID);
     }
 }

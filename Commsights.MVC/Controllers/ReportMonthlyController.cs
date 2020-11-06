@@ -41,19 +41,79 @@ namespace Commsights.MVC.Controllers
             _reportMonthlyRepository = reportMonthlyRepository;
             _reportMonthlyPropertyRepository = reportMonthlyPropertyRepository;
         }
-        public IActionResult MonthlyData()
+        public IActionResult Monthly()
         {
             BaseViewModel model = new BaseViewModel();
             model.YearFinance = DateTime.Now.Year;
             model.MonthFinance = DateTime.Now.Month;
             return View(model);
         }
-        public IActionResult Monthly(int ID)
+        public IActionResult MonthlyData(int ID)
         {
             ReportMonthly model = new ReportMonthly();
             if (ID > 0)
             {
                 model = _reportMonthlyRepository.GetByID(ID);
+            }
+            return View(model);
+        }
+        public IActionResult MonthlyIndustry(int ID)
+        {
+            ReportMonthlyViewModel model = new ReportMonthlyViewModel();
+            if (ID > 0)
+            {
+                ReportMonthly reportMonthly = _reportMonthlyRepository.GetByID(ID);
+                if (reportMonthly != null)
+                {
+                    model.ID = reportMonthly.ID;
+                    model.Title = reportMonthly.Title;
+                    model.ListReportMonthlyIndustryDataTransfer = _reportMonthlyRepository.GetIndustryByIDWithoutSUMToList(model.ID);
+                }
+            }
+            return View(model);
+        }
+        public IActionResult MonthlyIndustryCount(int ID)
+        {
+            ReportMonthlyViewModel model = new ReportMonthlyViewModel();
+            if (ID > 0)
+            {
+                ReportMonthly reportMonthly = _reportMonthlyRepository.GetByID(ID);
+                if (reportMonthly != null)
+                {
+                    model.ID = reportMonthly.ID;
+                    model.Title = reportMonthly.Title;
+                    model.ListReportMonthlyIndustryDataTransfer = _reportMonthlyRepository.GetIndustryByID001WithoutSUMToList(model.ID);
+                }
+            }
+            return View(model);
+        }
+        public IActionResult MonthlyCompanyCount(int ID)
+        {
+            ReportMonthlyViewModel model = new ReportMonthlyViewModel();
+            if (ID > 0)
+            {
+                ReportMonthly reportMonthly = _reportMonthlyRepository.GetByID(ID);
+                if (reportMonthly != null)
+                {
+                    model.ID = reportMonthly.ID;
+                    model.Title = reportMonthly.Title;
+                    model.ListReportMonthlyIndustryDataTransfer = _reportMonthlyRepository.GetCompanyByIDToList(model.ID);
+                }
+            }
+            return View(model);
+        }
+        public IActionResult MonthlyFeatureIndustry(int ID)
+        {
+            ReportMonthlyViewModel model = new ReportMonthlyViewModel();
+            if (ID > 0)
+            {
+                ReportMonthly reportMonthly = _reportMonthlyRepository.GetByID(ID);
+                if (reportMonthly != null)
+                {
+                    model.ID = reportMonthly.ID;
+                    model.Title = reportMonthly.Title;
+                    model.ListReportMonthlyIndustryDataTransfer = _reportMonthlyRepository.GetFeatureIndustryWithoutSUMByIDToList(model.ID);
+                }
             }
             return View(model);
         }
@@ -105,6 +165,28 @@ namespace Commsights.MVC.Controllers
         {
             var data = _reportMonthlyPropertyRepository.GetReportMonthlyPropertyDataTransferByParentIDToList(parentID);
             return Json(data.ToDataSourceResult(request));
+        }       
+        public ActionResult GetIndustryByIDToListToJSON(int ID)
+        {
+            return Json(_reportMonthlyRepository.GetIndustryByIDToList(ID));
+        }
+        public ActionResult GetIndustryByID001ToListToJSON(int ID)
+        {
+            return Json(_reportMonthlyRepository.GetIndustryByID001ToList(ID));
+        }
+        public ActionResult GetCompanyByIDToListToJSON(int ID)
+        {
+            return Json(_reportMonthlyRepository.GetCompanyByIDToList(ID));
+        }
+        public ActionResult GetFeatureIndustryByIDToListToJSON(int ID)
+        {
+            return Json(_reportMonthlyRepository.GetFeatureIndustryByIDToList(ID));
+        }
+        [HttpPost]
+        public IActionResult Export_Save(string contentType, string base64, string fileName)
+        {
+            var fileContents = Convert.FromBase64String(base64);
+            return File(fileContents, contentType, fileName);
         }
         public ActionResult UploadDataReportMonthly(Commsights.Data.Models.ReportMonthly model)
         {
@@ -151,80 +233,82 @@ namespace Commsights.MVC.Controllers
                                                 int totalRows = workSheet.Dimension.Rows;
                                                 for (int i = 2; i <= totalRows; i++)
                                                 {
-                                                    try
+                                                    //try
+                                                    //{
+                                                    Product product = new Product();
+                                                    product.GUICode = AppGlobal.InitGuiCode;
+                                                    product.Source = AppGlobal.SourceAuto;
+                                                    product.Initialization(InitType.Insert, RequestUserID);
+                                                    string datePublish = "";
+                                                    if (workSheet.Cells[i, 2].Value != null)
                                                     {
-                                                        Product product = new Product();
-                                                        product.GUICode = AppGlobal.InitGuiCode;
-                                                        product.Source = AppGlobal.SourceAuto;
-                                                        product.Initialization(InitType.Insert, RequestUserID);
-                                                        string datePublish = "";
-                                                        if (workSheet.Cells[i, 2].Value != null)
+                                                        datePublish = workSheet.Cells[i, 2].Value.ToString().Trim();
+                                                        try
                                                         {
-                                                            datePublish = workSheet.Cells[i, 2].Value.ToString().Trim();
+                                                            product.DatePublish = DateTime.Parse(datePublish);
+                                                        }
+                                                        catch
+                                                        {
                                                             try
                                                             {
-                                                                product.DatePublish = DateTime.Parse(datePublish);
+                                                                int year = int.Parse(datePublish.Split('/')[2]);
+                                                                int month = int.Parse(datePublish.Split('/')[0]);
+                                                                int day = int.Parse(datePublish.Split('/')[1]);
+                                                                product.DatePublish = new DateTime(year, month, day, 0, 0, 0);
                                                             }
                                                             catch
                                                             {
                                                                 try
                                                                 {
                                                                     int year = int.Parse(datePublish.Split('/')[2]);
-                                                                    int month = int.Parse(datePublish.Split('/')[0]);
-                                                                    int day = int.Parse(datePublish.Split('/')[1]);
+                                                                    int month = int.Parse(datePublish.Split('/')[1]);
+                                                                    int day = int.Parse(datePublish.Split('/')[0]);
                                                                     product.DatePublish = new DateTime(year, month, day, 0, 0, 0);
                                                                 }
                                                                 catch
                                                                 {
                                                                     try
                                                                     {
-                                                                        int year = int.Parse(datePublish.Split('/')[2]);
-                                                                        int month = int.Parse(datePublish.Split('/')[1]);
-                                                                        int day = int.Parse(datePublish.Split('/')[0]);
-                                                                        product.DatePublish = new DateTime(year, month, day, 0, 0, 0);
+                                                                        DateTime DateTimeStandard = new DateTime(1899, 12, 30);
+                                                                        product.DatePublish = DateTimeStandard.AddDays(int.Parse(datePublish));
                                                                     }
                                                                     catch
                                                                     {
-                                                                        try
-                                                                        {
-                                                                            DateTime DateTimeStandard = new DateTime(1899, 12, 30);
-                                                                            product.DatePublish = DateTimeStandard.AddDays(int.Parse(datePublish));
-                                                                        }
-                                                                        catch
-                                                                        {
-                                                                        }
                                                                     }
                                                                 }
                                                             }
                                                         }
-                                                        if (workSheet.Cells[i, 15].Value != null)
+                                                    }
+                                                    if (workSheet.Cells[i, 15].Value != null)
+                                                    {
+                                                        product.Title = workSheet.Cells[i, 15].Value.ToString().Trim();
+                                                        if (workSheet.Cells[i, 15].Hyperlink != null)
                                                         {
-                                                            product.Title = workSheet.Cells[i, 15].Value.ToString().Trim();
-                                                            if (workSheet.Cells[i, 15].Hyperlink != null)
-                                                            {
-                                                                product.URLCode = workSheet.Cells[i, 15].Hyperlink.AbsoluteUri.Trim();
-                                                            }
+                                                            product.URLCode = workSheet.Cells[i, 15].Hyperlink.AbsoluteUri.Trim();
                                                         }
-                                                        if (workSheet.Cells[i, 16].Value != null)
+                                                    }
+                                                    if (workSheet.Cells[i, 16].Value != null)
+                                                    {
+                                                        product.TitleEnglish = workSheet.Cells[i, 16].Value.ToString().Trim();
+                                                        if (workSheet.Cells[i, 16].Hyperlink != null)
                                                         {
-                                                            product.TitleEnglish = workSheet.Cells[i, 16].Value.ToString().Trim();
-                                                            if (workSheet.Cells[i, 16].Hyperlink != null)
-                                                            {
-                                                                product.URLCode = workSheet.Cells[i, 16].Hyperlink.AbsoluteUri.Trim();
-                                                            }
+                                                            product.URLCode = workSheet.Cells[i, 16].Hyperlink.AbsoluteUri.Trim();
                                                         }
-                                                        if (workSheet.Cells[i, 17].Value != null)
-                                                        {
-                                                            product.URLCode = workSheet.Cells[i, 17].Value.ToString().Trim();
-                                                        }
-                                                        if (workSheet.Cells[i, 18].Value != null)
-                                                        {
-                                                            product.Page = workSheet.Cells[i, 18].Value.ToString().Trim();
-                                                        }
-                                                        if (workSheet.Cells[i, 19].Value != null)
-                                                        {
-                                                            product.Author = workSheet.Cells[i, 19].Value.ToString().Trim();
-                                                        }
+                                                    }
+                                                    if (workSheet.Cells[i, 17].Value != null)
+                                                    {
+                                                        product.URLCode = workSheet.Cells[i, 17].Value.ToString().Trim();
+                                                    }
+                                                    if (workSheet.Cells[i, 18].Value != null)
+                                                    {
+                                                        product.Page = workSheet.Cells[i, 18].Value.ToString().Trim();
+                                                    }
+                                                    if (workSheet.Cells[i, 19].Value != null)
+                                                    {
+                                                        product.Author = workSheet.Cells[i, 19].Value.ToString().Trim();
+                                                    }
+                                                    if (!string.IsNullOrEmpty(product.URLCode))
+                                                    {
                                                         Product product001 = _productRepository.GetByURLCode(product.URLCode);
                                                         if (product001 != null)
                                                         {
@@ -456,6 +540,7 @@ namespace Commsights.MVC.Controllers
                                                                 }
                                                                 if (segmentProduct.ID > 0)
                                                                 {
+                                                                    productProperty.SegmentProductID = segmentProduct.ID;
                                                                     productProperty.SegmentID = segmentProduct.ID;
                                                                 }
                                                             }
@@ -557,6 +642,7 @@ namespace Commsights.MVC.Controllers
                                                             if (workSheet.Cells[i, 20].Value != null)
                                                             {
                                                                 productProperty.TierCommsights = workSheet.Cells[i, 20].Value.ToString().Trim();
+                                                                productProperty.TierCommsightsID = AppGlobal.TierOtherID;
                                                                 if (productProperty.TierCommsights.Contains(@"Mass") == true)
                                                                 {
                                                                     productProperty.TierCommsightsID = AppGlobal.TierMassMediaID;
@@ -714,10 +800,11 @@ namespace Commsights.MVC.Controllers
                                                             }
                                                         }
                                                     }
-                                                    catch (Exception e1)
-                                                    {
-                                                        string mes1 = e1.Message;
-                                                    }
+                                                    //}
+                                                    //catch (Exception e1)
+                                                    //{
+                                                    //    string mes1 = e1.Message;
+                                                    //}
                                                 }
                                             }
                                         }
