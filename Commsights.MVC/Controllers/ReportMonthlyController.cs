@@ -373,78 +373,78 @@ namespace Commsights.MVC.Controllers
                                                                 if (workSheet.Cells[i, 3].Value != null)
                                                                 {
                                                                     productProperty.CategoryMain = workSheet.Cells[i, 3].Value.ToString().Trim();
-                                                                    Config categoryMain = _configRepository.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.CategoryMain, productProperty.CategoryMain);
-                                                                    if (categoryMain == null)
-                                                                    {
-                                                                        categoryMain = new Config();
-                                                                        categoryMain.CodeName = productProperty.CategoryMain;
-                                                                        categoryMain.GroupName = AppGlobal.CRM;
-                                                                        categoryMain.Code = AppGlobal.CategoryMain;
-                                                                        categoryMain.ParentID = 0;
-                                                                        categoryMain.Initialization(InitType.Insert, RequestUserID);
-                                                                        _configRepository.Create(categoryMain);
-                                                                    }
-                                                                    if (categoryMain.ID > 0)
-                                                                    {
-                                                                        productProperty.CategoryMainID = categoryMain.ID;
-                                                                    }
+                                                                    //Config categoryMain = _configRepository.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.CategoryMain, productProperty.CategoryMain);
+                                                                    //if (categoryMain == null)
+                                                                    //{
+                                                                    //    categoryMain = new Config();
+                                                                    //    categoryMain.CodeName = productProperty.CategoryMain;
+                                                                    //    categoryMain.GroupName = AppGlobal.CRM;
+                                                                    //    categoryMain.Code = AppGlobal.CategoryMain;
+                                                                    //    categoryMain.ParentID = 0;
+                                                                    //    categoryMain.Initialization(InitType.Insert, RequestUserID);
+                                                                    //    _configRepository.Create(categoryMain);
+                                                                    //}
+                                                                    //if (categoryMain.ID > 0)
+                                                                    //{
+                                                                    //    productProperty.CategoryMainID = categoryMain.ID;
+                                                                    //}
                                                                 }
                                                                 if (workSheet.Cells[i, 4].Value != null)
                                                                 {
                                                                     productProperty.CategorySub = workSheet.Cells[i, 4].Value.ToString().Trim();
-                                                                    Config categorySub = _configRepository.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.CategoryMain, productProperty.CategorySub);
-                                                                    if (categorySub == null)
-                                                                    {
-                                                                        categorySub = new Config();
-                                                                        categorySub.CodeName = productProperty.CategorySub;
-                                                                        categorySub.GroupName = AppGlobal.CRM;
-                                                                        categorySub.Code = AppGlobal.CategoryMain;
-                                                                        categorySub.ParentID = 0;
-                                                                        categorySub.Initialization(InitType.Insert, RequestUserID);
-                                                                        _configRepository.Create(categorySub);
-                                                                    }
-                                                                    if (categorySub.ID > 0)
-                                                                    {
-                                                                        productProperty.CategorySubID = categorySub.ID;
-                                                                    }
+                                                                    //Config categorySub = _configRepository.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.CategoryMain, productProperty.CategorySub);
+                                                                    //if (categorySub == null)
+                                                                    //{
+                                                                    //    categorySub = new Config();
+                                                                    //    categorySub.CodeName = productProperty.CategorySub;
+                                                                    //    categorySub.GroupName = AppGlobal.CRM;
+                                                                    //    categorySub.Code = AppGlobal.CategoryMain;
+                                                                    //    categorySub.ParentID = 0;
+                                                                    //    categorySub.Initialization(InitType.Insert, RequestUserID);
+                                                                    //    _configRepository.Create(categorySub);
+                                                                    //}
+                                                                    //if (categorySub.ID > 0)
+                                                                    //{
+                                                                    //    productProperty.CategorySubID = categorySub.ID;
+                                                                    //}
                                                                 }
 
                                                                 if (workSheet.Cells[i, 5].Value != null)
                                                                 {
                                                                     productProperty.CompanyName = workSheet.Cells[i, 5].Value.ToString().Trim();
-                                                                    Membership company = _membershipRepository.GetByAccount(productProperty.CompanyName);
-                                                                    if (company == null)
-                                                                    {
-                                                                        company = new Membership();
-                                                                        company.ParentID = AppGlobal.ParentIDCompetitor;
-                                                                        company.Active = true;
-                                                                        company.Account = productProperty.CompanyName;
-                                                                        company.Initialization(InitType.Insert, RequestUserID);
-                                                                        _membershipRepository.Create(company);
-                                                                    }
-                                                                    if (company.ID > 0)
-                                                                    {
-                                                                        productProperty.CompanyID = company.ID;
-                                                                    }
+                                                                    //Membership company = _membershipRepository.GetByAccount(productProperty.CompanyName);
+                                                                    //if (company == null)
+                                                                    //{
+                                                                    //    company = new Membership();
+                                                                    //    company.ParentID = AppGlobal.ParentIDCompetitor;
+                                                                    //    company.Active = true;
+                                                                    //    company.Account = productProperty.CompanyName;
+                                                                    //    company.Initialization(InitType.Insert, RequestUserID);
+                                                                    //    _membershipRepository.Create(company);
+                                                                    //}
+                                                                    //if (company.ID > 0)
+                                                                    //{
+                                                                    //    productProperty.CompanyID = company.ID;
+                                                                    //}
                                                                 }
                                                                 if (workSheet.Cells[i, 6].Value != null)
                                                                 {
                                                                     productProperty.CorpCopy = workSheet.Cells[i, 6].Value.ToString().Trim();
-                                                                    Config corpCopy = _configRepository.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.CorpCopy, productProperty.CorpCopy);
-                                                                    if (corpCopy == null)
-                                                                    {
-                                                                        corpCopy = new Config();
-                                                                        corpCopy.CodeName = productProperty.CorpCopy;
-                                                                        corpCopy.GroupName = AppGlobal.CRM;
-                                                                        corpCopy.Code = AppGlobal.CorpCopy;
-                                                                        corpCopy.ParentID = 0;
-                                                                        corpCopy.Initialization(InitType.Insert, RequestUserID);
-                                                                        _configRepository.Create(corpCopy);
-                                                                    }
-                                                                    if (corpCopy.ID > 0)
-                                                                    {
-                                                                        productProperty.CorpCopyID = corpCopy.ID;
-                                                                    }
+                                                                    //Config corpCopy = _configRepository.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.CorpCopy, productProperty.CorpCopy);
+                                                                    //if (corpCopy == null)
+                                                                    //{
+                                                                    //    corpCopy = new Config();
+                                                                    //    corpCopy.CodeName = productProperty.CorpCopy;
+                                                                    //    corpCopy.GroupName = AppGlobal.CRM;
+                                                                    //    corpCopy.Code = AppGlobal.CorpCopy;
+                                                                    //    corpCopy.ParentID = 0;
+                                                                    //    corpCopy.Initialization(InitType.Insert, RequestUserID);
+                                                                    //    _configRepository.Create(corpCopy);
+                                                                    //}
+                                                                    //if (corpCopy.ID > 0)
+                                                                    //{
+                                                                    //    productProperty.CorpCopyID = corpCopy.ID;
+                                                                    //}
                                                                 }
                                                                 if (workSheet.Cells[i, 7].Value != null)
                                                                 {
@@ -466,11 +466,11 @@ namespace Commsights.MVC.Controllers
                                                                         {
                                                                             productProperty.FeatureCorpID = AppGlobal.FeatureID;
                                                                         }
-                                                                        Config feature = _configRepository.GetByID(productProperty.FeatureCorpID.Value);
-                                                                        if (feature != null)
-                                                                        {
-                                                                            productProperty.FeatureCorp = feature.CodeName;
-                                                                        }
+                                                                        //Config feature = _configRepository.GetByID(productProperty.FeatureCorpID.Value);
+                                                                        //if (feature != null)
+                                                                        //{
+                                                                        //    productProperty.FeatureCorp = feature.CodeName;
+                                                                        //}
                                                                     }
                                                                     catch
                                                                     {
@@ -479,41 +479,41 @@ namespace Commsights.MVC.Controllers
                                                                 if (workSheet.Cells[i, 8].Value != null)
                                                                 {
                                                                     productProperty.FeatureCorp = workSheet.Cells[i, 8].Value.ToString().Trim();
-                                                                    Config featureCorp = _configRepository.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Feature, productProperty.FeatureCorp);
-                                                                    if (featureCorp == null)
-                                                                    {
-                                                                        featureCorp = new Config();
-                                                                        featureCorp.CodeName = productProperty.FeatureCorp;
-                                                                        featureCorp.GroupName = AppGlobal.CRM;
-                                                                        featureCorp.Code = AppGlobal.Feature;
-                                                                        featureCorp.ParentID = 0;
-                                                                        featureCorp.Initialization(InitType.Insert, RequestUserID);
-                                                                        _configRepository.Create(featureCorp);
-                                                                    }
-                                                                    if (featureCorp.ID > 0)
-                                                                    {
-                                                                        productProperty.FeatureCorpID = featureCorp.ID;
-                                                                    }
+                                                                    //Config featureCorp = _configRepository.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Feature, productProperty.FeatureCorp);
+                                                                    //if (featureCorp == null)
+                                                                    //{
+                                                                    //    featureCorp = new Config();
+                                                                    //    featureCorp.CodeName = productProperty.FeatureCorp;
+                                                                    //    featureCorp.GroupName = AppGlobal.CRM;
+                                                                    //    featureCorp.Code = AppGlobal.Feature;
+                                                                    //    featureCorp.ParentID = 0;
+                                                                    //    featureCorp.Initialization(InitType.Insert, RequestUserID);
+                                                                    //    _configRepository.Create(featureCorp);
+                                                                    //}
+                                                                    //if (featureCorp.ID > 0)
+                                                                    //{
+                                                                    //    productProperty.FeatureCorpID = featureCorp.ID;
+                                                                    //}
                                                                 }
                                                                 if (workSheet.Cells[i, 9].Value != null)
                                                                 {
                                                                     productProperty.SentimentCorp = workSheet.Cells[i, 9].Value.ToString().Trim();
-                                                                    Config sentimentCorp = _configRepository.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Sentiment, productProperty.SentimentCorp);
-                                                                    if (sentimentCorp == null)
-                                                                    {
-                                                                        sentimentCorp = new Config();
-                                                                        sentimentCorp.CodeName = productProperty.SentimentCorp;
-                                                                        sentimentCorp.GroupName = AppGlobal.CRM;
-                                                                        sentimentCorp.Code = AppGlobal.Sentiment;
-                                                                        sentimentCorp.ParentID = 0;
-                                                                        sentimentCorp.Initialization(InitType.Insert, RequestUserID);
-                                                                        _configRepository.Create(sentimentCorp);
-                                                                    }
-                                                                    if (sentimentCorp.ID > 0)
-                                                                    {
-                                                                        productProperty.SentimentCorpID = sentimentCorp.ID;
+                                                                    //Config sentimentCorp = _configRepository.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Sentiment, productProperty.SentimentCorp);
+                                                                    //if (sentimentCorp == null)
+                                                                    //{
+                                                                    //    sentimentCorp = new Config();
+                                                                    //    sentimentCorp.CodeName = productProperty.SentimentCorp;
+                                                                    //    sentimentCorp.GroupName = AppGlobal.CRM;
+                                                                    //    sentimentCorp.Code = AppGlobal.Sentiment;
+                                                                    //    sentimentCorp.ParentID = 0;
+                                                                    //    sentimentCorp.Initialization(InitType.Insert, RequestUserID);
+                                                                    //    _configRepository.Create(sentimentCorp);
+                                                                    //}
+                                                                    //if (sentimentCorp.ID > 0)
+                                                                    //{
+                                                                    //    productProperty.SentimentCorpID = sentimentCorp.ID;
 
-                                                                    }
+                                                                    //}
                                                                     if (string.IsNullOrEmpty(productProperty.SentimentProduct))
                                                                     {
                                                                         productProperty.SentimentProduct = productProperty.SentimentCorp;
@@ -526,42 +526,42 @@ namespace Commsights.MVC.Controllers
                                                                 if (workSheet.Cells[i, 10].Value != null)
                                                                 {
                                                                     productProperty.SegmentProduct = workSheet.Cells[i, 10].Value.ToString().Trim();
-                                                                    Config segmentProduct = _configRepository.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Segment, productProperty.SegmentProduct);
-                                                                    if (segmentProduct == null)
-                                                                    {
-                                                                        segmentProduct = new Config();
-                                                                        segmentProduct.ParentID = model.IndustryID;
-                                                                        segmentProduct.CodeName = productProperty.SegmentProduct;
-                                                                        segmentProduct.GroupName = AppGlobal.CRM;
-                                                                        segmentProduct.Code = AppGlobal.Segment;
-                                                                        segmentProduct.ParentID = 0;
-                                                                        segmentProduct.Initialization(InitType.Insert, RequestUserID);
-                                                                        _configRepository.Create(segmentProduct);
-                                                                    }
-                                                                    if (segmentProduct.ID > 0)
-                                                                    {
-                                                                        productProperty.SegmentProductID = segmentProduct.ID;
-                                                                        productProperty.SegmentID = segmentProduct.ID;
-                                                                    }
+                                                                    //Config segmentProduct = _configRepository.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Segment, productProperty.SegmentProduct);
+                                                                    //if (segmentProduct == null)
+                                                                    //{
+                                                                    //    segmentProduct = new Config();
+                                                                    //    segmentProduct.ParentID = model.IndustryID;
+                                                                    //    segmentProduct.CodeName = productProperty.SegmentProduct;
+                                                                    //    segmentProduct.GroupName = AppGlobal.CRM;
+                                                                    //    segmentProduct.Code = AppGlobal.Segment;
+                                                                    //    segmentProduct.ParentID = 0;
+                                                                    //    segmentProduct.Initialization(InitType.Insert, RequestUserID);
+                                                                    //    _configRepository.Create(segmentProduct);
+                                                                    //}
+                                                                    //if (segmentProduct.ID > 0)
+                                                                    //{
+                                                                    //    productProperty.SegmentProductID = segmentProduct.ID;
+                                                                    //    productProperty.SegmentID = segmentProduct.ID;
+                                                                    //}
                                                                 }
                                                                 if (workSheet.Cells[i, 11].Value != null)
                                                                 {
                                                                     productProperty.ProductName_ProjectName = workSheet.Cells[i, 11].Value.ToString().Trim();
-                                                                    MembershipPermission membershipPermissionProduct = _membershipPermissionRepository.GetByCodeAndProductName(AppGlobal.Product, productProperty.ProductName_ProjectName);
-                                                                    if (membershipPermissionProduct == null)
-                                                                    {
-                                                                        membershipPermissionProduct = new MembershipPermission();
-                                                                        membershipPermissionProduct.Code = AppGlobal.Product;
-                                                                        membershipPermissionProduct.MembershipID = productProperty.CompanyID;
-                                                                        membershipPermissionProduct.IndustryID = productProperty.IndustryID;
-                                                                        membershipPermissionProduct.SegmentID = productProperty.SegmentID;
-                                                                        membershipPermissionProduct.Initialization(InitType.Insert, RequestUserID);
-                                                                        _membershipPermissionRepository.Create(membershipPermissionProduct);
-                                                                    }
-                                                                    if (membershipPermissionProduct.ID > 0)
-                                                                    {
-                                                                        productProperty.ProductID = membershipPermissionProduct.ID;
-                                                                    }
+                                                                    //MembershipPermission membershipPermissionProduct = _membershipPermissionRepository.GetByCodeAndProductName(AppGlobal.Product, productProperty.ProductName_ProjectName);
+                                                                    //if (membershipPermissionProduct == null)
+                                                                    //{
+                                                                    //    membershipPermissionProduct = new MembershipPermission();
+                                                                    //    membershipPermissionProduct.Code = AppGlobal.Product;
+                                                                    //    membershipPermissionProduct.MembershipID = productProperty.CompanyID;
+                                                                    //    membershipPermissionProduct.IndustryID = productProperty.IndustryID;
+                                                                    //    membershipPermissionProduct.SegmentID = productProperty.SegmentID;
+                                                                    //    membershipPermissionProduct.Initialization(InitType.Insert, RequestUserID);
+                                                                    //    _membershipPermissionRepository.Create(membershipPermissionProduct);
+                                                                    //}
+                                                                    //if (membershipPermissionProduct.ID > 0)
+                                                                    //{
+                                                                    //    productProperty.ProductID = membershipPermissionProduct.ID;
+                                                                    //}
                                                                 }
                                                                 if (workSheet.Cells[i, 12].Value != null)
                                                                 {
@@ -583,11 +583,11 @@ namespace Commsights.MVC.Controllers
                                                                         {
                                                                             productProperty.FeatureProductID = AppGlobal.FeatureID;
                                                                         }
-                                                                        Config feature = _configRepository.GetByID(productProperty.FeatureProductID.Value);
-                                                                        if (feature != null)
-                                                                        {
-                                                                            productProperty.FeatureProduct = feature.CodeName;
-                                                                        }
+                                                                        //Config feature = _configRepository.GetByID(productProperty.FeatureProductID.Value);
+                                                                        //if (feature != null)
+                                                                        //{
+                                                                        //    productProperty.FeatureProduct = feature.CodeName;
+                                                                        //}
                                                                     }
                                                                     catch
                                                                     {
@@ -596,40 +596,40 @@ namespace Commsights.MVC.Controllers
                                                                 if (workSheet.Cells[i, 13].Value != null)
                                                                 {
                                                                     productProperty.FeatureProduct = workSheet.Cells[i, 13].Value.ToString().Trim();
-                                                                    Config featureProduct = _configRepository.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Feature, productProperty.FeatureProduct);
-                                                                    if (featureProduct == null)
-                                                                    {
-                                                                        featureProduct = new Config();
-                                                                        featureProduct.CodeName = productProperty.FeatureProduct;
-                                                                        featureProduct.GroupName = AppGlobal.CRM;
-                                                                        featureProduct.Code = AppGlobal.Feature;
-                                                                        featureProduct.ParentID = 0;
-                                                                        featureProduct.Initialization(InitType.Insert, RequestUserID);
-                                                                        _configRepository.Create(featureProduct);
-                                                                    }
-                                                                    if (featureProduct.ID > 0)
-                                                                    {
-                                                                        productProperty.FeatureProductID = featureProduct.ID;
-                                                                    }
+                                                                    //Config featureProduct = _configRepository.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Feature, productProperty.FeatureProduct);
+                                                                    //if (featureProduct == null)
+                                                                    //{
+                                                                    //    featureProduct = new Config();
+                                                                    //    featureProduct.CodeName = productProperty.FeatureProduct;
+                                                                    //    featureProduct.GroupName = AppGlobal.CRM;
+                                                                    //    featureProduct.Code = AppGlobal.Feature;
+                                                                    //    featureProduct.ParentID = 0;
+                                                                    //    featureProduct.Initialization(InitType.Insert, RequestUserID);
+                                                                    //    _configRepository.Create(featureProduct);
+                                                                    //}
+                                                                    //if (featureProduct.ID > 0)
+                                                                    //{
+                                                                    //    productProperty.FeatureProductID = featureProduct.ID;
+                                                                    //}
                                                                 }
                                                                 if (workSheet.Cells[i, 14].Value != null)
                                                                 {
                                                                     productProperty.SentimentProduct = workSheet.Cells[i, 14].Value.ToString().Trim();
-                                                                    Config sentimentProduct = _configRepository.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Sentiment, productProperty.SentimentProduct);
-                                                                    if (sentimentProduct == null)
-                                                                    {
-                                                                        sentimentProduct = new Config();
-                                                                        sentimentProduct.CodeName = productProperty.SentimentProduct;
-                                                                        sentimentProduct.GroupName = AppGlobal.CRM;
-                                                                        sentimentProduct.Code = AppGlobal.Sentiment;
-                                                                        sentimentProduct.ParentID = 0;
-                                                                        sentimentProduct.Initialization(InitType.Insert, RequestUserID);
-                                                                        _configRepository.Create(sentimentProduct);
-                                                                    }
-                                                                    if (sentimentProduct.ID > 0)
-                                                                    {
-                                                                        productProperty.SentimentProductID = sentimentProduct.ID;
-                                                                    }
+                                                                    //Config sentimentProduct = _configRepository.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Sentiment, productProperty.SentimentProduct);
+                                                                    //if (sentimentProduct == null)
+                                                                    //{
+                                                                    //    sentimentProduct = new Config();
+                                                                    //    sentimentProduct.CodeName = productProperty.SentimentProduct;
+                                                                    //    sentimentProduct.GroupName = AppGlobal.CRM;
+                                                                    //    sentimentProduct.Code = AppGlobal.Sentiment;
+                                                                    //    sentimentProduct.ParentID = 0;
+                                                                    //    sentimentProduct.Initialization(InitType.Insert, RequestUserID);
+                                                                    //    _configRepository.Create(sentimentProduct);
+                                                                    //}
+                                                                    //if (sentimentProduct.ID > 0)
+                                                                    //{
+                                                                    //    productProperty.SentimentProductID = sentimentProduct.ID;
+                                                                    //}
                                                                     if (string.IsNullOrEmpty(productProperty.SentimentCorp))
                                                                     {
                                                                         productProperty.SentimentCorp = productProperty.SentimentProduct;
@@ -663,27 +663,27 @@ namespace Commsights.MVC.Controllers
                                                                     {
                                                                         productProperty.TierCommsightsID = AppGlobal.TierIndustryID;
                                                                     }
-                                                                    Uri myUri = new Uri(product.URLCode);
-                                                                    string domain = myUri.Host;
-                                                                    Config website = _configRepository.GetByGroupNameAndCodeAndTitle(AppGlobal.CRM, AppGlobal.Website, domain);
-                                                                    if (website != null)
-                                                                    {
-                                                                        if (website.ID > 0)
-                                                                        {
-                                                                            Config tier = _configRepository.GetByGroupNameAndCodeAndParentIDAndTierID(AppGlobal.CRM, AppGlobal.Tier, website.ID, productProperty.TierCommsightsID.Value);
-                                                                            if (tier == null)
-                                                                            {
-                                                                                tier = new Config();
-                                                                                tier.GroupName = AppGlobal.CRM;
-                                                                                tier.Code = AppGlobal.Tier;
-                                                                                tier.ParentID = website.ID;
-                                                                                tier.TierID = productProperty.TierCommsightsID;
-                                                                                tier.IndustryID = model.IndustryID;
-                                                                                tier.Initialization(InitType.Insert, RequestUserID);
-                                                                                _configRepository.Create(tier);
-                                                                            }
-                                                                        }
-                                                                    }
+                                                                    //Uri myUri = new Uri(product.URLCode);
+                                                                    //string domain = myUri.Host;
+                                                                    //Config website = _configRepository.GetByGroupNameAndCodeAndTitle(AppGlobal.CRM, AppGlobal.Website, domain);
+                                                                    //if (website != null)
+                                                                    //{
+                                                                    //    if (website.ID > 0)
+                                                                    //    {
+                                                                    //        Config tier = _configRepository.GetByGroupNameAndCodeAndParentIDAndTierID(AppGlobal.CRM, AppGlobal.Tier, website.ID, productProperty.TierCommsightsID.Value);
+                                                                    //        if (tier == null)
+                                                                    //        {
+                                                                    //            tier = new Config();
+                                                                    //            tier.GroupName = AppGlobal.CRM;
+                                                                    //            tier.Code = AppGlobal.Tier;
+                                                                    //            tier.ParentID = website.ID;
+                                                                    //            tier.TierID = productProperty.TierCommsightsID;
+                                                                    //            tier.IndustryID = model.IndustryID;
+                                                                    //            tier.Initialization(InitType.Insert, RequestUserID);
+                                                                    //            _configRepository.Create(tier);
+                                                                    //        }
+                                                                    //    }
+                                                                    //}
                                                                 }
                                                                 if (workSheet.Cells[i, 21].Value != null)
                                                                 {
