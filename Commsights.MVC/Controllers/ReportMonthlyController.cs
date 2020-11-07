@@ -17,6 +17,7 @@ using OfficeOpenXml;
 using Commsights.MVC.Models;
 using Commsights.Service.Mail;
 using System.Globalization;
+using System.Data;
 
 namespace Commsights.MVC.Controllers
 {
@@ -131,7 +132,11 @@ namespace Commsights.MVC.Controllers
         public IActionResult Delete(int ID)
         {
             string note = AppGlobal.InitString;
-            int result = _reportMonthlyRepository.Delete(ID);
+            int result = 0;
+            if (_reportMonthlyRepository.DeleteByID(ID) != "-1")
+            {
+                result = 1;
+            }
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
@@ -351,7 +356,7 @@ namespace Commsights.MVC.Controllers
                                                                         _configRepository.Create(tier);
                                                                     }
                                                                 }
-                                                                _productRepository.Create(product001);
+                                                                _productRepository.AsyncInsertSingleItem(product001);
                                                             }
                                                             if ((product001.ID > 0) && (model.ID > 0))
                                                             {
@@ -806,6 +811,82 @@ namespace Commsights.MVC.Controllers
                                                         string mes1 = e1.Message;
                                                     }
                                                 }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                string mes = e.Message;
+            }
+            string action = "Upload";
+            string controller = "ReportMonthly";
+            return RedirectToAction(action, controller, new { ID = model.ID });
+        }
+        public ActionResult UploadDataReportMonthly001(Commsights.Data.Models.ReportMonthly model)
+        {
+            try
+            {
+                if (Request.Form.Files.Count > 0)
+                {
+                    var file = Request.Form.Files[0];
+                    if (file == null || file.Length == 0)
+                    {
+                    }
+                    if (file != null)
+                    {
+                        string fileExtension = Path.GetExtension(file.FileName);
+                        string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                        fileName = "ReportMonthly_" + model.CompanyID + "_" + model.Year + "_" + model.Month;
+                        fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
+                        var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.FTPUploadExcel, fileName);
+                        using (var stream = new FileStream(physicalPath, FileMode.Create))
+                        {
+                            file.CopyTo(stream);
+                            FileInfo fileLocation = new FileInfo(physicalPath);
+                            if (fileLocation.Length > 0)
+                            {
+                                if ((fileExtension == ".xlsx") || (fileExtension == ".xls"))
+                                {
+                                    using (ExcelPackage package = new ExcelPackage(stream))
+                                    {
+                                        if (package.Workbook.Worksheets.Count > 0)
+                                        {
+                                            ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
+                                            if (workSheet != null)
+                                            {
+                                                model.Note = fileName;
+                                                model.Initialization(InitType.Insert, RequestUserID);
+                                                model.IsMonthly = true;
+                                                model.Title = "ReportMonthly_" + model.CompanyID + "_" + model.Year + "_" + model.Month + "_" + AppGlobal.DateTimeCode;
+                                                Membership customer = _membershipRepository.GetByID(model.CompanyID.Value);
+                                                if (customer != null)
+                                                {
+                                                    model.Title = "ReportMonthly_" + model.CompanyID + "_" + customer.Account + "_" + model.Year + "_" + model.Month + "_" + AppGlobal.DateTimeCode;
+                                                }
+                                                _reportMonthlyRepository.Create(model);
+                                                DataTable tbl = new DataTable();
+                                                bool hasHeader = true;
+                                                foreach (var firstRowCell in workSheet.Cells[1, 1, 1, workSheet.Dimension.End.Column])
+                                                {
+                                                    tbl.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
+                                                }
+                                                var startRow = hasHeader ? 2 : 1;
+                                                for (int rowNum = startRow; rowNum <= workSheet.Dimension.End.Row; rowNum++)
+                                                {
+                                                    var wsRow = workSheet.Cells[rowNum, 1, rowNum, workSheet.Dimension.End.Column];
+                                                    DataRow row = tbl.Rows.Add();
+                                                    foreach (var cell in wsRow)
+                                                    {
+                                                        row[cell.Start.Column - 1] = cell.Text;
+                                                    }
+                                                }
+                                                _reportMonthlyRepository.InsertItemsByReportMonthlyID(tbl, model.ID);
                                             }
                                         }
                                     }

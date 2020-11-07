@@ -24,6 +24,34 @@ namespace Commsights.Data.Repositories
         {
             return _context.ReportMonthly.Where(item => item.Year == year && item.Month == month).OrderBy(item => item.Title).ToList();
         }
+        public string DeleteByID(int ID)
+        {
+            string result = "";
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ReportMonthlyDeleteByID", parameters);
+
+            }
+            return result;
+        }
+        public string InsertItemsByReportMonthlyID(DataTable table, int reportMonthlyID)
+        {
+            string result = "";
+            if (reportMonthlyID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@table",table),
+                    new SqlParameter("@ReportMonthlyID",reportMonthlyID),
+                };
+                result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertItemsByReportMonthlyID", parameters);
+            }
+            return result;
+        }
         public List<ReportMonthlyIndustryDataTransfer> GetIndustryByIDToList(int ID)
         {
             List<ReportMonthlyIndustryDataTransfer> list = new List<ReportMonthlyIndustryDataTransfer>();
