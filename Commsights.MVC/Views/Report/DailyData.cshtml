@@ -31,11 +31,11 @@
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
                             )
                     </div>
-                    @*<div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
-                        <input id="chkUpload" type="checkbox">
-                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Upload</p>
-                    </div>*@
-                    <div class='col-sm-6'>
+                    <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
+                        <input id="IsUpload" type="checkbox">
+                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Upload/Publish</p>
+                    </div>
+                    <div class='col-sm-4'>
                         <button style="width:50px;" type="button" class="btn btn-success" title="Search" onclick="onSearch()">
                             <span class="fas fa-search"></span>
                         </button>
@@ -136,7 +136,7 @@
     model.Field(t => t.Product).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsDailyToList", "Report").Data("filterProduct"))
+.Read(t => t.Action("GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsDailyAndIsUploadToList", "Report").Data("filterProduct"))
 .Destroy(t => t.Action("DeleteProductAndProductProperty", "Report"))
 .Update(t => t.Action("UpdateDataTransfer", "Report").Data("filterProduct"))))
             </div>
@@ -172,13 +172,15 @@
         var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
         var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
         var datePublishEndValue = toDate02($("#DatePublishEnd").val());
+        var isUploadValue = document.getElementById('IsUpload').checked;
             $.ajax({
                 type: 'GET',
                 url: "@Url.Action("DeleteByDatePublishBeginAndDatePublishEndAndIndustryID", "Report")",
                 data: {
                     industryID: industryIDValue,
                     datePublishBegin: datePublishBeginValue,
-                    datePublishEnd: datePublishEndValue
+                    datePublishEnd: datePublishEndValue,
+                    isUpload: isUploadValue
                 },
                 success: function () { }
             }).done(() => {
@@ -225,7 +227,8 @@
         var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
         var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
         var datePublishEndValue = toDate02($("#DatePublishEnd").val());
-        return { datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, industryID: industryIDValue };
+        var isUploadValue = document.getElementById('IsUpload').checked;
+        return { datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, industryID: industryIDValue, isUpload: isUploadValue };
     }
     function onSaveAllData() {
         BeginRequestHandler();

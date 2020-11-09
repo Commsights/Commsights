@@ -2720,6 +2720,11 @@ namespace Commsights.MVC.Controllers
             var data = _reportRepository.GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsDailyToList(datePublishBegin, datePublishEnd, industryID, true);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsDailyAndIsUploadToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isUpload)
+        {
+            var data = _reportRepository.GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsDailyAndIsUploadToList(datePublishBegin, datePublishEnd, industryID, true, isUpload);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult InitializationByDatePublishBeginAndDatePublishEndAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
         {
             var data = _reportRepository.InitializationByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
@@ -2970,7 +2975,12 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
             return Json(note);
         }
-
+        public IActionResult DeleteByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsUpload(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isUpload)
+        {
+            _reportRepository.DeleteProductAndProductPropertyByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsUpload(datePublishBegin, datePublishEnd, industryID, isUpload);
+            string note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
+            return Json(note);
+        }
         public IActionResult UpdateByIndustryIDAndDatePublishBeginAndDatePublishEndAndAllData(int industryID, DateTime datePublishBegin, DateTime datePublishEnd, bool allData)
         {
             if (allData == true)

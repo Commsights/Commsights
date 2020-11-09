@@ -150,5 +150,33 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<ReportMonthlySentimentDataTransfer> GetSentimentByIDToList(int ID)
+        {
+            List<ReportMonthlySentimentDataTransfer> list = new List<ReportMonthlySentimentDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectSentimentByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlySentimentDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlySentimentDataTransfer> GetSentimentByIDWithoutSUMToList(int ID)
+        {
+            List<ReportMonthlySentimentDataTransfer> list = new List<ReportMonthlySentimentDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectSentiment001ByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlySentimentDataTransfer>(dt);
+            }
+            return list;
+        }
     }
 }

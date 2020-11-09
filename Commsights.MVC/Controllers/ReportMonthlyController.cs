@@ -118,6 +118,20 @@ namespace Commsights.MVC.Controllers
             }
             return View(model);
         }
+        public IActionResult MonthlySentimentIndustry(int ID)
+        {
+            ReportMonthlyViewModel model = new ReportMonthlyViewModel();
+            if (ID > 0)
+            {
+                ReportMonthly reportMonthly = _reportMonthlyRepository.GetByID(ID);
+                if (reportMonthly != null)
+                {
+                    model.ID = reportMonthly.ID;
+                    model.Title = reportMonthly.Title;                    
+                }
+            }
+            return View(model);
+        }
         public IActionResult Upload(int ID)
         {
             ReportMonthly model = new ReportMonthly();
@@ -133,7 +147,7 @@ namespace Commsights.MVC.Controllers
         {
             string note = AppGlobal.InitString;
             int result = 0;
-            if (_reportMonthlyRepository.DeleteByID(ID) != "-1")
+            if (_reportMonthlyRepository.DeleteByID(ID) == "-1")
             {
                 result = 1;
             }
@@ -182,10 +196,18 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetCompanyByIDToListToJSON(int ID)
         {
             return Json(_reportMonthlyRepository.GetCompanyByIDToList(ID));
-        }
+        }        
         public ActionResult GetFeatureIndustryByIDToListToJSON(int ID)
         {
             return Json(_reportMonthlyRepository.GetFeatureIndustryByIDToList(ID));
+        }
+        public ActionResult GetSentimentByIDWithoutSUMToListToJSON(int ID)
+        {
+            return Json(_reportMonthlyRepository.GetSentimentByIDWithoutSUMToList(ID));
+        }
+        public ActionResult GetSentimentByIDToListToJSON(int ID)
+        {
+            return Json(_reportMonthlyRepository.GetSentimentByIDToList(ID));
         }
         [HttpPost]
         public IActionResult Export_Save(string contentType, string base64, string fileName)

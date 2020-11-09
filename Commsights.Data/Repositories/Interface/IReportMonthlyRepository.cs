@@ -20,5 +20,7 @@ namespace Commsights.Data.Repositories
         public List<ReportMonthlyIndustryDataTransfer> GetCompanyByIDToList(int ID);
         public List<ReportMonthlyIndustryDataTransfer> GetFeatureIndustryByIDToList(int ID);
         public List<ReportMonthlyIndustryDataTransfer> GetFeatureIndustryWithoutSUMByIDToList(int ID);
+        public List<ReportMonthlySentimentDataTransfer> GetSentimentByIDToList(int ID);
+        public List<ReportMonthlySentimentDataTransfer> GetSentimentByIDWithoutSUMToList(int ID);
     }
 }

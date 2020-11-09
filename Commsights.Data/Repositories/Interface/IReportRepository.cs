@@ -36,5 +36,7 @@ namespace Commsights.Data.Repositories
         public List<ProductDataTransfer> GetByIDListToList(string iDList);
         public Task<List<ProductDataTransfer>> AsyncGetByIDListToList(string iDList);
         public List<ProductDataTransfer> GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsDailyToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isDaily);
+        public List<ProductDataTransfer> GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsDailyAndIsUploadToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isDaily, bool isUpload);
+        public string DeleteProductAndProductPropertyByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsUpload(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isUpload);
     }
 }
