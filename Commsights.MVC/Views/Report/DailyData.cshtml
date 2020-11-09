@@ -318,7 +318,8 @@
         datePublishBeginValue = datePublishBeginValue.replace("/", "-");
         datePublishEndValue = datePublishEndValue.replace("/", "-");
         datePublishEndValue = datePublishEndValue.replace("/", "-");
-        var url = "/Report/DailyPrintPreviewByIndustryIDAndDatePublishBeginAndDatePublishEnd?industryID=" + industryIDValue + "&datePublishBeginString=" + datePublishBeginValue + "&datePublishEndString=" + datePublishEndValue;
+        var isUploadValue = document.getElementById('IsUpload').checked;
+        var url = "/Report/DailyPrintPreviewByIndustryIDAndDatePublishBeginAndDatePublishEnd?industryID=" + industryIDValue + "&datePublishBeginString=" + datePublishBeginValue + "&datePublishEndString=" + datePublishEndValue + "&isUpload=" + isUploadValue;
         OpenWindowByURL(url);
     }
     function onExcelEnglish() {
@@ -330,7 +331,8 @@
         datePublishBeginValue = datePublishBeginValue.replace("/", "-");
         datePublishEndValue = datePublishEndValue.replace("/", "-");
         datePublishEndValue = datePublishEndValue.replace("/", "-");
-        var url = "/Report/ExportExcelReportDailyByDatePublishBeginAndDatePublishEndAndIndustryID?industryID=" + industryIDValue + "&datePublishBeginString=" + datePublishBeginValue + "&datePublishEndString=" + datePublishEndValue;
+        var isUploadValue = document.getElementById('IsUpload').checked;
+        var url = "/Report/ExportExcelReportDailyByDatePublishBeginAndDatePublishEndAndIndustryID?industryID=" + industryIDValue + "&datePublishBeginString=" + datePublishBeginValue + "&datePublishEndString=" + datePublishEndValue + "&isUpload=" + isUploadValue;
         window.location.replace(url);
         EndRequestHandler();
     }
@@ -343,7 +345,8 @@
         datePublishBeginValue = datePublishBeginValue.replace("/", "-");
         datePublishEndValue = datePublishEndValue.replace("/", "-");
         datePublishEndValue = datePublishEndValue.replace("/", "-");
-        var url = "/Report/ExportExcelReportDailyByDatePublishBeginAndDatePublishEndAndIndustryIDWithVietnamese?industryID=" + industryIDValue + "&datePublishBeginString=" + datePublishBeginValue + "&datePublishEndString=" + datePublishEndValue;
+        var isUploadValue = document.getElementById('IsUpload').checked;
+        var url = "/Report/ExportExcelReportDailyByDatePublishBeginAndDatePublishEndAndIndustryIDWithVietnamese?industryID=" + industryIDValue + "&datePublishBeginString=" + datePublishBeginValue + "&datePublishEndString=" + datePublishEndValue + "&isUpload=" + isUploadValue;
         window.location.replace(url);
         EndRequestHandler();
     }

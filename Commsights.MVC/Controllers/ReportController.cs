@@ -276,7 +276,7 @@ namespace Commsights.MVC.Controllers
             }
             return View(model);
         }
-        public IActionResult DailyPrintPreviewByIndustryIDAndDatePublishBeginAndDatePublishEnd(int industryID, string datePublishBeginString, string datePublishEndString)
+        public IActionResult DailyPrintPreviewByIndustryIDAndDatePublishBeginAndDatePublishEnd(int industryID, string datePublishBeginString, string datePublishEndString, bool isUpload)
         {
             DateTime datePublishBegin = DateTime.Now;
             DateTime datePublishEnd = DateTime.Now;
@@ -311,7 +311,7 @@ namespace Commsights.MVC.Controllers
             }
             BaseViewModel model = new BaseViewModel();
             List<Config> listDailyReportColumn = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.DailyReportColumn);
-            List<ProductDataTransfer> listData = _reportRepository.GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
+            List<ProductDataTransfer> listData = _reportRepository.GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsDailyAndIsUploadToList(datePublishBegin, datePublishEnd, industryID, true, isUpload);
             List<ProductDataTransfer> listDataISummary = listData.Where(item => item.IsSummary == true).ToList();
             StringBuilder txt = new StringBuilder();
             txt.AppendLine(@"<div style='text-align: center;'><b>DAILY REPORT (" + DateTime.Now.ToString("dd/MM/yyyy") + ")</b></div>");
@@ -2128,7 +2128,7 @@ namespace Commsights.MVC.Controllers
             model.Note = html;
             return model;
         }
-        public IActionResult ExportExcelReportDailyByDatePublishBeginAndDatePublishEndAndIndustryID(CancellationToken cancellationToken, string datePublishBeginString, string datePublishEndString, int industryID)
+        public IActionResult ExportExcelReportDailyByDatePublishBeginAndDatePublishEndAndIndustryID(CancellationToken cancellationToken, string datePublishBeginString, string datePublishEndString, int industryID, bool isUpload)
         {
             DateTime datePublishBegin = DateTime.Now;
             DateTime datePublishEnd = DateTime.Now;
@@ -2166,7 +2166,7 @@ namespace Commsights.MVC.Controllers
             Color color = Color.FromArgb(int.Parse("#c00000".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));
             Color colorTitle = Color.FromArgb(int.Parse("#ed7d31".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));
             List<Config> listDailyReportColumn = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.DailyReportColumn);
-            List<ProductDataTransfer> listData = _reportRepository.GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
+            List<ProductDataTransfer> listData = _reportRepository.GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsDailyAndIsUploadToList(datePublishBegin, datePublishEnd, industryID, true, isUpload);
             List<ProductDataTransfer> listDataISummary = listData.Where(item => item.IsSummary == true).ToList();
             using (var package = new ExcelPackage(stream))
             {
@@ -2387,7 +2387,7 @@ namespace Commsights.MVC.Controllers
             stream.Position = 0;
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
         }
-        public IActionResult ExportExcelReportDailyByDatePublishBeginAndDatePublishEndAndIndustryIDWithVietnamese(CancellationToken cancellationToken, string datePublishBeginString, string datePublishEndString, int industryID)
+        public IActionResult ExportExcelReportDailyByDatePublishBeginAndDatePublishEndAndIndustryIDWithVietnamese(CancellationToken cancellationToken, string datePublishBeginString, string datePublishEndString, int industryID, bool isUpload)
         {
             DateTime datePublishBegin = DateTime.Now;
             DateTime datePublishEnd = DateTime.Now;
@@ -2425,7 +2425,7 @@ namespace Commsights.MVC.Controllers
             Color color = Color.FromArgb(int.Parse("#c00000".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));
             Color colorTitle = Color.FromArgb(int.Parse("#ed7d31".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));
             List<Config> listDailyReportColumn = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.DailyReportColumn);
-            List<ProductDataTransfer> listData = _reportRepository.GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
+            List<ProductDataTransfer> listData = _reportRepository.GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsDailyAndIsUploadToList(datePublishBegin, datePublishEnd, industryID, true, isUpload);
             List<ProductDataTransfer> listDataISummary = listData.Where(item => item.IsSummary == true).ToList();
             using (var package = new ExcelPackage(stream))
             {
