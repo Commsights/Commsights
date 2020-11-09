@@ -127,7 +127,42 @@ namespace Commsights.MVC.Controllers
                 if (reportMonthly != null)
                 {
                     model.ID = reportMonthly.ID;
-                    model.Title = reportMonthly.Title;                    
+                    model.Title = reportMonthly.Title;
+                    model.ListReportMonthlySentimentDataTransfer = _reportMonthlyRepository.GetSentimentByIDWithoutSUMToList(model.ID);
+                    model.ListReportMonthlySentimentAndMediaTypeDataTransfer = _reportMonthlyRepository.GetSentimentAndMediaTypeWithoutSUMByIDToList(model.ID);
+                    model.ListReportMonthlySentimentAndFeatureDataTransfer = _reportMonthlyRepository.GetSentimentAndFeatureWithoutSUMByIDToList(model.ID);
+                }
+            }
+            return View(model);
+        }
+        public IActionResult MonthlyChannel(int ID)
+        {
+            ReportMonthlyViewModel model = new ReportMonthlyViewModel();
+            if (ID > 0)
+            {
+                ReportMonthly reportMonthly = _reportMonthlyRepository.GetByID(ID);
+                if (reportMonthly != null)
+                {
+                    model.ID = reportMonthly.ID;
+                    model.Title = reportMonthly.Title;
+                    model.ListReportMonthlyChannelDataTransfer = _reportMonthlyRepository.GetChannelByIDWithoutSUMToList(model.ID);
+                    model.ListReportMonthlyChannelAndFeatureDataTransfer = _reportMonthlyRepository.GetChannelAndFeatureWithoutSUMByIDToList(model.ID);
+                    model.ListReportMonthlyChannelAndMentionDataTransfer = _reportMonthlyRepository.GetChannelAndMentionWithoutSUMByIDToList(model.ID);
+                }
+            }
+            return View(model);
+        }
+        public IActionResult MonthlyTierCommsights(int ID)
+        {
+            ReportMonthlyViewModel model = new ReportMonthlyViewModel();
+            if (ID > 0)
+            {
+                ReportMonthly reportMonthly = _reportMonthlyRepository.GetByID(ID);
+                if (reportMonthly != null)
+                {
+                    model.ID = reportMonthly.ID;
+                    model.Title = reportMonthly.Title;
+                    model.ListReportMonthlyTierCommsightsDataTransfer = _reportMonthlyRepository.GetTierCommsightsWithoutSUMByIDToList(model.ID);
                 }
             }
             return View(model);
@@ -196,7 +231,7 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetCompanyByIDToListToJSON(int ID)
         {
             return Json(_reportMonthlyRepository.GetCompanyByIDToList(ID));
-        }        
+        }
         public ActionResult GetFeatureIndustryByIDToListToJSON(int ID)
         {
             return Json(_reportMonthlyRepository.GetFeatureIndustryByIDToList(ID));
@@ -205,9 +240,33 @@ namespace Commsights.MVC.Controllers
         {
             return Json(_reportMonthlyRepository.GetSentimentByIDWithoutSUMToList(ID));
         }
+        public ActionResult GetSentimentAndFeatureWithoutSUMByIDToListToJSON(int ID)
+        {
+            return Json(_reportMonthlyRepository.GetSentimentAndFeatureWithoutSUMByIDToList(ID));
+        }
+        public ActionResult GetSentimentAndMediaTypeWithoutSUMByIDToListToJSON(int ID)
+        {
+            return Json(_reportMonthlyRepository.GetSentimentAndMediaTypeWithoutSUMByIDToList(ID));
+        }
         public ActionResult GetSentimentByIDToListToJSON(int ID)
         {
             return Json(_reportMonthlyRepository.GetSentimentByIDToList(ID));
+        }
+        public ActionResult GetChannelByIDToListToJSON(int ID)
+        {
+            return Json(_reportMonthlyRepository.GetChannelByIDToList(ID));
+        }
+        public ActionResult GetChannelAndFeatureByIDToListToJSON(int ID)
+        {
+            return Json(_reportMonthlyRepository.GetChannelAndFeatureByIDToList(ID));
+        }
+        public ActionResult GetChannelAndMentionByIDToListToJSON(int ID)
+        {
+            return Json(_reportMonthlyRepository.GetChannelAndMentionByIDToList(ID));
+        }
+        public ActionResult GetTierCommsightsByIDToListToJSON(int ID)
+        {
+            return Json(_reportMonthlyRepository.GetTierCommsightsByIDToList(ID));
         }
         [HttpPost]
         public IActionResult Export_Save(string contentType, string base64, string fileName)

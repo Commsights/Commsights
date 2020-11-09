@@ -178,5 +178,145 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<ReportMonthlySentimentDataTransfer> GetSentimentAndFeatureWithoutSUMByIDToList(int ID)
+        {
+            List<ReportMonthlySentimentDataTransfer> list = new List<ReportMonthlySentimentDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectSentimentAndFeatureWithoutSUMByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlySentimentDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlySentimentDataTransfer> GetSentimentAndMediaTypeWithoutSUMByIDToList(int ID)
+        {
+            List<ReportMonthlySentimentDataTransfer> list = new List<ReportMonthlySentimentDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectSentimentAndMediaTypeWithoutSUMByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlySentimentDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyChannelDataTransfer> GetChannelByIDToList(int ID)
+        {
+            List<ReportMonthlyChannelDataTransfer> list = new List<ReportMonthlyChannelDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectChannelByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyChannelDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyChannelDataTransfer> GetChannelByIDWithoutSUMToList(int ID)
+        {
+            List<ReportMonthlyChannelDataTransfer> list = new List<ReportMonthlyChannelDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectChannelWithoutSUMByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyChannelDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyChannelDataTransfer> GetChannelAndFeatureByIDToList(int ID)
+        {
+            List<ReportMonthlyChannelDataTransfer> list = new List<ReportMonthlyChannelDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectChannelAndFeatureByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyChannelDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyChannelDataTransfer> GetChannelAndFeatureWithoutSUMByIDToList(int ID)
+        {
+            List<ReportMonthlyChannelDataTransfer> list = new List<ReportMonthlyChannelDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectChannelAndFeatureWithoutSUMByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyChannelDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyChannelDataTransfer> GetChannelAndMentionByIDToList(int ID)
+        {
+            List<ReportMonthlyChannelDataTransfer> list = new List<ReportMonthlyChannelDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectChannelAndMentionByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyChannelDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyChannelDataTransfer> GetChannelAndMentionWithoutSUMByIDToList(int ID)
+        {
+            List<ReportMonthlyChannelDataTransfer> list = new List<ReportMonthlyChannelDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectChannelAndMentionWithoutSUMByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyChannelDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyTierCommsightsDataTransfer> GetTierCommsightsByIDToList(int ID)
+        {
+            List<ReportMonthlyTierCommsightsDataTransfer> list = new List<ReportMonthlyTierCommsightsDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectTierCommsightsByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyTierCommsightsDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyTierCommsightsDataTransfer> GetTierCommsightsWithoutSUMByIDToList(int ID)
+        {
+            List<ReportMonthlyTierCommsightsDataTransfer> list = new List<ReportMonthlyTierCommsightsDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectTierCommsightsWithoutSUMByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyTierCommsightsDataTransfer>(dt);
+            }
+            return list;
+        }
     }
 }

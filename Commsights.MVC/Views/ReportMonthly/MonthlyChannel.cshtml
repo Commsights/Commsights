@@ -1,0 +1,586 @@
+﻿@{ ViewData["Title"] = Model.Title + " - Channel"; }
+
+@model Commsights.MVC.Models.ReportMonthlyViewModel
+@Html.HiddenFor(Model => Model.ID)
+@Html.HiddenFor(Model => Model.Title)
+<div>
+    | <a href="/ReportMonthly/MonthlyReport?ID=@Model.ID" class="text-success" title="Report">Report</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Industry</a> |
+    <a href="/ReportMonthly/MonthlyIndustryCount?ID=@Model.ID" class="text-success" title="Industry">Industry Count</a> |
+    <a href="/ReportMonthly/MonthlyCompanyCount?ID=@Model.ID" class="text-success" title="Company">Company Count</a> |
+    <a href="/ReportMonthly/MonthlyFeatureIndustry?ID=@Model.ID" class="text-success" title="Feature-Mention">Feature-Mention</a> |
+    <a href="/ReportMonthly/MonthlySentimentIndustry?ID=@Model.ID" class="text-success" title="Sentiment">Sentiment</a> |
+    <a href="/ReportMonthly/MonthlyChannel?ID=@Model.ID" class="text-success" title="Channel">Channel</a> |
+    <a href="/ReportMonthly/MonthlyTierCommsights?ID=@Model.ID" class="text-success" title="Media Tiers">Media Tiers</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Category</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Trendline</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Campaign</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Key Stories</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Brand Growth</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Product segment</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Top titles</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Scorecard</a> |
+    <a href="/ReportMonthly/MonthlyData?ID=@Model.ID" class="text-success" title="Data">Data</a> |
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">@Model.Title - Channel</h3>
+            </div>
+            <div class="card-body">
+                <h5>CHANNEL</h5>
+                <div class="col-md-12">
+                    <div id="DataChannel" class='col-sm-12'></div>
+                </div>
+                <hr />
+                <h5>CHANNEL BY FEATURE</h5>
+                <div class="col-md-12">
+                    <div id="DataChannelAndFeature" class='col-sm-12'></div>
+                </div>
+                <hr />
+                <h5>CHANNEL BY MENTION</h5>
+                <div class="col-md-12">
+                    <div id="DataChannelAndMention" class='col-sm-12'></div>
+                </div>
+                <br />
+                <table style="width:100%;">
+                    <tr>
+                        <td valign="top">
+                            <div>
+                                <div class="row">
+                                    <div class='col-sm-2'>
+                                        <button type="button" class="btn btn-success" onclick="exportJPG('ChartBarChannelThisMonth')"><span class="fas fa-file-image"></span></button>
+                                    </div>
+                                </div>
+                                <div>
+                                    @(Html.Kendo().Chart(Model.ListReportMonthlyChannelDataTransfer)
+.Name("ChartBarChannelThisMonth")
+.Theme("Material")
+.Title(t => t.Text("Channel").Color("#0000ff").Font("20px sans-serif"))
+  .HtmlAttributes(new { style = "min-height:400px;" })
+   .Legend(legend => legend
+       .Position(ChartLegendPosition.Bottom)
+   )
+   .ChartArea(chartArea => chartArea
+      .Background("#ffffff")
+  )
+   .SeriesDefaults(seriesDefaults =>
+            seriesDefaults.Bar().Stack(true)
+        )
+.Series(series =>
+{
+    series.Bar(model => model.OnlineCount).Name("Online").Axis("Feature");
+    series.Bar(model => model.NewspaperCount).Name("Newspaper").Axis("Feature");
+    series.Bar(model => model.MagazineCount).Name("Magazine").Axis("Feature");
+    series.Bar(model => model.TVCount).Name("TV").Axis("Feature");
+})
+   .CategoryAxis(axis => axis
+      .Name("Customer")
+      .Title("Industry")
+       .Categories(model => model.SegmentProduct)
+   )
+    .ValueAxis(axis => axis
+       .Numeric()
+       .Name("Feature")       
+   )
+   .Tooltip(tooltip => tooltip
+       .Visible(true)
+       .Format("{0:N0}")
+   )
+     .Pannable(pannable => pannable
+            .Lock(ChartAxisLock.Y)
+        )
+        .Zoomable(zoomable => zoomable
+            .Mousewheel(mousewheel => mousewheel.Lock(ChartAxisLock.Y))
+            .Selection(selection => selection.Lock(ChartAxisLock.Y))
+        )
+            )
+                                </div>
+                            </div>
+                        </td>
+                        <td valign="top">
+                            <div>
+                                <div class="row">
+                                    <div class='col-sm-2'>
+                                        <button type="button" class="btn btn-success" onclick="exportJPG('ChartBarChannelAndFeatureThisMonth')"><span class="fas fa-file-image"></span></button>
+                                    </div>
+                                </div>
+                                <div>
+                                    @(Html.Kendo().Chart(Model.ListReportMonthlyChannelAndFeatureDataTransfer)
+.Name("ChartBarChannelAndFeatureThisMonth")
+.Theme("Material")
+.Title(t => t.Text("Channel by Feature").Color("#0000ff").Font("20px sans-serif"))
+  .HtmlAttributes(new { style = "min-height:400px;" })
+   .Legend(legend => legend
+       .Position(ChartLegendPosition.Bottom)
+   )
+   .ChartArea(chartArea => chartArea
+      .Background("#ffffff")
+  )
+   .SeriesDefaults(seriesDefaults =>
+            seriesDefaults.Bar().Stack(true)
+        )
+.Series(series =>
+{
+    series.Bar(model => model.OnlineCount).Name("Online").Axis("Feature");
+    series.Bar(model => model.NewspaperCount).Name("Newspaper").Axis("Feature");
+    series.Bar(model => model.MagazineCount).Name("Magazine").Axis("Feature");
+    series.Bar(model => model.TVCount).Name("TV").Axis("Feature");
+})
+   .CategoryAxis(axis => axis
+      .Name("Customer")
+      .Title("Industry")
+       .Categories(model => model.SegmentProduct)
+   )
+    .ValueAxis(axis => axis
+       .Numeric()       
+       .Name("Feature")       
+   )
+   .Tooltip(tooltip => tooltip
+       .Visible(true)
+       .Format("{0:N0} %")
+   )
+     .Pannable(pannable => pannable
+            .Lock(ChartAxisLock.Y)
+        )
+        .Zoomable(zoomable => zoomable
+            .Mousewheel(mousewheel => mousewheel.Lock(ChartAxisLock.Y))
+            .Selection(selection => selection.Lock(ChartAxisLock.Y))
+        )
+            )
+                                </div>
+                            </div>
+                        </td>
+                        <td valign="top">
+                            <div>
+                                <div class="row">
+                                    <div class='col-sm-2'>
+                                        <button type="button" class="btn btn-success" onclick="exportJPG('ChartBarChannelAndMentionThisMonth')"><span class="fas fa-file-image"></span></button>
+                                    </div>
+                                </div>
+                                <div>
+                                    @(Html.Kendo().Chart(Model.ListReportMonthlyChannelAndMentionDataTransfer)
+.Name("ChartBarChannelAndMentionThisMonth")
+.Theme("Material")
+.Title(t => t.Text("Channel by Mention").Color("#0000ff").Font("20px sans-serif"))
+  .HtmlAttributes(new { style = "min-height:400px;" })
+   .Legend(legend => legend
+       .Position(ChartLegendPosition.Bottom)
+   )
+   .ChartArea(chartArea => chartArea
+      .Background("#ffffff")
+  )
+   .SeriesDefaults(seriesDefaults =>
+            seriesDefaults.Bar().Stack(true)
+        )
+.Series(series =>
+{
+    series.Bar(model => model.OnlineCount).Name("Online").Axis("Feature");
+    series.Bar(model => model.NewspaperCount).Name("Newspaper").Axis("Feature");
+    series.Bar(model => model.MagazineCount).Name("Magazine").Axis("Feature");
+    series.Bar(model => model.TVCount).Name("TV").Axis("Feature");
+})
+   .CategoryAxis(axis => axis
+      .Name("Customer")
+      .Title("Industry")
+       .Categories(model => model.SegmentProduct)
+   )
+    .ValueAxis(axis => axis
+       .Numeric()       
+       .Name("Feature")       
+   )
+   .Tooltip(tooltip => tooltip
+       .Visible(true)
+       .Format("{0:N0} %")
+   )
+     .Pannable(pannable => pannable
+            .Lock(ChartAxisLock.Y)
+        )
+        .Zoomable(zoomable => zoomable
+            .Mousewheel(mousewheel => mousewheel.Lock(ChartAxisLock.Y))
+            .Selection(selection => selection.Lock(ChartAxisLock.Y))
+        )
+            )
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>        
+        </div>
+    </div>
+</div>
+<script>
+    function exportJPG(control) {
+        var Title = $('#Title').val();
+        var id = "#" + control;
+        var chart = $(id).getKendoChart();
+        chart.exportImage().done(function (data) {
+            kendo.saveAs({
+                dataURI: data,
+                fileName: Title + ".jpg",
+                proxyURL: "@Url.Action("Export_Save", "ReportMonthly")"
+            });
+        });
+    }
+    $(document).ready(() => {
+        onGetChannelByIDToListToJSON();
+        onGetChannelAndFeatureByIDToListToJSON();
+        onGetChannelAndMentionByIDToListToJSON();
+    });
+    function onGetChannelByIDToListToJSON() {
+        $("#DataChannel").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetChannelByIDToListToJSON", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (list) {
+                 var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                 html = html + '<thead>';
+                 html = html + '<tr>';
+                 html = html + "<th class='text-center'><a style='cursor:pointer;'></a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Last month</a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>This month</a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Growth</a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Growth (%)</a></th>";
+                 html = html + '</tr>';
+                html = html + '<tr>';
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Brand</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in list) {
+                     $(list[index]).each(function (iRec, item) {
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                        }
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.SegmentProduct + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.OnlineLastMonthCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.NewspaperLastMonthCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.MagazineLastMonthCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.TVLastMonthCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.OnlineCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.NewspaperCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.MagazineCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.TVCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.OnlineGrowth + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.NewspaperGrowth + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.MagazineGrowth + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.TVGrowth + '</td>';
+                         if (item.OnlineGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + item.OnlineGrowthPercent + '</td>';
+                         }
+                         else {
+                             if (item.OnlineGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + item.OnlineGrowthPercent + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + item.OnlineGrowthPercent + '</td>';
+                             }
+                         }
+                         if (item.NewspaperGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + item.NewspaperGrowthPercent + '</td>';
+                         }
+                         else {
+                             if (item.NewspaperGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + item.NewspaperGrowthPercent + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + item.NewspaperGrowthPercent + '</td>';
+                             }
+                         }
+                         if (item.MagazineGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + item.MagazineGrowthPercent + '</td>';
+                         }
+                         else {
+                             if (item.MagazineGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + item.MagazineGrowthPercent + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + item.MagazineGrowthPercent + '</td>';
+                             }
+                         }
+                         if (item.TVGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + item.TVGrowthPercent + '</td>';
+                         }
+                         else {
+                             if (item.TVGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + item.TVGrowthPercent + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + item.TVGrowthPercent + '</td>';
+                             }
+                         }
+                        html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                 $("#DataChannel").append(html);
+            }
+        }).done(() => {
+        });
+    }
+    function onGetChannelAndFeatureByIDToListToJSON() {
+        $("#DataChannelAndFeature").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetChannelAndFeatureByIDToListToJSON", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (list) {
+                 var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                 html = html + '<thead>';
+                 html = html + '<tr>';
+                 html = html + "<th class='text-center'><a style='cursor:pointer;'></a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Last month</a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>This month</a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Growth</a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Growth (%)</a></th>";
+                 html = html + '</tr>';
+                html = html + '<tr>';
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Brand</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in list) {
+                     $(list[index]).each(function (iRec, item) {
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                        }
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.SegmentProduct + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.OnlineLastMonthCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.NewspaperLastMonthCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.MagazineLastMonthCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.TVLastMonthCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.OnlineCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.NewspaperCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.MagazineCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.TVCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.OnlineGrowth + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.NewspaperGrowth + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.MagazineGrowth + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.TVGrowth + '</td>';
+                         if (item.OnlineGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + item.OnlineGrowthPercent + '</td>';
+                         }
+                         else {
+                             if (item.OnlineGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + item.OnlineGrowthPercent + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + item.OnlineGrowthPercent + '</td>';
+                             }
+                         }
+                         if (item.NewspaperGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + item.NewspaperGrowthPercent + '</td>';
+                         }
+                         else {
+                             if (item.NewspaperGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + item.NewspaperGrowthPercent + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + item.NewspaperGrowthPercent + '</td>';
+                             }
+                         }
+                         if (item.MagazineGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + item.MagazineGrowthPercent + '</td>';
+                         }
+                         else {
+                             if (item.MagazineGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + item.MagazineGrowthPercent + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + item.MagazineGrowthPercent + '</td>';
+                             }
+                         }
+                         if (item.TVGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + item.TVGrowthPercent + '</td>';
+                         }
+                         else {
+                             if (item.TVGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + item.TVGrowthPercent + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + item.TVGrowthPercent + '</td>';
+                             }
+                         }
+                        html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                 $("#DataChannelAndFeature").append(html);
+            }
+        }).done(() => {
+        });
+    }
+    function onGetChannelAndMentionByIDToListToJSON() {
+        $("#DataChannelAndMention").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetChannelAndMentionByIDToListToJSON", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (list) {
+                 var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                 html = html + '<thead>';
+                 html = html + '<tr>';
+                 html = html + "<th class='text-center'><a style='cursor:pointer;'></a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Last month</a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>This month</a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Growth</a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Growth (%)</a></th>";
+                 html = html + '</tr>';
+                html = html + '<tr>';
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Brand</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in list) {
+                     $(list[index]).each(function (iRec, item) {
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                        }
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.SegmentProduct + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.OnlineLastMonthCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.NewspaperLastMonthCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.MagazineLastMonthCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.TVLastMonthCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.OnlineCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.NewspaperCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.MagazineCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.TVCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.OnlineGrowth + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.NewspaperGrowth + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.MagazineGrowth + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.TVGrowth + '</td>';
+                         if (item.OnlineGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + item.OnlineGrowthPercent + '</td>';
+                         }
+                         else {
+                             if (item.OnlineGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + item.OnlineGrowthPercent + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + item.OnlineGrowthPercent + '</td>';
+                             }
+                         }
+                         if (item.NewspaperGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + item.NewspaperGrowthPercent + '</td>';
+                         }
+                         else {
+                             if (item.NewspaperGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + item.NewspaperGrowthPercent + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + item.NewspaperGrowthPercent + '</td>';
+                             }
+                         }
+                         if (item.MagazineGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + item.MagazineGrowthPercent + '</td>';
+                         }
+                         else {
+                             if (item.MagazineGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + item.MagazineGrowthPercent + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + item.MagazineGrowthPercent + '</td>';
+                             }
+                         }
+                         if (item.TVGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + item.TVGrowthPercent + '</td>';
+                         }
+                         else {
+                             if (item.TVGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + item.TVGrowthPercent + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + item.TVGrowthPercent + '</td>';
+                             }
+                         }
+                        html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                 $("#DataChannelAndMention").append(html);
+            }
+        }).done(() => {
+        });
+    }
+</script>
