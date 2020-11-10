@@ -162,7 +162,25 @@ namespace Commsights.MVC.Controllers
                 {
                     model.ID = reportMonthly.ID;
                     model.Title = reportMonthly.Title;
-                    model.ListReportMonthlyTierCommsightsDataTransfer = _reportMonthlyRepository.GetTierCommsightsWithoutSUMByIDToList(model.ID);
+                    model.ListCompanyName = _reportMonthlyRepository.GetTierCommsightsAndCompanyNameDistinctByIDToList(model.ID);
+                    model.ListTierCommsightsAndCompanyNameAndPortal = _reportMonthlyRepository.GetTierCommsightsAndCompanyNameAndPortalByIDToList(model.ID);
+                    model.ListTierCommsightsAndCompanyNameAndOther = _reportMonthlyRepository.GetTierCommsightsAndCompanyNameAndOtherByIDToList(model.ID);
+                    model.ListTierCommsightsAndCompanyNameAndMass = _reportMonthlyRepository.GetTierCommsightsAndCompanyNameAndMassByIDToList(model.ID);
+                    model.ListTierCommsightsAndCompanyNameAndIndustry = _reportMonthlyRepository.GetTierCommsightsAndCompanyNameAndIndustryByIDToList(model.ID);
+                }
+            }
+            return View(model);
+        }
+        public IActionResult MonthlyTierCommsightsAndCompanyName(int ID)
+        {
+            ReportMonthlyViewModel model = new ReportMonthlyViewModel();
+            if (ID > 0)
+            {
+                ReportMonthly reportMonthly = _reportMonthlyRepository.GetByID(ID);
+                if (reportMonthly != null)
+                {
+                    model.ID = reportMonthly.ID;
+                    model.Title = reportMonthly.Title;                    
                 }
             }
             return View(model);
@@ -267,6 +285,25 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetTierCommsightsByIDToListToJSON(int ID)
         {
             return Json(_reportMonthlyRepository.GetTierCommsightsByIDToList(ID));
+        }
+        public ActionResult GetMonthlyTierCommsightsAndCompanyNameToJSON(int ID)
+        {
+            ReportMonthlyViewModel model = new ReportMonthlyViewModel();
+            if (ID > 0)
+            {
+                ReportMonthly reportMonthly = _reportMonthlyRepository.GetByID(ID);
+                if (reportMonthly != null)
+                {
+                    model.ID = reportMonthly.ID;
+                    model.Title = reportMonthly.Title;
+                    model.ListCompanyName = _reportMonthlyRepository.GetTierCommsightsAndCompanyNameDistinctByIDToList(model.ID);
+                    model.ListTierCommsightsAndCompanyNameAndPortal = _reportMonthlyRepository.GetTierCommsightsAndCompanyNameAndPortalByIDToList(model.ID);
+                    model.ListTierCommsightsAndCompanyNameAndOther = _reportMonthlyRepository.GetTierCommsightsAndCompanyNameAndOtherByIDToList(model.ID);
+                    model.ListTierCommsightsAndCompanyNameAndMass = _reportMonthlyRepository.GetTierCommsightsAndCompanyNameAndMassByIDToList(model.ID);
+                    model.ListTierCommsightsAndCompanyNameAndIndustry = _reportMonthlyRepository.GetTierCommsightsAndCompanyNameAndIndustryByIDToList(model.ID);
+                }
+            }
+            return Json(model);
         }
         [HttpPost]
         public IActionResult Export_Save(string contentType, string base64, string fileName)

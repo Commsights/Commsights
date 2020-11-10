@@ -318,5 +318,75 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> GetTierCommsightsAndCompanyNameDistinctByIDToList(int ID)
+        {
+            List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> list = new List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectTierCommsightsAndCompanyNameDistinctByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> GetTierCommsightsAndCompanyNameAndPortalByIDToList(int ID)
+        {
+            List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> list = new List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectTierCommsightsAndCompanyNameAndPortalByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> GetTierCommsightsAndCompanyNameAndOtherByIDToList(int ID)
+        {
+            List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> list = new List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectTierCommsightsAndCompanyNameAndOtherByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> GetTierCommsightsAndCompanyNameAndMassByIDToList(int ID)
+        {
+            List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> list = new List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectTierCommsightsAndCompanyNameAndMassByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> GetTierCommsightsAndCompanyNameAndIndustryByIDToList(int ID)
+        {
+            List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> list = new List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectTierCommsightsAndCompanyNameAndIndustryByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer>(dt);
+            }
+            return list;
+        }
     }
 }

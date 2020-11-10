@@ -32,5 +32,10 @@ namespace Commsights.Data.Repositories
         public List<ReportMonthlyChannelDataTransfer> GetChannelAndMentionWithoutSUMByIDToList(int ID);
         public List<ReportMonthlyTierCommsightsDataTransfer> GetTierCommsightsByIDToList(int ID);
         public List<ReportMonthlyTierCommsightsDataTransfer> GetTierCommsightsWithoutSUMByIDToList(int ID);
+        public List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> GetTierCommsightsAndCompanyNameDistinctByIDToList(int ID);
+        public List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> GetTierCommsightsAndCompanyNameAndPortalByIDToList(int ID);
+        public List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> GetTierCommsightsAndCompanyNameAndOtherByIDToList(int ID);
+        public List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> GetTierCommsightsAndCompanyNameAndMassByIDToList(int ID);
+        public List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> GetTierCommsightsAndCompanyNameAndIndustryByIDToList(int ID);
     }
 }

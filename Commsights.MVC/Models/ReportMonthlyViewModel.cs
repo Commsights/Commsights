@@ -13,12 +13,16 @@ namespace Commsights.MVC.Models
         public string Title { get; set; }
         public List<ReportMonthlyIndustryDataTransfer> ListReportMonthlyIndustryDataTransfer { get; set; }
         public List<ReportMonthlySentimentDataTransfer> ListReportMonthlySentimentDataTransfer { get; set; }
-
         public List<ReportMonthlySentimentDataTransfer> ListReportMonthlySentimentAndMediaTypeDataTransfer { get; set; }
         public List<ReportMonthlySentimentDataTransfer> ListReportMonthlySentimentAndFeatureDataTransfer { get; set; }
         public List<ReportMonthlyChannelDataTransfer> ListReportMonthlyChannelDataTransfer { get; set; }
         public List<ReportMonthlyChannelDataTransfer> ListReportMonthlyChannelAndFeatureDataTransfer { get; set; }
         public List<ReportMonthlyChannelDataTransfer> ListReportMonthlyChannelAndMentionDataTransfer { get; set; }
         public List<ReportMonthlyTierCommsightsDataTransfer> ListReportMonthlyTierCommsightsDataTransfer { get; set; }
+        public List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> ListCompanyName { get; set; }
+        public List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> ListTierCommsightsAndCompanyNameAndIndustry { get; set; }
+        public List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> ListTierCommsightsAndCompanyNameAndMass { get; set; }
+        public List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> ListTierCommsightsAndCompanyNameAndOther { get; set; }
+        public List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> ListTierCommsightsAndCompanyNameAndPortal { get; set; }
     }
 }

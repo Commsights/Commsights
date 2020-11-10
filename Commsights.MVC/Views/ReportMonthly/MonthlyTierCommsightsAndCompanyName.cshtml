@@ -1,0 +1,140 @@
+﻿@{ ViewData["Title"] = Model.Title + " - Tier Commsights and Company"; }
+
+@model Commsights.MVC.Models.ReportMonthlyViewModel
+@Html.HiddenFor(Model => Model.ID)
+@Html.HiddenFor(Model => Model.Title)
+<div>
+    | <a href="/ReportMonthly/MonthlyReport?ID=@Model.ID" class="text-success" title="Report">Report</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Industry</a> |
+    <a href="/ReportMonthly/MonthlyIndustryCount?ID=@Model.ID" class="text-success" title="Industry">Industry Count</a> |
+    <a href="/ReportMonthly/MonthlyCompanyCount?ID=@Model.ID" class="text-success" title="Company">Company Count</a> |
+    <a href="/ReportMonthly/MonthlyFeatureIndustry?ID=@Model.ID" class="text-success" title="Feature-Mention">Feature-Mention</a> |
+    <a href="/ReportMonthly/MonthlySentimentIndustry?ID=@Model.ID" class="text-success" title="Sentiment">Sentiment</a> |
+    <a href="/ReportMonthly/MonthlyChannel?ID=@Model.ID" class="text-success" title="Channel">Channel</a> |
+    <a href="/ReportMonthly/MonthlyTierCommsights?ID=@Model.ID" class="text-success" title="Media Tiers">Media Tiers</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Category</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Trendline</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Campaign</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Key Stories</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Brand Growth</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Product segment</a> |
+    <a href="/ReportMonthly/MonthlyTierCommsightsAndCompanyName?ID=@Model.ID" class="text-success" title="Top titles">Top titles</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Scorecard</a> |
+    <a href="/ReportMonthly/MonthlyData?ID=@Model.ID" class="text-success" title="Data">Data</a> |
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">@Model.Title - Tier Commsights and Company</h3>
+            </div>
+            <div class="card-body">                
+                <div class="col-md-12">
+                    <div id="DataTierCommsightsAndCompanyName" class='col-sm-12'></div>
+                </div>                            
+            </div>        
+        </div>
+    </div>
+</div>
+<script>
+    function exportJPG(control) {
+        var Title = $('#Title').val();
+        var id = "#" + control;
+        var chart = $(id).getKendoChart();
+        chart.exportImage().done(function (data) {
+            kendo.saveAs({
+                dataURI: data,
+                fileName: Title + ".jpg",
+                proxyURL: "@Url.Action("Export_Save", "ReportMonthly")"
+            });
+        });
+    }
+    $(document).ready(() => {
+        onGetTierCommsightsByIDToListToJSON();        
+    });
+    function onGetTierCommsightsByIDToListToJSON() {
+        BeginRequestHandler();
+        $("#DataTierCommsights").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetMonthlyTierCommsightsAndCompanyNameToJSON", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (model) {
+                 var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                 html = html + '<thead>';
+                 html = html + '<tr>';
+                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Company</a></th>";
+                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Mass</a></th>";
+                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Industry</a></th>";
+                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Portal</a></th>";
+                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Other</a></th>";                 
+                 html = html + '</tr>';
+                 html = html + '</thead>';
+                 html = html + '<tbody>';
+                 var no = 0;
+                 for (var index in model.ListCompanyName) {
+                     $(model.ListCompanyName[index]).each(function (iRec, item001) {
+                         no = no + 1;
+                         if (no % 2 == 0) {
+                             html = html + '<tr style="background-color:#ffffff;">';
+                         }
+                         else {
+                             html = html + '<tr style="background-color:#f1f1f1;">';
+                         }
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item001.CompanyName + '</td>';       
+                         html = html + '<td class="text-left" valign="top">';
+                         for (var index in model.ListTierCommsightsAndCompanyNameAndMass) {
+                             $(model.ListTierCommsightsAndCompanyNameAndMass[index]).each(function (iRec, item002) { 
+                                 if (item001.CompanyName == item002.CompanyName) {
+                                     html = html + '' + item002.Media + ' (' + item002.TierCount + ')';
+                                     html = html + '<br/>';
+                                 }                                 
+                             });
+                         } 
+                         html = html + '</td>';
+                         html = html + '<td class="text-left" valign="top">';
+                         for (var index in model.ListTierCommsightsAndCompanyNameAndIndustry) {
+                             $(model.ListTierCommsightsAndCompanyNameAndIndustry[index]).each(function (iRec, item003) {
+                                 if (item001.CompanyName == item003.CompanyName) {
+                                     html = html + '' + item003.Media + ' (' + item003.TierCount + ')';
+                                     html = html + '<br/>';
+                                 }
+                             });
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-left" valign="top">';
+                         for (var index in model.ListTierCommsightsAndCompanyNameAndPortal) {
+                             $(model.ListTierCommsightsAndCompanyNameAndPortal[index]).each(function (iRec, item004) {
+                                 if (item001.CompanyName == item004.CompanyName) {
+                                     html = html + '' + item004.Media + ' (' + item004.TierCount + ')';
+                                     html = html + '<br/>';
+                                 }
+                             });
+                         }
+                         html = html + '</td>';
+                         html = html + '</td>';
+                         html = html + '<td class="text-left" valign="top">';
+                         for (var index in model.ListTierCommsightsAndCompanyNameAndOther) {
+                             $(model.ListTierCommsightsAndCompanyNameAndOther[index]).each(function (iRec, item005) {
+                                 if (item001.CompanyName == item005.CompanyName) {
+                                     html = html + '' + item005.Media + ' (' + item005.TierCount + ')';
+                                     html = html + '<br/>';
+                                 }
+                             });
+                         }
+                         html = html + '</td>';
+                     });
+                 }                 
+                 html = html + '</tbody>';
+                 html = html + '</table>';
+                 html = $.parseHTML(html);
+                 $("#DataTierCommsightsAndCompanyName").append(html);
+            }
+         }).done(() => {
+             EndRequestHandler();
+        });
+    }   
+</script>
