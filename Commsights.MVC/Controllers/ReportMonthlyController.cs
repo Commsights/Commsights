@@ -99,6 +99,7 @@ namespace Commsights.MVC.Controllers
                     model.ID = reportMonthly.ID;
                     model.Title = reportMonthly.Title;
                     model.ListReportMonthlyIndustryDataTransfer = _reportMonthlyRepository.GetCompanyByIDToList(model.ID);
+                    model.ListReportMonthlyIndustryDataTransfer = _reportMonthlyRepository.GetIndustryByID001WithoutSUMToList(model.ID);
                 }
             }
             return View(model);
@@ -180,7 +181,49 @@ namespace Commsights.MVC.Controllers
                 if (reportMonthly != null)
                 {
                     model.ID = reportMonthly.ID;
-                    model.Title = reportMonthly.Title;                    
+                    model.Title = reportMonthly.Title;
+                }
+            }
+            return View(model);
+        }
+        public IActionResult MonthlyCompanyAndYear(int ID)
+        {
+            ReportMonthlyViewModel model = new ReportMonthlyViewModel();
+            if (ID > 0)
+            {
+                ReportMonthly reportMonthly = _reportMonthlyRepository.GetByID(ID);
+                if (reportMonthly != null)
+                {
+                    model.ID = reportMonthly.ID;
+                    model.Title = reportMonthly.Title;
+                    model.ListReportMonthlyCompanyAndYearDataTransfer = _reportMonthlyRepository.GetCompanyAndYearWithoutSUMByIDToList(ID);
+                    model.ListMonth = new List<MonthData>();
+                    for (int i = 1; i < 13; i++)
+                    {
+                        MonthData monthData = new MonthData();
+                        monthData.Month = i.ToString();
+                        model.ListMonth.Add(monthData);
+                    }
+                    model.ListSeries = new List<SeriesData>();
+                    foreach (ReportMonthlyCompanyAndYearDataTransfer item in model.ListReportMonthlyCompanyAndYearDataTransfer)
+                    {
+                        SeriesData seriesData = new SeriesData();
+                        seriesData.Name = item.CompanyName;
+                        seriesData.Data = new List<int?>();
+                        seriesData.Data.Add(item.Month01Count);
+                        seriesData.Data.Add(item.Month02Count);
+                        seriesData.Data.Add(item.Month03Count);
+                        seriesData.Data.Add(item.Month04Count);
+                        seriesData.Data.Add(item.Month05Count);
+                        seriesData.Data.Add(item.Month06Count);
+                        seriesData.Data.Add(item.Month07Count);
+                        seriesData.Data.Add(item.Month08Count);
+                        seriesData.Data.Add(item.Month09Count);
+                        seriesData.Data.Add(item.Month10Count);
+                        seriesData.Data.Add(item.Month11Count);
+                        seriesData.Data.Add(item.Month12Count);
+                        model.ListSeries.Add(seriesData);
+                    }
                 }
             }
             return View(model);
@@ -285,6 +328,10 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetTierCommsightsByIDToListToJSON(int ID)
         {
             return Json(_reportMonthlyRepository.GetTierCommsightsByIDToList(ID));
+        }
+        public ActionResult GetCompanyAndYearByIDToListToJSON(int ID)
+        {
+            return Json(_reportMonthlyRepository.GetCompanyAndYearByIDToList(ID));
         }
         public ActionResult GetMonthlyTierCommsightsAndCompanyNameToJSON(int ID)
         {

@@ -24,5 +24,8 @@ namespace Commsights.MVC.Models
         public List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> ListTierCommsightsAndCompanyNameAndMass { get; set; }
         public List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> ListTierCommsightsAndCompanyNameAndOther { get; set; }
         public List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> ListTierCommsightsAndCompanyNameAndPortal { get; set; }
+        public List<ReportMonthlyCompanyAndYearDataTransfer> ListReportMonthlyCompanyAndYearDataTransfer { get; set; }
+        public List<MonthData> ListMonth { get; set; }
+        public List<SeriesData> ListSeries { get; set; }
     }
 }

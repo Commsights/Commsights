@@ -8,7 +8,7 @@ namespace Commsights.Data.DataTransferObject
 {
     public class ReportMonthlyChannelDataTransfer
     {        
-        public string SegmentProduct { get; set; }        
+        public string CompanyName { get; set; }        
         public int? OnlineLastMonthCount { get; set; }
         public int? NewspaperLastMonthCount { get; set; }
         public int? TVLastMonthCount { get; set; }

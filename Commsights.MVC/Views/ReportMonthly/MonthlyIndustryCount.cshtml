@@ -16,7 +16,7 @@
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Trendline</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Campaign</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Key Stories</a> |
-    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Brand Growth</a> |
+    <a href="/ReportMonthly/MonthlyCompanyAndYear?ID=@Model.ID" class="text-success" title="MonthlyCompanyAndYear">Brand Growth</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Product segment</a> |
     <a href="/ReportMonthly/MonthlyTierCommsightsAndCompanyName?ID=@Model.ID" class="text-success" title="Top titles">Top titles</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Scorecard</a> |
@@ -61,7 +61,7 @@
    .CategoryAxis(axis => axis
       .Name("Customer")
       .Title("Industry")
-       .Categories(model => model.SegmentProduct)
+       .Categories(model => model.CompanyName)
    )
     .ValueAxis(axis => axis
        .Numeric()       
@@ -109,7 +109,7 @@
    .CategoryAxis(axis => axis
       .Name("Customer")
       .Title("Industry")
-       .Categories(model => model.SegmentProduct)
+       .Categories(model => model.CompanyName)
    )
     .ValueAxis(axis => axis
        .Numeric()       
@@ -153,7 +153,7 @@
       .Background("#ffffff")
   )
         .Series(series => {
-            series.Donut(t => t.ProductNewsCountPercent, t => t.SegmentProduct)
+            series.Donut(t => t.ProductNewsCountPercent, t => t.CompanyName)
              .Labels(labels => labels
             .Visible(true)
             .Position(ChartPieLabelsPosition.OutsideEnd)
@@ -189,7 +189,7 @@
       .Background("#ffffff")
   )
         .Series(series => {
-            series.Donut(t => t.ProductNewsLastMonthCountPercent, t => t.SegmentProduct)
+            series.Donut(t => t.ProductNewsLastMonthCountPercent, t => t.CompanyName)
            .Labels(labels => labels
             .Visible(true)
             .Position(ChartPieLabelsPosition.OutsideEnd)
@@ -227,7 +227,7 @@
       .Background("#ffffff")
   )
         .Series(series => {
-            series.Donut(t => t.ProductMediaCountPercent, t => t.SegmentProduct)
+            series.Donut(t => t.ProductMediaCountPercent, t => t.CompanyName)
             .Labels(labels => labels
             .Visible(true)
             .Position(ChartPieLabelsPosition.OutsideEnd)
@@ -263,7 +263,7 @@
       .Background("#ffffff")
   )
         .Series(series => {
-            series.Donut(t => t.ProductMediaLastMonthCountPercent, t => t.SegmentProduct)
+            series.Donut(t => t.ProductMediaLastMonthCountPercent, t => t.CompanyName)
            .Labels(labels => labels
             .Visible(true)
             .Position(ChartPieLabelsPosition.OutsideEnd)
@@ -302,7 +302,7 @@
                  var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
                 html = html + '<thead>';
                 html = html + '<tr>';
-                html = html + "<th class='text-center' style='width: 40%;'><a style='cursor:pointer;'>Industry</a></th>";
+                 html = html + "<th class='text-center' style='width: 40%;'><a style='cursor:pointer;'>Company</a></th>";
                  html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>News (Last month)</a></th>";
                  html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Media (Last month)</a></th>";
                  html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>News (This month)</a></th>";
@@ -322,7 +322,7 @@
                         else {
                             html = html + '<tr style="background-color:#f1f1f1;">';
                         }
-                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.SegmentProduct + '</td>';
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold;">' + item.ProductNewsLastMonthCount + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold;">' + item.ProductMediaLastMonthCount + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold;">' + item.ProductNewsCount + '</td>';

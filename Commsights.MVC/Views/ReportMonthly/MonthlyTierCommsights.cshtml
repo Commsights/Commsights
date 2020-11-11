@@ -5,8 +5,7 @@
 @Html.HiddenFor(Model => Model.Title)
 <div>
     | <a href="/ReportMonthly/MonthlyReport?ID=@Model.ID" class="text-success" title="Report">Report</a> |
-    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Industry</a> |
-    <a href="/ReportMonthly/MonthlyIndustryCount?ID=@Model.ID" class="text-success" title="Industry">Industry Count</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Industry</a> |    
     <a href="/ReportMonthly/MonthlyCompanyCount?ID=@Model.ID" class="text-success" title="Company">Company Count</a> |
     <a href="/ReportMonthly/MonthlyFeatureIndustry?ID=@Model.ID" class="text-success" title="Feature-Mention">Feature-Mention</a> |
     <a href="/ReportMonthly/MonthlySentimentIndustry?ID=@Model.ID" class="text-success" title="Sentiment">Sentiment</a> |
@@ -16,7 +15,7 @@
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Trendline</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Campaign</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Key Stories</a> |
-    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Brand Growth</a> |
+    <a href="/ReportMonthly/MonthlyCompanyAndYear?ID=@Model.ID" class="text-success" title="MonthlyCompanyAndYear">Brand Growth</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Product segment</a> |
     <a href="/ReportMonthly/MonthlyTierCommsightsAndCompanyName?ID=@Model.ID" class="text-success" title="Top titles">Top titles</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Scorecard</a> |
@@ -67,7 +66,7 @@
    .CategoryAxis(axis => axis
       .Name("Customer")
       .Title("Industry")
-       .Categories(model => model.SegmentProduct)
+       .Categories(model => model.CompanyName)
    )
     .ValueAxis(axis => axis
        .Numeric()
@@ -130,7 +129,7 @@
                  html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Growth (%)</a></th>";
                  html = html + '</tr>';
                 html = html + '<tr>';
-                 html = html + "<th class='text-center' style='width: 16%;'><a style='cursor:pointer;'>Brand</a></th>";
+                 html = html + "<th class='text-center' style='width: 16%;'><a style='cursor:pointer;'>Company</a></th>";
                  html = html + "<th class='text-center' style='width: 7%;'><a style='cursor:pointer;'>Mass media</a></th>";
                  html = html + "<th class='text-center' style='width: 7%;'><a style='cursor:pointer;'>Industry media</a></th>";
                  html = html + "<th class='text-center' style='width: 7%;'><a style='cursor:pointer;'>Portal</a></th>";
@@ -156,7 +155,7 @@
                         else {
                             html = html + '<tr style="background-color:#f1f1f1;">';
                         }
-                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.SegmentProduct + '</td>';
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold;">' + item.MassLastMonthCount + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold;">' + item.IndustryLastMonthCount + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold;">' + item.PortalLastMonthCount + '</td>';

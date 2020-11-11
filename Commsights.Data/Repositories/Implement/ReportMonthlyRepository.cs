@@ -388,5 +388,33 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<ReportMonthlyCompanyAndYearDataTransfer> GetCompanyAndYearByIDToList(int ID)
+        {
+            List<ReportMonthlyCompanyAndYearDataTransfer> list = new List<ReportMonthlyCompanyAndYearDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectCompanyAndYearByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyCompanyAndYearDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyCompanyAndYearDataTransfer> GetCompanyAndYearWithoutSUMByIDToList(int ID)
+        {
+            List<ReportMonthlyCompanyAndYearDataTransfer> list = new List<ReportMonthlyCompanyAndYearDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectCompanyAndYearWithoutSUMByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyCompanyAndYearDataTransfer>(dt);
+            }
+            return list;
+        }
     }
 }
