@@ -125,6 +125,7 @@
         return { ID: IDValue };
     }
     function onGetIndustryByIDToListToJSON() {
+        BeginRequestHandler();
         $("#DataIndustry").html('');
         var IDValue = $("#ID").val();
          $.ajax({
@@ -164,7 +165,8 @@
                 html = $.parseHTML(html);
                  $("#DataIndustry").append(html);
             }
-        }).done(() => {
+         }).done(() => {
+             EndRequestHandler();
         });
     }
     function exportJPG(control) {

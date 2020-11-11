@@ -150,6 +150,7 @@
         onGetFeatureIndustryByIDToListToJSON();
     });
     function onGetFeatureIndustryByIDToListToJSON() {
+        BeginRequestHandler();
         $("#DataFeature").html('');
         var IDValue = $("#ID").val();
          $.ajax({
@@ -217,7 +218,8 @@
                 html = $.parseHTML(html);
                  $("#DataFeature").append(html);
             }
-        }).done(() => {
+         }).done(() => {
+             EndRequestHandler();
         });
     }
     function exportJPG(control) {

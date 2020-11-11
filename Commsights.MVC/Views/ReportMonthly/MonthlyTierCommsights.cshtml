@@ -111,6 +111,7 @@
         onGetTierCommsightsByIDToListToJSON();        
     });
     function onGetTierCommsightsByIDToListToJSON() {
+        BeginRequestHandler();
         $("#DataTierCommsights").html('');
         var IDValue = $("#ID").val();
          $.ajax({
@@ -216,7 +217,8 @@
                 html = $.parseHTML(html);
                  $("#DataTierCommsights").append(html);
             }
-        }).done(() => {
+         }).done(() => {
+             EndRequestHandler();
         });
     }   
 </script>

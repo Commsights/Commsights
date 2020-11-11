@@ -402,6 +402,7 @@
         onGetIndustryByID001ToListToJSON();
     });
     function onGetCompanyByIDToListToJSON() {
+        BeginRequestHandler();
         $("#DataCompany").html('');
         var IDValue = $("#ID").val();
          $.ajax({
@@ -453,10 +454,12 @@
                 html = $.parseHTML(html);
                  $("#DataCompany").append(html);
             }
-        }).done(() => {
+         }).done(() => {
+             EndRequestHandler();
         });
     }
     function onGetIndustryByID001ToListToJSON() {
+        BeginRequestHandler();
         $("#DataIndustry").html('');
         var IDValue = $("#ID").val();
          $.ajax({
@@ -532,7 +535,8 @@
                 html = $.parseHTML(html);
                  $("#DataIndustry").append(html);
             }
-        }).done(() => {
+         }).done(() => {
+             EndRequestHandler();
         });
     }
     function exportJPG(control) {

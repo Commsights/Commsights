@@ -92,6 +92,7 @@
         onGetCompanyAndYearByIDToListToJSON();
     });
     function onGetCompanyAndYearByIDToListToJSON() {
+        BeginRequestHandler();
         var now = new Date();
         var year = now.getFullYear();
         $("#DataCompanyAndYear").html('');
@@ -203,7 +204,8 @@
                 html = $.parseHTML(html);
                  $("#DataCompanyAndYear").append(html);
             }
-        }).done(() => {
+         }).done(() => {
+             EndRequestHandler();
         });
     }
     function exportJPG(control) {

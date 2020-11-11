@@ -1042,16 +1042,123 @@ namespace Commsights.MVC.Controllers
                                                     tbl.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
                                                 }
                                                 var startRow = hasHeader ? 2 : 1;
+                                                string feature_Corp = "";
+                                                string feature_Product = "";
+                                                string url = "";
                                                 for (int rowNum = startRow; rowNum <= workSheet.Dimension.End.Row; rowNum++)
                                                 {
                                                     var wsRow = workSheet.Cells[rowNum, 1, rowNum, workSheet.Dimension.End.Column];
                                                     DataRow row = tbl.Rows.Add();
                                                     foreach (var cell in wsRow)
                                                     {
-                                                        row[cell.Start.Column - 1] = cell.Text;
+                                                        string address = cell.Address.Substring(0, 1);
+                                                        switch (address)
+                                                        {
+                                                            case "G":
+                                                                if (cell.Value != null)
+                                                                {
+                                                                    string value = cell.Value.ToString();
+                                                                    value = value.Replace(@"%", @"");
+                                                                    row[cell.Start.Column - 1] = cell.Value;
+                                                                    try
+                                                                    {
+                                                                        decimal sOE_Corp = decimal.Parse(value);
+                                                                        sOE_Corp = sOE_Corp * 100;
+                                                                        row[cell.Start.Column - 1] = (int)sOE_Corp;
+                                                                        if (sOE_Corp < 60)
+                                                                        {
+                                                                            feature_Corp = "Mention";
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            feature_Corp = "Feature";
+                                                                        }
+                                                                    }
+                                                                    catch
+                                                                    {
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "H":
+                                                                if (cell.Value == null)
+                                                                {
+                                                                    if (!string.IsNullOrEmpty(feature_Corp))
+                                                                    {
+                                                                        row[cell.Start.Column - 1] = feature_Corp;
+                                                                        feature_Corp = "";
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "L":
+                                                                if (cell.Value != null)
+                                                                {
+                                                                    string value = cell.Value.ToString();
+                                                                    value = value.Replace(@"%", @"");
+                                                                    row[cell.Start.Column - 1] = cell.Value;
+                                                                    try
+                                                                    {
+                                                                        decimal sOE_Product = decimal.Parse(value);
+                                                                        sOE_Product = sOE_Product * 100;
+                                                                        row[cell.Start.Column - 1] = (int)sOE_Product;
+                                                                        if (sOE_Product < 60)
+                                                                        {
+                                                                            feature_Product = "Mention";
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            feature_Product = "Feature";
+                                                                        }
+                                                                    }
+                                                                    catch
+                                                                    {
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "M":
+                                                                if (cell.Value == null)
+                                                                {
+                                                                    if (!string.IsNullOrEmpty(feature_Product))
+                                                                    {
+                                                                        row[cell.Start.Column - 1] = feature_Product;
+                                                                        feature_Product = "";
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "O":
+                                                                row[cell.Start.Column - 1] = cell.Value;
+                                                                if (cell.Value != null)
+                                                                {
+                                                                    if (cell.Hyperlink != null)
+                                                                    {
+                                                                        url = cell.Hyperlink.AbsoluteUri.Trim();
+
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case "Q":
+                                                                row[cell.Start.Column - 1] = cell.Value;
+                                                                if (cell.Value == null)
+                                                                {
+                                                                    row[cell.Start.Column - 1] = url;
+                                                                    url = "";
+                                                                }
+                                                                else
+                                                                {
+                                                                    url = cell.Value.ToString();
+                                                                }
+                                                                break;
+                                                            default:
+                                                                row[cell.Start.Column - 1] = cell.Value;
+                                                                break;
+                                                        }
+                                                        if (cell.Address == "AG")
+                                                        {
+                                                            Uri myUri = new Uri(url);
+                                                            row[cell.Start.Column - 1] = myUri.Host;
+                                                        }
                                                     }
                                                 }
-                                                _reportMonthlyRepository.InsertItemsByReportMonthlyID(tbl, model.ID);
+                                                _reportMonthlyRepository.InsertItemsByDataTableAndReportMonthlyIDAndRequestUserID(tbl, model.ID, RequestUserID);
                                             }
                                         }
                                     }

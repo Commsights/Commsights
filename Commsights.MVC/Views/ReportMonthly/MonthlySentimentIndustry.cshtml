@@ -349,6 +349,7 @@
         onGetSentimentAndFeatureWithoutSUMByIDToListToJSON();        
     });
     function onGetSentimentByIDToListToJSON() {
+        BeginRequestHandler();
         $("#DataSentiment").html('');
         var IDValue = $("#ID").val();
          $.ajax({
@@ -438,10 +439,12 @@
                 html = $.parseHTML(html);
                  $("#DataSentiment").append(html);
             }
-        }).done(() => {
+         }).done(() => {
+             EndRequestHandler();
         });
     }
     function onGetSentimentAndMediaTypeWithoutSUMByIDToListToJSON() {
+        BeginRequestHandler();
         $("#DataSentimentAndMediaType").html('');
         var IDValue = $("#ID").val();
          $.ajax({
@@ -532,10 +535,12 @@
                 html = $.parseHTML(html);
                  $("#DataSentimentAndMediaType").append(html);
             }
-        }).done(() => {
+         }).done(() => {
+             EndRequestHandler();
         });
     }
     function onGetSentimentAndFeatureWithoutSUMByIDToListToJSON() {
+        BeginRequestHandler();
         $("#DataSentimentAndFeature").html('');
         var IDValue = $("#ID").val();
          $.ajax({
@@ -579,7 +584,8 @@
                 html = $.parseHTML(html);
                  $("#DataSentimentAndFeature").append(html);
             }
-        }).done(() => {
+         }).done(() => {
+             EndRequestHandler();
         });
     }
 </script>

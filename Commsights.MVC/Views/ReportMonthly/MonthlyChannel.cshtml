@@ -229,6 +229,7 @@
         onGetChannelAndMentionByIDToListToJSON();
     });
     function onGetChannelByIDToListToJSON() {
+        BeginRequestHandler();
         $("#DataChannel").html('');
         var IDValue = $("#ID").val();
          $.ajax({
@@ -343,10 +344,12 @@
                 html = $.parseHTML(html);
                  $("#DataChannel").append(html);
             }
-        }).done(() => {
+         }).done(() => {
+             EndRequestHandler();
         });
     }
     function onGetChannelAndFeatureByIDToListToJSON() {
+        BeginRequestHandler();
         $("#DataChannelAndFeature").html('');
         var IDValue = $("#ID").val();
          $.ajax({
@@ -461,10 +464,12 @@
                 html = $.parseHTML(html);
                  $("#DataChannelAndFeature").append(html);
             }
-        }).done(() => {
+         }).done(() => {
+             EndRequestHandler();
         });
     }
     function onGetChannelAndMentionByIDToListToJSON() {
+        BeginRequestHandler();
         $("#DataChannelAndMention").html('');
         var IDValue = $("#ID").val();
          $.ajax({
@@ -579,7 +584,8 @@
                 html = $.parseHTML(html);
                  $("#DataChannelAndMention").append(html);
             }
-        }).done(() => {
+         }).done(() => {
+             EndRequestHandler();
         });
     }
 </script>

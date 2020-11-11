@@ -22,7 +22,7 @@ namespace Commsights.Data.Repositories
         }
         public List<ReportMonthly> GetByYearAndMonthToList(int year, int month)
         {
-            return _context.ReportMonthly.Where(item => item.Year == year && item.Month == month).OrderBy(item => item.Title).ToList();
+            return _context.ReportMonthly.Where(item => item.Year == year && item.Month == month).OrderByDescending(item => item.DateUpdated).ToList();
         }
         public string DeleteByID(int ID)
         {
@@ -49,6 +49,21 @@ namespace Commsights.Data.Repositories
                     new SqlParameter("@ReportMonthlyID",reportMonthlyID),
                 };
                 result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertItemsByReportMonthlyID", parameters);
+            }
+            return result;
+        }
+        public string InsertItemsByDataTableAndReportMonthlyIDAndRequestUserID(DataTable table, int reportMonthlyID, int RequestUserID)
+        {
+            string result = "";
+            if (reportMonthlyID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@table",table),
+                    new SqlParameter("@ReportMonthlyID",reportMonthlyID),
+                    new SqlParameter("@RequestUserID",RequestUserID),
+                };
+                result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertItemsByDataTableAndReportMonthlyIDAndRequestUserID", parameters);
             }
             return result;
         }
