@@ -38,14 +38,14 @@
                             <div>
                                 <div class="row">
                                     <div class='col-sm-2'>
-                                        <button type="button" class="btn btn-success" onclick="exportJPG('ChartBarTierCommsightsThisMonth')"><span class="fas fa-file-image"></span></button>
+                                        <button type="button" class="btn btn-success" onclick="exportJPG('ChartBarTierCommSightsThisMonth')"><span class="fas fa-file-image"></span></button>
                                     </div>
                                 </div>
                                 <div>
                                     @(Html.Kendo().Chart(Model.ListReportMonthlyTierCommsightsDataTransfer)
-.Name("ChartBarTierCommsightsThisMonth")
+.Name("ChartBarTierCommSightsThisMonth")
 .Theme("Material")
-.Title(t => t.Text("Tier Commsights").Color("#0000ff").Font("20px sans-serif"))
+.Title(t => t.Text("Tier CommSights").Color("#0000ff").Font("20px sans-serif"))
   .HtmlAttributes(new { style = "min-height:400px;" })
    .Legend(legend => legend
        .Position(ChartLegendPosition.Bottom)
@@ -58,20 +58,19 @@
         )
 .Series(series =>
 {
-    series.Bar(model => model.MassCount).Name("Mass").Axis("Feature");
-    series.Bar(model => model.IndustryCount).Name("Industry").Axis("Feature");
-    series.Bar(model => model.PortalCount).Name("Portal").Axis("Feature");
-    series.Bar(model => model.OrthersCount).Name("Orthers").Axis("Feature");
+    series.Bar(model => model.MassCount).Name("Mass").Axis("TierCommSights");
+    series.Bar(model => model.IndustryCount).Name("Industry").Axis("TierCommSights");
+    series.Bar(model => model.PortalCount).Name("Portal").Axis("TierCommSights");
+    series.Bar(model => model.OrthersCount).Name("Orthers").Axis("TierCommSights");
 })
    .CategoryAxis(axis => axis
       .Name("Customer")
-      .Title("Industry")
+      .Title("Company")
        .Categories(model => model.CompanyName)
    )
     .ValueAxis(axis => axis
        .Numeric()
-       .Name("Feature")
-       .Title("Tier Commsights")
+       .Name("TierCommSights")
    )
    .Tooltip(tooltip => tooltip
        .Visible(true)
@@ -87,7 +86,7 @@
             )
                                 </div>
                             </div>
-                        </td>
+                        </td>            
                     </tr>
                 </table>
             </div>        

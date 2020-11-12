@@ -18,6 +18,7 @@ using Commsights.MVC.Models;
 using Commsights.Service.Mail;
 using System.Globalization;
 using System.Data;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace Commsights.MVC.Controllers
 {
@@ -98,7 +99,6 @@ namespace Commsights.MVC.Controllers
                 {
                     model.ID = reportMonthly.ID;
                     model.Title = reportMonthly.Title;
-                    model.ListReportMonthlyIndustryDataTransfer = _reportMonthlyRepository.GetCompanyByIDToList(model.ID);
                     model.ListReportMonthlyIndustryDataTransfer = _reportMonthlyRepository.GetIndustryByID001WithoutSUMToList(model.ID);
                 }
             }
@@ -163,11 +163,7 @@ namespace Commsights.MVC.Controllers
                 {
                     model.ID = reportMonthly.ID;
                     model.Title = reportMonthly.Title;
-                    model.ListCompanyName = _reportMonthlyRepository.GetTierCommsightsAndCompanyNameDistinctByIDToList(model.ID);
-                    model.ListTierCommsightsAndCompanyNameAndPortal = _reportMonthlyRepository.GetTierCommsightsAndCompanyNameAndPortalByIDToList(model.ID);
-                    model.ListTierCommsightsAndCompanyNameAndOther = _reportMonthlyRepository.GetTierCommsightsAndCompanyNameAndOtherByIDToList(model.ID);
-                    model.ListTierCommsightsAndCompanyNameAndMass = _reportMonthlyRepository.GetTierCommsightsAndCompanyNameAndMassByIDToList(model.ID);
-                    model.ListTierCommsightsAndCompanyNameAndIndustry = _reportMonthlyRepository.GetTierCommsightsAndCompanyNameAndIndustryByIDToList(model.ID);
+                    model.ListReportMonthlyTierCommsightsDataTransfer = _reportMonthlyRepository.GetTierCommsightsWithoutSUMByIDToList(ID);
                 }
             }
             return View(model);
@@ -1045,6 +1041,7 @@ namespace Commsights.MVC.Controllers
                                                 string feature_Corp = "";
                                                 string feature_Product = "";
                                                 string url = "";
+                                                int index = 0;
                                                 for (int rowNum = startRow; rowNum <= workSheet.Dimension.End.Row; rowNum++)
                                                 {
                                                     var wsRow = workSheet.Cells[rowNum, 1, rowNum, workSheet.Dimension.End.Column];
@@ -1131,7 +1128,6 @@ namespace Commsights.MVC.Controllers
                                                                     if (cell.Hyperlink != null)
                                                                     {
                                                                         url = cell.Hyperlink.AbsoluteUri.Trim();
-
                                                                     }
                                                                 }
                                                                 break;
@@ -1157,6 +1153,16 @@ namespace Commsights.MVC.Controllers
                                                             row[cell.Start.Column - 1] = myUri.Host;
                                                         }
                                                     }
+                                                    string url001 = tbl.Rows[index]["URL"].ToString();
+                                                    if (string.IsNullOrEmpty(url001))
+                                                    {
+                                                        tbl.Rows[index]["URL"] = url;
+                                                    }
+                                                    index = index + 1;
+                                                }
+                                                if (tbl.Columns.Count < 33)
+                                                {
+                                                    tbl.Columns.Add(new DataColumn("Media"));
                                                 }
                                                 _reportMonthlyRepository.InsertItemsByDataTableAndReportMonthlyIDAndRequestUserID(tbl, model.ID, RequestUserID);
                                             }

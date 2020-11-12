@@ -178,19 +178,19 @@
         )
 .Series(series =>
 {
-    series.Bar(model => model.PositiveCount).Name("Positive").Axis("Feature").Color("Green");
-    series.Bar(model => model.NeutralCount).Name("Neutral").Axis("Feature").Color("Black");
-    series.Bar(model => model.NegativeCount).Name("Negative").Axis("Feature").Color("Red");
+    series.Bar(model => model.PositiveCount).Name("Positive").Axis("Sentiment").Color("Green");
+    series.Bar(model => model.NeutralCount).Name("Neutral").Axis("Sentiment").Color("Black");
+    series.Bar(model => model.NegativeCount).Name("Negative").Axis("Sentiment").Color("Red");
 })
    .CategoryAxis(axis => axis
       .Name("Customer")
-      .Title("Industry")
+      .Title("Company")
        .Categories(model => model.CompanyName)
    )
     .ValueAxis(axis => axis
        .Numeric()
-       .Name("Feature")
-       .Title("Feature")
+       .Name("Sentiment")
+       .Title("")
    )
    .Tooltip(tooltip => tooltip
        .Visible(true)
@@ -280,14 +280,14 @@
             <div class="col-md-12">
                 <div class="row">
                     <div class='col-sm-2'>
-                        <button type="button" class="btn btn-success" onclick="exportJPG('ChartColumnSentimentAndFeature')"><span class="fas fa-file-image"></span></button>
+                        <button type="button" class="btn btn-success" onclick="exportJPG('ChartColumnSentimentAndCompany')"><span class="fas fa-file-image"></span></button>
                     </div>
                 </div>
                 <div>
                     @(Html.Kendo().Chart(Model.ListReportMonthlySentimentAndFeatureDataTransfer)
-.Name("ChartColumnSentimentAndFeature")
+.Name("ChartColumnSentimentAndCompany")
 .Theme("Material")
-.Title(t => t.Text("Sentiment vs Feature").Color("#0000ff").Font("20px sans-serif"))
+.Title(t => t.Text("Sentiment vs Company").Color("#0000ff").Font("20px sans-serif"))
   .HtmlAttributes(new { style = "min-height:400px;" })
    .Legend(legend => legend
        .Position(ChartLegendPosition.Bottom)
@@ -295,22 +295,25 @@
    .ChartArea(chartArea => chartArea
       .Background("#ffffff")
   )
+     .SeriesDefaults(seriesDefaults =>
+            seriesDefaults.Column().Stack(true)
+        )
 .Series(series =>
 {
-    series.Column(model => model.PositiveCount).Name("Positive").Axis("Online");
-    series.Column(model => model.NeutralCount).Name("Neutral").Axis("Online");
-    series.Column(model => model.NegativeCount).Name("Negative").Axis("Online");    
+    series.Column(model => model.PositiveCount).Name("Positive").Axis("Sentiment");
+    series.Column(model => model.NeutralCount).Name("Neutral").Axis("Sentiment");
+    series.Column(model => model.NegativeCount).Name("Negative").Axis("Sentiment");
 })
 
    .CategoryAxis(axis => axis
       .Name("Customer")
-      .Title("")
-       .Categories(model => model.FullName)
-   )    
+      .Title("Company")
+       .Categories(model => model.CompanyName)
+   )
     .ValueAxis(axis => axis
        .Numeric()
-       .Name("Online")
-       .Title("Online")
+       .Name("Sentiment")
+       .Title("Sentiment")
    )
 
    .Tooltip(tooltip => tooltip
@@ -327,6 +330,7 @@
             )
                 </div>
             </div>
+            
         </div>
     </div>
 </div>
