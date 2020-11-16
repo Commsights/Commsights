@@ -431,5 +431,33 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<ReportMonthlySegmentProductDataTransfer> GetSegmentProductByIDToList(int ID)
+        {
+            List<ReportMonthlySegmentProductDataTransfer> list = new List<ReportMonthlySegmentProductDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectSegmentProductByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlySegmentProductDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlySegmentProductDataTransfer> GetSegmentProductWithoutSUMByIDToList(int ID)
+        {
+            List<ReportMonthlySegmentProductDataTransfer> list = new List<ReportMonthlySegmentProductDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectSegmentProductWithoutSUMByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlySegmentProductDataTransfer>(dt);
+            }
+            return list;
+        }
     }
 }

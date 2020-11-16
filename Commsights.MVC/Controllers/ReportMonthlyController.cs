@@ -224,14 +224,46 @@ namespace Commsights.MVC.Controllers
             }
             return View(model);
         }
+        public IActionResult MonthlySegmentProduct(int ID)
+        {
+            ReportMonthlyViewModel model = new ReportMonthlyViewModel();
+            if (ID > 0)
+            {
+                ReportMonthly reportMonthly = _reportMonthlyRepository.GetByID(ID);
+                if (reportMonthly != null)
+                {
+                    model.ID = reportMonthly.ID;
+                    model.Title = reportMonthly.Title;
+                    model.ListReportMonthlySegmentProductDataTransfer = _reportMonthlyRepository.GetSegmentProductWithoutSUMByIDToList(model.ID);
+                    DataTable dt = new DataTable();
+                    dt.Columns.Add("Segment");
+                    foreach (ReportMonthlySegmentProductDataTransfer item in model.ListReportMonthlySegmentProductDataTransfer)
+                    {
+                        dt.Columns.Add(item.ProductName_ProjectName);
+                    }
+                    foreach (ReportMonthlySegmentProductDataTransfer item in model.ListReportMonthlySegmentProductDataTransfer)
+                    {
+                        dt.Rows.Add(item.ProductName_ProjectName);
+                    }
+                    dt.AcceptChanges();
+                }
+            }
+            return View(model);
+        }
         public IActionResult Upload(int ID)
         {
             ReportMonthly model = new ReportMonthly();
-            model.Year = DateTime.Now.Year;
-            model.Month = DateTime.Now.Month;
-            if (ID > 0)
+            model.ID = ID;
+            if (model.ID > 0)
             {
-                model = _reportMonthlyRepository.GetByID(ID);
+                model = _reportMonthlyRepository.GetByID(model.ID);
+            }
+            if ((model == null) || (model.ID < 1))
+            {
+                model = new ReportMonthly();
+                model.ID = ID;
+                model.Year = DateTime.Now.Year;
+                model.Month = DateTime.Now.Month;
             }
             return View(model);
         }
@@ -328,6 +360,10 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetCompanyAndYearByIDToListToJSON(int ID)
         {
             return Json(_reportMonthlyRepository.GetCompanyAndYearByIDToList(ID));
+        }
+        public ActionResult GetSegmentProductWithoutSUMByIDToListToJSON(int ID)
+        {
+            return Json(_reportMonthlyRepository.GetSegmentProductWithoutSUMByIDToList(ID));
         }
         public ActionResult GetMonthlyTierCommsightsAndCompanyNameToJSON(int ID)
         {
