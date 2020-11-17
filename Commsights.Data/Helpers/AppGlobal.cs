@@ -2387,7 +2387,10 @@ namespace Commsights.Data.Helpers
                                             }
                                             catch
                                             {
-                                                list.Add(i);
+                                                if ((i.Text.Contains("{}") == false)|| (i.Text.Contains("[]") == false) || (i.Text.Contains("' trước") == false) || (i.Text.Contains("h trước") == false))
+                                                {
+                                                    list.Add(i);
+                                                }
                                             }
                                         }
                                     }
