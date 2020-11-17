@@ -602,6 +602,7 @@ namespace Commsights.MVC.Controllers
             {
                 Config config = _configResposistory.GetByID(websiteID);
                 this.CreateProductScanWebsiteNoFilterProduct001(config);
+                //this.CreateProductScanWebsiteNoFilterProduct002();
             }
 
             //HttpWebRequest request;
@@ -750,6 +751,8 @@ namespace Commsights.MVC.Controllers
         }
         public void CreateProductScanWebsiteNoFilterProduct001(Config config)
         {
+            var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", "Error.txt");
+            StreamWriter sw = new StreamWriter(physicalPath);
             if (config != null)
             {
                 List<Config> listConfig = _configResposistory.GetByParentIDAndGroupNameAndCodeToList(config.ID, AppGlobal.CRM, AppGlobal.Website);
@@ -787,6 +790,8 @@ namespace Commsights.MVC.Controllers
                                 catch (Exception e1)
                                 {
                                     string mes1 = e1.Message;
+                                    sw.WriteLine("" + item.ID + "-" + item.Title + ": " + mes1);
+                                    sw.WriteLine("********************************************");
                                 }
                             }
                         }
@@ -794,9 +799,43 @@ namespace Commsights.MVC.Controllers
                     catch (Exception e)
                     {
                         string mes = e.Message;
+                        sw.WriteLine("" + item.ID + "-" + item.Title + ": " + mes);
+                        sw.WriteLine("********************************************");
                     }
                 }
             }
         }
+
+        public void CreateProductScanWebsiteNoFilterProduct002()
+        {
+            LinkItem linkItem = new LinkItem();
+            linkItem.Text = "More tourism festivals to occur as Covid-19 contained";
+            linkItem.Href = "https://e.vnexpress.net/news/travel/places/more-tourism-festivals-to-occur-as-covid-19-contained-4191387.html";
+            if (_productRepository.IsValidBySQL(linkItem.Href) == true)
+            {
+                try
+                {
+                    WebClient webClient001 = new WebClient();
+                    webClient001.Encoding = System.Text.Encoding.UTF8;
+                    string html001 = webClient001.DownloadString(linkItem.Href);
+                    Product product = new Product();
+                    product.Source = AppGlobal.SourceAuto;
+                    product.Title = linkItem.Text;
+                    product.MetaTitle = AppGlobal.SetName(product.Title);
+                    product.URLCode = linkItem.Href;
+                    product.DatePublish = DateTime.Now;
+                    product.Initialization(InitType.Insert, RequestUserID);
+                    product.DatePublish = DateTime.Now;
+                    AppGlobal.FinderContentAndDatePublish(html001, product);
+                    //_productRepository.AsyncInsertSingleItem(product);
+                }
+                catch (Exception e1)
+                {
+                    string mes1 = e1.Message;
+                }
+            }
+        }
+
     }
 }
+

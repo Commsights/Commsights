@@ -2418,22 +2418,50 @@ namespace Commsights.Data.Helpers
         }
         public static void FinderContentAndDatePublish(string html, Product product)
         {
+            string url = product.URLCode;
             if (!string.IsNullOrEmpty(html))
             {
                 string htmlspan = html;
-                //htmlspan = htmlspan.Replace(@"~", @"");
-                //htmlspan = htmlspan.Replace(@"</h1>", @"~");
-                //if (htmlspan.Split('~').Length > 1)
-                //{
-                //    htmlspan = htmlspan.Split('~')[1];
-                //}
-                //htmlspan = htmlspan.Replace(@"</h2>", @"~");
-                //if (htmlspan.Split('~').Length > 1)
-                //{
-                //    htmlspan = htmlspan.Split('~')[1];
-                //}
                 MatchCollection m1;
                 bool check = false;
+                if (check == false)
+                {
+                    htmlspan = htmlspan.Replace(@"~", @"");
+                    htmlspan = htmlspan.Replace(@"<meta", @"~<meta");
+                    for (int i = 0; i < htmlspan.Split('~').Length; i++)
+                    {
+                        string value = htmlspan.Split('~')[i];
+                        if (value.Contains(@"datePublished") == true)
+                        {
+                            string date = value.Replace(@"content=""", @"~");
+                            if (date.Split('~').Length > 1)
+                            {
+                                date = date.Split('~')[1];
+                                date = date.Split(' ')[0];
+                                date = date.Replace(@"-", @"/");
+                                try
+                                {
+                                    product.DatePublish = new DateTime(int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[2]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                                    check = true;
+                                    i = htmlspan.Split('~').Length;
+                                }
+                                catch
+                                {
+                                }
+                            }
+                        }
+                    }
+                }
+                if (check == false)
+                {
+                    htmlspan = html;
+                    htmlspan = htmlspan.Replace(@"~", @"");
+                    htmlspan = htmlspan.Replace(@"</header>", @"~");
+                    if (htmlspan.Split('~').Length > 1)
+                    {
+                        htmlspan = htmlspan.Split('~')[1];
+                    }
+                }
                 if (check == false)
                 {
                     m1 = Regex.Matches(htmlspan, @"(<span.*?>.*?</span>)", RegexOptions.Singleline);
@@ -2446,7 +2474,7 @@ namespace Commsights.Data.Helpers
                         {
                             for (int j = 0; j < t.Split(' ').Length; j++)
                             {
-                                string date = t.Split(' ')[j];                                
+                                string date = t.Split(' ')[j];
                                 date = date.Trim();
                                 date = date.Replace(@",", @"");
                                 if ((date.Length == 10) && (date.Contains(@"/") == true))
