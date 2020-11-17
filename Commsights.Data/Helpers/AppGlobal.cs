@@ -2421,17 +2421,17 @@ namespace Commsights.Data.Helpers
             if (!string.IsNullOrEmpty(html))
             {
                 string htmlspan = html;
-                htmlspan = htmlspan.Replace(@"~", @"");
-                htmlspan = htmlspan.Replace(@"</h1>", @"~");
-                if (htmlspan.Split('~').Length > 1)
-                {
-                    htmlspan = htmlspan.Split('~')[1];
-                }
-                htmlspan = htmlspan.Replace(@"</h2>", @"~");
-                if (htmlspan.Split('~').Length > 1)
-                {
-                    htmlspan = htmlspan.Split('~')[1];
-                }
+                //htmlspan = htmlspan.Replace(@"~", @"");
+                //htmlspan = htmlspan.Replace(@"</h1>", @"~");
+                //if (htmlspan.Split('~').Length > 1)
+                //{
+                //    htmlspan = htmlspan.Split('~')[1];
+                //}
+                //htmlspan = htmlspan.Replace(@"</h2>", @"~");
+                //if (htmlspan.Split('~').Length > 1)
+                //{
+                //    htmlspan = htmlspan.Split('~')[1];
+                //}
                 MatchCollection m1;
                 bool check = false;
                 if (check == false)
@@ -2446,8 +2446,9 @@ namespace Commsights.Data.Helpers
                         {
                             for (int j = 0; j < t.Split(' ').Length; j++)
                             {
-                                string date = t.Split(' ')[j];
+                                string date = t.Split(' ')[j];                                
                                 date = date.Trim();
+                                date = date.Replace(@",", @"");
                                 if ((date.Length == 10) && (date.Contains(@"/") == true))
                                 {
                                     try
@@ -2490,6 +2491,7 @@ namespace Commsights.Data.Helpers
                             {
                                 string date = t.Split(' ')[j];
                                 date = date.Trim();
+                                date = date.Replace(@",", @"");
                                 if ((date.Length == 10) && (date.Contains(@"/") == true))
                                 {
                                     try
@@ -2542,6 +2544,7 @@ namespace Commsights.Data.Helpers
                             {
                                 string date = t.Split(' ')[j];
                                 date = date.Trim();
+                                date = date.Replace(@",", @"");
                                 if ((date.Length == 10) && (date.Contains(@"/") == true))
                                 {
                                     try
