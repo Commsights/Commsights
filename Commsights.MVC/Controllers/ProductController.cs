@@ -751,8 +751,8 @@ namespace Commsights.MVC.Controllers
         }
         public void CreateProductScanWebsiteNoFilterProduct001(Config config)
         {
-            var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", "Error.txt");
-            StreamWriter sw = new StreamWriter(physicalPath);
+            //var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", "Error.txt");
+            //StreamWriter sw = new StreamWriter(physicalPath);
             if (config != null)
             {
                 List<Config> listConfig = _configResposistory.GetByParentIDAndGroupNameAndCodeToList(config.ID, AppGlobal.CRM, AppGlobal.Website);
@@ -790,8 +790,8 @@ namespace Commsights.MVC.Controllers
                                 catch (Exception e1)
                                 {
                                     string mes1 = e1.Message;
-                                    sw.WriteLine("" + item.ID + "-" + item.Title + ": " + mes1);
-                                    sw.WriteLine("********************************************");
+                                    //sw.WriteLine("" + item.ID + "-" + item.Title + ": " + mes1);
+                                    //sw.WriteLine("********************************************");
                                 }
                             }
                         }
@@ -799,8 +799,8 @@ namespace Commsights.MVC.Controllers
                     catch (Exception e)
                     {
                         string mes = e.Message;
-                        sw.WriteLine("" + item.ID + "-" + item.Title + ": " + mes);
-                        sw.WriteLine("********************************************");
+                        //sw.WriteLine("" + item.ID + "-" + item.Title + ": " + mes);
+                        //sw.WriteLine("********************************************");
                     }
                 }
             }
