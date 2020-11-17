@@ -764,7 +764,7 @@ namespace Commsights.MVC.Controllers
                         List<LinkItem> list = AppGlobal.LinkFinder(html, config.URLFull);
                         foreach (LinkItem linkItem in list)
                         {
-                            if (_productRepository.IsValid(linkItem.Href) == true)
+                            if (_productRepository.IsValidBySQL(linkItem.Href) == true)
                             {
                                 try
                                 {

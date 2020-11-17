@@ -19,6 +19,7 @@ namespace Commsights.Data.Repositories
         public void FilterProduct(Product product, List<ProductProperty> listProductProperty, int RequestUserID);
         public int AddRange(List<Product> list);
         public bool IsValid(string url);
+        public bool IsValidBySQL(string url);
         public bool IsValidByFileNameAndDatePublish(string fileName, DateTime datePublish);
         public List<Product> GetByCategoryIDAndDatePublishToList(int CategoryID, DateTime datePublish);
         public List<Product> GetByParentIDAndDatePublishToList(int parentID, DateTime datePublish);
@@ -42,6 +43,7 @@ namespace Commsights.Data.Repositories
         public Task<List<Product>> AsyncGetByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source);
         public Task<List<ProductCompact>> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source);
         public Task<string> AsyncInsertSingleItem(Product product);
+        public string InsertSingleItem(Product product);
         public Task<string> AsyncUpdateSingleItem(Product product);
         public List<Product> GetByAndiToList();
         public Product GetByProductID(int productID);
