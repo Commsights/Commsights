@@ -751,8 +751,7 @@ namespace Commsights.MVC.Controllers
         }
         public void CreateProductScanWebsiteNoFilterProduct001(Config config)
         {
-            //var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", "Error.txt");
-            //StreamWriter sw = new StreamWriter(physicalPath);
+
             if (config != null)
             {
                 List<Config> listConfig = _configResposistory.GetByParentIDAndGroupNameAndCodeToList(config.ID, AppGlobal.CRM, AppGlobal.Website);
@@ -790,8 +789,16 @@ namespace Commsights.MVC.Controllers
                                 catch (Exception e1)
                                 {
                                     string mes1 = e1.Message;
-                                    //sw.WriteLine("" + item.ID + "-" + item.Title + ": " + mes1);
-                                    //sw.WriteLine("********************************************");
+                                    try
+                                    {
+                                        var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", "Error.txt");
+                                        StreamWriter sw = new StreamWriter(physicalPath);
+                                        sw.WriteLine(config.ID + "-" + config.Title + "-" + item.ID + "-" + item.URLFull + ": " + mes1);
+                                        sw.WriteLine("********************************************");
+                                    }
+                                    catch
+                                    {
+                                    }
                                 }
                             }
                         }
@@ -799,8 +806,16 @@ namespace Commsights.MVC.Controllers
                     catch (Exception e)
                     {
                         string mes = e.Message;
-                        //sw.WriteLine("" + item.ID + "-" + item.Title + ": " + mes);
-                        //sw.WriteLine("********************************************");
+                        try
+                        {
+                            var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", "Error.txt");
+                            StreamWriter sw = new StreamWriter(physicalPath);
+                            sw.WriteLine(config.ID + "-" + config.Title + "-" + item.ID + "-" + item.URLFull + ": " + mes);
+                            sw.WriteLine("********************************************");
+                        }
+                        catch
+                        {
+                        }
                     }
                 }
             }
