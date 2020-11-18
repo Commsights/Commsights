@@ -931,16 +931,16 @@
         return false;
     }
     function onScanAutoNoFilterProductByIndexBeginAndIndexEnd(indexBegin) {
-        BeginRequestHandler();
+        BeginRequestHandler();        
         var indexEnd = indexBegin + 100;
-        for (var i = indexBegin; i < indexEnd; i = i + 10) {           
+        for (var i = indexBegin; i < indexEnd; i = i + 10) {                      
             $.ajax({
             type: 'GET',
             url: "@Url.Action("ScanWebsiteNoFilterProductByIndexBeginVoid", "Product")",
             data: {
                 indexBegin: i,
             },
-            success: function () {                              
+            success: function () {               
             }
             }).done(() => {
 
