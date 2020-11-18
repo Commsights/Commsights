@@ -600,9 +600,9 @@ namespace Commsights.MVC.Controllers
         {
             if (websiteID > 0)
             {
-                Config config = _configResposistory.GetByID(websiteID);
-                this.CreateProductScanWebsiteNoFilterProduct001(config);
-                //this.CreateProductScanWebsiteNoFilterProduct002();
+                //Config config = _configResposistory.GetByID(websiteID);
+                //this.CreateProductScanWebsiteNoFilterProduct001(config);
+                this.CreateProductScanWebsiteNoFilterProduct002();
             }
 
             //HttpWebRequest request;
@@ -751,10 +751,23 @@ namespace Commsights.MVC.Controllers
         }
         public void CreateProductScanWebsiteNoFilterProduct001(Config config)
         {
-
             if (config != null)
             {
                 List<Config> listConfig = _configResposistory.GetByParentIDAndGroupNameAndCodeToList(config.ID, AppGlobal.CRM, AppGlobal.Website);
+                if (listConfig.Count == 0)
+                {
+                    StringBuilder txt = new StringBuilder();
+                    var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", "Error.txt");
+                    StreamReader sr = new StreamReader(physicalPath);
+                    string content = sr.ReadToEnd();
+                    sr.Close();
+                    txt.Append(content);
+                    txt.AppendLine(config.ID + "-" + config.Title + "-0");
+                    txt.Append("********************************************");
+                    StreamWriter sw = new StreamWriter(physicalPath);
+                    sw.WriteLine(txt.ToString());
+                    sw.Close();
+                }
                 foreach (Config item in listConfig)
                 {
                     WebClient webClient = new WebClient();
@@ -791,10 +804,17 @@ namespace Commsights.MVC.Controllers
                                     string mes1 = e1.Message;
                                     try
                                     {
+                                        StringBuilder txt = new StringBuilder();
                                         var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", "Error.txt");
+                                        StreamReader sr = new StreamReader(physicalPath);
+                                        string content = sr.ReadToEnd();
+                                        sr.Close();
+                                        txt.Append(content);
+                                        txt.AppendLine(config.ID + "-" + config.Title + "-" + item.ID + "-" + item.URLFull + ": " + mes1);
+                                        txt.Append("********************************************");
                                         StreamWriter sw = new StreamWriter(physicalPath);
-                                        sw.WriteLine(config.ID + "-" + config.Title + "-" + item.ID + "-" + item.URLFull + ": " + mes1);
-                                        sw.WriteLine("********************************************");
+                                        sw.WriteLine(txt.ToString());
+                                        sw.Close();
                                     }
                                     catch
                                     {
@@ -808,49 +828,57 @@ namespace Commsights.MVC.Controllers
                         string mes = e.Message;
                         try
                         {
+                            StringBuilder txt = new StringBuilder();
                             var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", "Error.txt");
+                            StreamReader sr = new StreamReader(physicalPath);
+                            string content = sr.ReadToEnd();
+                            sr.Close();
+                            txt.Append(content);
+                            txt.AppendLine(config.ID + "-" + config.Title + "-" + item.ID + "-" + item.URLFull + ": " + mes);
+                            txt.Append("********************************************");
                             StreamWriter sw = new StreamWriter(physicalPath);
-                            sw.WriteLine(config.ID + "-" + config.Title + "-" + item.ID + "-" + item.URLFull + ": " + mes);
-                            sw.WriteLine("********************************************");
+                            sw.WriteLine(txt.ToString());
+                            sw.Close();
                         }
                         catch
                         {
                         }
                     }
                 }
+
             }
         }
 
         public void CreateProductScanWebsiteNoFilterProduct002()
         {
-            LinkItem linkItem = new LinkItem();
-            linkItem.Text = "More tourism festivals to occur as Covid-19 contained";
-            linkItem.Href = "https://e.vnexpress.net/news/travel/places/more-tourism-festivals-to-occur-as-covid-19-contained-4191387.html";
-            if (_productRepository.IsValidBySQL(linkItem.Href) == true)
-            {
-                try
-                {
-                    WebClient webClient001 = new WebClient();
-                    webClient001.Encoding = System.Text.Encoding.UTF8;
-                    string html001 = webClient001.DownloadString(linkItem.Href);
-                    Product product = new Product();
-                    product.Source = AppGlobal.SourceAuto;
-                    product.Title = linkItem.Text;
-                    product.MetaTitle = AppGlobal.SetName(product.Title);
-                    product.URLCode = linkItem.Href;
-                    product.DatePublish = DateTime.Now;
-                    product.Initialization(InitType.Insert, RequestUserID);
-                    product.DatePublish = DateTime.Now;
-                    AppGlobal.FinderContentAndDatePublish(html001, product);
-                    //_productRepository.AsyncInsertSingleItem(product);
-                }
-                catch (Exception e1)
-                {
-                    string mes1 = e1.Message;
-                }
-            }
-        }
 
+            //LinkItem linkItem = new LinkItem();
+            //linkItem.Text = "More tourism festivals to occur as Covid-19 contained";
+            //linkItem.Href = "https://e.vnexpress.net/news/travel/places/more-tourism-festivals-to-occur-as-covid-19-contained-4191387.html";
+            //if (_productRepository.IsValidBySQL(linkItem.Href) == true)
+            //{
+            //    try
+            //    {
+            //        WebClient webClient001 = new WebClient();
+            //        webClient001.Encoding = System.Text.Encoding.UTF8;
+            //        string html001 = webClient001.DownloadString(linkItem.Href);
+            //        Product product = new Product();
+            //        product.Source = AppGlobal.SourceAuto;
+            //        product.Title = linkItem.Text;
+            //        product.MetaTitle = AppGlobal.SetName(product.Title);
+            //        product.URLCode = linkItem.Href;
+            //        product.DatePublish = DateTime.Now;
+            //        product.Initialization(InitType.Insert, RequestUserID);
+            //        product.DatePublish = DateTime.Now;
+            //        AppGlobal.FinderContentAndDatePublish(html001, product);
+            //        //_productRepository.AsyncInsertSingleItem(product);
+            //    }
+            //    catch (Exception e1)
+            //    {
+            //        string mes1 = e1.Message;
+            //    }
+            //}
+        }
     }
 }
 
