@@ -50,10 +50,136 @@
                         </button>
                     </div>
                 </div>
+                <br />
+                <div class="row">
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(0)">
+                            00
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(100)">
+                            01
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(200)">
+                            02
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(300)">
+                            03
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(400)">
+                            04
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(500)">
+                            05
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(600)">
+                            06
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(700)">
+                            07
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(800)">
+                            08
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(900)">
+                            09
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(1000)">
+                            10
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(1100)">
+                            11
+                        </button>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(1200)">
+                            12
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(1300)">
+                            13
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(1400)">
+                            14
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(1500)">
+                            15
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(1600)">
+                            16
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(1700)">
+                            17
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(1800)">
+                            18
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(1900)">
+                            19
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(2000)">
+                            20
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(2100)">
+                            21
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(2200)">
+                            22
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(2300)">
+                            23
+                        </button>
+                    </div>
+                </div>
                 @(Html.Kendo().Grid<Commsights.Data.Models.Config>()
 .Name("Config")
 .Columns(columns =>
-{    
+{
     columns.Bound(t => t.Title).Title("Title").Width(200);
     columns.Bound(t => t.URLFull).Title("URLFull").Width(400);
     columns.Bound(t => t.SortOrder).Title("Sort order").Width(200);
@@ -175,6 +301,25 @@
          });
         return false;
     }
+    function onScanFullNoFilterProductByIndexBegin(indexBeginValue) {
+        BeginRequestHandler();
+         $.ajax({
+            url: '@Url.Action("ScanFullNoFilterProductByIndexBegin", "Product")',
+             type: 'GET',
+             data: {
+                 indexBegin: indexBeginValue,
+             },
+            cache: false
+         }).done(function (e) {
+             EndRequestHandler();
+             var response = e;
+             var messageType = response.split('-')[0];
+             var note = response.split('-')[1];
+             var notification = $("#Notification").data("kendoNotification");
+             notification.show(note, messageType);
+         });
+        return false;
+    }
     function onScanWebsiteNoFilterProduct() {
         var websiteIDValue = $("#Website").data("kendoDropDownList").value();
         BeginRequestHandler();
@@ -208,7 +353,7 @@
                        setTimeout(function () {
                            var url = '/Product/ScanWebsiteNoFilterProductVoid?websiteID=' + item.ID;
                            window.open(url, '_blank');
-                       }, index * 3000);                          
+                       }, index * 3000);
                    });
                }
                EndRequestHandler();
@@ -217,5 +362,6 @@
 
         });
         return false;
-    }   
+    }
+
 </script>

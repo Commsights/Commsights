@@ -596,6 +596,22 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
             return Json(note);
         }
+        public IActionResult ScanFullNoFilterProductByIndexBegin(int indexBegin)
+        {
+            List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
+            int listConfigCount = listConfig.Count;
+            int indexEnd = indexBegin + 100;
+            for (int i = indexBegin; i < indexEnd; i++)
+            {
+                if (i == listConfigCount)
+                {
+                    i = indexEnd;
+                }
+                this.CreateProductScanWebsiteNoFilterProduct001(listConfig[i]);
+            }
+            string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
+            return Json(note);
+        }
         public IActionResult ScanWebsiteNoFilterProduct(int websiteID)
         {
             if (websiteID > 0)
@@ -825,12 +841,11 @@ namespace Commsights.MVC.Controllers
                         }
                         catch
                         {
-                        }                       
+                        }
                     }
                 }
             }
         }
-
         public void CreateProductScanWebsiteNoFilterProduct002()
         {
             try
