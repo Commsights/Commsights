@@ -930,10 +930,10 @@
         });
         return false;
     }
-    function onScanAutoNoFilterProductByIndexBeginAndIndexEnd(indexEnd) {
+    function onScanAutoNoFilterProductByIndexBeginAndIndexEnd(indexBegin) {
         BeginRequestHandler();
-        var indexBegin = 0;
-        for (indexBegin = 0; indexBegin < indexEnd; indexBegin = indexBegin + 10) {
+        var indexEnd = indexBegin + 100;
+        for (var i = indexBegin; i < indexEnd; i = i + 10) {
             var url = '/Product/ScanWebsiteNoFilterProductByIndexBeginVoid?indexBegin=' + indexBegin;
             window.open(url, '_blank');
         }
