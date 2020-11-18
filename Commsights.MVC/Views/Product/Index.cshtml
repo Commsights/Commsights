@@ -53,6 +53,69 @@
                 <br />
                 <div class="row">
                     <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(100)">
+                            100
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(200)">
+                            200
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(300)">
+                            300
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(400)">
+                            400
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(500)">
+                            500
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(600)">
+                            600
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(700)">
+                            700
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(800)">
+                            800
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(900)">
+                            900
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(1000)">
+                            1000
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(1100)">
+                            1100
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(1200)">
+                            1200
+                        </button>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class='col-sm-1'>
                         <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(0)">
                             00
                         </button>
@@ -867,5 +930,14 @@
         });
         return false;
     }
-
+    function onScanAutoNoFilterProductByIndexBeginAndIndexEnd(indexEnd) {
+        BeginRequestHandler();
+        var indexBegin = 0;
+        for (indexBegin = 0; indexBegin < indexEnd; indexBegin = indexBegin + 10) {
+            var url = '/Product/ScanWebsiteNoFilterProductByIndexBeginVoid?indexBegin=' + indexBegin;
+            window.open(url, '_blank');
+        }
+        EndRequestHandler();
+        return false;
+    }
 </script>

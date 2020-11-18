@@ -637,13 +637,26 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
             return Json(note);
         }
-
         public void ScanWebsiteNoFilterProductVoid(int websiteID)
         {
             if (websiteID > 0)
             {
                 Config config = _configResposistory.GetByID(websiteID);
                 this.CreateProductScanWebsiteNoFilterProduct001(config);
+            }
+        }
+        public void ScanWebsiteNoFilterProductByIndexBeginVoid(int indexBegin)
+        {
+            List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
+            int listConfigCount = listConfig.Count;
+            int indexEnd = indexBegin + 10;
+            for (int i = indexBegin; i < indexEnd; i++)
+            {
+                if (i == listConfigCount)
+                {
+                    i = indexEnd;
+                }
+                this.CreateProductScanWebsiteNoFilterProduct001(listConfig[i]);
             }
         }
         public void CreateProductScanWebsiteNoFilterProduct(Config config)
