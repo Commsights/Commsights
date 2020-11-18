@@ -35,7 +35,7 @@
                 <br />
                 <div class="row">
                     <div class='col-sm-4'>
-                        <button type="button" class="btn btn-primary" onclick="onScanAutoNoFilterProduct()">
+                        <button type="button" class="btn btn-primary" onclick="onScanAutoNoFilterProductAutoLoad()">
                             <span class="fas fa-sync-alt"></span> Scan auto no filter
                         </button>
                     </div>
@@ -930,17 +930,47 @@
         });
         return false;
     }
+    function onScanAutoNoFilterProductAutoLoad() {
+       BeginRequestHandler();
+       $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetWebsiteByGroupNameAndCodeAndActiveToList", "Config")",
+            data: {
+            },
+           success: function (Config) {
+               for (var index in Config) {
+                   $(Config[index]).each(function (iRec, item) {
+                       $.ajax({
+                        type: 'GET',
+                        url: "@Url.Action("ScanWebsiteNoFilterProductVoid", "Product")",
+                        data: {
+                            websiteID: item.ID,
+                        },
+                        success: function () {
+                        }
+                        }).done(() => {
+
+                        });
+                   });
+               }
+               EndRequestHandler();
+           }
+        }).done(() => {
+
+        });
+        return false;
+    }
     function onScanAutoNoFilterProductByIndexBeginAndIndexEnd(indexBegin) {
-        BeginRequestHandler();        
+        BeginRequestHandler();
         var indexEnd = indexBegin + 100;
-        for (var i = indexBegin; i < indexEnd; i = i + 10) {                      
+        for (var i = indexBegin; i < indexEnd; i = i + 10) {
             $.ajax({
             type: 'GET',
             url: "@Url.Action("ScanWebsiteNoFilterProductByIndexBeginVoid", "Product")",
             data: {
                 indexBegin: i,
             },
-            success: function () {               
+            success: function () {
             }
             }).done(() => {
 
