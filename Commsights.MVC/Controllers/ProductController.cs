@@ -645,6 +645,15 @@ namespace Commsights.MVC.Controllers
                 this.CreateProductScanWebsiteNoFilterProduct001(config);
             }
         }
+        public async Task<string> AsyncScanWebsiteNoFilterProductVoid(int websiteID)
+        {
+            if (websiteID > 0)
+            {
+                Config config = _configResposistory.GetByID(websiteID);
+                await this.AsyncCreateProductScanWebsiteNoFilterProduct001(config);
+            }
+            return "";
+        }
         public void ScanWebsiteNoFilterProductByIndexBeginVoid(int indexBegin)
         {
             List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
@@ -858,6 +867,88 @@ namespace Commsights.MVC.Controllers
                     }
                 }
             }
+        }
+        public async Task<string> AsyncCreateProductScanWebsiteNoFilterProduct001(Config config)
+        {
+
+            if (config != null)
+            {
+                List<Config> listConfig = _configResposistory.GetByParentIDAndGroupNameAndCodeToList(config.ID, AppGlobal.CRM, AppGlobal.Website);
+                if (listConfig.Count == 0)
+                {
+                    try
+                    {
+                        string filename = DateTime.Now.ToString("yyyyMMdd") + "-" + config.ID + "-" + config.Title + "-0.txt";
+                        var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", filename);
+                        System.IO.File.Create(physicalPath);
+                    }
+                    catch
+                    {
+                    }
+                }
+                foreach (Config item in listConfig)
+                {
+                    WebClient webClient = new WebClient();
+                    webClient.Encoding = System.Text.Encoding.UTF8;
+                    string html = "";
+                    try
+                    {
+                        html = webClient.DownloadString(item.URLFull);
+                        List<LinkItem> list = AppGlobal.LinkFinder(html, config.URLFull);
+                        foreach (LinkItem linkItem in list)
+                        {
+                            //if (_productRepository.IsValidBySQL(linkItem.Href) == true)
+                            //{
+                            try
+                            {
+                                WebClient webClient001 = new WebClient();
+                                webClient001.Encoding = System.Text.Encoding.UTF8;
+                                string html001 = webClient001.DownloadString(linkItem.Href);
+                                Product product = new Product();
+                                product.ParentID = config.ID;
+                                product.CategoryID = config.ID;
+                                product.Source = AppGlobal.SourceAuto;
+                                product.Title = linkItem.Text;
+                                product.MetaTitle = AppGlobal.SetName(product.Title);
+                                product.URLCode = linkItem.Href;
+                                product.DatePublish = DateTime.Now;
+                                product.Initialization(InitType.Insert, RequestUserID);
+                                product.DatePublish = DateTime.Now;
+                                AppGlobal.FinderContentAndDatePublish(html001, product);
+                                await _productRepository.AsyncInsertSingleItem(product);
+                            }
+                            catch (Exception e1)
+                            {
+                                string mes1 = e1.Message;
+                                try
+                                {
+                                    string filename = DateTime.Now.ToString("yyyyMMdd") + "-" + config.ID + "-" + config.Title + "-" + item.ID + "-" + item.URLFull + "-" + mes1 + ".txt";
+                                    var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", filename);
+                                    System.IO.File.Create(physicalPath);
+                                }
+                                catch
+                                {
+                                }
+                            }
+                            //}
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        string mes = e.Message;
+                        try
+                        {
+                            string filename = DateTime.Now.ToString("yyyyMMdd") + "-" + config.ID + "-" + config.Title + "-" + mes + ".txt";
+                            var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", filename);
+                            System.IO.File.Create(physicalPath);
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+            }
+            return "";
         }
         public void CreateProductScanWebsiteNoFilterProduct002()
         {
