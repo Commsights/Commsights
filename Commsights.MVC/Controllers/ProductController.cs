@@ -807,40 +807,40 @@ namespace Commsights.MVC.Controllers
                         List<LinkItem> list = AppGlobal.LinkFinder(html, config.URLFull);
                         foreach (LinkItem linkItem in list)
                         {
-                            if (_productRepository.IsValidBySQL(linkItem.Href) == true)
+                            //if (_productRepository.IsValidBySQL(linkItem.Href) == true)
+                            //{
+                            try
                             {
+                                WebClient webClient001 = new WebClient();
+                                webClient001.Encoding = System.Text.Encoding.UTF8;
+                                string html001 = webClient001.DownloadString(linkItem.Href);
+                                Product product = new Product();
+                                product.ParentID = config.ID;
+                                product.CategoryID = config.ID;
+                                product.Source = AppGlobal.SourceAuto;
+                                product.Title = linkItem.Text;
+                                product.MetaTitle = AppGlobal.SetName(product.Title);
+                                product.URLCode = linkItem.Href;
+                                product.DatePublish = DateTime.Now;
+                                product.Initialization(InitType.Insert, RequestUserID);
+                                product.DatePublish = DateTime.Now;
+                                AppGlobal.FinderContentAndDatePublish(html001, product);
+                                _productRepository.AsyncInsertSingleItem(product);
+                            }
+                            catch (Exception e1)
+                            {
+                                string mes1 = e1.Message;
                                 try
                                 {
-                                    WebClient webClient001 = new WebClient();
-                                    webClient001.Encoding = System.Text.Encoding.UTF8;
-                                    string html001 = webClient001.DownloadString(linkItem.Href);
-                                    Product product = new Product();
-                                    product.ParentID = config.ID;
-                                    product.CategoryID = config.ID;
-                                    product.Source = AppGlobal.SourceAuto;
-                                    product.Title = linkItem.Text;
-                                    product.MetaTitle = AppGlobal.SetName(product.Title);
-                                    product.URLCode = linkItem.Href;
-                                    product.DatePublish = DateTime.Now;
-                                    product.Initialization(InitType.Insert, RequestUserID);
-                                    product.DatePublish = DateTime.Now;
-                                    AppGlobal.FinderContentAndDatePublish(html001, product);
-                                    _productRepository.AsyncInsertSingleItem(product);
+                                    string filename = DateTime.Now.ToString("yyyyMMdd") + "-" + config.ID + "-" + config.Title + "-" + item.ID + "-" + item.URLFull + "-" + mes1 + ".txt";
+                                    var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", filename);
+                                    System.IO.File.Create(physicalPath);
                                 }
-                                catch (Exception e1)
+                                catch
                                 {
-                                    string mes1 = e1.Message;
-                                    try
-                                    {
-                                        string filename = DateTime.Now.ToString("yyyyMMdd") + "-" + config.ID + "-" + config.Title + "-" + item.ID + "-" + item.URLFull + "-" + mes1 + ".txt";
-                                        var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", filename);
-                                        System.IO.File.Create(physicalPath);
-                                    }
-                                    catch
-                                    {
-                                    }
                                 }
                             }
+                            //}
                         }
                     }
                     catch (Exception e)
