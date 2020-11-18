@@ -600,7 +600,7 @@ namespace Commsights.MVC.Controllers
         {
             List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
             int listConfigCount = listConfig.Count;
-            int indexEnd = indexBegin + 100;
+            int indexEnd = indexBegin + 10;
             for (int i = indexBegin; i < indexEnd; i++)
             {
                 if (i == listConfigCount)
