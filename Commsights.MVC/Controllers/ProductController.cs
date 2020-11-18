@@ -600,9 +600,9 @@ namespace Commsights.MVC.Controllers
         {
             if (websiteID > 0)
             {
-                //Config config = _configResposistory.GetByID(websiteID);
-                //this.CreateProductScanWebsiteNoFilterProduct001(config);
-                this.CreateProductScanWebsiteNoFilterProduct002();
+                Config config = _configResposistory.GetByID(websiteID);
+                this.CreateProductScanWebsiteNoFilterProduct001(config);
+                //this.CreateProductScanWebsiteNoFilterProduct002();
             }
 
             //HttpWebRequest request;
@@ -751,22 +751,21 @@ namespace Commsights.MVC.Controllers
         }
         public void CreateProductScanWebsiteNoFilterProduct001(Config config)
         {
+
             if (config != null)
             {
                 List<Config> listConfig = _configResposistory.GetByParentIDAndGroupNameAndCodeToList(config.ID, AppGlobal.CRM, AppGlobal.Website);
                 if (listConfig.Count == 0)
                 {
-                    StringBuilder txt = new StringBuilder();
-                    var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", "Error.txt");
-                    StreamReader sr = new StreamReader(physicalPath);
-                    string content = sr.ReadToEnd();
-                    sr.Close();
-                    txt.Append(content);
-                    txt.AppendLine(config.ID + "-" + config.Title + "-0");
-                    txt.Append("********************************************");
-                    StreamWriter sw = new StreamWriter(physicalPath);
-                    sw.WriteLine(txt.ToString());
-                    sw.Close();
+                    try
+                    {
+                        string filename = DateTime.Now.ToString("yyyyMMdd") + "-" + config.ID + "-" + config.Title + "-0.txt";
+                        var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", filename);
+                        System.IO.File.Create(physicalPath);
+                    }
+                    catch
+                    {
+                    }
                 }
                 foreach (Config item in listConfig)
                 {
@@ -804,17 +803,9 @@ namespace Commsights.MVC.Controllers
                                     string mes1 = e1.Message;
                                     try
                                     {
-                                        StringBuilder txt = new StringBuilder();
-                                        var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", "Error.txt");
-                                        StreamReader sr = new StreamReader(physicalPath);
-                                        string content = sr.ReadToEnd();
-                                        sr.Close();
-                                        txt.Append(content);
-                                        txt.AppendLine(config.ID + "-" + config.Title + "-" + item.ID + "-" + item.URLFull + ": " + mes1);
-                                        txt.Append("********************************************");
-                                        StreamWriter sw = new StreamWriter(physicalPath);
-                                        sw.WriteLine(txt.ToString());
-                                        sw.Close();
+                                        string filename = DateTime.Now.ToString("yyyyMMdd") + "-" + config.ID + "-" + config.Title + "-" + item.ID + "-" + item.URLFull + "-" + mes1 + ".txt";
+                                        var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", filename);
+                                        System.IO.File.Create(physicalPath);
                                     }
                                     catch
                                     {
@@ -828,30 +819,29 @@ namespace Commsights.MVC.Controllers
                         string mes = e.Message;
                         try
                         {
-                            StringBuilder txt = new StringBuilder();
-                            var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", "Error.txt");
-                            StreamReader sr = new StreamReader(physicalPath);
-                            string content = sr.ReadToEnd();
-                            sr.Close();
-                            txt.Append(content);
-                            txt.AppendLine(config.ID + "-" + config.Title + "-" + item.ID + "-" + item.URLFull + ": " + mes);
-                            txt.Append("********************************************");
-                            StreamWriter sw = new StreamWriter(physicalPath);
-                            sw.WriteLine(txt.ToString());
-                            sw.Close();
+                            string filename = DateTime.Now.ToString("yyyyMMdd") + "-" + config.ID + "-" + config.Title + "-" + mes + ".txt";
+                            var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", filename);
+                            System.IO.File.Create(physicalPath);
                         }
                         catch
                         {
-                        }
+                        }                       
                     }
                 }
-
             }
         }
 
         public void CreateProductScanWebsiteNoFilterProduct002()
         {
-
+            try
+            {
+                string filename = DateTime.Now.ToString("yyyyMMdd") + "-0" + ".txt";
+                var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", filename);
+                System.IO.File.Create(physicalPath);
+            }
+            catch
+            {
+            }
             //LinkItem linkItem = new LinkItem();
             //linkItem.Text = "More tourism festivals to occur as Covid-19 contained";
             //linkItem.Href = "https://e.vnexpress.net/news/travel/places/more-tourism-festivals-to-occur-as-covid-19-contained-4191387.html";
