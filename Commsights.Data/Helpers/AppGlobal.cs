@@ -2431,7 +2431,7 @@ namespace Commsights.Data.Helpers
                     for (int i = 0; i < htmlspan.Split('~').Length; i++)
                     {
                         string value = htmlspan.Split('~')[i];
-                        if (value.Contains(@"datePublished") == true)
+                        if (value.Contains(@"published") == true)
                         {
                             string date = value.Replace(@"content=""", @"~");
                             if (date.Split('~').Length > 1)

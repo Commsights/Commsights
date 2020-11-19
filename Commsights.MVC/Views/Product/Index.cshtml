@@ -940,7 +940,7 @@
            success: function (Config) {
                for (var index in Config) {
                    $(Config[index]).each(function (iRec, item) {
-                       
+                       console.log("done: " + item.ID);
                        $.ajax({
                         type: 'GET',
                         url: "@Url.Action("AsyncScanWebsiteNoFilterProductVoid", "Product")",
@@ -948,11 +948,11 @@
                             websiteID: item.ID,
                         },
                         success: function () {
-                            console.log("success" + item.ID);
+                            console.log("success: " + item.ID);
                             EndRequestHandler();
                         }
                         }).done(() => {
-                            console.log("done" + item.ID);
+                            console.log("done: " + item.ID);
                         });
                    });
                }
