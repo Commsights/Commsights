@@ -233,19 +233,7 @@ namespace Commsights.MVC.Controllers
                 if (reportMonthly != null)
                 {
                     model.ID = reportMonthly.ID;
-                    model.Title = reportMonthly.Title;
-                    model.ListReportMonthlySegmentProductDataTransfer = _reportMonthlyRepository.GetSegmentProductWithoutSUMByIDToList(model.ID);
-                    DataTable dt = new DataTable();
-                    dt.Columns.Add("Segment");
-                    foreach (ReportMonthlySegmentProductDataTransfer item in model.ListReportMonthlySegmentProductDataTransfer)
-                    {
-                        dt.Columns.Add(item.ProductName_ProjectName);
-                    }
-                    foreach (ReportMonthlySegmentProductDataTransfer item in model.ListReportMonthlySegmentProductDataTransfer)
-                    {
-                        dt.Rows.Add(item.ProductName_ProjectName);
-                    }
-                    dt.AcceptChanges();
+                    model.Title = reportMonthly.Title;                    
                 }
             }
             return View(model);
