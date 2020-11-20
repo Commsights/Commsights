@@ -924,7 +924,8 @@ namespace Commsights.MVC.Controllers
                         {
                             try
                             {
-                                string extend = linkItem.Href.Split('/')[linkItem.Href.Split('/').Length - 1];
+                                Uri myUri = new Uri(linkItem.Href);
+                                string extend = myUri.LocalPath;
                                 if (extend.Contains(".") == true)
                                 {
                                     WebClient webClient001 = new WebClient();
