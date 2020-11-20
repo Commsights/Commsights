@@ -2419,6 +2419,7 @@ namespace Commsights.Data.Helpers
         public static void FinderContentAndDatePublish(string html, Product product)
         {
             string url = product.URLCode;
+            html = html.Replace(@"~", @"");
             if (!string.IsNullOrEmpty(html))
             {
                 string htmlspan = html;
@@ -2529,7 +2530,7 @@ namespace Commsights.Data.Helpers
                         string value = m1[i].Groups[1].Value;
                         string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
                         t = t.Replace(@"-", @"/");
-                        t = t.Replace(@".", @"/");                        
+                        t = t.Replace(@".", @"/");
                         if ((!string.IsNullOrEmpty(t)) && (t.Contains(@"/") == true))
                         {
                             for (int j = 0; j < t.Split(' ').Length; j++)
@@ -2629,7 +2630,14 @@ namespace Commsights.Data.Helpers
                         }
                     }
                 }
-                m1 = Regex.Matches(htmlspan, @"(<p.*?>.*?</p>)", RegexOptions.Singleline);
+                string htmlspan001 = htmlspan;
+                Uri myUri = new Uri(product.URLCode);
+                if (myUri.Host.Contains(@"tinmoi.vn") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"</article>", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                }
+                m1 = Regex.Matches(htmlspan001, @"(<p.*?>.*?</p>)", RegexOptions.Singleline);
                 for (int i = 0; i < m1.Count; i++)
                 {
                     string value = m1[i].Groups[1].Value;
