@@ -2443,7 +2443,7 @@ namespace Commsights.Data.Helpers
                                 try
                                 {
                                     DateTime datePublish = new DateTime(int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[2]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                    if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Month != datePublish.Month) && (product.DatePublish.Day != datePublish.Day))
+                                    if (product.DatePublish > datePublish)
                                     {
                                         product.DatePublish = datePublish;
                                         check = true;
@@ -2475,6 +2475,7 @@ namespace Commsights.Data.Helpers
                         string value = m1[i].Groups[1].Value;
                         string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
                         t = t.Replace(@"-", @"/");
+                        t = t.Replace(@".", @"/");                        
                         if ((!string.IsNullOrEmpty(t)) && (t.Contains(@"/") == true))
                         {
                             for (int j = 0; j < t.Split(' ').Length; j++)
@@ -2487,7 +2488,7 @@ namespace Commsights.Data.Helpers
                                     try
                                     {
                                         DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Month != datePublish.Month) && (product.DatePublish.Day != datePublish.Day))
+                                        if (product.DatePublish > datePublish)
                                         {
                                             product.DatePublish = datePublish;
                                             check = true;
@@ -2499,7 +2500,7 @@ namespace Commsights.Data.Helpers
                                         try
                                         {
                                             DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                            if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Month != datePublish.Month) && (product.DatePublish.Day != datePublish.Day))
+                                            if (product.DatePublish > datePublish)
                                             {
                                                 product.DatePublish = datePublish;
                                                 check = true;
@@ -2528,6 +2529,7 @@ namespace Commsights.Data.Helpers
                         string value = m1[i].Groups[1].Value;
                         string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
                         t = t.Replace(@"-", @"/");
+                        t = t.Replace(@".", @"/");
                         if ((!string.IsNullOrEmpty(t)) && (t.Contains(@"/") == true))
                         {
                             for (int j = 0; j < t.Split(' ').Length; j++)
@@ -2540,7 +2542,7 @@ namespace Commsights.Data.Helpers
                                     try
                                     {
                                         DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Month != datePublish.Month) && (product.DatePublish.Day != datePublish.Day))
+                                        if (product.DatePublish > datePublish)
                                         {
                                             product.DatePublish = datePublish;
                                             check = true;
@@ -2552,7 +2554,7 @@ namespace Commsights.Data.Helpers
                                         try
                                         {
                                             DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                            if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Month != datePublish.Month) && (product.DatePublish.Day != datePublish.Day))
+                                            if (product.DatePublish > datePublish)
                                             {
                                                 product.DatePublish = datePublish;
                                                 check = true;
@@ -2593,6 +2595,7 @@ namespace Commsights.Data.Helpers
                         if (check == false)
                         {
                             t = t.Replace(@"-", @"/");
+                            t = t.Replace(@".", @"/");
                             for (int j = 0; j < t.Split(' ').Length; j++)
                             {
                                 string date = t.Split(' ')[j];
@@ -2603,7 +2606,7 @@ namespace Commsights.Data.Helpers
                                     try
                                     {
                                         DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Month != datePublish.Month) && (product.DatePublish.Day != datePublish.Day))
+                                        if (product.DatePublish > datePublish)
                                         {
                                             product.DatePublish = datePublish;
                                             check = true;
@@ -2615,7 +2618,7 @@ namespace Commsights.Data.Helpers
                                         try
                                         {
                                             DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                            if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Month != datePublish.Month) && (product.DatePublish.Day != datePublish.Day))
+                                            if (product.DatePublish > datePublish)
                                             {
                                                 product.DatePublish = datePublish;
                                                 check = true;

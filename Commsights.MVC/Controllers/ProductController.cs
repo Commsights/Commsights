@@ -1001,41 +1001,30 @@ namespace Commsights.MVC.Controllers
         }
         public void CreateProductScanWebsiteNoFilterProduct002()
         {
+
+            LinkItem linkItem = new LinkItem();
+            linkItem.Text = "More tourism festivals to occur as Covid-19 contained";
+            linkItem.Href = "http://giaoduc.edu.vn/tri-an-hon-2000-giao-vien-va-tro-giang-2020-2020.htm";
             try
             {
-                string filename = DateTime.Now.ToString("yyyyMMdd") + "-0" + ".txt";
-                var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", filename);
-                System.IO.File.Create(physicalPath);
+                WebClient webClient001 = new WebClient();
+                webClient001.Encoding = System.Text.Encoding.UTF8;
+                string html001 = webClient001.DownloadString(linkItem.Href);
+                Product product = new Product();
+                product.Source = AppGlobal.SourceAuto;
+                product.Title = linkItem.Text;
+                product.MetaTitle = AppGlobal.SetName(product.Title);
+                product.URLCode = linkItem.Href;
+                product.DatePublish = DateTime.Now;
+                product.Initialization(InitType.Insert, RequestUserID);
+                product.DatePublish = DateTime.Now;
+                AppGlobal.FinderContentAndDatePublish(html001, product);
+                //_productRepository.AsyncInsertSingleItem(product);
             }
-            catch
+            catch (Exception e1)
             {
+                string mes1 = e1.Message;
             }
-            //LinkItem linkItem = new LinkItem();
-            //linkItem.Text = "More tourism festivals to occur as Covid-19 contained";
-            //linkItem.Href = "https://e.vnexpress.net/news/travel/places/more-tourism-festivals-to-occur-as-covid-19-contained-4191387.html";
-            //if (_productRepository.IsValidBySQL(linkItem.Href) == true)
-            //{
-            //    try
-            //    {
-            //        WebClient webClient001 = new WebClient();
-            //        webClient001.Encoding = System.Text.Encoding.UTF8;
-            //        string html001 = webClient001.DownloadString(linkItem.Href);
-            //        Product product = new Product();
-            //        product.Source = AppGlobal.SourceAuto;
-            //        product.Title = linkItem.Text;
-            //        product.MetaTitle = AppGlobal.SetName(product.Title);
-            //        product.URLCode = linkItem.Href;
-            //        product.DatePublish = DateTime.Now;
-            //        product.Initialization(InitType.Insert, RequestUserID);
-            //        product.DatePublish = DateTime.Now;
-            //        AppGlobal.FinderContentAndDatePublish(html001, product);
-            //        //_productRepository.AsyncInsertSingleItem(product);
-            //    }
-            //    catch (Exception e1)
-            //    {
-            //        string mes1 = e1.Message;
-            //    }
-            //}
         }
     }
 }
