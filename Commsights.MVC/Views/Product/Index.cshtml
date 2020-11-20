@@ -113,7 +113,7 @@
                         </button>
                     </div>
                 </div>
-                <br />
+                @*<br />
                 <div class="row">
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProductByIndexBegin(0)">
@@ -742,7 +742,7 @@
                             119
                         </button>
                     </div>
-                </div>
+                </div>*@
                 @(Html.Kendo().Grid<Commsights.Data.Models.Config>()
 .Name("Config")
 .Columns(columns =>
@@ -891,7 +891,7 @@
         var websiteIDValue = $("#Website").data("kendoDropDownList").value();
         BeginRequestHandler();
          $.ajax({
-            url: '@Url.Action("ScanWebsiteNoFilterProduct", "Product")',
+            url: '@Url.Action("AsyncScanWebsiteNoFilterProduct", "Product")',
              type: 'GET',
              data: {
                  websiteID: websiteIDValue,

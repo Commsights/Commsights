@@ -637,6 +637,17 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
             return Json(note);
         }
+        public async Task<string> AsyncScanWebsiteNoFilterProduct(int websiteID)
+        {
+            if (websiteID > 0)
+            {
+                Config config = _configResposistory.GetByID(websiteID);
+                await this.AsyncCreateProductScanWebsiteNoFilterProduct001(config);
+                //this.CreateProductScanWebsiteNoFilterProduct002();
+            }
+            string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
+            return note;
+        }
         public void ScanWebsiteNoFilterProductVoid(int websiteID)
         {
             if (websiteID > 0)
@@ -885,7 +896,6 @@ namespace Commsights.MVC.Controllers
         }
         public async Task<string> AsyncCreateProductScanWebsiteNoFilterProduct001(Config config)
         {
-
             if (config != null)
             {
                 List<Config> listConfig = _configResposistory.GetByParentIDAndGroupNameAndCodeToList(config.ID, AppGlobal.CRM, AppGlobal.Website);
@@ -919,18 +929,41 @@ namespace Commsights.MVC.Controllers
                                 WebClient webClient001 = new WebClient();
                                 webClient001.Encoding = System.Text.Encoding.UTF8;
                                 string html001 = webClient001.DownloadString(linkItem.Href);
-                                Product product = new Product();
-                                product.ParentID = config.ID;
-                                product.CategoryID = config.ID;
-                                product.Source = AppGlobal.SourceAuto;
-                                product.Title = linkItem.Text;
-                                product.MetaTitle = AppGlobal.SetName(product.Title);
-                                product.URLCode = linkItem.Href;
-                                product.DatePublish = DateTime.Now;
-                                product.Initialization(InitType.Insert, RequestUserID);
-                                product.DatePublish = DateTime.Now;
-                                AppGlobal.FinderContentAndDatePublish(html001, product);
-                                await _productRepository.AsyncInsertSingleItem(product);
+                                if (html001.Contains(@"</h1>") == true)
+                                {                                    
+                                    string htmlspan = html001;
+                                    MatchCollection m1 = Regex.Matches(htmlspan, @"(<h1.*?>.*?</h1>)", RegexOptions.Singleline);
+                                    for (int i = 0; i < m1.Count; i++)
+                                    {
+                                        string value = m1[i].Groups[1].Value;                                        
+                                        if (!string.IsNullOrEmpty(value))
+                                        {
+                                            if ((value.Contains("</span>") == false) && (value.Contains("</p>") == false) && (value.Contains("</a>") == false) && (value.Contains("</div>") == false))
+                                            {
+                                                string title = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                                                title = title.Trim();
+                                                Product product = new Product();
+                                                product.Title = title;
+                                                product.ParentID = config.ID;
+                                                product.CategoryID = config.ID;
+                                                product.Source = AppGlobal.SourceAuto;
+                                                if (string.IsNullOrEmpty(product.Title))
+                                                {
+                                                    product.Title = linkItem.Text;
+                                                }
+                                                product.MetaTitle = AppGlobal.SetName(product.Title);
+                                                product.URLCode = linkItem.Href;
+                                                product.DatePublish = DateTime.Now;
+                                                product.Initialization(InitType.Insert, RequestUserID);
+                                                product.DatePublish = DateTime.Now;
+                                                AppGlobal.FinderContentAndDatePublish(html001, product);
+                                                await _productRepository.AsyncInsertSingleItem(product);
+                                            }
+                                        }
+                                    }
+
+                                    
+                                }
                             }
                             catch (Exception e1)
                             {
