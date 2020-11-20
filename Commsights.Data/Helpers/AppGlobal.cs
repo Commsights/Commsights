@@ -2443,7 +2443,7 @@ namespace Commsights.Data.Helpers
                                 try
                                 {
                                     DateTime datePublish = new DateTime(int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[2]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                    if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year))
+                                    if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Month != datePublish.Month) && (product.DatePublish.Day != datePublish.Day))
                                     {
                                         product.DatePublish = datePublish;
                                         check = true;
@@ -2487,7 +2487,7 @@ namespace Commsights.Data.Helpers
                                     try
                                     {
                                         DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year))
+                                        if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Month != datePublish.Month) && (product.DatePublish.Day != datePublish.Day))
                                         {
                                             product.DatePublish = datePublish;
                                             check = true;
@@ -2499,7 +2499,7 @@ namespace Commsights.Data.Helpers
                                         try
                                         {
                                             DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                            if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year))
+                                            if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Month != datePublish.Month) && (product.DatePublish.Day != datePublish.Day))
                                             {
                                                 product.DatePublish = datePublish;
                                                 check = true;
@@ -2540,7 +2540,7 @@ namespace Commsights.Data.Helpers
                                     try
                                     {
                                         DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year))
+                                        if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Month != datePublish.Month) && (product.DatePublish.Day != datePublish.Day))
                                         {
                                             product.DatePublish = datePublish;
                                             check = true;
@@ -2552,7 +2552,7 @@ namespace Commsights.Data.Helpers
                                         try
                                         {
                                             DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                            if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year))
+                                            if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Month != datePublish.Month) && (product.DatePublish.Day != datePublish.Day))
                                             {
                                                 product.DatePublish = datePublish;
                                                 check = true;
@@ -2603,7 +2603,7 @@ namespace Commsights.Data.Helpers
                                     try
                                     {
                                         DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year))
+                                        if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Month != datePublish.Month) && (product.DatePublish.Day != datePublish.Day))
                                         {
                                             product.DatePublish = datePublish;
                                             check = true;
@@ -2615,7 +2615,7 @@ namespace Commsights.Data.Helpers
                                         try
                                         {
                                             DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                            if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year))
+                                            if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Month != datePublish.Month) && (product.DatePublish.Day != datePublish.Day))
                                             {
                                                 product.DatePublish = datePublish;
                                                 check = true;
