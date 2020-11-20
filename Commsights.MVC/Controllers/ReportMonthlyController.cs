@@ -233,7 +233,7 @@ namespace Commsights.MVC.Controllers
                 if (reportMonthly != null)
                 {
                     model.ID = reportMonthly.ID;
-                    model.Title = reportMonthly.Title;                    
+                    model.Title = reportMonthly.Title;
                 }
             }
             return View(model);
@@ -1066,6 +1066,8 @@ namespace Commsights.MVC.Controllers
                                                 string feature_Product = "";
                                                 string url = "";
                                                 int index = 0;
+                                                List<string> listURL = new List<string>();
+                                                List<string> listMedia = new List<string>();
                                                 for (int rowNum = startRow; rowNum <= workSheet.Dimension.End.Row; rowNum++)
                                                 {
                                                     var wsRow = workSheet.Cells[rowNum, 1, rowNum, workSheet.Dimension.End.Column];
@@ -1152,6 +1154,11 @@ namespace Commsights.MVC.Controllers
                                                                     if (cell.Hyperlink != null)
                                                                     {
                                                                         url = cell.Hyperlink.AbsoluteUri.Trim();
+                                                                        listURL.Add(url);
+                                                                        Uri myUri = new Uri(url);
+                                                                        string domain = myUri.Host;
+                                                                        domain = domain.Replace(@"www.", @"");
+                                                                        listMedia.Add(domain);
                                                                     }
                                                                 }
                                                                 break;
@@ -1171,11 +1178,6 @@ namespace Commsights.MVC.Controllers
                                                                 row[cell.Start.Column - 1] = cell.Value;
                                                                 break;
                                                         }
-                                                        if (cell.Address == "AG")
-                                                        {
-                                                            Uri myUri = new Uri(url);
-                                                            row[cell.Start.Column - 1] = myUri.Host;
-                                                        }
                                                     }
                                                     string url001 = tbl.Rows[index]["URL"].ToString();
                                                     if (string.IsNullOrEmpty(url001))
@@ -1187,6 +1189,23 @@ namespace Commsights.MVC.Controllers
                                                 if (tbl.Columns.Count < 33)
                                                 {
                                                     tbl.Columns.Add(new DataColumn("Media"));
+                                                }
+                                                for (int i = 0; i < tbl.Rows.Count; i++)
+                                                {
+                                                    try
+                                                    {
+                                                        tbl.Rows[i]["URL"] = listURL[i];
+                                                    }
+                                                    catch
+                                                    {
+                                                    }
+                                                    try
+                                                    {
+                                                        tbl.Rows[i]["Media"] = listMedia[i];
+                                                    }
+                                                    catch
+                                                    {
+                                                    }
                                                 }
                                                 _reportMonthlyRepository.InsertItemsByDataTableAndReportMonthlyIDAndRequestUserID(tbl, model.ID, RequestUserID);
                                             }
