@@ -922,48 +922,49 @@ namespace Commsights.MVC.Controllers
                         List<LinkItem> list = AppGlobal.LinkFinder(html, config.URLFull);
                         foreach (LinkItem linkItem in list)
                         {
-                            //if (_productRepository.IsValidBySQL(linkItem.Href) == true)
-                            //{
                             try
                             {
-                                WebClient webClient001 = new WebClient();
-                                webClient001.Encoding = System.Text.Encoding.UTF8;
-                                string html001 = webClient001.DownloadString(linkItem.Href);
-                                if (html001.Contains(@"</h1>") == true)
-                                {                                    
-                                    string htmlspan = html001;
-                                    MatchCollection m1 = Regex.Matches(htmlspan, @"(<h1.*?>.*?</h1>)", RegexOptions.Singleline);
-                                    for (int i = 0; i < m1.Count; i++)
+                                string extend = linkItem.Href.Split('/')[linkItem.Href.Split('/').Length - 1];
+                                if (extend.Contains(".") == true)
+                                {
+                                    WebClient webClient001 = new WebClient();
+                                    webClient001.Encoding = System.Text.Encoding.UTF8;
+                                    string html001 = webClient001.DownloadString(linkItem.Href);
+                                    if (html001.Contains(@"</h1>") == true)
                                     {
-                                        string value = m1[i].Groups[1].Value;                                        
-                                        if (!string.IsNullOrEmpty(value))
+                                        string htmlspan = html001;
+                                        MatchCollection m1 = Regex.Matches(htmlspan, @"(<h1.*?>.*?</h1>)", RegexOptions.Singleline);
+                                        for (int i = 0; i < m1.Count; i++)
                                         {
-                                            if ((value.Contains("</span>") == false) && (value.Contains("</p>") == false) && (value.Contains("</a>") == false) && (value.Contains("</div>") == false))
+                                            string value = m1[i].Groups[1].Value;
+                                            if (!string.IsNullOrEmpty(value))
                                             {
-                                                string title = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
-                                                title = title.Trim();
-                                                Product product = new Product();
-                                                product.Title = title;
-                                                product.ParentID = config.ID;
-                                                product.CategoryID = config.ID;
-                                                product.Source = AppGlobal.SourceAuto;
-                                                if (string.IsNullOrEmpty(product.Title))
+                                                if ((value.Contains("</span>") == false) && (value.Contains("</p>") == false) && (value.Contains("</a>") == false) && (value.Contains("</div>") == false))
                                                 {
-                                                    product.Title = linkItem.Text;
+                                                    string title = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                                                    title = title.Trim();
+                                                    Product product = new Product();
+                                                    product.Title = title;
+                                                    product.ParentID = config.ID;
+                                                    product.CategoryID = config.ID;
+                                                    product.Source = AppGlobal.SourceAuto;
+                                                    if (string.IsNullOrEmpty(product.Title))
+                                                    {
+                                                        product.Title = linkItem.Text;
+                                                    }
+                                                    product.MetaTitle = AppGlobal.SetName(product.Title);
+                                                    product.URLCode = linkItem.Href;
+                                                    product.DatePublish = DateTime.Now;
+                                                    product.Initialization(InitType.Insert, RequestUserID);
+                                                    product.DatePublish = DateTime.Now;
+                                                    AppGlobal.FinderContentAndDatePublish(html001, product);
+                                                    await _productRepository.AsyncInsertSingleItem(product);
                                                 }
-                                                product.MetaTitle = AppGlobal.SetName(product.Title);
-                                                product.URLCode = linkItem.Href;
-                                                product.DatePublish = DateTime.Now;
-                                                product.Initialization(InitType.Insert, RequestUserID);
-                                                product.DatePublish = DateTime.Now;
-                                                AppGlobal.FinderContentAndDatePublish(html001, product);
-                                                await _productRepository.AsyncInsertSingleItem(product);
                                             }
                                         }
                                     }
-
-                                    
                                 }
+
                             }
                             catch (Exception e1)
                             {
@@ -978,7 +979,6 @@ namespace Commsights.MVC.Controllers
                                 {
                                 }
                             }
-                            //}
                         }
                     }
                     catch (Exception e)
