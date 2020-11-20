@@ -2442,9 +2442,13 @@ namespace Commsights.Data.Helpers
                                 date = date.Replace(@"-", @"/");
                                 try
                                 {
-                                    product.DatePublish = new DateTime(int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[2]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                    check = true;
-                                    i = htmlspan.Split('~').Length;
+                                    DateTime datePublish = new DateTime(int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[2]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                                    if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year))
+                                    {
+                                        product.DatePublish = datePublish;
+                                        check = true;
+                                        i = htmlspan.Split('~').Length;
+                                    }
                                 }
                                 catch
                                 {
@@ -2482,15 +2486,25 @@ namespace Commsights.Data.Helpers
                                 {
                                     try
                                     {
-                                        product.DatePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        check = true;
+                                        DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                                        if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year))
+                                        {
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                            i = htmlspan.Split('~').Length;
+                                        }
                                     }
                                     catch
                                     {
                                         try
                                         {
-                                            product.DatePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                            check = true;
+                                            DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                                            if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year))
+                                            {
+                                                product.DatePublish = datePublish;
+                                                check = true;
+                                                i = htmlspan.Split('~').Length;
+                                            }
                                         }
                                         catch
                                         {
@@ -2525,15 +2539,25 @@ namespace Commsights.Data.Helpers
                                 {
                                     try
                                     {
-                                        product.DatePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        check = true;
+                                        DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                                        if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year))
+                                        {
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                            i = htmlspan.Split('~').Length;
+                                        }
                                     }
                                     catch
                                     {
                                         try
                                         {
-                                            product.DatePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                            check = true;
+                                            DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                                            if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year))
+                                            {
+                                                product.DatePublish = datePublish;
+                                                check = true;
+                                                i = htmlspan.Split('~').Length;
+                                            }
                                         }
                                         catch
                                         {
@@ -2578,15 +2602,25 @@ namespace Commsights.Data.Helpers
                                 {
                                     try
                                     {
-                                        product.DatePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        check = true;
+                                        DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                                        if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year))
+                                        {
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                            i = htmlspan.Split('~').Length;
+                                        }
                                     }
                                     catch
                                     {
                                         try
                                         {
-                                            product.DatePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                            check = true;
+                                            DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                                            if ((product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year) && (product.DatePublish.Year != datePublish.Year))
+                                            {
+                                                product.DatePublish = datePublish;
+                                                check = true;
+                                                i = htmlspan.Split('~').Length;
+                                            }
                                         }
                                         catch
                                         {
