@@ -2469,6 +2469,60 @@ namespace Commsights.Data.Helpers
                 }
                 if (check == false)
                 {
+                    m1 = Regex.Matches(htmlspan, @"(<time.*?>.*?</time>)", RegexOptions.Singleline);
+                    for (int i = 0; i < m1.Count; i++)
+                    {
+                        string value = m1[i].Groups[1].Value;
+                        string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                        t = t.Replace(@"-", @"/");
+                        t = t.Replace(@".", @"/");
+                        if ((!string.IsNullOrEmpty(t)) && (t.Contains(@"/") == true))
+                        {
+                            for (int j = 0; j < t.Split(' ').Length; j++)
+                            {
+                                string date = t.Split(' ')[j];
+                                date = date.Trim();
+                                date = date.Replace(@",", @"");
+                                if ((date.Length == 10) && (date.Contains(@"/") == true))
+                                {
+                                    try
+                                    {
+                                        DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                                        if (product.DatePublish > datePublish)
+                                        {
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                            i = htmlspan.Split('~').Length;
+                                        }
+                                    }
+                                    catch
+                                    {
+                                        try
+                                        {
+                                            DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                                            if (product.DatePublish > datePublish)
+                                            {
+                                                product.DatePublish = datePublish;
+                                                check = true;
+                                                i = htmlspan.Split('~').Length;
+                                            }
+                                        }
+                                        catch
+                                        {
+                                        }
+                                    }
+                                    if (check == true)
+                                    {
+                                        i = m1.Count;
+                                        j = t.Split(' ').Length;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (check == false)
+                {
                     m1 = Regex.Matches(htmlspan, @"(<span.*?>.*?</span>)", RegexOptions.Singleline);
                     for (int i = 0; i < m1.Count; i++)
                     {

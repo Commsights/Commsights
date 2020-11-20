@@ -1004,7 +1004,7 @@ namespace Commsights.MVC.Controllers
 
             LinkItem linkItem = new LinkItem();
             linkItem.Text = "More tourism festivals to occur as Covid-19 contained";
-            linkItem.Href = "http://giaoduc.edu.vn/tri-an-hon-2000-giao-vien-va-tro-giang-2020-2020.htm";
+            linkItem.Href = "https://sohuutritue.net.vn/oppo-ra-mat-nguyen-mau-smartphone-man-hinh-cuon-dau-tien-tren-the-gioi-d85114.html";
             try
             {
                 WebClient webClient001 = new WebClient();
