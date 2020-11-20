@@ -935,9 +935,9 @@ namespace Commsights.MVC.Controllers
                                     {
                                         string htmlspan = html001;
                                         MatchCollection m1 = Regex.Matches(htmlspan, @"(<h1.*?>.*?</h1>)", RegexOptions.Singleline);
-                                        for (int i = 0; i < m1.Count; i++)
+                                        if (m1.Count > 0)
                                         {
-                                            string value = m1[i].Groups[1].Value;
+                                            string value = m1[m1.Count - 1].Groups[1].Value;
                                             if (!string.IsNullOrEmpty(value))
                                             {
                                                 if ((value.Contains("</span>") == false) && (value.Contains("</p>") == false) && (value.Contains("</a>") == false) && (value.Contains("</div>") == false))
@@ -965,7 +965,6 @@ namespace Commsights.MVC.Controllers
                                         }
                                     }
                                 }
-
                             }
                             catch (Exception e1)
                             {
