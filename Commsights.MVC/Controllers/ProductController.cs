@@ -937,42 +937,57 @@ namespace Commsights.MVC.Controllers
                                 string extend = myUri.LocalPath;
                                 if (extend.Contains(".") == true)
                                 {
-                                    WebClient webClient001 = new WebClient();
-                                    webClient001.Encoding = System.Text.Encoding.UTF8;
-                                    string html001 = webClient001.DownloadString(linkItem.Href);
-                                    if (html001.Contains(@"</h1>") == true)
+                                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(linkItem.Href);
+                                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                                    if (response.StatusCode == HttpStatusCode.OK)
                                     {
-                                        string htmlspan = html001;
-                                        MatchCollection m1 = Regex.Matches(htmlspan, @"(<h1.*?>.*?</h1>)", RegexOptions.Singleline);
-                                        if (m1.Count > 0)
+                                        Stream receiveStream = response.GetResponseStream();
+                                        StreamReader readStream = null;
+                                        if (response.CharacterSet == null)
                                         {
-                                            string value = m1[m1.Count - 1].Groups[1].Value;
-                                            if (!string.IsNullOrEmpty(value))
+                                            readStream = new StreamReader(receiveStream);
+                                        }
+                                        else
+                                        {
+                                            readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                                        }
+                                        string html001 = readStream.ReadToEnd();                                        
+                                        if (html001.Contains(@"</h1>") == true)
+                                        {
+                                            string htmlspan = html001;
+                                            MatchCollection m1 = Regex.Matches(htmlspan, @"(<h1.*?>.*?</h1>)", RegexOptions.Singleline);
+                                            if (m1.Count > 0)
                                             {
-                                                if ((value.Contains("</span>") == false) && (value.Contains("</p>") == false) && (value.Contains("</a>") == false) && (value.Contains("</div>") == false))
+                                                string value = m1[m1.Count - 1].Groups[1].Value;
+                                                if (!string.IsNullOrEmpty(value))
                                                 {
-                                                    string title = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
-                                                    title = title.Trim();
-                                                    Product product = new Product();
-                                                    product.Title = title;
-                                                    product.ParentID = config.ID;
-                                                    product.CategoryID = config.ID;
-                                                    product.Source = AppGlobal.SourceAuto;
-                                                    if (string.IsNullOrEmpty(product.Title))
+                                                    if ((value.Contains("</span>") == false) && (value.Contains("</p>") == false) && (value.Contains("</a>") == false) && (value.Contains("</div>") == false))
                                                     {
-                                                        product.Title = linkItem.Text;
+                                                        string title = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                                                        title = title.Trim();
+                                                        Product product = new Product();
+                                                        product.Title = title;
+                                                        product.ParentID = config.ID;
+                                                        product.CategoryID = config.ID;
+                                                        product.Source = AppGlobal.SourceAuto;
+                                                        if (string.IsNullOrEmpty(product.Title))
+                                                        {
+                                                            product.Title = linkItem.Text;
+                                                        }
+                                                        product.MetaTitle = AppGlobal.SetName(product.Title);
+                                                        product.URLCode = linkItem.Href;
+                                                        product.DatePublish = DateTime.Now;
+                                                        product.Initialization(InitType.Insert, RequestUserID);
+                                                        product.DatePublish = DateTime.Now;
+                                                        AppGlobal.FinderContentAndDatePublish(html001, product);
+                                                        await _productRepository.AsyncInsertSingleItem(product);
                                                     }
-                                                    product.MetaTitle = AppGlobal.SetName(product.Title);
-                                                    product.URLCode = linkItem.Href;
-                                                    product.DatePublish = DateTime.Now;
-                                                    product.Initialization(InitType.Insert, RequestUserID);
-                                                    product.DatePublish = DateTime.Now;
-                                                    AppGlobal.FinderContentAndDatePublish(html001, product);
-                                                    await _productRepository.AsyncInsertSingleItem(product);
                                                 }
                                             }
                                         }
-                                    }
+                                        response.Close();
+                                        readStream.Close();
+                                    }                            
                                 }
                             }
                             catch (Exception e1)
