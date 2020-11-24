@@ -993,8 +993,6 @@ namespace Commsights.MVC.Controllers
                                                         {
                                                             await _productRepository.AsyncInsertSingleItem(product);
                                                         }
-
-
                                                     }
                                                 }
                                             }
