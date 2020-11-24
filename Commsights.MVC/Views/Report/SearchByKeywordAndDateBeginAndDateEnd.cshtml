@@ -84,7 +84,7 @@
 .FileName("Config.pdf")
 )
 .HtmlAttributes(new { @class = "KendoGrid" })
-.Search(search => { search.Field(f => f.Title); search.Field(f => f.URLCode); search.Field(f => f.Description); search.Field(f => f.TitleEnglish); search.Field(f => f.DescriptionEnglish); })
+.Search(search => { search.Field(f => f.Title); search.Field(f => f.URLCode); search.Field(f => f.TitleEnglish); })
 .Events(ev => ev.Change("onGridChange"))
 .DataSource(dataSource => dataSource
 .Ajax()

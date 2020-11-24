@@ -1065,6 +1065,7 @@ namespace Commsights.MVC.Controllers
                                                 string feature_Corp = "";
                                                 string feature_Product = "";
                                                 string url = "";
+                                                string domain = "";
                                                 int index = 0;
                                                 List<string> listURL = new List<string>();
                                                 List<string> listMedia = new List<string>();
@@ -1156,7 +1157,7 @@ namespace Commsights.MVC.Controllers
                                                                         url = cell.Hyperlink.AbsoluteUri.Trim();
                                                                         listURL.Add(url);
                                                                         Uri myUri = new Uri(url);
-                                                                        string domain = myUri.Host;
+                                                                        domain = myUri.Host;
                                                                         domain = domain.Replace(@"www.", @"");
                                                                         listMedia.Add(domain);
                                                                     }
@@ -1167,7 +1168,6 @@ namespace Commsights.MVC.Controllers
                                                                 if (cell.Value == null)
                                                                 {
                                                                     row[cell.Start.Column - 1] = url;
-                                                                    url = "";
                                                                 }
                                                                 else
                                                                 {
@@ -1182,7 +1182,26 @@ namespace Commsights.MVC.Controllers
                                                     string url001 = tbl.Rows[index]["URL"].ToString();
                                                     if (string.IsNullOrEmpty(url001))
                                                     {
-                                                        tbl.Rows[index]["URL"] = url;
+                                                        tbl.Rows[index]["URL"] = url.Trim();
+                                                        try
+                                                        {
+
+                                                            tbl.Rows[index]["Media"] = domain.Trim();
+                                                        }
+                                                        catch
+                                                        {
+                                                        }
+                                                    }
+                                                    string domain001 = tbl.Rows[index]["Media"].ToString();
+                                                    if (string.IsNullOrEmpty(domain001))
+                                                    {
+                                                        try
+                                                        {
+                                                            tbl.Rows[index]["Media"] = domain;
+                                                        }
+                                                        catch
+                                                        {
+                                                        }
                                                     }
                                                     index = index + 1;
                                                 }
@@ -1190,23 +1209,23 @@ namespace Commsights.MVC.Controllers
                                                 {
                                                     tbl.Columns.Add(new DataColumn("Media"));
                                                 }
-                                                for (int i = 0; i < tbl.Rows.Count; i++)
-                                                {
-                                                    try
-                                                    {
-                                                        tbl.Rows[i]["URL"] = listURL[i];
-                                                    }
-                                                    catch
-                                                    {
-                                                    }
-                                                    try
-                                                    {
-                                                        tbl.Rows[i]["Media"] = listMedia[i];
-                                                    }
-                                                    catch
-                                                    {
-                                                    }
-                                                }
+                                                //for (int i = 0; i < tbl.Rows.Count; i++)
+                                                //{
+                                                //    try
+                                                //    {
+                                                //        tbl.Rows[i]["URL"] = listURL[i].Trim();
+                                                //    }
+                                                //    catch
+                                                //    {
+                                                //    }
+                                                //    try
+                                                //    {
+                                                //        tbl.Rows[i]["Media"] = listMedia[i];
+                                                //    }
+                                                //    catch
+                                                //    {
+                                                //    }
+                                                //}
                                                 _reportMonthlyRepository.InsertItemsByDataTableAndReportMonthlyIDAndRequestUserID(tbl, model.ID, RequestUserID);
                                             }
                                         }
