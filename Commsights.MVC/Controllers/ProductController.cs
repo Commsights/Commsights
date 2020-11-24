@@ -639,12 +639,13 @@ namespace Commsights.MVC.Controllers
         }
         public async Task<string> AsyncScanWebsiteNoFilterProduct(int websiteID)
         {
-            if (websiteID > 0)
-            {
-                Config config = _configResposistory.GetByID(websiteID);
-                await this.AsyncCreateProductScanWebsiteNoFilterProduct001(config);
-                //this.CreateProductScanWebsiteNoFilterProduct002();
-            }
+            //if (websiteID > 0)
+            //{
+            //    Config config = _configResposistory.GetByID(websiteID);
+            //    await this.AsyncCreateProductScanWebsiteNoFilterProduct001(config);
+
+            //}
+            this.CreateProductScanWebsiteNoFilterProduct002();
             string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
             return note;
         }
@@ -961,7 +962,7 @@ namespace Commsights.MVC.Controllers
                                         html001 = html001.Replace(@"tags'>", @"~");
                                         html001 = html001.Split('~')[0];
                                         if (html001.Contains(@"</h1>") == true)
-                                        {                                           
+                                        {
                                             string htmlspan = html001;
                                             MatchCollection m1 = Regex.Matches(htmlspan, @"(<h1.*?>.*?</h1>)", RegexOptions.Singleline);
                                             if (m1.Count > 0)
@@ -988,14 +989,19 @@ namespace Commsights.MVC.Controllers
                                                         product.Initialization(InitType.Insert, RequestUserID);
                                                         product.DatePublish = DateTime.Now;
                                                         AppGlobal.FinderContentAndDatePublish(html001, product);
-                                                        await _productRepository.AsyncInsertSingleItem(product);
+                                                        if ((product.DatePublish.Year > 2019) && (product.Active == true))
+                                                        {
+                                                            await _productRepository.AsyncInsertSingleItem(product);
+                                                        }
+
+
                                                     }
                                                 }
                                             }
                                         }
                                         response.Close();
                                         readStream.Close();
-                                    }                            
+                                    }
                                 }
                             }
                             catch (Exception e1)
@@ -1035,22 +1041,67 @@ namespace Commsights.MVC.Controllers
 
             LinkItem linkItem = new LinkItem();
             linkItem.Text = "More tourism festivals to occur as Covid-19 contained";
-            linkItem.Href = "https://sohuutritue.net.vn/oppo-ra-mat-nguyen-mau-smartphone-man-hinh-cuon-dau-tien-tren-the-gioi-d85114.html";
+            linkItem.Href = "https://congthuong.vn/infographic-viet-nam-tro-thanh-quoc-gia-thu-7-thong-qua-cptpp-111612.html";
             try
             {
-                WebClient webClient001 = new WebClient();
-                webClient001.Encoding = System.Text.Encoding.UTF8;
-                string html001 = webClient001.DownloadString(linkItem.Href);
-                Product product = new Product();
-                product.Source = AppGlobal.SourceAuto;
-                product.Title = linkItem.Text;
-                product.MetaTitle = AppGlobal.SetName(product.Title);
-                product.URLCode = linkItem.Href;
-                product.DatePublish = DateTime.Now;
-                product.Initialization(InitType.Insert, RequestUserID);
-                product.DatePublish = DateTime.Now;
-                AppGlobal.FinderContentAndDatePublish(html001, product);
-                //_productRepository.AsyncInsertSingleItem(product);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(linkItem.Href);
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    Stream receiveStream = response.GetResponseStream();
+                    StreamReader readStream = null;
+                    if (response.CharacterSet == null)
+                    {
+                        readStream = new StreamReader(receiveStream);
+                    }
+                    else
+                    {
+                        readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                    }
+                    string html001 = readStream.ReadToEnd();
+                    html001 = html001.Replace(@"class=""tags", @"~");
+                    html001 = html001.Split('~')[0];
+                    html001 = html001.Replace(@"class='tags", @"~");
+                    html001 = html001.Split('~')[0];
+                    html001 = html001.Replace(@"tags"">", @"~");
+                    html001 = html001.Split('~')[0];
+                    html001 = html001.Replace(@"tags'>", @"~");
+                    html001 = html001.Split('~')[0];
+                    if (html001.Contains(@"</h1>") == true)
+                    {
+                        string htmlspan = html001;
+                        MatchCollection m1 = Regex.Matches(htmlspan, @"(<h1.*?>.*?</h1>)", RegexOptions.Singleline);
+                        if (m1.Count > 0)
+                        {
+                            string value = m1[m1.Count - 1].Groups[1].Value;
+                            if (!string.IsNullOrEmpty(value))
+                            {
+                                if ((value.Contains("</span>") == false) && (value.Contains("</p>") == false) && (value.Contains("</a>") == false) && (value.Contains("</div>") == false))
+                                {
+                                    string title = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                                    title = title.Trim();
+                                    Product product = new Product();
+                                    product.Title = title;
+                                    product.ParentID = 0;
+                                    product.CategoryID = 0;
+                                    product.Source = AppGlobal.SourceAuto;
+                                    if (string.IsNullOrEmpty(product.Title))
+                                    {
+                                        product.Title = linkItem.Text;
+                                    }
+                                    product.MetaTitle = AppGlobal.SetName(product.Title);
+                                    product.URLCode = linkItem.Href;
+                                    product.DatePublish = DateTime.Now;
+                                    product.Initialization(InitType.Insert, RequestUserID);
+                                    product.DatePublish = DateTime.Now;
+                                    AppGlobal.FinderContentAndDatePublish(html001, product);
+                                }
+                            }
+                        }
+                    }
+                    response.Close();
+                    readStream.Close();
+                }
             }
             catch (Exception e1)
             {
