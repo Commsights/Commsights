@@ -2444,14 +2444,11 @@ namespace Commsights.Data.Helpers
                                 try
                                 {
                                     DateTime datePublish = new DateTime(int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[2]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                    if (datePublish.Year > 2019)
+                                    if (product.DatePublish > datePublish)
                                     {
-                                        if (product.DatePublish > datePublish)
-                                        {
-                                            product.DatePublish = datePublish;
-                                            check = true;
-                                            i = htmlspan.Split('~').Length;
-                                        }
+                                        product.DatePublish = datePublish;
+                                        check = true;
+                                        i = htmlspan.Split('~').Length;
                                     }
                                 }
                                 catch
@@ -2477,13 +2474,10 @@ namespace Commsights.Data.Helpers
                         try
                         {
                             DateTime datePublish = new DateTime(int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[2]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                            if (datePublish.Year > 2019)
+                            if (product.DatePublish > datePublish)
                             {
-                                if (product.DatePublish > datePublish)
-                                {
-                                    product.DatePublish = datePublish;
-                                    check = true;
-                                }
+                                product.DatePublish = datePublish;
+                                check = true;
                             }
                         }
                         catch
@@ -2519,14 +2513,11 @@ namespace Commsights.Data.Helpers
                                     try
                                     {
                                         DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        if (datePublish.Year > 2019)
+                                        if (product.DatePublish > datePublish)
                                         {
-                                            if (product.DatePublish > datePublish)
-                                            {
-                                                product.DatePublish = datePublish;
-                                                check = true;
-                                                i = htmlspan.Split('~').Length;
-                                            }
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                            i = htmlspan.Split('~').Length;
                                         }
                                     }
                                     catch
@@ -2534,14 +2525,11 @@ namespace Commsights.Data.Helpers
                                         try
                                         {
                                             DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                            if (datePublish.Year > 2019)
+                                            if (product.DatePublish > datePublish)
                                             {
-                                                if (product.DatePublish > datePublish)
-                                                {
-                                                    product.DatePublish = datePublish;
-                                                    check = true;
-                                                    i = htmlspan.Split('~').Length;
-                                                }
+                                                product.DatePublish = datePublish;
+                                                check = true;
+                                                i = htmlspan.Split('~').Length;
                                             }
                                         }
                                         catch
@@ -2586,30 +2574,28 @@ namespace Commsights.Data.Helpers
                                     try
                                     {
                                         DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        if (datePublish.Year > 2019)
-                                        {
+                                        
                                             if (product.DatePublish > datePublish)
                                             {
                                                 product.DatePublish = datePublish;
                                                 check = true;
                                                 i = htmlspan.Split('~').Length;
                                             }
-                                        }
+                                        
                                     }
                                     catch
                                     {
                                         try
                                         {
                                             DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                            if (datePublish.Year > 2019)
-                                            {
+                                           
                                                 if (product.DatePublish > datePublish)
                                                 {
                                                     product.DatePublish = datePublish;
                                                     check = true;
                                                     i = htmlspan.Split('~').Length;
                                                 }
-                                            }
+                                            
                                         }
                                         catch
                                         {
@@ -2676,28 +2662,26 @@ namespace Commsights.Data.Helpers
                                 try
                                 {
                                     DateTime datePublish = new DateTime(year, month, day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                    if (datePublish.Year > 2019)
-                                    {
+                                  
                                         if (product.DatePublish > datePublish)
                                         {
                                             product.DatePublish = datePublish;
                                             check = true;
                                         }
-                                    }
+                                    
                                 }
                                 catch
                                 {
                                     try
                                     {
                                         DateTime datePublish = new DateTime(year, day, month, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        if (datePublish.Year > 2019)
-                                        {
+                                       
                                             if (product.DatePublish > datePublish)
                                             {
                                                 product.DatePublish = datePublish;
                                                 check = true;
                                             }
-                                        }
+                                        
                                     }
                                     catch
                                     {
@@ -2735,30 +2719,28 @@ namespace Commsights.Data.Helpers
                                     try
                                     {
                                         DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        if (datePublish.Year > 2019)
-                                        {
+                                       
                                             if (product.DatePublish > datePublish)
                                             {
                                                 product.DatePublish = datePublish;
                                                 check = true;
                                                 i = htmlspan.Split('~').Length;
                                             }
-                                        }
+                                        
                                     }
                                     catch
                                     {
                                         try
                                         {
                                             DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                            if (datePublish.Year > 2019)
-                                            {
+                                           
                                                 if (product.DatePublish > datePublish)
                                                 {
                                                     product.DatePublish = datePublish;
                                                     check = true;
                                                     i = htmlspan.Split('~').Length;
                                                 }
-                                            }
+                                            
                                         }
                                         catch
                                         {
@@ -2825,28 +2807,26 @@ namespace Commsights.Data.Helpers
                                 try
                                 {
                                     DateTime datePublish = new DateTime(year, month, day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                    if (datePublish.Year > 2019)
-                                    {
+                                    
                                         if (product.DatePublish > datePublish)
                                         {
                                             product.DatePublish = datePublish;
                                             check = true;
                                         }
-                                    }
+                                    
                                 }
                                 catch
                                 {
                                     try
                                     {
                                         DateTime datePublish = new DateTime(year, day, month, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        if (datePublish.Year > 2019)
-                                        {
+                                       
                                             if (product.DatePublish > datePublish)
                                             {
                                                 product.DatePublish = datePublish;
                                                 check = true;
                                             }
-                                        }
+                                        
                                     }
                                     catch
                                     {
@@ -2884,30 +2864,28 @@ namespace Commsights.Data.Helpers
                                     try
                                     {
                                         DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        if (datePublish.Year > 2019)
-                                        {
+                                        
                                             if (product.DatePublish > datePublish)
                                             {
                                                 product.DatePublish = datePublish;
                                                 check = true;
                                                 i = htmlspan.Split('~').Length;
                                             }
-                                        }
+                                        
                                     }
                                     catch
                                     {
                                         try
                                         {
                                             DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                            if (datePublish.Year > 2019)
-                                            {
+                                           
                                                 if (product.DatePublish > datePublish)
                                                 {
                                                     product.DatePublish = datePublish;
                                                     check = true;
                                                     i = htmlspan.Split('~').Length;
                                                 }
-                                            }
+                                            
                                         }
                                         catch
                                         {
@@ -2974,28 +2952,26 @@ namespace Commsights.Data.Helpers
                                 try
                                 {
                                     DateTime datePublish = new DateTime(year, month, day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                    if (datePublish.Year > 2019)
-                                    {
+                                    
                                         if (product.DatePublish > datePublish)
                                         {
                                             product.DatePublish = datePublish;
                                             check = true;
                                         }
-                                    }
+                                    
                                 }
                                 catch
                                 {
                                     try
                                     {
                                         DateTime datePublish = new DateTime(year, day, month, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        if (datePublish.Year > 2019)
-                                        {
+                                       
                                             if (product.DatePublish > datePublish)
                                             {
                                                 product.DatePublish = datePublish;
                                                 check = true;
                                             }
-                                        }
+                                        
                                     }
                                     catch
                                     {
@@ -3051,30 +3027,28 @@ namespace Commsights.Data.Helpers
                                     try
                                     {
                                         DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        if (datePublish.Year > 2019)
-                                        {
+                                       
                                             if (product.DatePublish > datePublish)
                                             {
                                                 product.DatePublish = datePublish;
                                                 check = true;
                                                 i = htmlspan.Split('~').Length;
                                             }
-                                        }
+                                        
                                     }
                                     catch
                                     {
                                         try
                                         {
                                             DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                            if (datePublish.Year > 2019)
-                                            {
+                                            
                                                 if (product.DatePublish > datePublish)
                                                 {
                                                     product.DatePublish = datePublish;
                                                     check = true;
                                                     i = htmlspan.Split('~').Length;
                                                 }
-                                            }
+                                            
                                         }
                                         catch
                                         {
@@ -3090,7 +3064,7 @@ namespace Commsights.Data.Helpers
                         }
                     }
                 }
-                product.Active = check;
+                
             }
         }
         public static List<LinkItem> ImgFinder(string html)

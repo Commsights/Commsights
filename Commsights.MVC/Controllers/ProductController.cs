@@ -989,7 +989,7 @@ namespace Commsights.MVC.Controllers
                                                         product.Initialization(InitType.Insert, RequestUserID);
                                                         product.DatePublish = DateTime.Now;
                                                         AppGlobal.FinderContentAndDatePublish(html001, product);
-                                                        if ((product.DatePublish.Year > 2019) && (product.Active == true))
+                                                        if (product.DatePublish.Year > 2019)
                                                         {
                                                             await _productRepository.AsyncInsertSingleItem(product);
                                                         }
@@ -1041,7 +1041,7 @@ namespace Commsights.MVC.Controllers
 
             LinkItem linkItem = new LinkItem();
             linkItem.Text = "More tourism festivals to occur as Covid-19 contained";
-            linkItem.Href = "https://congthuong.vn/infographic-viet-nam-tro-thanh-quoc-gia-thu-7-thong-qua-cptpp-111612.html";
+            linkItem.Href = "https://congthuong.vn/bo-cong-thuong-dieu-chinh-chinh-sach-quan-ly-phat-trien-cum-cong-nghiep-126465.html";
             try
             {
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(linkItem.Href);
