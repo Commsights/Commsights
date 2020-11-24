@@ -2438,7 +2438,7 @@ namespace Commsights.Data.Helpers
                             if (date.Split('~').Length > 1)
                             {
                                 date = date.Split('~')[1];
-                                date = date.Split(' ')[0];
+                                date = date.Split('"')[0];
                                 date = date.Substring(0, 10);
                                 date = date.Replace(@"-", @"/");
                                 try
