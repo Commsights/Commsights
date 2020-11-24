@@ -2427,7 +2427,7 @@ namespace Commsights.Data.Helpers
                 bool check = false;
                 if (check == false)
                 {
-                    htmlspan = htmlspan.Replace(@"~", @"");
+                    htmlspan = html;
                     htmlspan = htmlspan.Replace(@"<meta", @"~<meta");
                     for (int i = 0; i < htmlspan.Split('~').Length; i++)
                     {
@@ -2461,15 +2461,39 @@ namespace Commsights.Data.Helpers
                 if (check == false)
                 {
                     htmlspan = html;
+                    htmlspan = htmlspan.Replace(@"""datePublished"":", @"~");
+                    if (htmlspan.Split('~').Length > 1)
+                    {
+                        htmlspan = htmlspan.Split('~')[1];
+                        htmlspan = htmlspan.Trim();
+                        htmlspan = htmlspan.Split(',')[0];
+                        htmlspan = htmlspan.Replace(@"""", @"");
+                        htmlspan = htmlspan.Substring(0, 10);
+                        htmlspan = htmlspan.Replace(@"-", @"/");
+                        string date = htmlspan;
+                        try
+                        {
+                            DateTime datePublish = new DateTime(int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[2]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                            if (product.DatePublish > datePublish)
+                            {
+                                product.DatePublish = datePublish;
+                                check = true;                                
+                            }
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+                if (check == false)
+                {
+                    htmlspan = html;
                     htmlspan = htmlspan.Replace(@"~", @"");
                     htmlspan = htmlspan.Replace(@"</header>", @"~");
                     if (htmlspan.Split('~').Length > 1)
                     {
                         htmlspan = htmlspan.Split('~')[1];
                     }
-                }
-                if (check == false)
-                {
                     m1 = Regex.Matches(htmlspan, @"(<time.*?>.*?</time>)", RegexOptions.Singleline);
                     for (int i = 0; i < m1.Count; i++)
                     {
@@ -2524,6 +2548,13 @@ namespace Commsights.Data.Helpers
                 }
                 if (check == false)
                 {
+                    htmlspan = html;
+                    htmlspan = htmlspan.Replace(@"~", @"");
+                    htmlspan = htmlspan.Replace(@"</header>", @"~");
+                    if (htmlspan.Split('~').Length > 1)
+                    {
+                        htmlspan = htmlspan.Split('~')[1];
+                    }
                     m1 = Regex.Matches(htmlspan, @"(<time.*?>.*?</time>)", RegexOptions.Singleline);
                     for (int i = 0; i < m1.Count; i++)
                     {
@@ -2569,7 +2600,7 @@ namespace Commsights.Data.Helpers
                                     if (product.DatePublish > datePublish)
                                     {
                                         product.DatePublish = datePublish;
-                                        check = true;                                        
+                                        check = true;
                                     }
                                 }
                                 catch
@@ -2580,7 +2611,7 @@ namespace Commsights.Data.Helpers
                                         if (product.DatePublish > datePublish)
                                         {
                                             product.DatePublish = datePublish;
-                                            check = true;                                            
+                                            check = true;
                                         }
                                     }
                                     catch
@@ -2593,6 +2624,13 @@ namespace Commsights.Data.Helpers
                 }
                 if (check == false)
                 {
+                    htmlspan = html;
+                    htmlspan = htmlspan.Replace(@"~", @"");
+                    htmlspan = htmlspan.Replace(@"</header>", @"~");
+                    if (htmlspan.Split('~').Length > 1)
+                    {
+                        htmlspan = htmlspan.Split('~')[1];
+                    }
                     m1 = Regex.Matches(htmlspan, @"(<span.*?>.*?</span>)", RegexOptions.Singleline);
                     for (int i = 0; i < m1.Count; i++)
                     {
@@ -2647,6 +2685,13 @@ namespace Commsights.Data.Helpers
                 }
                 if (check == false)
                 {
+                    htmlspan = html;
+                    htmlspan = htmlspan.Replace(@"~", @"");
+                    htmlspan = htmlspan.Replace(@"</header>", @"~");
+                    if (htmlspan.Split('~').Length > 1)
+                    {
+                        htmlspan = htmlspan.Split('~')[1];
+                    }
                     m1 = Regex.Matches(htmlspan, @"(<span.*?>.*?</span>)", RegexOptions.Singleline);
                     for (int i = 0; i < m1.Count; i++)
                     {
@@ -2716,6 +2761,13 @@ namespace Commsights.Data.Helpers
                 }
                 if (check == false)
                 {
+                    htmlspan = html;
+                    htmlspan = htmlspan.Replace(@"~", @"");
+                    htmlspan = htmlspan.Replace(@"</header>", @"~");
+                    if (htmlspan.Split('~').Length > 1)
+                    {
+                        htmlspan = htmlspan.Split('~')[1];
+                    }
                     m1 = Regex.Matches(htmlspan, @"(<div.*?>.*?</div>)", RegexOptions.Singleline);
                     for (int i = 0; i < m1.Count; i++)
                     {
@@ -2770,6 +2822,13 @@ namespace Commsights.Data.Helpers
                 }
                 if (check == false)
                 {
+                    htmlspan = html;
+                    htmlspan = htmlspan.Replace(@"~", @"");
+                    htmlspan = htmlspan.Replace(@"</header>", @"~");
+                    if (htmlspan.Split('~').Length > 1)
+                    {
+                        htmlspan = htmlspan.Split('~')[1];
+                    }
                     m1 = Regex.Matches(htmlspan, @"(<div.*?>.*?</div>)", RegexOptions.Singleline);
                     for (int i = 0; i < m1.Count; i++)
                     {
