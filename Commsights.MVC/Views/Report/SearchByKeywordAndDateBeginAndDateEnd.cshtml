@@ -57,7 +57,8 @@
     columns.Bound(t => t.DatePublish).Title("Date").Format("{0: MM/dd/yyyy}").Width(120).HtmlAttributes(new { @class = "text-right" }).HeaderHtmlAttributes(new { @class = "text-center" });
     columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(1000);
     columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
-    columns.Bound(t => t.URLCode).Title("URL").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.URLCode).Title("URL").Width(1000).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.ID).Title("ID").Width(100);
 })
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
