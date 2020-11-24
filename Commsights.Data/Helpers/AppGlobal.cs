@@ -2637,14 +2637,14 @@ namespace Commsights.Data.Helpers
                     htmlspan001 = htmlspan001.Replace(@"</article>", @"~");
                     htmlspan001 = htmlspan001.Split('~')[0];
                 }
+                htmlspan001 = htmlspan001.Replace(@"class=""tags", @"~");
+                htmlspan001 = htmlspan001.Split('~')[0];
+                htmlspan001 = htmlspan001.Replace(@"class='tags", @"~");
+                htmlspan001 = htmlspan001.Split('~')[0];
                 htmlspan001 = htmlspan001.Replace(@"tags"">", @"~");
                 htmlspan001 = htmlspan001.Split('~')[0];
                 htmlspan001 = htmlspan001.Replace(@"tags'>", @"~");
-                htmlspan001 = htmlspan001.Split('~')[0];
-                htmlspan001 = htmlspan001.Replace(@"social"">", @"~");
-                htmlspan001 = htmlspan001.Split('~')[0];
-                htmlspan001 = htmlspan001.Replace(@"social'>", @"~");
-                htmlspan001 = htmlspan001.Split('~')[0];
+                htmlspan001 = htmlspan001.Split('~')[0];      
                 m1 = Regex.Matches(htmlspan001, @"(<p.*?>.*?</p>)", RegexOptions.Singleline);
                 for (int i = 0; i < m1.Count; i++)
                 {

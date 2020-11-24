@@ -951,9 +951,17 @@ namespace Commsights.MVC.Controllers
                                         {
                                             readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
                                         }
-                                        string html001 = readStream.ReadToEnd();                                        
+                                        string html001 = readStream.ReadToEnd();
+                                        html001 = html001.Replace(@"class=""tags", @"~");
+                                        html001 = html001.Split('~')[0];
+                                        html001 = html001.Replace(@"class='tags", @"~");
+                                        html001 = html001.Split('~')[0];
+                                        html001 = html001.Replace(@"tags"">", @"~");
+                                        html001 = html001.Split('~')[0];
+                                        html001 = html001.Replace(@"tags'>", @"~");
+                                        html001 = html001.Split('~')[0];
                                         if (html001.Contains(@"</h1>") == true)
-                                        {
+                                        {                                           
                                             string htmlspan = html001;
                                             MatchCollection m1 = Regex.Matches(htmlspan, @"(<h1.*?>.*?</h1>)", RegexOptions.Singleline);
                                             if (m1.Count > 0)
