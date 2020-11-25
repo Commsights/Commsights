@@ -2654,28 +2654,28 @@ namespace Commsights.Data.Helpers
                                     try
                                     {
                                         DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        
-                                            if (product.DatePublish > datePublish)
-                                            {
-                                                product.DatePublish = datePublish;
-                                                check = true;
-                                                i = htmlspan.Split('~').Length;
-                                            }
-                                        
+
+                                        if (product.DatePublish > datePublish)
+                                        {
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                            i = htmlspan.Split('~').Length;
+                                        }
+
                                     }
                                     catch
                                     {
                                         try
                                         {
                                             DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                           
-                                                if (product.DatePublish > datePublish)
-                                                {
-                                                    product.DatePublish = datePublish;
-                                                    check = true;
-                                                    i = htmlspan.Split('~').Length;
-                                                }
-                                            
+
+                                            if (product.DatePublish > datePublish)
+                                            {
+                                                product.DatePublish = datePublish;
+                                                check = true;
+                                                i = htmlspan.Split('~').Length;
+                                            }
+
                                         }
                                         catch
                                         {
@@ -2742,26 +2742,26 @@ namespace Commsights.Data.Helpers
                                 try
                                 {
                                     DateTime datePublish = new DateTime(year, month, day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                  
-                                        if (product.DatePublish > datePublish)
-                                        {
-                                            product.DatePublish = datePublish;
-                                            check = true;
-                                        }
-                                    
+
+                                    if (product.DatePublish > datePublish)
+                                    {
+                                        product.DatePublish = datePublish;
+                                        check = true;
+                                    }
+
                                 }
                                 catch
                                 {
                                     try
                                     {
                                         DateTime datePublish = new DateTime(year, day, month, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                       
-                                            if (product.DatePublish > datePublish)
-                                            {
-                                                product.DatePublish = datePublish;
-                                                check = true;
-                                            }
-                                        
+
+                                        if (product.DatePublish > datePublish)
+                                        {
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                        }
+
                                     }
                                     catch
                                     {
@@ -2799,28 +2799,28 @@ namespace Commsights.Data.Helpers
                                     try
                                     {
                                         DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                       
-                                            if (product.DatePublish > datePublish)
-                                            {
-                                                product.DatePublish = datePublish;
-                                                check = true;
-                                                i = htmlspan.Split('~').Length;
-                                            }
-                                        
+
+                                        if (product.DatePublish > datePublish)
+                                        {
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                            i = htmlspan.Split('~').Length;
+                                        }
+
                                     }
                                     catch
                                     {
                                         try
                                         {
                                             DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                           
-                                                if (product.DatePublish > datePublish)
-                                                {
-                                                    product.DatePublish = datePublish;
-                                                    check = true;
-                                                    i = htmlspan.Split('~').Length;
-                                                }
-                                            
+
+                                            if (product.DatePublish > datePublish)
+                                            {
+                                                product.DatePublish = datePublish;
+                                                check = true;
+                                                i = htmlspan.Split('~').Length;
+                                            }
+
                                         }
                                         catch
                                         {
@@ -2887,26 +2887,26 @@ namespace Commsights.Data.Helpers
                                 try
                                 {
                                     DateTime datePublish = new DateTime(year, month, day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                    
-                                        if (product.DatePublish > datePublish)
-                                        {
-                                            product.DatePublish = datePublish;
-                                            check = true;
-                                        }
-                                    
+
+                                    if (product.DatePublish > datePublish)
+                                    {
+                                        product.DatePublish = datePublish;
+                                        check = true;
+                                    }
+
                                 }
                                 catch
                                 {
                                     try
                                     {
                                         DateTime datePublish = new DateTime(year, day, month, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                       
-                                            if (product.DatePublish > datePublish)
-                                            {
-                                                product.DatePublish = datePublish;
-                                                check = true;
-                                            }
-                                        
+
+                                        if (product.DatePublish > datePublish)
+                                        {
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                        }
+
                                     }
                                     catch
                                     {
@@ -2944,28 +2944,28 @@ namespace Commsights.Data.Helpers
                                     try
                                     {
                                         DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        
-                                            if (product.DatePublish > datePublish)
-                                            {
-                                                product.DatePublish = datePublish;
-                                                check = true;
-                                                i = htmlspan.Split('~').Length;
-                                            }
-                                        
+
+                                        if (product.DatePublish > datePublish)
+                                        {
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                            i = htmlspan.Split('~').Length;
+                                        }
+
                                     }
                                     catch
                                     {
                                         try
                                         {
                                             DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                           
-                                                if (product.DatePublish > datePublish)
-                                                {
-                                                    product.DatePublish = datePublish;
-                                                    check = true;
-                                                    i = htmlspan.Split('~').Length;
-                                                }
-                                            
+
+                                            if (product.DatePublish > datePublish)
+                                            {
+                                                product.DatePublish = datePublish;
+                                                check = true;
+                                                i = htmlspan.Split('~').Length;
+                                            }
+
                                         }
                                         catch
                                         {
@@ -3032,26 +3032,26 @@ namespace Commsights.Data.Helpers
                                 try
                                 {
                                     DateTime datePublish = new DateTime(year, month, day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                    
-                                        if (product.DatePublish > datePublish)
-                                        {
-                                            product.DatePublish = datePublish;
-                                            check = true;
-                                        }
-                                    
+
+                                    if (product.DatePublish > datePublish)
+                                    {
+                                        product.DatePublish = datePublish;
+                                        check = true;
+                                    }
+
                                 }
                                 catch
                                 {
                                     try
                                     {
                                         DateTime datePublish = new DateTime(year, day, month, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                       
-                                            if (product.DatePublish > datePublish)
-                                            {
-                                                product.DatePublish = datePublish;
-                                                check = true;
-                                            }
-                                        
+
+                                        if (product.DatePublish > datePublish)
+                                        {
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                        }
+
                                     }
                                     catch
                                     {
@@ -3063,35 +3063,43 @@ namespace Commsights.Data.Helpers
                 }
                 string htmlspan001 = htmlspan;
                 Uri myUri = new Uri(product.URLCode);
-                if (myUri.Host.Contains(@"tinmoi.vn") == true)
+                //if (myUri.Host.Contains(@"tinmoi.vn") == true)
+                //{
+                //    htmlspan001 = htmlspan001.Replace(@"</article>", @"~");
+                //    htmlspan001 = htmlspan001.Split('~')[0];
+                //}
+                htmlspan001 = htmlspan001.Replace(@"</article>", @"~");
+                if (html001.Split('~').Length > 1)
                 {
-                    htmlspan001 = htmlspan001.Replace(@"</article>", @"~");
+                    html001 = html001.Split('~')[1];
+                }
+                else
+                {
+                    htmlspan001 = htmlspan001.Replace(@"class=""tags", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    htmlspan001 = htmlspan001.Replace(@"class='tags", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    htmlspan001 = htmlspan001.Replace(@"tags"">", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    htmlspan001 = htmlspan001.Replace(@"tags'>", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    htmlspan001 = htmlspan001.Replace(@"class=""social", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    htmlspan001 = htmlspan001.Replace(@"class='social", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    htmlspan001 = htmlspan001.Replace(@"social"">", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    htmlspan001 = htmlspan001.Replace(@"social'>", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    htmlspan001 = htmlspan001.Replace(@"class=""fb-comments", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    htmlspan001 = htmlspan001.Replace(@"class='fb-comments", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    htmlspan001 = htmlspan001.Replace(@"fb-comments"">", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    htmlspan001 = htmlspan001.Replace(@"fb-comments'>", @"~");
                     htmlspan001 = htmlspan001.Split('~')[0];
                 }
-                htmlspan001 = htmlspan001.Replace(@"class=""tags", @"~");
-                htmlspan001 = htmlspan001.Split('~')[0];
-                htmlspan001 = htmlspan001.Replace(@"class='tags", @"~");
-                htmlspan001 = htmlspan001.Split('~')[0];
-                htmlspan001 = htmlspan001.Replace(@"tags"">", @"~");
-                htmlspan001 = htmlspan001.Split('~')[0];
-                htmlspan001 = htmlspan001.Replace(@"tags'>", @"~");
-                htmlspan001 = htmlspan001.Split('~')[0];
-                htmlspan001 = htmlspan001.Replace(@"class=""social", @"~");
-                htmlspan001 = htmlspan001.Split('~')[0];
-                htmlspan001 = htmlspan001.Replace(@"class='social", @"~");
-                htmlspan001 = htmlspan001.Split('~')[0];
-                htmlspan001 = htmlspan001.Replace(@"social"">", @"~");
-                htmlspan001 = htmlspan001.Split('~')[0];
-                htmlspan001 = htmlspan001.Replace(@"social'>", @"~");
-                htmlspan001 = htmlspan001.Split('~')[0];
-                htmlspan001 = htmlspan001.Replace(@"class=""fb-comments", @"~");
-                htmlspan001 = htmlspan001.Split('~')[0];
-                htmlspan001 = htmlspan001.Replace(@"class='fb-comments", @"~");
-                htmlspan001 = htmlspan001.Split('~')[0];
-                htmlspan001 = htmlspan001.Replace(@"fb-comments"">", @"~");
-                htmlspan001 = htmlspan001.Split('~')[0];
-                htmlspan001 = htmlspan001.Replace(@"fb-comments'>", @"~");
-                htmlspan001 = htmlspan001.Split('~')[0];
                 m1 = Regex.Matches(htmlspan001, @"(<p.*?>.*?</p>)", RegexOptions.Singleline);
                 for (int i = 0; i < m1.Count; i++)
                 {
@@ -3123,28 +3131,28 @@ namespace Commsights.Data.Helpers
                                     try
                                     {
                                         DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                       
-                                            if (product.DatePublish > datePublish)
-                                            {
-                                                product.DatePublish = datePublish;
-                                                check = true;
-                                                i = htmlspan.Split('~').Length;
-                                            }
-                                        
+
+                                        if (product.DatePublish > datePublish)
+                                        {
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                            i = htmlspan.Split('~').Length;
+                                        }
+
                                     }
                                     catch
                                     {
                                         try
                                         {
                                             DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                            
-                                                if (product.DatePublish > datePublish)
-                                                {
-                                                    product.DatePublish = datePublish;
-                                                    check = true;
-                                                    i = htmlspan.Split('~').Length;
-                                                }
-                                            
+
+                                            if (product.DatePublish > datePublish)
+                                            {
+                                                product.DatePublish = datePublish;
+                                                check = true;
+                                                i = htmlspan.Split('~').Length;
+                                            }
+
                                         }
                                         catch
                                         {
@@ -3160,7 +3168,7 @@ namespace Commsights.Data.Helpers
                         }
                     }
                 }
-                
+
             }
         }
         public static List<LinkItem> ImgFinder(string html)

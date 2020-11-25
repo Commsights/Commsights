@@ -639,13 +639,12 @@ namespace Commsights.MVC.Controllers
         }
         public async Task<string> AsyncScanWebsiteNoFilterProduct(int websiteID)
         {
-            //if (websiteID > 0)
-            //{
-            //    Config config = _configResposistory.GetByID(websiteID);
-            //    await this.AsyncCreateProductScanWebsiteNoFilterProduct001(config);
-
-            //}
-            this.CreateProductScanWebsiteNoFilterProduct002();
+            if (websiteID > 0)
+            {
+                Config config = _configResposistory.GetByID(websiteID);
+                await this.AsyncCreateProductScanWebsiteNoFilterProduct001(config);
+            }
+            //this.CreateProductScanWebsiteNoFilterProduct002();
             string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
             return note;
         }
@@ -954,30 +953,38 @@ namespace Commsights.MVC.Controllers
                                             readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
                                         }
                                         string html001 = readStream.ReadToEnd();
-                                        html001 = html001.Replace(@"class=""tags", @"~");
-                                        html001 = html001.Split('~')[0];
-                                        html001 = html001.Replace(@"class='tags", @"~");
-                                        html001 = html001.Split('~')[0];
-                                        html001 = html001.Replace(@"tags"">", @"~");
-                                        html001 = html001.Split('~')[0];
-                                        html001 = html001.Replace(@"tags'>", @"~");
-                                        html001 = html001.Split('~')[0];
-                                        html001 = html001.Replace(@"class=""social", @"~");
-                                        html001 = html001.Split('~')[0];
-                                        html001 = html001.Replace(@"class='social", @"~");
-                                        html001 = html001.Split('~')[0];
-                                        html001 = html001.Replace(@"social"">", @"~");
-                                        html001 = html001.Split('~')[0];
-                                        html001 = html001.Replace(@"social'>", @"~");
-                                        html001 = html001.Split('~')[0];
-                                        html001 = html001.Replace(@"class=""fb-comments", @"~");
-                                        html001 = html001.Split('~')[0];
-                                        html001 = html001.Replace(@"class='fb-comments", @"~");
-                                        html001 = html001.Split('~')[0];
-                                        html001 = html001.Replace(@"fb-comments"">", @"~");
-                                        html001 = html001.Split('~')[0];
-                                        html001 = html001.Replace(@"fb-comments'>", @"~");
-                                        html001 = html001.Split('~')[0];
+                                        html001 = html001.Replace(@"</article>", @"~");
+                                        if (html001.Split('~').Length > 1)
+                                        {
+                                            html001 = html001.Split('~')[1];
+                                        }
+                                        else
+                                        {
+                                            html001 = html001.Replace(@"class=""tags", @"~");
+                                            html001 = html001.Split('~')[0];
+                                            html001 = html001.Replace(@"class='tags", @"~");
+                                            html001 = html001.Split('~')[0];
+                                            html001 = html001.Replace(@"tags"">", @"~");
+                                            html001 = html001.Split('~')[0];
+                                            html001 = html001.Replace(@"tags'>", @"~");
+                                            html001 = html001.Split('~')[0];
+                                            html001 = html001.Replace(@"class=""social", @"~");
+                                            html001 = html001.Split('~')[0];
+                                            html001 = html001.Replace(@"class='social", @"~");
+                                            html001 = html001.Split('~')[0];
+                                            html001 = html001.Replace(@"social"">", @"~");
+                                            html001 = html001.Split('~')[0];
+                                            html001 = html001.Replace(@"social'>", @"~");
+                                            html001 = html001.Split('~')[0];
+                                            html001 = html001.Replace(@"class=""fb-comments", @"~");
+                                            html001 = html001.Split('~')[0];
+                                            html001 = html001.Replace(@"class='fb-comments", @"~");
+                                            html001 = html001.Split('~')[0];
+                                            html001 = html001.Replace(@"fb-comments"">", @"~");
+                                            html001 = html001.Split('~')[0];
+                                            html001 = html001.Replace(@"fb-comments'>", @"~");
+                                            html001 = html001.Split('~')[0];
+                                        }
                                         if (domain.Contains(@"nhipcaudoanhnghiep.vn") == true)
                                         {
                                             if (html001.Contains(@"</h2>") == true)
