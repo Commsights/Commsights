@@ -2555,6 +2555,86 @@ namespace Commsights.Data.Helpers
                     {
                         htmlspan = htmlspan.Split('~')[1];
                     }
+                    m1 = Regex.Matches(htmlspan, @"(<dd.*?>.*?</dd>)", RegexOptions.Singleline);
+                    for (int i = 0; i < m1.Count; i++)
+                    {
+                        string value = m1[i].Groups[1].Value;
+                        string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                        if (((t.Contains(@"ngày") == true) && (t.Contains(@"tháng") == true)) || ((t.Contains(@"ng&#224;y") == true) && (t.Contains(@"th&#225;ng") == true)))
+                        {
+                            int day = 0;
+                            int month = 0;
+                            int year = 0;
+                            int index = 0;
+                            foreach (string item in t.Split(' '))
+                            {
+                                string date = item;
+                                date = date.Trim();
+                                date = date.Replace(@",", @"");
+                                try
+                                {
+                                    int dateValue = int.Parse(date);
+                                    switch (index)
+                                    {
+                                        case 0:
+                                            day = dateValue;
+                                            break;
+                                        case 1:
+                                            month = dateValue;
+                                            break;
+                                        case 2:
+                                            year = dateValue;
+                                            break;
+                                    }
+                                    index = index + 1;
+                                }
+                                catch
+                                {
+                                }
+                            }
+                            if (index == 3)
+                            {
+                                try
+                                {
+                                    DateTime datePublish = new DateTime(year, month, day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
+                                    if (product.DatePublish > datePublish)
+                                    {
+                                        product.DatePublish = datePublish;
+                                        check = true;
+                                    }
+
+                                }
+                                catch
+                                {
+                                    try
+                                    {
+                                        DateTime datePublish = new DateTime(year, day, month, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
+                                        if (product.DatePublish > datePublish)
+                                        {
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                        }
+
+                                    }
+                                    catch
+                                    {
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (check == false)
+                {
+                    htmlspan = html;
+                    htmlspan = htmlspan.Replace(@"~", @"");
+                    htmlspan = htmlspan.Replace(@"</header>", @"~");
+                    if (htmlspan.Split('~').Length > 1)
+                    {
+                        htmlspan = htmlspan.Split('~')[1];
+                    }
                     m1 = Regex.Matches(htmlspan, @"(<time.*?>.*?</time>)", RegexOptions.Singleline);
                     for (int i = 0; i < m1.Count; i++)
                     {
@@ -2995,6 +3075,22 @@ namespace Commsights.Data.Helpers
                 htmlspan001 = htmlspan001.Replace(@"tags"">", @"~");
                 htmlspan001 = htmlspan001.Split('~')[0];
                 htmlspan001 = htmlspan001.Replace(@"tags'>", @"~");
+                htmlspan001 = htmlspan001.Split('~')[0];
+                htmlspan001 = htmlspan001.Replace(@"class=""social", @"~");
+                htmlspan001 = htmlspan001.Split('~')[0];
+                htmlspan001 = htmlspan001.Replace(@"class='social", @"~");
+                htmlspan001 = htmlspan001.Split('~')[0];
+                htmlspan001 = htmlspan001.Replace(@"social"">", @"~");
+                htmlspan001 = htmlspan001.Split('~')[0];
+                htmlspan001 = htmlspan001.Replace(@"social'>", @"~");
+                htmlspan001 = htmlspan001.Split('~')[0];
+                htmlspan001 = htmlspan001.Replace(@"class=""fb-comments", @"~");
+                htmlspan001 = htmlspan001.Split('~')[0];
+                htmlspan001 = htmlspan001.Replace(@"class='fb-comments", @"~");
+                htmlspan001 = htmlspan001.Split('~')[0];
+                htmlspan001 = htmlspan001.Replace(@"fb-comments"">", @"~");
+                htmlspan001 = htmlspan001.Split('~')[0];
+                htmlspan001 = htmlspan001.Replace(@"fb-comments'>", @"~");
                 htmlspan001 = htmlspan001.Split('~')[0];
                 m1 = Regex.Matches(htmlspan001, @"(<p.*?>.*?</p>)", RegexOptions.Singleline);
                 for (int i = 0; i < m1.Count; i++)

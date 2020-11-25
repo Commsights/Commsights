@@ -936,6 +936,7 @@ namespace Commsights.MVC.Controllers
                             {
                                 Uri myUri = new Uri(linkItem.Href);
                                 string extend = myUri.LocalPath;
+                                string domain = myUri.Host;
                                 if (extend.Contains(".") == true)
                                 {
                                     HttpWebRequest request = (HttpWebRequest)WebRequest.Create(linkItem.Href);
@@ -961,37 +962,95 @@ namespace Commsights.MVC.Controllers
                                         html001 = html001.Split('~')[0];
                                         html001 = html001.Replace(@"tags'>", @"~");
                                         html001 = html001.Split('~')[0];
-                                        if (html001.Contains(@"</h1>") == true)
+                                        html001 = html001.Replace(@"class=""social", @"~");
+                                        html001 = html001.Split('~')[0];
+                                        html001 = html001.Replace(@"class='social", @"~");
+                                        html001 = html001.Split('~')[0];
+                                        html001 = html001.Replace(@"social"">", @"~");
+                                        html001 = html001.Split('~')[0];
+                                        html001 = html001.Replace(@"social'>", @"~");
+                                        html001 = html001.Split('~')[0];
+                                        html001 = html001.Replace(@"class=""fb-comments", @"~");
+                                        html001 = html001.Split('~')[0];
+                                        html001 = html001.Replace(@"class='fb-comments", @"~");
+                                        html001 = html001.Split('~')[0];
+                                        html001 = html001.Replace(@"fb-comments"">", @"~");
+                                        html001 = html001.Split('~')[0];
+                                        html001 = html001.Replace(@"fb-comments'>", @"~");
+                                        html001 = html001.Split('~')[0];
+                                        if (domain.Contains(@"nhipcaudoanhnghiep.vn") == true)
                                         {
-                                            string htmlspan = html001;
-                                            MatchCollection m1 = Regex.Matches(htmlspan, @"(<h1.*?>.*?</h1>)", RegexOptions.Singleline);
-                                            if (m1.Count > 0)
+                                            if (html001.Contains(@"</h2>") == true)
                                             {
-                                                string value = m1[m1.Count - 1].Groups[1].Value;
-                                                if (!string.IsNullOrEmpty(value))
+                                                string htmlspan = html001;
+                                                MatchCollection m1 = Regex.Matches(htmlspan, @"(<h2.*?>.*?</h2>)", RegexOptions.Singleline);
+                                                if (m1.Count > 0)
                                                 {
-                                                    if ((value.Contains("</span>") == false) && (value.Contains("</p>") == false) && (value.Contains("</a>") == false) && (value.Contains("</div>") == false))
+                                                    string value = m1[m1.Count - 1].Groups[1].Value;
+                                                    if (!string.IsNullOrEmpty(value))
                                                     {
-                                                        string title = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
-                                                        title = title.Trim();
-                                                        Product product = new Product();
-                                                        product.Title = title;
-                                                        product.ParentID = config.ID;
-                                                        product.CategoryID = config.ID;
-                                                        product.Source = AppGlobal.SourceAuto;
-                                                        if (string.IsNullOrEmpty(product.Title))
+                                                        if ((value.Contains("</span>") == false) && (value.Contains("</p>") == false) && (value.Contains("</a>") == false) && (value.Contains("</div>") == false))
                                                         {
-                                                            product.Title = linkItem.Text;
+                                                            string title = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                                                            title = title.Trim();
+                                                            Product product = new Product();
+                                                            product.Title = title;
+                                                            product.ParentID = config.ID;
+                                                            product.CategoryID = config.ID;
+                                                            product.Source = AppGlobal.SourceAuto;
+                                                            if (string.IsNullOrEmpty(product.Title))
+                                                            {
+                                                                product.Title = linkItem.Text;
+                                                            }
+                                                            product.MetaTitle = AppGlobal.SetName(product.Title);
+                                                            product.URLCode = linkItem.Href;
+                                                            product.DatePublish = DateTime.Now;
+                                                            product.Initialization(InitType.Insert, RequestUserID);
+                                                            product.DatePublish = DateTime.Now;
+                                                            AppGlobal.FinderContentAndDatePublish(html001, product);
+                                                            if (product.DatePublish.Year > 2019)
+                                                            {
+                                                                await _productRepository.AsyncInsertSingleItem(product);
+                                                            }
                                                         }
-                                                        product.MetaTitle = AppGlobal.SetName(product.Title);
-                                                        product.URLCode = linkItem.Href;
-                                                        product.DatePublish = DateTime.Now;
-                                                        product.Initialization(InitType.Insert, RequestUserID);
-                                                        product.DatePublish = DateTime.Now;
-                                                        AppGlobal.FinderContentAndDatePublish(html001, product);
-                                                        if (product.DatePublish.Year > 2019)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (html001.Contains(@"</h1>") == true)
+                                            {
+                                                string htmlspan = html001;
+                                                MatchCollection m1 = Regex.Matches(htmlspan, @"(<h1.*?>.*?</h1>)", RegexOptions.Singleline);
+                                                if (m1.Count > 0)
+                                                {
+                                                    string value = m1[m1.Count - 1].Groups[1].Value;
+                                                    if (!string.IsNullOrEmpty(value))
+                                                    {
+                                                        if ((value.Contains("</span>") == false) && (value.Contains("</p>") == false) && (value.Contains("</a>") == false) && (value.Contains("</div>") == false))
                                                         {
-                                                            await _productRepository.AsyncInsertSingleItem(product);
+                                                            string title = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                                                            title = title.Trim();
+                                                            Product product = new Product();
+                                                            product.Title = title;
+                                                            product.ParentID = config.ID;
+                                                            product.CategoryID = config.ID;
+                                                            product.Source = AppGlobal.SourceAuto;
+                                                            if (string.IsNullOrEmpty(product.Title))
+                                                            {
+                                                                product.Title = linkItem.Text;
+                                                            }
+                                                            product.MetaTitle = AppGlobal.SetName(product.Title);
+                                                            product.URLCode = linkItem.Href;
+                                                            product.DatePublish = DateTime.Now;
+                                                            product.Initialization(InitType.Insert, RequestUserID);
+                                                            product.DatePublish = DateTime.Now;
+                                                            AppGlobal.FinderContentAndDatePublish(html001, product);
+                                                            if (product.DatePublish.Year > 2019)
+                                                            {
+                                                                await _productRepository.AsyncInsertSingleItem(product);
+                                                            }
                                                         }
                                                     }
                                                 }
