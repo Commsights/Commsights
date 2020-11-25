@@ -947,7 +947,7 @@ namespace Commsights.MVC.Controllers
                                         StreamReader readStream = null;
                                         if (response.CharacterSet == null)
                                         {
-                                            readStream = new StreamReader(receiveStream);
+                                            readStream = new StreamReader(receiveStream, Encoding.UTF8);
                                         }
                                         else
                                         {
