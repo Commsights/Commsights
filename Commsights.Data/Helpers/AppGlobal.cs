@@ -3061,45 +3061,9 @@ namespace Commsights.Data.Helpers
                         }
                     }
                 }
-                string htmlspan001 = htmlspan;
+                string htmlspan001 = html;
                 Uri myUri = new Uri(product.URLCode);
-                //if (myUri.Host.Contains(@"tinmoi.vn") == true)
-                //{
-                //    htmlspan001 = htmlspan001.Replace(@"</article>", @"~");
-                //    htmlspan001 = htmlspan001.Split('~')[0];
-                //}
-                htmlspan001 = htmlspan001.Replace(@"</article>", @"~");
-                if (html001.Split('~').Length > 1)
-                {
-                    html001 = html001.Split('~')[1];
-                }
-                else
-                {
-                    htmlspan001 = htmlspan001.Replace(@"class=""tags", @"~");
-                    htmlspan001 = htmlspan001.Split('~')[0];
-                    htmlspan001 = htmlspan001.Replace(@"class='tags", @"~");
-                    htmlspan001 = htmlspan001.Split('~')[0];
-                    htmlspan001 = htmlspan001.Replace(@"tags"">", @"~");
-                    htmlspan001 = htmlspan001.Split('~')[0];
-                    htmlspan001 = htmlspan001.Replace(@"tags'>", @"~");
-                    htmlspan001 = htmlspan001.Split('~')[0];
-                    htmlspan001 = htmlspan001.Replace(@"class=""social", @"~");
-                    htmlspan001 = htmlspan001.Split('~')[0];
-                    htmlspan001 = htmlspan001.Replace(@"class='social", @"~");
-                    htmlspan001 = htmlspan001.Split('~')[0];
-                    htmlspan001 = htmlspan001.Replace(@"social"">", @"~");
-                    htmlspan001 = htmlspan001.Split('~')[0];
-                    htmlspan001 = htmlspan001.Replace(@"social'>", @"~");
-                    htmlspan001 = htmlspan001.Split('~')[0];
-                    htmlspan001 = htmlspan001.Replace(@"class=""fb-comments", @"~");
-                    htmlspan001 = htmlspan001.Split('~')[0];
-                    htmlspan001 = htmlspan001.Replace(@"class='fb-comments", @"~");
-                    htmlspan001 = htmlspan001.Split('~')[0];
-                    htmlspan001 = htmlspan001.Replace(@"fb-comments"">", @"~");
-                    htmlspan001 = htmlspan001.Split('~')[0];
-                    htmlspan001 = htmlspan001.Replace(@"fb-comments'>", @"~");
-                    htmlspan001 = htmlspan001.Split('~')[0];
-                }
+                htmlspan001 = HTMLReplaceAndSplit(htmlspan001);
                 m1 = Regex.Matches(htmlspan001, @"(<p.*?>.*?</p>)", RegexOptions.Singleline);
                 for (int i = 0; i < m1.Count; i++)
                 {
@@ -3193,6 +3157,36 @@ namespace Commsights.Data.Helpers
                 }
             }
             return list;
+        }
+        public static string HTMLReplaceAndSplit(string htmlspan001)
+        {
+            htmlspan001 = htmlspan001.Replace(@"<footer>", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"class=""footer", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"class='footer", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"footer"">", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"footer'>", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"class=""comments", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"class='comments", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"comments"">", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"comments'>", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"class=""fb-comments", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"class='fb-comments", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"fb-comments"">", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"fb-comments'>", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            return htmlspan001;
         }
         public void GetAuthorFromURL(Product product)
         {

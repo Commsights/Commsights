@@ -344,6 +344,21 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
+        public IActionResult UpdateProductCompact(ProductCompact model)
+        {
+            string note = AppGlobal.InitString;
+            _productRepository.UpdateProductCompactSingleItem(model);
+            int result = 1;
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
         public IActionResult Delete(int ID)
         {
             string note = AppGlobal.InitString;
@@ -953,114 +968,24 @@ namespace Commsights.MVC.Controllers
                                             readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
                                         }
                                         string html001 = readStream.ReadToEnd();
-                                        html001 = html001.Replace(@"</article>", @"~");
-                                        if (html001.Split('~').Length > 1)
-                                        {
-                                            html001 = html001.Split('~')[1];
-                                        }
-                                        else
-                                        {
-                                            html001 = html001.Replace(@"class=""tags", @"~");
-                                            html001 = html001.Split('~')[0];
-                                            html001 = html001.Replace(@"class='tags", @"~");
-                                            html001 = html001.Split('~')[0];
-                                            html001 = html001.Replace(@"tags"">", @"~");
-                                            html001 = html001.Split('~')[0];
-                                            html001 = html001.Replace(@"tags'>", @"~");
-                                            html001 = html001.Split('~')[0];
-                                            html001 = html001.Replace(@"class=""social", @"~");
-                                            html001 = html001.Split('~')[0];
-                                            html001 = html001.Replace(@"class='social", @"~");
-                                            html001 = html001.Split('~')[0];
-                                            html001 = html001.Replace(@"social"">", @"~");
-                                            html001 = html001.Split('~')[0];
-                                            html001 = html001.Replace(@"social'>", @"~");
-                                            html001 = html001.Split('~')[0];
-                                            html001 = html001.Replace(@"class=""fb-comments", @"~");
-                                            html001 = html001.Split('~')[0];
-                                            html001 = html001.Replace(@"class='fb-comments", @"~");
-                                            html001 = html001.Split('~')[0];
-                                            html001 = html001.Replace(@"fb-comments"">", @"~");
-                                            html001 = html001.Split('~')[0];
-                                            html001 = html001.Replace(@"fb-comments'>", @"~");
-                                            html001 = html001.Split('~')[0];
-                                        }
+                                        string htmlspan001 = html001;
+                                        htmlspan001 = AppGlobal.HTMLReplaceAndSplit(htmlspan001);
                                         if (domain.Contains(@"nhipcaudoanhnghiep.vn") == true)
                                         {
-                                            if (html001.Contains(@"</h2>") == true)
+                                            if (htmlspan001.Contains(@"</h2>") == true)
                                             {
-                                                string htmlspan = html001;
+                                                string htmlspan = htmlspan001;
                                                 MatchCollection m1 = Regex.Matches(htmlspan, @"(<h2.*?>.*?</h2>)", RegexOptions.Singleline);
-                                                if (m1.Count > 0)
-                                                {
-                                                    string value = m1[m1.Count - 1].Groups[1].Value;
-                                                    if (!string.IsNullOrEmpty(value))
-                                                    {
-                                                        if ((value.Contains("</span>") == false) && (value.Contains("</p>") == false) && (value.Contains("</a>") == false) && (value.Contains("</div>") == false))
-                                                        {
-                                                            string title = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
-                                                            title = title.Trim();
-                                                            Product product = new Product();
-                                                            product.Title = title;
-                                                            product.ParentID = config.ID;
-                                                            product.CategoryID = config.ID;
-                                                            product.Source = AppGlobal.SourceAuto;
-                                                            if (string.IsNullOrEmpty(product.Title))
-                                                            {
-                                                                product.Title = linkItem.Text;
-                                                            }
-                                                            product.MetaTitle = AppGlobal.SetName(product.Title);
-                                                            product.URLCode = linkItem.Href;
-                                                            product.DatePublish = DateTime.Now;
-                                                            product.Initialization(InitType.Insert, RequestUserID);
-                                                            product.DatePublish = DateTime.Now;
-                                                            AppGlobal.FinderContentAndDatePublish(html001, product);
-                                                            if (product.DatePublish.Year > 2019)
-                                                            {
-                                                                await _productRepository.AsyncInsertSingleItem(product);
-                                                            }
-                                                        }
-                                                    }
-                                                }
+                                                await AsyncInsertSingleItem(m1, config, linkItem, html001);
                                             }
                                         }
                                         else
                                         {
-                                            if (html001.Contains(@"</h1>") == true)
+                                            if (htmlspan001.Contains(@"</h1>") == true)
                                             {
-                                                string htmlspan = html001;
+                                                string htmlspan = htmlspan001;
                                                 MatchCollection m1 = Regex.Matches(htmlspan, @"(<h1.*?>.*?</h1>)", RegexOptions.Singleline);
-                                                if (m1.Count > 0)
-                                                {
-                                                    string value = m1[m1.Count - 1].Groups[1].Value;
-                                                    if (!string.IsNullOrEmpty(value))
-                                                    {
-                                                        if ((value.Contains("</span>") == false) && (value.Contains("</p>") == false) && (value.Contains("</a>") == false) && (value.Contains("</div>") == false))
-                                                        {
-                                                            string title = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
-                                                            title = title.Trim();
-                                                            Product product = new Product();
-                                                            product.Title = title;
-                                                            product.ParentID = config.ID;
-                                                            product.CategoryID = config.ID;
-                                                            product.Source = AppGlobal.SourceAuto;
-                                                            if (string.IsNullOrEmpty(product.Title))
-                                                            {
-                                                                product.Title = linkItem.Text;
-                                                            }
-                                                            product.MetaTitle = AppGlobal.SetName(product.Title);
-                                                            product.URLCode = linkItem.Href;
-                                                            product.DatePublish = DateTime.Now;
-                                                            product.Initialization(InitType.Insert, RequestUserID);
-                                                            product.DatePublish = DateTime.Now;
-                                                            AppGlobal.FinderContentAndDatePublish(html001, product);
-                                                            if (product.DatePublish.Year > 2019)
-                                                            {
-                                                                await _productRepository.AsyncInsertSingleItem(product);
-                                                            }
-                                                        }
-                                                    }
-                                                }
+                                                await AsyncInsertSingleItem(m1, config, linkItem, html001);
                                             }
                                         }
                                         response.Close();
@@ -1094,6 +1019,41 @@ namespace Commsights.MVC.Controllers
                         }
                         catch
                         {
+                        }
+                    }
+                }
+            }
+            return "";
+        }
+        public async Task<string> AsyncInsertSingleItem(MatchCollection m1, Config config, LinkItem linkItem, string html001)
+        {
+            if (m1.Count > 0)
+            {
+                string value = m1[m1.Count - 1].Groups[1].Value;
+                if (!string.IsNullOrEmpty(value))
+                {
+                    if ((value.Contains("</span>") == false) && (value.Contains("</p>") == false) && (value.Contains("</a>") == false) && (value.Contains("</div>") == false))
+                    {
+                        string title = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                        title = title.Trim();
+                        Product product = new Product();
+                        product.Title = title;
+                        product.ParentID = config.ID;
+                        product.CategoryID = config.ID;
+                        product.Source = AppGlobal.SourceAuto;
+                        if (string.IsNullOrEmpty(product.Title))
+                        {
+                            product.Title = linkItem.Text;
+                        }
+                        product.MetaTitle = AppGlobal.SetName(product.Title);
+                        product.URLCode = linkItem.Href;
+                        product.DatePublish = DateTime.Now;
+                        product.Initialization(InitType.Insert, RequestUserID);
+                        product.DatePublish = DateTime.Now;
+                        AppGlobal.FinderContentAndDatePublish(html001, product);
+                        if (product.DatePublish.Year > 2019)
+                        {
+                            await _productRepository.AsyncInsertSingleItem(product);
                         }
                     }
                 }

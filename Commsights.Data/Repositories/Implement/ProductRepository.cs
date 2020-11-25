@@ -1242,5 +1242,18 @@ new SqlParameter("@TitleEnglish",product.TitleEnglish),
             string result = await SQLHelper.ExecuteNonQueryAsync(AppGlobal.ConectionString, "sp_ProductUpdateSingleItem", parameters);
             return result;
         }
+        public string UpdateProductCompactSingleItem(ProductCompact product)
+        {
+            SqlParameter[] parameters =
+            {
+new SqlParameter("@ID",product.ID),
+new SqlParameter("@Title",product.Title),
+new SqlParameter("@DatePublish",product.DatePublish),
+new SqlParameter("@TitleEnglish",product.TitleEnglish),
+new SqlParameter("@IsError",product.IsError),
+};
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductUpdateSingleItem", parameters);
+            return result;
+        }
     }
 }
