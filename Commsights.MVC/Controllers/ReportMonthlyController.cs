@@ -369,34 +369,56 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetTrendLineWithoutSUMByIDToListToJSON(int ID)
         {
-            List<ReportMonthlyTrendLineDataTransfer> list = _reportMonthlyRepository.GetTrendLineWithoutSUMByIDToList(ID);
-            List<ReportMonthlyTrendLineDataTransfer> listCompanyName = _reportMonthlyRepository.GetTrendLineDistinctCompanyNameByIDToList(ID);
             DataTable tbl = new DataTable();
-            tbl.Columns.Add(new DataColumn("Year"));
-            tbl.Columns.Add(new DataColumn("Month"));
-            tbl.Columns.Add(new DataColumn("Day"));
-            foreach (ReportMonthlyTrendLineDataTransfer item in listCompanyName)
+            ReportMonthly model = _reportMonthlyRepository.GetByID(ID);
+            if (model != null)
             {
-                tbl.Columns.Add(new DataColumn(item.CompanyName));
-            }
-            for (int i = 1; i < 63; i++)
-            {
-                DataRow row = tbl.NewRow();
-                tbl.Rows.Add(row);
-            }
-            int index = 0;
-            foreach (ReportMonthlyTrendLineDataTransfer item in list)
-            {
-                foreach (DataColumn column in tbl.Columns)
+                int monthLast = model.Month - 1;
+                int yearLast = model.Year;
+                if (monthLast < 1)
                 {
-                    if (item.CompanyName == column.ColumnName)
+                    monthLast = 1;
+                    yearLast = yearLast - 1;
+                }
+                List<ReportMonthlyTrendLineDataTransfer> list = _reportMonthlyRepository.GetTrendLineWithoutSUMByIDToList(ID);
+                List<ReportMonthlyTrendLineDataTransfer> listCompanyName = _reportMonthlyRepository.GetTrendLineDistinctCompanyNameByIDToList(ID);
+                tbl.Columns.Add(new DataColumn("Year"));
+                tbl.Columns.Add(new DataColumn("Month"));
+                tbl.Columns.Add(new DataColumn("Day"));
+                foreach (ReportMonthlyTrendLineDataTransfer item in listCompanyName)
+                {
+                    tbl.Columns.Add(new DataColumn(item.CompanyName));
+                }
+                for (int i = 1; i < 32; i++)
+                {
+                    DataRow row = tbl.NewRow();
+                    row["Year"] = yearLast;
+                    row["Month"] = monthLast;
+                    row["Day"] = i;
+                    tbl.Rows.Add(row);
+                }
+                for (int i = 1; i < 32; i++)
+                {
+                    DataRow row = tbl.NewRow();
+                    row["Year"] = model.Year;
+                    row["Month"] = model.Month;
+                    row["Day"] = i;
+                    tbl.Rows.Add(row);
+                }
+                int index = 0;
+                foreach (ReportMonthlyTrendLineDataTransfer item in list)
+                {
+                    foreach (DataColumn column in tbl.Columns)
                     {
+                        if (item.CompanyName == column.ColumnName)
+                        {
 
+                        }
                     }
                 }
+                tbl.AcceptChanges();
             }
-            tbl.AcceptChanges();
-            return Json(list);
+            return Json(tbl);
         }
         public ActionResult GetMonthlyTierCommsightsAndCompanyNameToJSON(int ID)
         {
