@@ -168,6 +168,20 @@ namespace Commsights.MVC.Controllers
             }
             return View(model);
         }
+        public IActionResult MonthlyTrendLine(int ID)
+        {
+            ReportMonthlyViewModel model = new ReportMonthlyViewModel();
+            if (ID > 0)
+            {
+                ReportMonthly reportMonthly = _reportMonthlyRepository.GetByID(ID);
+                if (reportMonthly != null)
+                {
+                    model.ID = reportMonthly.ID;
+                    model.Title = reportMonthly.Title;
+                }
+            }
+            return View(model);
+        }
         public IActionResult MonthlyTierCommsightsAndCompanyName(int ID)
         {
             ReportMonthlyViewModel model = new ReportMonthlyViewModel();
@@ -352,6 +366,37 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetSegmentProductWithoutSUMByIDToListToJSON(int ID)
         {
             return Json(_reportMonthlyRepository.GetSegmentProductWithoutSUMByIDToList(ID));
+        }
+        public ActionResult GetTrendLineWithoutSUMByIDToListToJSON(int ID)
+        {
+            List<ReportMonthlyTrendLineDataTransfer> list = _reportMonthlyRepository.GetTrendLineWithoutSUMByIDToList(ID);
+            List<ReportMonthlyTrendLineDataTransfer> listCompanyName = _reportMonthlyRepository.GetTrendLineDistinctCompanyNameByIDToList(ID);
+            DataTable tbl = new DataTable();
+            tbl.Columns.Add(new DataColumn("Year"));
+            tbl.Columns.Add(new DataColumn("Month"));
+            tbl.Columns.Add(new DataColumn("Day"));
+            foreach (ReportMonthlyTrendLineDataTransfer item in listCompanyName)
+            {
+                tbl.Columns.Add(new DataColumn(item.CompanyName));
+            }
+            for (int i = 1; i < 63; i++)
+            {
+                DataRow row = tbl.NewRow();
+                tbl.Rows.Add(row);
+            }
+            int index = 0;
+            foreach (ReportMonthlyTrendLineDataTransfer item in list)
+            {
+                foreach (DataColumn column in tbl.Columns)
+                {
+                    if (item.CompanyName == column.ColumnName)
+                    {
+
+                    }
+                }
+            }
+            tbl.AcceptChanges();
+            return Json(list);
         }
         public ActionResult GetMonthlyTierCommsightsAndCompanyNameToJSON(int ID)
         {

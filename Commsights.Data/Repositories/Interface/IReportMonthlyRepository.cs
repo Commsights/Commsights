@@ -42,5 +42,7 @@ namespace Commsights.Data.Repositories
         public string InsertItemsByDataTableAndReportMonthlyIDAndRequestUserID(DataTable table, int reportMonthlyID, int RequestUserID);
         public List<ReportMonthlySegmentProductDataTransfer> GetSegmentProductWithoutSUMByIDToList(int ID);
         public List<ReportMonthlySegmentProductDataTransfer> GetSegmentProductByIDToList(int ID);
+        public List<ReportMonthlyTrendLineDataTransfer> GetTrendLineWithoutSUMByIDToList(int ID);
+        public List<ReportMonthlyTrendLineDataTransfer> GetTrendLineDistinctCompanyNameByIDToList(int ID);
     }
 }

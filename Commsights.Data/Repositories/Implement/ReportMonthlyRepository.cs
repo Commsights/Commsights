@@ -459,5 +459,33 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<ReportMonthlyTrendLineDataTransfer> GetTrendLineWithoutSUMByIDToList(int ID)
+        {
+            List<ReportMonthlyTrendLineDataTransfer> list = new List<ReportMonthlyTrendLineDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectTrendLineByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyTrendLineDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyTrendLineDataTransfer> GetTrendLineDistinctCompanyNameByIDToList(int ID)
+        {
+            List<ReportMonthlyTrendLineDataTransfer> list = new List<ReportMonthlyTrendLineDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectTrendLineDistinctCompanyNameByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyTrendLineDataTransfer>(dt);
+            }
+            return list;
+        }
     }
 }
