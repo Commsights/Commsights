@@ -88,7 +88,7 @@
                     <div id="DataChannelAndMention" class='col-sm-12'></div>
                 </div>
                 <hr />
-                <h4>Tier Commsights</h4>
+                <h4>Media Tier</h4>
                 <div class="col-md-12">
                     <div id="DataTierCommsights" class='col-sm-12'></div>
                 </div>
@@ -173,7 +173,9 @@
                             html = html + '<tr style="background-color:#f1f1f1;">';
                         }
                          html = html + '<td class="text-left" style="font-weight: bold;">' + item.SegmentProduct + '</td>';
-                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.ProductCount + '</td>';
+                         let ProductCount = Math.round(item.ProductCount);
+                         var ProductCountString = ProductCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");                      
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + ProductCountString + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold;">' + item.ProductPercent + '</td>';
                          html = html + '</tr>';
                     });
@@ -291,26 +293,30 @@
                          html = html + '<td class="text-right" style="font-weight: bold;">' + ProductMediaLastMonthCountString + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold;">' + ProductNewsCountString + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold;">' + ProductMediaCountString + '</td>';
+                         let NewsGrowthPercent = Math.round(item.NewsGrowthPercent);
+                         var NewsGrowthPercentString = NewsGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         let MediaGrowthPercent = Math.round(item.MediaGrowthPercent);
+                         var MediaGrowthPercentString = MediaGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
                          if (item.NewsGrowthPercent >0) {
-                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + item.NewsGrowthPercent + '</td>';
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + NewsGrowthPercentString + '</td>';
                          }
                          else {
                              if (item.NewsGrowthPercent == 0) {
-                                 html = html + '<td class="text-right" style="font-weight: bold;">' + item.NewsGrowthPercent + '</td>';
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + NewsGrowthPercentString + '</td>';
                              }
                              else {
-                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + item.NewsGrowthPercent + '</td>';
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + NewsGrowthPercentString + '</td>';
                              }
                          }
                          if (item.MediaGrowthPercent >0) {
-                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + item.MediaGrowthPercent + '</td>';
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + MediaGrowthPercentString + '</td>';
                          }
                          else {
                              if (item.MediaGrowthPercent == 0) {
-                                 html = html + '<td class="text-right" style="font-weight: bold;">' + item.MediaGrowthPercent + '</td>';
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + MediaGrowthPercentString + '</td>';
                              }
                              else {
-                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + item.MediaGrowthPercent + '</td>';
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + MediaGrowthPercentString + '</td>';
                              }
                          }
                          html = html + '</tr>';
@@ -344,7 +350,7 @@
                  html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Mention (Last month)</a></th>";
                  html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Feature (This month)</a></th>";
                  html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Mention (This month)</a></th>";
-                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Growth Mention (%)</a></th>";
+                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Growth Feature (%)</a></th>";
                  html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Growth Mention (%)</a></th>";
                 html = html + '</tr>';
                 html = html + '</thead>';
@@ -364,26 +370,30 @@
                          html = html + '<td class="text-right" style="font-weight: bold;">' + item.MentionLastMonthCount + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold;">' + item.FeatureCount + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold;">' + item.MentionCount + '</td>';
+                         let FeatureGrowthPercent = Math.round(item.FeatureGrowthPercent);
+                         var FeatureGrowthPercentString = FeatureGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         let MentionGrowthPercent = Math.round(item.MentionGrowthPercent);
+                         var MentionGrowthPercentString = MentionGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
                          if (item.FeatureGrowthPercent > 0) {
-                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + item.FeatureGrowthPercent + '</td>';
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + FeatureGrowthPercentString + '</td>';
                          }
                          else {
                              if (item.FeatureGrowthPercent == 0) {
-                                 html = html + '<td class="text-right" style="font-weight: bold;">' + item.FeatureGrowthPercent + '</td>';
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + FeatureGrowthPercentString + '</td>';
                              }
                              else {
-                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + item.FeatureGrowthPercent + '</td>';
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + FeatureGrowthPercentString + '</td>';
                              }
                          }
                          if (item.MentionGrowthPercent > 0) {
-                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + item.MentionGrowthPercent + '</td>';
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + MentionGrowthPercentString + '</td>';
                          }
                          else {
                              if (item.MentionGrowthPercent == 0) {
-                                 html = html + '<td class="text-right" style="font-weight: bold;">' + item.MentionGrowthPercent + '</td>';
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + MentionGrowthPercentString + '</td>';
                              }
                              else {
-                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + item.MentionGrowthPercent + '</td>';
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + MentionGrowthPercentString + '</td>';
                              }
                          }
                          html = html + '</tr>';
@@ -440,45 +450,64 @@
                         }
                         else {
                             html = html + '<tr style="background-color:#f1f1f1;">';
-                        }
+                         }
+                         let PositiveLastMonthCount = Math.round(item.PositiveLastMonthCount);
+                         var PositiveLastMonthCountString = PositiveLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         let NeutralLastMonthCount = Math.round(item.NeutralLastMonthCount);
+                         var NeutralLastMonthCountString = NeutralLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         let NegativeLastMonthCount = Math.round(item.NegativeLastMonthCount);
+                         var NegativeLastMonthCountString = NegativeLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         let PositiveCount = Math.round(item.PositiveCount);
+                         var PositiveCountString = PositiveCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         let NeutralCount = Math.round(item.NeutralCount);
+                         var NeutralCountString = NeutralCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         let NegativeCount = Math.round(item.NegativeCount);
+                         var NegativeCountString = NegativeCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         let PositiveGrowthPercent = Math.round(item.PositiveGrowthPercent);
+                         var PositiveGrowthPercentString = PositiveGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         let NeutralGrowthPercent = Math.round(item.NeutralGrowthPercent);
+                         var NeutralGrowthPercentString = NeutralGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         let NegativeGrowthPercent = Math.round(item.NegativeGrowthPercent);
+                         var NegativeGrowthPercentString = NegativeGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+
                          html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
-                         html = html + '<td class="text-right" style="font-weight: bold; color: green;">' + item.PositiveLastMonthCount + '</td>';
-                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.NeutralLastMonthCount + '</td>';
-                         html = html + '<td class="text-right" style="font-weight: bold; color: red;">' + item.NegativeLastMonthCount + '</td>';
-                         html = html + '<td class="text-right" style="font-weight: bold; color: green;">' + item.PositiveCount + '</td>';
-                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.NeutralCount + '</td>';
-                         html = html + '<td class="text-right" style="font-weight: bold; color: red;">' + item.NegativeCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold; color: green;">' + PositiveLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + NeutralLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold; color: red;">' + NegativeLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold; color: green;">' + PositiveCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + NeutralCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold; color: red;">' + NegativeCountString + '</td>';
                          if (item.PositiveGrowthPercent > 0) {
-                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + item.PositiveGrowthPercent + '</td>';
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + PositiveGrowthPercentString + '</td>';
                          }
                          else {
                              if (item.PositiveGrowthPercent == 0) {
-                                 html = html + '<td class="text-right" style="font-weight: bold;">' + item.PositiveGrowthPercent + '</td>';
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + PositiveGrowthPercentString + '</td>';
                              }
                              else {
-                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + item.PositiveGrowthPercent + '</td>';
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + PositiveGrowthPercentString + '</td>';
                              }
                          }
                          if (item.NeutralGrowthPercent > 0) {
-                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + item.NeutralGrowthPercent + '</td>';
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + NeutralGrowthPercentString + '</td>';
                          }
                          else {
                              if (item.NeutralGrowthPercent == 0) {
-                                 html = html + '<td class="text-right" style="font-weight: bold;">' + item.NeutralGrowthPercent + '</td>';
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + NeutralGrowthPercentString + '</td>';
                              }
                              else {
-                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + item.NeutralGrowthPercent + '</td>';
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + NeutralGrowthPercentString + '</td>';
                              }
                          }
                          if (item.NegativeGrowthPercent > 0) {
-                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + item.NegativeGrowthPercent + '</td>';
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + NegativeGrowthPercentString + '</td>';
                          }
                          else {
                              if (item.NegativeGrowthPercent == 0) {
-                                 html = html + '<td class="text-right" style="font-weight: bold;">' + item.NegativeGrowthPercent + '</td>';
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + NegativeGrowthPercentString + '</td>';
                              }
                              else {
-                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + item.NegativeGrowthPercent + '</td>';
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + NegativeGrowthPercentString + '</td>';
                              }
                          }
                         html = html + '</tr>';
@@ -534,7 +563,7 @@
                              }
                          }
                          else {
-                             html = html + '<td class="text-left" style="font-weight: bold;">' + item.SegmentProduct + '</td>';
+                             html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
                          }
                          html = html + '<td class="text-left" style="font-weight: bold;">' + item.Sentiment + '</td>';
                          switch (item.Sentiment) {
