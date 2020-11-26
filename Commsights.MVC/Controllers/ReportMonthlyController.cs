@@ -369,12 +369,13 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetTrendLineWithoutSUMByIDToListToJSON(int ID)
         {
+            string html = "";
             DataTable tbl = new DataTable();
             ReportMonthly model = _reportMonthlyRepository.GetByID(ID);
             if (model != null)
             {
-                int monthLast = model.Month - 1;
-                int yearLast = model.Year;
+                int monthLast = model.Month.Value - 1;
+                int yearLast = model.Year.Value;
                 if (monthLast < 1)
                 {
                     monthLast = 1;
@@ -405,20 +406,69 @@ namespace Commsights.MVC.Controllers
                     row["Day"] = i;
                     tbl.Rows.Add(row);
                 }
-                int index = 0;
-                foreach (ReportMonthlyTrendLineDataTransfer item in list)
+                for (int i = 0; i < tbl.Rows.Count; i++)
                 {
-                    foreach (DataColumn column in tbl.Columns)
+                    foreach (ReportMonthlyTrendLineDataTransfer item in list)
                     {
-                        if (item.CompanyName == column.ColumnName)
+                        for (int j = 0; j < tbl.Columns.Count; j++)
                         {
-
+                            string columnName = tbl.Columns[j].ColumnName;
+                            if (item.CompanyName == columnName)
+                            {
+                                try
+                                {
+                                    int year = int.Parse(tbl.Rows[i]["Year"].ToString());
+                                    int month = int.Parse(tbl.Rows[i]["Month"].ToString());
+                                    int day = int.Parse(tbl.Rows[i]["Day"].ToString());
+                                    if ((year == item.Year) && (month == item.Month) && (day == item.Day))
+                                    {
+                                        tbl.Rows[i][columnName] = item.TrendLineCount;
+                                        j = tbl.Columns.Count;
+                                    }
+                                }
+                                catch
+                                {
+                                }
+                            }
                         }
                     }
                 }
-                tbl.AcceptChanges();
+
+                StringBuilder txt = new StringBuilder();
+                txt.AppendLine("<table class='border01' id='Data01' cellspacing='4' style='background-color:#ffffff; width:100%;'>");
+                txt.AppendLine("<thead>");
+                txt.AppendLine("<tr>");
+                for (int i = 0; i < tbl.Columns.Count; i++)
+                {
+                    txt.AppendLine("<th class='text-center'><a style='cursor:pointer;'>" + tbl.Columns[i].ColumnName + "</a></th>");
+                }
+                txt.AppendLine("</tr>");
+                txt.AppendLine("</thead>");
+                txt.AppendLine("<tbody>");
+                for (int i = 0; i < tbl.Rows.Count; i++)
+                {
+                    if (i % 2 == 0)
+                    {
+                        txt.AppendLine("<tr style='background-color:#ffffff;'>");
+                    }
+                    else
+                    {
+                        txt.AppendLine("<tr style='background-color:#f1f1f1;'>");
+                    }
+                    txt.AppendLine("<td class='text-center'>" + tbl.Rows[i]["Year"].ToString() + "</td>");
+                    txt.AppendLine("<td class='text-center'>" + tbl.Rows[i]["Month"].ToString() + "</td>");
+                    txt.AppendLine("<td class='text-center'>" + tbl.Rows[i]["Day"].ToString() + "</td>");
+                    for (int j = 3; j < tbl.Columns.Count; j++)
+                    {
+                        txt.AppendLine("<td class='text-right'>" + tbl.Rows[i][tbl.Columns[j].ColumnName].ToString() + "</td>");
+                    }
+                    txt.AppendLine("</tr>");
+                }
+                txt.AppendLine("</tbody>");
+                txt.AppendLine("</table>");
+                html = txt.ToString();
             }
-            return Json(tbl);
+            return Json(html);
         }
         public ActionResult GetMonthlyTierCommsightsAndCompanyNameToJSON(int ID)
         {

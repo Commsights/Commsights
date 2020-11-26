@@ -61,9 +61,9 @@
             data: {
                 ID: IDValue,
             },
-             success: function (list) {
-                var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';                
-                html = $.parseHTML(html);
+             success: function (list) {              
+                 var html = '';                
+                 html = $.parseHTML(list);
                  $("#DataTrendline").append(html);
             }
          }).done(() => {

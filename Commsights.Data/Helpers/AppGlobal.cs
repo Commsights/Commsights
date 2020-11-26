@@ -3186,6 +3186,14 @@ namespace Commsights.Data.Helpers
             htmlspan001 = htmlspan001.Split('~')[0];
             htmlspan001 = htmlspan001.Replace(@"fb-comments'>", @"~");
             htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"related-list"">", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"related-list'>", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"related"">", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"related'>", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
             return htmlspan001;
         }
         public void GetAuthorFromURL(Product product)

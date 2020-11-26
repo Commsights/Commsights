@@ -694,18 +694,24 @@ namespace Commsights.MVC.Controllers
                 this.CreateProductScanWebsiteNoFilterProduct001(listConfig[i]);
             }
         }
-        public async Task<string> AsyncScanWebsiteNoFilterProductByIndexBeginVoid(int indexBegin, int action)
+        public async Task<string> AsyncScanWebsiteNoFilterProductByIndexBeginVoid(int indexBegin)
         {
-            List<Config> listConfig = new List<Config>();
-            switch (action)
+            List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
+            int listConfigCount = listConfig.Count;
+            int indexEnd = indexBegin + 10;
+            for (int i = indexBegin; i < indexEnd; i++)
             {
-                case 0:
-                    listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
-                    break;
-                case 1:
-                    listConfig = _configResposistory.GetWebsiteToList();
-                    break;
+                if (i == listConfigCount)
+                {
+                    i = indexEnd;
+                }
+                await this.AsyncCreateProductScanWebsiteNoFilterProduct001(listConfig[i]);
             }
+            return "";
+        }
+        public async Task<string> AsyncScanWebsiteNoFilterProductByIndexBeginVoid001(int indexBegin)
+        {
+            List<Config> listConfig = _configResposistory.GetWebsiteToList();
             int listConfigCount = listConfig.Count;
             int indexEnd = indexBegin + 10;
             for (int i = indexBegin; i < indexEnd; i++)
