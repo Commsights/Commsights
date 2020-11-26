@@ -1041,12 +1041,28 @@ namespace Commsights.Data.Helpers
                 return builder.Build().GetSection("AppSettings").GetSection("Customer").Value;
             }
         }
+        public static string FTPDownloadReprotMonth
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("FTPDownloadReprotMonth").Value;
+            }
+        }
         public static string FTPDownloadReprotDaily
         {
             get
             {
                 var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                 return builder.Build().GetSection("AppSettings").GetSection("FTPDownloadReprotDaily").Value;
+            }
+        }
+        public static string URLDownloadReprotMonth
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("URLDownloadReprotMonth").Value;
             }
         }
         public static string URLDownloadReprotDaily
@@ -2508,7 +2524,7 @@ namespace Commsights.Data.Helpers
                                 string date = t.Split(' ')[j];
                                 date = date.Trim();
                                 date = date.Replace(@",", @"");
-                                if ((date.Length == 10) && (date.Contains(@"/") == true))
+                                if ((date.Length > 7) && (date.Length < 11) && (date.Contains(@"/") == true))
                                 {
                                     try
                                     {
@@ -2649,7 +2665,7 @@ namespace Commsights.Data.Helpers
                                 string date = t.Split(' ')[j];
                                 date = date.Trim();
                                 date = date.Replace(@",", @"");
-                                if ((date.Length == 10) && (date.Contains(@"/") == true))
+                                if ((date.Length > 7) && (date.Length < 11) && (date.Contains(@"/") == true))
                                 {
                                     try
                                     {
@@ -2794,7 +2810,7 @@ namespace Commsights.Data.Helpers
                                 string date = t.Split(' ')[j];
                                 date = date.Trim();
                                 date = date.Replace(@",", @"");
-                                if ((date.Length == 10) && (date.Contains(@"/") == true))
+                                if ((date.Length > 7) && (date.Length < 11) && (date.Contains(@"/") == true))
                                 {
                                     try
                                     {
@@ -2939,7 +2955,7 @@ namespace Commsights.Data.Helpers
                                 string date = t.Split(' ')[j];
                                 date = date.Trim();
                                 date = date.Replace(@",", @"");
-                                if ((date.Length == 10) && (date.Contains(@"/") == true))
+                                if ((date.Length > 7) && (date.Length < 11) && (date.Contains(@"/") == true))
                                 {
                                     try
                                     {
@@ -3090,12 +3106,11 @@ namespace Commsights.Data.Helpers
                                 string date = t.Split(' ')[j];
                                 date = date.Trim();
                                 date = date.Replace(@",", @"");
-                                if ((date.Length == 10) && (date.Contains(@"/") == true))
+                                if ((date.Length > 7) && (date.Length < 11) && (date.Contains(@"/") == true))
                                 {
                                     try
                                     {
                                         DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-
                                         if (product.DatePublish > datePublish)
                                         {
                                             product.DatePublish = datePublish;

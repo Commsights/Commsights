@@ -976,7 +976,7 @@ namespace Commsights.MVC.Controllers
                                         string html001 = readStream.ReadToEnd();
                                         string htmlspan001 = html001;
                                         htmlspan001 = AppGlobal.HTMLReplaceAndSplit(htmlspan001);
-                                        if (domain.Contains(@"nhipcaudoanhnghiep.vn") == true)
+                                        if ((domain.Contains(@"nhipcaudoanhnghiep.vn") == true) || (domain.Contains(@"vov.vn") == true))
                                         {
                                             if (htmlspan001.Contains(@"</h2>") == true)
                                             {

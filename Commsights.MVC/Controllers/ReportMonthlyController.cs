@@ -19,6 +19,9 @@ using Commsights.Service.Mail;
 using System.Globalization;
 using System.Data;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using System.Threading;
+using System.Drawing;
+using OfficeOpenXml.Style;
 
 namespace Commsights.MVC.Controllers
 {
@@ -56,6 +59,20 @@ namespace Commsights.MVC.Controllers
             if (ID > 0)
             {
                 model = _reportMonthlyRepository.GetByID(ID);
+            }
+            return View(model);
+        }
+        public IActionResult MonthlyReport(int ID)
+        {
+            ReportMonthlyViewModel model = new ReportMonthlyViewModel();
+            if (ID > 0)
+            {
+                ReportMonthly reportMonthly = _reportMonthlyRepository.GetByID(ID);
+                if (reportMonthly != null)
+                {
+                    model.ID = reportMonthly.ID;
+                    model.Title = reportMonthly.Title;
+                }
             }
             return View(model);
         }
@@ -393,16 +410,16 @@ namespace Commsights.MVC.Controllers
                 for (int i = 1; i < 32; i++)
                 {
                     DataRow row = tbl.NewRow();
-                    row["Year"] = yearLast;
-                    row["Month"] = monthLast;
+                    row["Year"] = model.Year;
+                    row["Month"] = model.Month;
                     row["Day"] = i;
                     tbl.Rows.Add(row);
                 }
                 for (int i = 1; i < 32; i++)
                 {
                     DataRow row = tbl.NewRow();
-                    row["Year"] = model.Year;
-                    row["Month"] = model.Month;
+                    row["Year"] = yearLast;
+                    row["Month"] = monthLast;
                     row["Day"] = i;
                     tbl.Rows.Add(row);
                 }
@@ -1360,6 +1377,131 @@ namespace Commsights.MVC.Controllers
             string action = "Upload";
             string controller = "ReportMonthly";
             return RedirectToAction(action, controller, new { ID = model.ID });
+        }
+        public string ExportExcelByID(CancellationToken cancellationToken, int ID)
+        {
+            string result = "";
+            ReportMonthly model = _reportMonthlyRepository.GetByID(ID);
+            if (model != null)
+            {
+                string excelName = model.Title + ".xlsx";
+                var streamExport = new MemoryStream();
+                using (var package = new ExcelPackage(streamExport))
+                {
+                    Color color = Color.FromArgb(int.Parse("#c00000".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));
+                    var segment = package.Workbook.Worksheets.Add("Segment");
+                    segment.Cells[1, 1].Value = "Segment";
+                    segment.Cells[1, 1].Style.Font.Bold = true;
+                    segment.Cells[1, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    segment.Cells[1, 1].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                    segment.Cells[1, 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    segment.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(color);
+                    segment.Cells[1, 1].Style.Font.Name = "Times New Roman";
+                    segment.Cells[1, 1].Style.Font.Size = 12;
+                    segment.Cells[1, 1].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    segment.Cells[1, 1].Style.Border.Top.Color.SetColor(Color.Black);
+                    segment.Cells[1, 1].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    segment.Cells[1, 1].Style.Border.Left.Color.SetColor(Color.Black);
+                    segment.Cells[1, 1].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    segment.Cells[1, 1].Style.Border.Right.Color.SetColor(Color.Black);
+                    segment.Cells[1, 1].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    segment.Cells[1, 1].Style.Border.Bottom.Color.SetColor(Color.Black);
+
+                    segment.Cells[1, 2].Value = "Count";
+                    segment.Cells[1, 2].Style.Font.Bold = true;
+                    segment.Cells[1, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    segment.Cells[1, 2].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                    segment.Cells[1, 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    segment.Cells[1, 2].Style.Fill.BackgroundColor.SetColor(color);
+                    segment.Cells[1, 2].Style.Font.Name = "Times New Roman";
+                    segment.Cells[1, 2].Style.Font.Size = 12;
+                    segment.Cells[1, 2].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    segment.Cells[1, 2].Style.Border.Top.Color.SetColor(Color.Black);
+                    segment.Cells[1, 2].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    segment.Cells[1, 2].Style.Border.Left.Color.SetColor(Color.Black);
+                    segment.Cells[1, 2].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    segment.Cells[1, 2].Style.Border.Right.Color.SetColor(Color.Black);
+                    segment.Cells[1, 2].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    segment.Cells[1, 2].Style.Border.Bottom.Color.SetColor(Color.Black);
+
+                    segment.Cells[1, 3].Value = "Percent (%)";
+                    segment.Cells[1, 3].Style.Font.Bold = true;
+                    segment.Cells[1, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    segment.Cells[1, 3].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                    segment.Cells[1, 3].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    segment.Cells[1, 3].Style.Fill.BackgroundColor.SetColor(color);
+                    segment.Cells[1, 3].Style.Font.Name = "Times New Roman";
+                    segment.Cells[1, 3].Style.Font.Size = 12;
+                    segment.Cells[1, 3].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    segment.Cells[1, 3].Style.Border.Top.Color.SetColor(Color.Black);
+                    segment.Cells[1, 3].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    segment.Cells[1, 3].Style.Border.Left.Color.SetColor(Color.Black);
+                    segment.Cells[1, 3].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    segment.Cells[1, 3].Style.Border.Right.Color.SetColor(Color.Black);
+                    segment.Cells[1, 3].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    segment.Cells[1, 3].Style.Border.Bottom.Color.SetColor(Color.Black);
+                    List<ReportMonthlyIndustryDataTransfer> listReportMonthlyIndustryDataTransfer = _reportMonthlyRepository.GetIndustryByIDToList(ID);
+                    int row = 2;
+                    foreach (ReportMonthlyIndustryDataTransfer item in listReportMonthlyIndustryDataTransfer)
+                    {
+                        segment.Cells[row, 1].Value = item.SegmentProduct;
+                        segment.Cells[row, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        segment.Cells[row, 1].Style.Font.Name = "Times New Roman";
+                        segment.Cells[row, 1].Style.Font.Size = 12;
+                        segment.Cells[row, 1].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        segment.Cells[row, 1].Style.Border.Top.Color.SetColor(Color.Black);
+                        segment.Cells[row, 1].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        segment.Cells[row, 1].Style.Border.Left.Color.SetColor(Color.Black);
+                        segment.Cells[row, 1].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                        segment.Cells[row, 1].Style.Border.Right.Color.SetColor(Color.Black);
+                        segment.Cells[row, 1].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                        segment.Cells[row, 1].Style.Border.Bottom.Color.SetColor(Color.Black);
+
+                        segment.Cells[row, 2].Value = item.ProductCount;
+                        segment.Cells[row, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        segment.Cells[row, 2].Style.Font.Name = "Times New Roman";
+                        segment.Cells[row, 2].Style.Font.Size = 12;
+                        segment.Cells[row, 2].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        segment.Cells[row, 2].Style.Border.Top.Color.SetColor(Color.Black);
+                        segment.Cells[row, 2].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        segment.Cells[row, 2].Style.Border.Left.Color.SetColor(Color.Black);
+                        segment.Cells[row, 2].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                        segment.Cells[row, 2].Style.Border.Right.Color.SetColor(Color.Black);
+                        segment.Cells[row, 2].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                        segment.Cells[row, 2].Style.Border.Bottom.Color.SetColor(Color.Black);
+
+                        segment.Cells[row, 3].Value = item.ProductPercent;
+                        segment.Cells[row, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        segment.Cells[row, 3].Style.Font.Name = "Times New Roman";
+                        segment.Cells[row, 3].Style.Font.Size = 12;
+                        segment.Cells[row, 3].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        segment.Cells[row, 3].Style.Border.Top.Color.SetColor(Color.Black);
+                        segment.Cells[row, 3].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        segment.Cells[row, 3].Style.Border.Left.Color.SetColor(Color.Black);
+                        segment.Cells[row, 3].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                        segment.Cells[row, 3].Style.Border.Right.Color.SetColor(Color.Black);
+                        segment.Cells[row, 3].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                        segment.Cells[row, 3].Style.Border.Bottom.Color.SetColor(Color.Black);
+                        row = row + 1;
+                    }
+                    segment.Column(1).AutoFit();
+                    segment.Column(2).AutoFit();
+                    segment.Column(3).AutoFit();
+
+                    var companyCount = package.Workbook.Worksheets.Add("Company Count");
+
+
+                    package.Save();
+                }
+                streamExport.Position = 0;
+                var physicalPathCreate = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.FTPDownloadReprotMonth, excelName);
+                using (var stream = new FileStream(physicalPathCreate, FileMode.Create))
+                {
+                    streamExport.CopyTo(stream);
+                }
+                result = AppGlobal.DomainSub + AppGlobal.URLDownloadReprotMonth + excelName;
+            }
+            return result;
         }
     }
 }
