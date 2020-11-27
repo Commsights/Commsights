@@ -328,6 +328,11 @@ namespace Commsights.MVC.Controllers
             var data = _reportMonthlyPropertyRepository.GetReportMonthlyPropertyDataTransferByParentIDToList(parentID);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetProductPropertyByReportMonthlyIDToList([DataSourceRequest] DataSourceRequest request, int reportMonthlyID)
+        {
+            var data = _productPropertyRepository.GetByReportMonthlyIDToList(reportMonthlyID);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetIndustryByIDToListToJSON(int ID)
         {
             return Json(_reportMonthlyRepository.GetIndustryByIDToList(ID));
@@ -1320,47 +1325,26 @@ namespace Commsights.MVC.Controllers
                                                         try
                                                         {
 
-                                                            tbl.Rows[index]["Media"] = domain.Trim();
+                                                            tbl.Rows[index]["MediaTitle"] = domain.Trim();
                                                         }
                                                         catch
                                                         {
                                                         }
                                                     }
-                                                    string domain001 = tbl.Rows[index]["Media"].ToString();
+                                                    string domain001 = tbl.Rows[index]["MediaTitle"].ToString();
                                                     if (string.IsNullOrEmpty(domain001))
                                                     {
                                                         try
                                                         {
-                                                            tbl.Rows[index]["Media"] = domain;
+                                                            tbl.Rows[index]["MediaTitle"] = domain;
                                                         }
                                                         catch
                                                         {
                                                         }
                                                     }
                                                     index = index + 1;
-                                                }
-                                                if (tbl.Columns.Count < 33)
-                                                {
-                                                    tbl.Columns.Add(new DataColumn("Media"));
-                                                }
-                                                //for (int i = 0; i < tbl.Rows.Count; i++)
-                                                //{
-                                                //    try
-                                                //    {
-                                                //        tbl.Rows[i]["URL"] = listURL[i].Trim();
-                                                //    }
-                                                //    catch
-                                                //    {
-                                                //    }
-                                                //    try
-                                                //    {
-                                                //        tbl.Rows[i]["Media"] = listMedia[i];
-                                                //    }
-                                                //    catch
-                                                //    {
-                                                //    }
-                                                //}
-                                                _reportMonthlyRepository.InsertItemsByDataTableAndReportMonthlyIDAndRequestUserID(tbl, model.ID, RequestUserID);
+                                                }                                     
+                                                _reportMonthlyRepository.InsertItemsByProductProperty005AndReportMonthlyIDAndRequestUserID(tbl, model.ID, RequestUserID);
                                             }
                                         }
                                     }

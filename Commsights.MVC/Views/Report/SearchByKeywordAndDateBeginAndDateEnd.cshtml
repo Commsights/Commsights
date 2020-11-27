@@ -3,6 +3,8 @@
 @model Commsights.Data.Models.ProductSearch
 
 @Html.HiddenFor(Model => Model.ID)
+<input type="hidden" id="IDList">
+<input type="hidden" id="SearchList">
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
@@ -56,9 +58,9 @@
     columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70);
     columns.Select().Width(50);
     columns.Bound(t => t.IsError).Title("Error").Width(80);
-    columns.Bound(t => t.DatePublish).Title("Date").Format("{0: MM/dd/yyyy}").Width(200).HtmlAttributes(new { @class = "text-right" }).HeaderHtmlAttributes(new { @class = "text-center" });    
+    columns.Bound(t => t.DatePublish).Title("Date").Format("{0: MM/dd/yyyy}").Width(200).HtmlAttributes(new { @class = "text-right" }).HeaderHtmlAttributes(new { @class = "text-center" });
     columns.Bound(t => t.Title).Title("Headline (Vie)").Width(1000);
-    columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });    
+    columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
 })
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
@@ -92,7 +94,7 @@
 .PageSize(10000)
 .Model(model =>
 {
-    model.Id(t => t.ID);    
+    model.Id(t => t.SearchAndID);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceToList", "Product").Data("filterProduct"))
@@ -130,7 +132,7 @@
         var isDescriptionValue = document.getElementById("IsDescription").checked;
         return { search: searchValue, datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, isTitle: isTitleValue, isDescription: isDescriptionValue };
     }
-    function onSearch() {
+    function onSearch() {                
         $("#Product").data("kendoGrid").dataSource.read();
     }
     function onExcel() {
@@ -143,8 +145,8 @@
         });
     }
     function onGridChange(arg) {
-        $("#ID").val(this.selectedKeyNames().join(";"));       
-        var IDList = $("#ID").val();        
-        console.log(IDList);
+        $("#ID").val(this.selectedKeyNames().join(";")); 
+        var IDListValue = $("#ID").val();
+        console.log(IDListValue);
     }
 </script>

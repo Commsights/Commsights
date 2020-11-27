@@ -2432,7 +2432,7 @@ namespace Commsights.MVC.Controllers
                         workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                         workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
                     }
-                    
+
                     index = index + 1;
                 }
                 for (int i = 1; i <= column; i++)
@@ -2752,7 +2752,7 @@ namespace Commsights.MVC.Controllers
                         workSheet.Cells[row, i].Style.Border.Right.Color.SetColor(Color.Black);
                         workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                         workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
-                    }                   
+                    }
                     index = index + 1;
                 }
                 for (int i = 1; i <= column; i++)
@@ -4276,6 +4276,17 @@ namespace Commsights.MVC.Controllers
                                                         if (workSheet.Cells[i, 12].Value != null)
                                                         {
                                                             model.Duration = workSheet.Cells[i, 12].Value.ToString().Trim();
+                                                        }
+                                                        if (workSheet.Cells[i, 13].Value != null)
+                                                        {
+                                                            try
+                                                            {
+                                                                string advalue = workSheet.Cells[i, 13].Value.ToString().Trim();
+                                                                model.Advalue = int.Parse(advalue);
+                                                            }
+                                                            catch
+                                                            {
+                                                            }
                                                         }
                                                         if (workSheet.Cells[i, 14].Value != null)
                                                         {

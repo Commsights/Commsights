@@ -122,7 +122,7 @@
         var IDValue = $("#ID").val();
         $.post("/ReportMonthly/ExportExcelByID", { ID: IDValue }, function (result) {
             window.location.replace(result);
-            EndRequestHandler();            
+            EndRequestHandler();
         });
     }
     $(document).ready(() => {
@@ -174,7 +174,7 @@
                         }
                          html = html + '<td class="text-left" style="font-weight: bold;">' + item.SegmentProduct + '</td>';
                          let ProductCount = Math.round(item.ProductCount);
-                         var ProductCountString = ProductCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");                      
+                         var ProductCountString = ProductCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
                          html = html + '<td class="text-right" style="font-weight: bold;">' + ProductCountString + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold;">' + item.ProductPercent + '</td>';
                          html = html + '</tr>';
@@ -294,9 +294,9 @@
                          html = html + '<td class="text-right" style="font-weight: bold;">' + ProductNewsCountString + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold;">' + ProductMediaCountString + '</td>';
                          let NewsGrowthPercent = Math.round(item.NewsGrowthPercent);
-                         var NewsGrowthPercentString = NewsGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         var NewsGrowthPercentString = NewsGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
                          let MediaGrowthPercent = Math.round(item.MediaGrowthPercent);
-                         var MediaGrowthPercentString = MediaGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         var MediaGrowthPercentString = MediaGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
                          if (item.NewsGrowthPercent >0) {
                              html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + NewsGrowthPercentString + '</td>';
                          }
@@ -371,9 +371,9 @@
                          html = html + '<td class="text-right" style="font-weight: bold;">' + item.FeatureCount + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold;">' + item.MentionCount + '</td>';
                          let FeatureGrowthPercent = Math.round(item.FeatureGrowthPercent);
-                         var FeatureGrowthPercentString = FeatureGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         var FeatureGrowthPercentString = FeatureGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
                          let MentionGrowthPercent = Math.round(item.MentionGrowthPercent);
-                         var MentionGrowthPercentString = MentionGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         var MentionGrowthPercentString = MentionGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
                          if (item.FeatureGrowthPercent > 0) {
                              html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + FeatureGrowthPercentString + '</td>';
                          }
@@ -452,23 +452,23 @@
                             html = html + '<tr style="background-color:#f1f1f1;">';
                          }
                          let PositiveLastMonthCount = Math.round(item.PositiveLastMonthCount);
-                         var PositiveLastMonthCountString = PositiveLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         var PositiveLastMonthCountString = PositiveLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
                          let NeutralLastMonthCount = Math.round(item.NeutralLastMonthCount);
-                         var NeutralLastMonthCountString = NeutralLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         var NeutralLastMonthCountString = NeutralLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
                          let NegativeLastMonthCount = Math.round(item.NegativeLastMonthCount);
-                         var NegativeLastMonthCountString = NegativeLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         var NegativeLastMonthCountString = NegativeLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
                          let PositiveCount = Math.round(item.PositiveCount);
-                         var PositiveCountString = PositiveCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         var PositiveCountString = PositiveCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
                          let NeutralCount = Math.round(item.NeutralCount);
-                         var NeutralCountString = NeutralCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         var NeutralCountString = NeutralCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
                          let NegativeCount = Math.round(item.NegativeCount);
-                         var NegativeCountString = NegativeCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         var NegativeCountString = NegativeCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
                          let PositiveGrowthPercent = Math.round(item.PositiveGrowthPercent);
-                         var PositiveGrowthPercentString = PositiveGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         var PositiveGrowthPercentString = PositiveGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
                          let NeutralGrowthPercent = Math.round(item.NeutralGrowthPercent);
-                         var NeutralGrowthPercentString = NeutralGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         var NeutralGrowthPercentString = NeutralGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
                          let NegativeGrowthPercent = Math.round(item.NegativeGrowthPercent);
-                         var NegativeGrowthPercentString = NegativeGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+                         var NegativeGrowthPercentString = NegativeGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
 
                          html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold; color: green;">' + PositiveLastMonthCountString + '</td>';
@@ -545,9 +545,9 @@
                 html = html + '</tr>';
                 html = html + '</thead>';
                 html = html + '<tbody>';
-                var no = 0;
+                 var no = 0;                 
                  for (var index in list) {
-                     $(list[index]).each(function (iRec, item) {
+                     $(list[index]).each(function (iRec, item) {                        
                         no = no + 1;
                         if (no % 2 == 0) {
                             html = html + '<tr style="background-color:#ffffff;">';
@@ -555,16 +555,7 @@
                         else {
                             html = html + '<tr style="background-color:#f1f1f1;">';
                          }
-                         if (item.SegmentProduct != "#N/A") {
-                             switch (item.Sentiment) {
-                                 case "Negative":
-                                     html = html + '<td rowspan="3" class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
-                                     break;
-                             }
-                         }
-                         else {
-                             html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
-                         }
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';               
                          html = html + '<td class="text-left" style="font-weight: bold;">' + item.Sentiment + '</td>';
                          switch (item.Sentiment) {
                              case "Positive":

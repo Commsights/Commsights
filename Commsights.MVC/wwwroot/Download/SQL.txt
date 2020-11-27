@@ -1,0 +1,58 @@
+http://video.andi.vn/tvnews/2020/0821/FBNC-06035427.mp4
+
+ALTER DATABASE CommSights SET RECOVERY SIMPLE
+DBCC SHRINKFILE(CommSights_log) 
+ALTER DATABASE CommSights SET RECOVERY FULL
+
+
+select b.CodeName, b.Note, a.Title, a.Description, a.ContentMain, a.URLCode from Product a join Config b on a.IndustryID=b.ID where year(a.DatePublish)=2020 and month(a.DatePublish)=9 and day(a.DatePublish)=7 
+
+ order by a.ID desc
+
+
+select ID, DatePublish,Title, URLCode, ArticleTypeID, AssessID, CompanyID, IndustryID, SegmentID, ProductID from Product order by ID desc
+
+select ID, DatePublish,Title, URLCode, ArticleTypeID, AssessID, CompanyID, IndustryID, SegmentID, ProductID from Product where month(DatePublish)=9 and day(DatePublish)=15 order by ID desc
+
+select ProductCount=count(ID) from Product where month(DatePublish)=9 and day(DatePublish)=21
+
+select distinct a.ID, a.Title from Config a join Config b on a.ID=b.ParentID and b.IsMenuLeft=1 and b.Code='Website' and b.Active=0
+
+view-source:https://crm.vietuc.com/Print/PhieuBanTomGiong?Ordnum=S0081081&TenDaiLy=false
+
+view-source:https://pms.vietuc.com/NhatKyAoNuoi?TTP_KeHoachVuNuoiID=983
+
+
+select a.Title, a.URLCode, c1.CodeName, c2.Account, b.ArticleTypeID, b.IndustryID, b.CompanyID, b.SegmentID, b.ProductID, b.Code from Product a join ProductProperty b on a.ID=b.ParentID and month(a.DateCreated)=10 and day(a.DateCreated)=22 and a.Source='Auto' 
+
+join Config c1 on b.ArticleTypeID=c1.ID
+
+left join Membership c2 on b.CompanyID=c2.ID
+
+order by a.ID desc
+
+
+select * from Product where month(DateCreated)=10 and day(DateCreated)=22 and Source='Auto' order by ID desc
+
+select top 100 DateUpdated, Source, ID, DatePublish, Title, TitleEnglish, Description, URLCode from Product (nolock) where Source<>'Auto' order by ID desc
+
+select top 100 DateUpdated, Source, ID, DatePublish, Title, TitleEnglish, Description, URLCode from Product (nolock) where Source='Auto' order by ID desc
+
+select a.* from
+(
+
+select ParentID=0, Title='SUM', ProductCount=count(a.ID) 
+
+from Product a where a.Source='Auto' and month(a.DateCreated)=11 and day(a.DateCreated)=2 
+
+union
+
+select a.ParentID, b.Title, ProductCount=count(a.ID) 
+
+from Product a join Config b on a.ParentID=b.ID and a.Source='Auto' and month(a.DateCreated)=11 and day(a.DateCreated)=2 group by a.ParentID, b.Title
+
+) a order by a.ProductCount desc
+
+
+
+

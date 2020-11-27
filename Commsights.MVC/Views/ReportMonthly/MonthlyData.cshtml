@@ -28,11 +28,12 @@
             </div>
             <div class="card-body">
 
-                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ReportMonthlyPropertyDataTransfer>()
-.Name("ReportMonthlyPropertyDataTransfer")
+                @(Html.Kendo().Grid<Commsights.Data.Models.ProductProperty>()
+.Name("ProductProperty")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
+    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70).Locked(true);
+    columns.Template(@"<a target='_blank' href='#=URL#' title='#=Headline#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70).Locked(true);
     columns.Bound(t => t.Source).Title("Source").Width(100);
     columns.Bound(t => t.CategoryMain).Title("Main category").Width(200);
     columns.Bound(t => t.CategorySub).Title("Sub category").Width(200);
@@ -59,15 +60,15 @@
     columns.Bound(t => t.MPS).Title("MPS").Width(100).HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.ROME_Corp_VND).Title("ROME Corp").Width(150).Format("{0:N0}").HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.ROME_Product_VND).Title("ROME Product").Width(150).Format("{0:N0}").HtmlAttributes(new { @class = "text-right" });
-    columns.Bound(t => t.DatePublish).Title("Date").Width(150).Format("{0:MM/dd/yyyy}").HtmlAttributes(new { @class = "text-right" });
-    columns.Bound(t => t.Page).Title("Page").Width(100).HtmlAttributes(new { @class = "text-right" });
-    columns.Bound(t => t.Author).Title("Journalist").Width(150);
-    columns.Bound(t => t.Media).Title("Media").Width(300);
+    columns.Bound(t => t.DatePublish).Title("Publish").Width(150).Format("{0:MM/dd/yyyy}").HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.Page).Title("Page").Width(200).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.Duration).Title("Page").Width(200).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.Journalist).Title("Journalist").Width(150);
+    columns.Bound(t => t.MediaTitle).Title("Media").Width(300);
     columns.Bound(t => t.MediaType).Title("Type").Width(100);
-    columns.Bound(t => t.AdValue).Title("AdValue").Format("{0:N0}").Width(150).HtmlAttributes(new { @class = "text-right" });
-    columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(1000);
-    columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=TitleEnglish#' style='color: blue; cursor: pointer;'>#=TitleEnglish#</a>").Title("Headline (Eng)").Width(1000);
-    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
+    columns.Bound(t => t.Advalue).Title("AdValue").Format("{0:N0}").Width(150).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.Headline).Title("Headline").Width(1000);
+    columns.Bound(t => t.HeadlineEngLish).Title("EngLish").Width(1000);
 })
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
@@ -97,13 +98,13 @@
 .Search(search => { })
 .DataSource(dataSource => dataSource
 .Ajax()
-.PageSize(10000)
+.PageSize(100000)
 .Model(model =>
 {
     model.Id(t => t.ID);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetReportMonthlyPropertyDataTransferByParentIDToList", "ReportMonthly").Data("filterReportMonthlyProperty"))
+.Read(t => t.Action("GetProductPropertyByReportMonthlyIDToList", "ReportMonthly").Data("filterReportMonthlyProperty"))
 .Destroy(t => t.Action("DeleteReportMonthlyProperty", "ReportMonthly"))
 )
 )
@@ -120,11 +121,11 @@
             var note = response.split('-')[1];
             var notification = $("#Notification").data("kendoNotification");
             notification.show(note, messageType);
-            $("#ReportMonthlyPropertyDataTransfer").data("kendoGrid").dataSource.read();
+            $("#ProductProperty").data("kendoGrid").dataSource.read();
         }
     }
     function filterReportMonthlyProperty(e) {
-        var parentIDValue = $("#ID").val();
-        return { parentID: parentIDValue };
+        var reportMonthlyIDValue = $("#ID").val();
+        return { reportMonthlyID: reportMonthlyIDValue };
     }
 </script>

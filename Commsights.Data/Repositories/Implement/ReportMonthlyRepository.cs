@@ -67,6 +67,21 @@ namespace Commsights.Data.Repositories
             }
             return result;
         }
+        public string InsertItemsByProductProperty005AndReportMonthlyIDAndRequestUserID(DataTable table, int reportMonthlyID, int RequestUserID)
+        {
+            string result = "";
+            if (reportMonthlyID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@table",table),
+                    new SqlParameter("@ReportMonthlyID",reportMonthlyID),
+                    new SqlParameter("@RequestUserID",RequestUserID),
+                };
+                result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertItemsByProductProperty005AndReportMonthlyIDAndRequestUserID", parameters);
+            }
+            return result;
+        }
         public List<ReportMonthlyIndustryDataTransfer> GetIndustryByIDToList(int ID)
         {
             List<ReportMonthlyIndustryDataTransfer> list = new List<ReportMonthlyIndustryDataTransfer>();

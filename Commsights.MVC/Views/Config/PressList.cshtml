@@ -18,8 +18,8 @@
     columns.Bound(t => t.Language.TextName).EditorTemplateName("Config_Language").Title("Language").Width(200);
     columns.Bound(t => t.Frequency.TextName).EditorTemplateName("Config_Frequency").Title("Frequency").Width(200);
     columns.Bound(t => t.ColorType.TextName).EditorTemplateName("Config_ColorType").Title("Color type").Width(200);
-    columns.Bound(t => t.BlackWhite).Title("BlackWhite").Width(200).HtmlAttributes(new { @class = "text-right" });
-    columns.Bound(t => t.Color).Title("Color").Width(200).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.BlackWhite).Title("BlackWhite").Width(200).HtmlAttributes(new { @class = "text-right" }).Format("{0:N0}");
+    columns.Bound(t => t.Color).Title("Color").Width(200).HtmlAttributes(new { @class = "text-right" }).Format("{0:N0}");
     columns.Bound(t => t.SortOrder).Title("Sort order").Width(200);
     columns.Bound(t => t.ID).Title("ID").Width(100);
 })

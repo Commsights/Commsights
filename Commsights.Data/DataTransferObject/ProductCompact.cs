@@ -17,6 +17,8 @@ namespace Commsights.Data.DataTransferObject
         public string Description { get; set; }
         public string DescriptionEnglish { get; set; }
         public string URLCode { get; set; }
+        public string Search { get; set; }
+        public string SearchAndID { get; set; }
         public bool? IsError { get; set; }
     }
 }
