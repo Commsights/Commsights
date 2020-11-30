@@ -68,7 +68,7 @@ namespace Commsights.Data.Models
         public string SentimentCorp { get; set; }
         public int? SentimentProductID { get; set; }
         public string SentimentProduct { get; set; }
-        public int ReportMonthlyID { get; set; }
+        public int? ReportMonthlyID { get; set; }
         public string Headline { get; set; }
         public string URL { get; set; }
         public string Page { get; set; }

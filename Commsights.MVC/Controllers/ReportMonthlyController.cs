@@ -1226,7 +1226,10 @@ namespace Commsights.MVC.Controllers
                                                                     try
                                                                     {
                                                                         decimal sOE_Corp = decimal.Parse(value);
-                                                                        sOE_Corp = sOE_Corp * 100;
+                                                                        if (sOE_Corp < 1)
+                                                                        {
+                                                                            sOE_Corp = sOE_Corp * 100;
+                                                                        }
                                                                         row[cell.Start.Column - 1] = (int)sOE_Corp;
                                                                         if (sOE_Corp < 60)
                                                                         {
@@ -1251,6 +1254,10 @@ namespace Commsights.MVC.Controllers
                                                                         feature_Corp = "";
                                                                     }
                                                                 }
+                                                                else
+                                                                {
+                                                                    row[cell.Start.Column - 1] = cell.Value;
+                                                                }
                                                                 break;
                                                             case "L":
                                                                 if (cell.Value != null)
@@ -1261,7 +1268,10 @@ namespace Commsights.MVC.Controllers
                                                                     try
                                                                     {
                                                                         decimal sOE_Product = decimal.Parse(value);
-                                                                        sOE_Product = sOE_Product * 100;
+                                                                        if (sOE_Product < 1)
+                                                                        {
+                                                                            sOE_Product = sOE_Product * 100;
+                                                                        }
                                                                         row[cell.Start.Column - 1] = (int)sOE_Product;
                                                                         if (sOE_Product < 60)
                                                                         {
@@ -1277,7 +1287,7 @@ namespace Commsights.MVC.Controllers
                                                                     }
                                                                 }
                                                                 break;
-                                                            case "M":
+                                                            case "M":                                                                
                                                                 if (cell.Value == null)
                                                                 {
                                                                     if (!string.IsNullOrEmpty(feature_Product))
@@ -1286,6 +1296,10 @@ namespace Commsights.MVC.Controllers
                                                                         feature_Product = "";
                                                                     }
                                                                 }
+                                                                else
+                                                                {
+                                                                    row[cell.Start.Column - 1] = cell.Value;
+                                                                }    
                                                                 break;
                                                             case "O":
                                                                 row[cell.Start.Column - 1] = cell.Value;
@@ -1343,7 +1357,7 @@ namespace Commsights.MVC.Controllers
                                                         }
                                                     }
                                                     index = index + 1;
-                                                }                                     
+                                                }
                                                 _reportMonthlyRepository.InsertItemsByProductProperty005AndReportMonthlyIDAndRequestUserID(tbl, model.ID, RequestUserID);
                                             }
                                         }
@@ -1381,6 +1395,7 @@ namespace Commsights.MVC.Controllers
                     InitializationTierCommsights(package, color, ID);
                     InitializationTrendline(package, color, ID);
                     InitializationTopTitles(package, color, ID);
+                    InitializationData(package, color, ID);
                     package.Save();
                 }
                 streamExport.Position = 0;
@@ -1393,7 +1408,6 @@ namespace Commsights.MVC.Controllers
             }
             return result;
         }
-
         private void InitializationIndustry(ExcelPackage package, Color color, int ID)
         {
             var segment = package.Workbook.Worksheets.Add("Segment");
@@ -1497,7 +1511,6 @@ namespace Commsights.MVC.Controllers
             segment.Column(2).AutoFit();
             segment.Column(3).AutoFit();
         }
-
         private void InitializationCompanyCount(ExcelPackage package, Color color, int ID)
         {
             var companyCount = package.Workbook.Worksheets.Add("Company Count");
@@ -1890,7 +1903,6 @@ namespace Commsights.MVC.Controllers
             companyCount.Column(6).AutoFit();
             companyCount.Column(7).AutoFit();
         }
-
         private void InitializationFeature(ExcelPackage package, Color color, int ID)
         {
             var feature = package.Workbook.Worksheets.Add("Feature");
@@ -2123,7 +2135,6 @@ namespace Commsights.MVC.Controllers
             feature.Column(6).AutoFit();
             feature.Column(7).AutoFit();
         }
-
         private void InitializationSentiment(ExcelPackage package, Color color, int ID)
         {
             var sentiment = package.Workbook.Worksheets.Add("Sentiment");
@@ -2859,7 +2870,6 @@ namespace Commsights.MVC.Controllers
             sentiment.Column(9).AutoFit();
             sentiment.Column(10).AutoFit();
         }
-
         private void InitializationChannel(ExcelPackage package, Color color, int ID)
         {
             var channel = package.Workbook.Worksheets.Add("Channel");
@@ -5178,7 +5188,6 @@ namespace Commsights.MVC.Controllers
             tierCommsights.Column(12).AutoFit();
             tierCommsights.Column(13).AutoFit();
         }
-
         private void InitializationTrendline(ExcelPackage package, Color color, int ID)
         {
             var trendline = package.Workbook.Worksheets.Add("Trendline");
@@ -5383,7 +5392,6 @@ namespace Commsights.MVC.Controllers
                 trendline.Column(i).AutoFit();
             }
         }
-
         private void InitializationTopTitles(ExcelPackage package, Color color, int ID)
         {
             var topTitles = package.Workbook.Worksheets.Add("TopTitles");
@@ -5498,14 +5506,14 @@ namespace Commsights.MVC.Controllers
                     topTitles.Cells[row, 1].Style.Border.Right.Color.SetColor(Color.Black);
                     topTitles.Cells[row, 1].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                     topTitles.Cells[row, 1].Style.Border.Bottom.Color.SetColor(Color.Black);
-                    topTitles.Cells[row, 1].Style.VerticalAlignment = ExcelVerticalAlignment.Center;                    
+                    topTitles.Cells[row, 1].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
 
                     StringBuilder txtMass = new StringBuilder();
                     foreach (ReportMonthlyTierCommsightsAndCompanyNameDataTransfer itemMass in model.ListTierCommsightsAndCompanyNameAndMass)
                     {
                         if (itemMass.CompanyName == item.CompanyName)
                         {
-                            txtMass.AppendLine(itemMass.Media + " (" + itemMass.TierCount + ")");                            
+                            txtMass.AppendLine(itemMass.Media + " (" + itemMass.TierCount + ")");
                         }
                     }
                     StringBuilder txtIndustry = new StringBuilder();
@@ -5604,7 +5612,215 @@ namespace Commsights.MVC.Controllers
             topTitles.Column(2).Width = 40;
             topTitles.Column(3).Width = 40;
             topTitles.Column(4).Width = 40;
-            topTitles.Column(5).Width = 40;            
+            topTitles.Column(5).Width = 40;
+        }
+        private void InitializationData(ExcelPackage package, Color color, int ID)
+        {
+            var data = package.Workbook.Worksheets.Add("Data");
+            int row = 1;
+
+            data.Cells[row, 1].Value = "Source";
+            data.Cells[row, 2].Value = "Date";
+            data.Cells[row, 3].Value = "Main_Category";
+            data.Cells[row, 4].Value = "Sub_Category";
+            data.Cells[row, 5].Value = "Company";
+            data.Cells[row, 6].Value = "Corp_Copy";
+            data.Cells[row, 7].Value = "SOE_Corp";
+            data.Cells[row, 8].Value = "Feature_Corp";
+            data.Cells[row, 9].Value = "Sentiment_Corp";
+            data.Cells[row, 10].Value = "Segment_Product";
+            data.Cells[row, 11].Value = "Product_Name";
+            data.Cells[row, 12].Value = "SOE_Product";
+            data.Cells[row, 13].Value = "Feature_Product";
+            data.Cells[row, 14].Value = "Sentiment_Product";
+            data.Cells[row, 15].Value = "Headline";
+            data.Cells[row, 16].Value = "Headline_English";
+            data.Cells[row, 17].Value = "URL";
+            data.Cells[row, 18].Value = "Page";
+            data.Cells[row, 19].Value = "Duration";
+            data.Cells[row, 20].Value = "Journalist";
+            data.Cells[row, 21].Value = "Tier_CommSights";
+            data.Cells[row, 22].Value = "Tier_Customer";
+            data.Cells[row, 23].Value = "Spoke_Person_Name";
+            data.Cells[row, 24].Value = "Spoke_Person_Title";
+            data.Cells[row, 25].Value = "Tone_Value";
+            data.Cells[row, 26].Value = "Headline_Value";
+            data.Cells[row, 27].Value = "Spoke_Person_Value";
+            data.Cells[row, 28].Value = "Feature_Value";
+            data.Cells[row, 29].Value = "Tier_Value";
+            data.Cells[row, 30].Value = "Picture_Value";
+            data.Cells[row, 31].Value = "MPS";
+            data.Cells[row, 32].Value = "ROME_Corp";
+            data.Cells[row, 33].Value = "ROME_Product";
+            data.Cells[row, 34].Value = "MediaTitle";
+            data.Cells[row, 35].Value = "MediaType";
+            data.Cells[row, 36].Value = "Advalue";
+
+            for (int i = 1; i < 37; i++)
+            {
+                data.Cells[row, i].Style.Font.Bold = true;
+                data.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                data.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                data.Cells[row, i].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                data.Cells[row, i].Style.Fill.BackgroundColor.SetColor(color);
+                data.Cells[row, i].Style.Font.Name = "Times New Roman";
+                data.Cells[row, i].Style.Font.Size = 12;
+                data.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                data.Cells[row, i].Style.Border.Top.Color.SetColor(Color.Black);
+                data.Cells[row, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                data.Cells[row, i].Style.Border.Left.Color.SetColor(Color.Black);
+                data.Cells[row, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                data.Cells[row, i].Style.Border.Right.Color.SetColor(Color.Black);
+                data.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                data.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
+            }
+            List<ProductProperty> list = _productPropertyRepository.GetByReportMonthlyIDToList(ID);
+            row = row + 1;
+            foreach (ProductProperty item in list)
+            {
+                data.Cells[row, 1].Value = item.Source;
+                data.Cells[row, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 2].Value = item.DatePublish;
+                data.Cells[row, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                data.Cells[row, 2].Style.Numberformat.Format = "MM/dd/yyyy";
+
+                data.Cells[row, 3].Value = item.CategoryMain;
+                data.Cells[row, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 4].Value = item.CategorySub;
+                data.Cells[row, 4].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 5].Value = item.CompanyName;
+                data.Cells[row, 5].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 6].Value = item.CorpCopy;
+                data.Cells[row, 6].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 7].Value = item.SOECompany;
+                data.Cells[row, 7].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 8].Value = item.FeatureCorp;
+                data.Cells[row, 8].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 9].Value = item.SentimentCorp;
+                data.Cells[row, 9].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 10].Value = item.Segment;
+                data.Cells[row, 10].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 11].Value = item.ProductName_ProjectName;
+                data.Cells[row, 11].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 12].Value = item.SOEProduct;
+                data.Cells[row, 12].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 13].Value = item.FeatureProduct;
+                data.Cells[row, 13].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 14].Value = item.SentimentProduct;
+                data.Cells[row, 14].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 15].Value = item.Headline;
+                data.Cells[row, 15].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 16].Value = item.HeadlineEngLish;
+                data.Cells[row, 16].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 17].Value = item.URL;
+                data.Cells[row, 17].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 18].Value = item.Page;
+                data.Cells[row, 18].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 19].Value = item.Duration;
+                data.Cells[row, 19].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 20].Value = item.Journalist;
+                data.Cells[row, 20].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 21].Value = item.TierCommsights;
+                data.Cells[row, 21].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 22].Value = item.TierCustomer;
+                data.Cells[row, 22].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 23].Value = item.SpokePersonName;
+                data.Cells[row, 23].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 24].Value = item.SpokePersonTitle;
+                data.Cells[row, 24].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                data.Cells[row, 25].Value = item.ToneValue;
+                data.Cells[row, 25].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                data.Cells[row, 25].Style.Numberformat.Format = "#,##0";
+
+                data.Cells[row, 26].Value = item.HeadlineValue;
+                data.Cells[row, 26].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                data.Cells[row, 26].Style.Numberformat.Format = "#,##0";
+
+                data.Cells[row, 27].Value = item.SpokePersonValue;
+                data.Cells[row, 27].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                data.Cells[row, 27].Style.Numberformat.Format = "#,##0";
+
+                data.Cells[row, 28].Value = item.FeatureValue;
+                data.Cells[row, 28].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                data.Cells[row, 28].Style.Numberformat.Format = "#,##0";
+
+                data.Cells[row, 29].Value = item.TierValue;
+                data.Cells[row, 29].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                data.Cells[row, 29].Style.Numberformat.Format = "#,##0";
+
+                data.Cells[row, 30].Value = item.PictureValue;
+                data.Cells[row, 30].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                data.Cells[row, 30].Style.Numberformat.Format = "#,##0";
+
+                data.Cells[row, 31].Value = item.MPS;
+                data.Cells[row, 31].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                data.Cells[row, 31].Style.Numberformat.Format = "#,##0";
+
+                data.Cells[row, 32].Value = item.ROME_Corp_VND;
+                data.Cells[row, 32].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                data.Cells[row, 32].Style.Numberformat.Format = "#,##0";
+
+                data.Cells[row, 33].Value = item.ROME_Product_VND;
+                data.Cells[row, 33].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                data.Cells[row, 33].Style.Numberformat.Format = "#,##0";
+
+                data.Cells[row, 34].Value = item.MediaTitle;
+                data.Cells[row, 34].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                data.Cells[row, 34].Value = item.MediaType;
+
+                data.Cells[row, 35].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                data.Cells[row, 35].Value = item.Advalue;
+
+                data.Cells[row, 36].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                data.Cells[row, 36].Style.Numberformat.Format = "#,##0";
+                row = row + 1;
+            }
+            row = 2;
+            foreach (ProductProperty item in list)
+            {
+                for (int i = 1; i < 37; i++)
+                {
+                    data.Cells[row, i].Style.Font.Name = "Times New Roman";
+                    data.Cells[row, i].Style.Font.Size = 12;
+                    data.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    data.Cells[row, i].Style.Border.Top.Color.SetColor(Color.Black);
+                    data.Cells[row, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    data.Cells[row, i].Style.Border.Left.Color.SetColor(Color.Black);
+                    data.Cells[row, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    data.Cells[row, i].Style.Border.Right.Color.SetColor(Color.Black);
+                    data.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    data.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
+                }
+                row = row + 1;
+            }
+
+            for (int i = 1; i < 37; i++)
+            {
+                data.Column(i).AutoFit();
+            }
         }
     }
 }
