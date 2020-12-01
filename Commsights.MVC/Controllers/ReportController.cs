@@ -5737,13 +5737,30 @@ namespace Commsights.MVC.Controllers
                 workSheet.Cells[1, 12].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                 workSheet.Cells[1, 12].Style.Border.Bottom.Color.SetColor(Color.Black);
 
+                workSheet.Cells[1, 13].Value = "Search";
+                workSheet.Cells[1, 13].Style.Font.Bold = true;
+                workSheet.Cells[1, 13].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 13].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[1, 13].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[1, 13].Style.Fill.BackgroundColor.SetColor(color);
+                workSheet.Cells[1, 13].Style.Font.Name = "Times New Roman";
+                workSheet.Cells[1, 13].Style.Font.Size = 11;
+                workSheet.Cells[1, 13].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 13].Style.Border.Top.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 13].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 13].Style.Border.Left.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 13].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 13].Style.Border.Right.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 13].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 13].Style.Border.Bottom.Color.SetColor(Color.Black);
+
                 if (!string.IsNullOrEmpty(IDList))
                 {
                     List<ProductDataTransfer> listData = await _reportRepository.AsyncGetByIDListToList(IDList);
                     int row = 2;
                     foreach (ProductDataTransfer item in listData)
                     {
-                        for (int column = 1; column < 13; column++)
+                        for (int column = 1; column < 14; column++)
                         {
                             switch (column)
                             {
@@ -5803,6 +5820,9 @@ namespace Commsights.MVC.Controllers
                                 case 12:
                                     workSheet.Cells[row, column].Value = item.AdvertisementValue;
                                     workSheet.Cells[row, column].Style.Numberformat.Format = "#,##0";
+                                    break;
+                                case 13:
+                                    workSheet.Cells[row, column].Value = item.Summary;
                                     break;
                             }
                             workSheet.Cells[row, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;

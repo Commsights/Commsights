@@ -2324,10 +2324,10 @@ namespace Commsights.Data.Helpers
             List<LinkItem> list = new List<LinkItem>();
             if (!string.IsNullOrEmpty(html))
             {
-                Uri myUri = new Uri(urlRoot);
-                string host = myUri.Host;
-                string scheme = myUri.Scheme;
-                string localPath = myUri.LocalPath;
+                Uri root = new Uri(urlRoot);
+                string host = root.Host;
+                string scheme = root.Scheme;
+                string localPath = root.LocalPath;
                 MatchCollection m1 = Regex.Matches(html, @"(<a.*?>.*?</a>)", RegexOptions.Singleline);
                 foreach (Match m in m1)
                 {
@@ -2353,6 +2353,7 @@ namespace Commsights.Data.Helpers
                     }
                     if ((!string.IsNullOrEmpty(i.Href)) && (!string.IsNullOrEmpty(i.Text)))
                     {
+
                         if ((i.Href.Contains(@"http") == false) && (i.Href.Contains(@"#") == false) && (i.Href.Contains(@";") == false) && (i.Href.Contains(@"(") == false) && (i.Href.Contains(@")") == false) && (i.Href.Contains(@"{") == false) && (i.Href.Contains(@"}") == false) && (i.Href.Contains(@"[") == false) && (i.Href.Contains(@"]") == false))
                         {
                             string firstlyChar = i.Href[0].ToString();
@@ -2405,7 +2406,11 @@ namespace Commsights.Data.Helpers
                                             {
                                                 if ((i.Text.Contains("{") == false) && (i.Text.Contains("[]") == false) && (i.Text.Contains("' trước") == false) && (i.Text.Contains("h trước") == false))
                                                 {
-                                                    list.Add(i);
+                                                    Uri myUri = new Uri(i.Href);
+                                                    if (myUri.Host == root.Host)
+                                                    {
+                                                        list.Add(i);
+                                                    }
                                                 }
                                             }
                                         }
@@ -2417,6 +2422,189 @@ namespace Commsights.Data.Helpers
                 }
             }
             return list;
+        }
+        public static void LinkFinder001(string urlCategory, string urlRoot, bool repeat, List<LinkItem> list)
+        {
+            if (repeat == false)
+            {
+            }
+            int index = -1;
+            Uri root = new Uri(urlRoot);
+            Uri myUri = new Uri(urlRoot);
+            string html = "";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlCategory);
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Stream receiveStream = response.GetResponseStream();
+                StreamReader readStream = null;
+                if (response.CharacterSet == null)
+                {
+                    readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                }
+                else
+                {
+                    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                }
+                html = readStream.ReadToEnd();
+                response.Close();
+                readStream.Close();
+            }
+            List<LinkItem> listCategory = new List<LinkItem>();
+            if (!string.IsNullOrEmpty(html))
+            {
+                index = -1;
+                MatchCollection m1 = Regex.Matches(html, @"(<a.*?>.*?</a>)", RegexOptions.Singleline);
+                foreach (Match m in m1)
+                {
+                    index = index + 1;
+                    string value = m.Groups[1].Value;
+                    LinkItem i = new LinkItem();
+                    Match m2 = Regex.Match(value, @"href=\""(.*?)\""", RegexOptions.Singleline);
+                    if (m2.Success)
+                    {
+                        i.Href = m2.Groups[1].Value;
+                    }
+                    else
+                    {
+                        m2 = Regex.Match(value, @"href=\'(.*?)\'", RegexOptions.Singleline);
+                        if (m2.Success)
+                        {
+                            i.Href = m2.Groups[1].Value;
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(i.Href))
+                    {
+                        bool checkHref = false;
+                        try
+                        {
+                            myUri = new Uri(i.Href);
+                            checkHref = true;
+                        }
+                        catch (Exception e)
+                        {
+                            string mes = e.Message;
+                            i.Href = root.OriginalString + i.Href;
+                            try
+                            {
+                                myUri = new Uri(i.Href);
+                                checkHref = true;
+                            }
+                            catch (Exception e1)
+                            {
+                                string mes1 = e1.Message;
+                            }
+                        }
+                        if (checkHref == true)
+                        {
+                            if (myUri.Host == root.Host)
+                            {
+                                string rootOriginalString = root.OriginalString + "/";
+                                if (myUri.OriginalString != rootOriginalString)
+                                {
+                                    string localPath = myUri.LocalPath;
+                                    if (localPath.Contains(@".") == true)
+                                    {
+                                        string extension = localPath.Split('.')[1];
+                                        if ((extension.Contains(@"/") == false) && (extension.Contains(@"#") == false))
+                                        {
+                                            Match m3 = Regex.Match(value, @"title=\""(.*?)\""", RegexOptions.Singleline);
+                                            if (m3.Success)
+                                            {
+                                                i.Text = m3.Groups[1].Value;
+                                            }
+                                            else
+                                            {
+                                                m3 = Regex.Match(value, @"title=\'(.*?)\'", RegexOptions.Singleline);
+                                                if (m3.Success)
+                                                {
+                                                    i.Text = m3.Groups[1].Value;
+                                                }
+                                            }
+                                            if (string.IsNullOrEmpty(i.Text))
+                                            {
+                                                string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                                                i.Text = t;
+                                            }
+                                            if (!string.IsNullOrEmpty(i.Text))
+                                            {
+                                                i.Text = DecodeFromUTF8(i.Text);
+                                                if (i.Text.Split(' ').Length > 4)
+                                                {
+                                                    checkHref = false;
+                                                    for (int j = 0; j < list.Count; j++)
+                                                    {
+                                                        if (list[j].Href == i.Href)
+                                                        {
+                                                            checkHref = true;
+                                                            j = list.Count;
+                                                        }
+                                                    }
+                                                    if (checkHref == false)
+                                                    {
+                                                        list.Add(i);
+                                                    }
+
+                                                }
+                                                else
+                                                {
+                                                    if (repeat == true)
+                                                    {
+                                                        checkHref = false;
+                                                        for (int j = 0; j < listCategory.Count; j++)
+                                                        {
+                                                            if (listCategory[j].Href == i.Href)
+                                                            {
+                                                                checkHref = true;
+                                                                j = listCategory.Count;
+                                                            }
+                                                        }
+                                                        if (checkHref == false)
+                                                        {
+                                                            listCategory.Add(i);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (repeat == true)
+                                        {
+                                            checkHref = false;
+                                            for (int j = 0; j < listCategory.Count; j++)
+                                            {
+                                                if (listCategory[j].Href == i.Href)
+                                                {
+                                                    checkHref = true;
+                                                    j = listCategory.Count;
+                                                }
+                                            }
+                                            if (checkHref == false)
+                                            {
+                                                listCategory.Add(i);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (repeat == true)
+            {
+                index = -1;
+                foreach (LinkItem item in listCategory)
+                {
+                    index = index + 1;
+                    if (index > 20)
+                    {
+                    }
+                    LinkFinder001(item.Href, urlRoot, false, list);
+                }
+            }
         }
         public static void FinderContent(string html, Product product)
         {
@@ -3147,7 +3335,7 @@ namespace Commsights.Data.Helpers
                         }
                     }
                 }
-
+                product.Active = check;
             }
         }
         public static List<LinkItem> ImgFinder(string html)
@@ -3360,6 +3548,12 @@ namespace Commsights.Data.Helpers
                     product.URLCode = url;
                     break;
             }
+        }
+        private static string DecodeFromUTF8(string uTF8String)
+        {
+            byte[] bytes = Encoding.Default.GetBytes(uTF8String);
+            uTF8String = Encoding.UTF8.GetString(bytes);
+            return uTF8String;
         }
         #endregion
     }

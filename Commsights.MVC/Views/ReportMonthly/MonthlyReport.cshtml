@@ -664,7 +664,7 @@
         var IDValue = $("#ID").val();
          $.ajax({
             type: 'GET',
-            url: "@Url.Action("GetChannelByIDToListToJSON", "ReportMonthly")",
+            url: "@Url.Action("GetChannelByIDWithoutSUMToList", "ReportMonthly")",
             data: {
                 ID: IDValue,
             },
@@ -784,7 +784,7 @@
         var IDValue = $("#ID").val();
          $.ajax({
             type: 'GET',
-            url: "@Url.Action("GetChannelAndFeatureByIDToListToJSON", "ReportMonthly")",
+            url: "@Url.Action("GetChannelAndFeatureWithoutSUMByIDToList", "ReportMonthly")",
             data: {
                 ID: IDValue,
             },
@@ -904,7 +904,7 @@
         var IDValue = $("#ID").val();
          $.ajax({
             type: 'GET',
-            url: "@Url.Action("GetChannelAndMentionByIDToListToJSON", "ReportMonthly")",
+            url: "@Url.Action("GetChannelAndMentionWithoutSUMByIDToList", "ReportMonthly")",
             data: {
                 ID: IDValue,
             },
@@ -1024,7 +1024,7 @@
         var IDValue = $("#ID").val();
          $.ajax({
             type: 'GET',
-            url: "@Url.Action("GetTierCommsightsByIDToListToJSON", "ReportMonthly")",
+            url: "@Url.Action("GetTierCommsightsWithoutSUMByIDToList", "ReportMonthly")",
             data: {
                 ID: IDValue,
             },
@@ -1156,7 +1156,7 @@
         var IDValue = $("#ID").val();
          $.ajax({
             type: 'GET',
-            url: "@Url.Action("GetCompanyAndYearByIDToListToJSON", "ReportMonthly")",
+            url: "@Url.Action("GetCompanyAndYearWithoutSUMByIDToList", "ReportMonthly")",
             data: {
                 ID: IDValue,
             },

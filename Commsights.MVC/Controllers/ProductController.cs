@@ -657,7 +657,7 @@ namespace Commsights.MVC.Controllers
             if (websiteID > 0)
             {
                 Config config = _configResposistory.GetByID(websiteID);
-                await this.AsyncCreateProductScanWebsiteNoFilterProduct001(config);
+                await this.AsyncCreateProductScanWebsiteNoFilterProduct0001(config);
             }
             //this.CreateProductScanWebsiteNoFilterProduct002();
             string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
@@ -924,6 +924,54 @@ namespace Commsights.MVC.Controllers
                 }
             }
         }
+        public void CreateProductScanWebsiteNoFilterProduct0001(Config config)
+        {
+            if (config != null)
+            {
+                WebClient webClient = new WebClient();
+                webClient.Encoding = System.Text.Encoding.UTF8;
+                string html = "";
+                try
+                {
+                    html = webClient.DownloadString(config.URLFull);
+                    List<LinkItem> list = AppGlobal.LinkFinder(html, config.URLFull);
+                    foreach (LinkItem linkItem in list)
+                    {
+                        try
+                        {
+                            WebClient webClient001 = new WebClient();
+                            webClient001.Encoding = System.Text.Encoding.UTF8;
+                            string html001 = webClient001.DownloadString(linkItem.Href);
+                            Product product = new Product();
+                            product.ParentID = config.ID;
+                            product.CategoryID = config.ID;
+                            product.Source = AppGlobal.SourceAuto;
+                            product.Title = linkItem.Text;
+                            product.MetaTitle = AppGlobal.SetName(product.Title);
+                            product.URLCode = linkItem.Href;
+                            product.DatePublish = DateTime.Now;
+                            product.Initialization(InitType.Insert, RequestUserID);
+                            product.DatePublish = DateTime.Now;
+                            AppGlobal.FinderContentAndDatePublish(html001, product);
+                            if (product.Active == true)
+                            {
+                                _productRepository.AsyncInsertSingleItem(product);
+                            }
+                        }
+                        catch (Exception e1)
+                        {
+                            string mes1 = e1.Message;
+
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    string mes = e.Message;
+                }
+
+            }
+        }
         public async Task<string> AsyncCreateProductScanWebsiteNoFilterProduct001(Config config)
         {
             if (config != null)
@@ -1031,6 +1079,71 @@ namespace Commsights.MVC.Controllers
             }
             return "";
         }
+        public async Task<string> AsyncCreateProductScanWebsiteNoFilterProduct0001(Config config)
+        {
+            if (config != null)
+            {
+                List<LinkItem> list = new List<LinkItem>();
+                AppGlobal.LinkFinder001(config.URLFull, config.URLFull, true, list);
+                int count = list.Count;
+                //foreach (LinkItem linkItem in list)
+                //{
+                //    try
+                //    {
+                //        Uri myUri = new Uri(linkItem.Href);
+                //        string extend = myUri.LocalPath;
+                //        string domain = myUri.Host;
+                //        if (extend.Contains(".") == true)
+                //        {
+                //            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(linkItem.Href);
+                //            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                //            if (response.StatusCode == HttpStatusCode.OK)
+                //            {
+                //                Stream receiveStream = response.GetResponseStream();
+                //                StreamReader readStream = null;
+                //                if (response.CharacterSet == null)
+                //                {
+                //                    readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                //                }
+                //                else
+                //                {
+                //                    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                //                }
+                //                string html001 = readStream.ReadToEnd();
+                //                string htmlspan001 = html001;
+                //                htmlspan001 = AppGlobal.HTMLReplaceAndSplit(htmlspan001);
+                //                if ((domain.Contains(@"nhipcaudoanhnghiep.vn") == true) || (domain.Contains(@"vov.vn") == true))
+                //                {
+                //                    if (htmlspan001.Contains(@"</h2>") == true)
+                //                    {
+                //                        string htmlspan = htmlspan001;
+                //                        MatchCollection m1 = Regex.Matches(htmlspan, @"(<h2.*?>.*?</h2>)", RegexOptions.Singleline);
+                //                        await AsyncInsertSingleItem(m1, config, linkItem, html001);
+                //                    }
+                //                }
+                //                else
+                //                {
+                //                    if (htmlspan001.Contains(@"</h1>") == true)
+                //                    {
+                //                        string htmlspan = htmlspan001;
+                //                        MatchCollection m1 = Regex.Matches(htmlspan, @"(<h1.*?>.*?</h1>)", RegexOptions.Singleline);
+                //                        await AsyncInsertSingleItem(m1, config, linkItem, html001);
+                //                    }
+                //                }
+                //                response.Close();
+                //                readStream.Close();
+                //            }
+                //        }
+                //    }
+                //    catch (Exception e1)
+                //    {
+                //        string mes1 = e1.Message;
+                //    }
+                //}                
+
+            }
+            return "";
+        }
         public async Task<string> AsyncInsertSingleItem(MatchCollection m1, Config config, LinkItem linkItem, string html001)
         {
             if (m1.Count > 0)
@@ -1057,7 +1170,7 @@ namespace Commsights.MVC.Controllers
                         product.Initialization(InitType.Insert, RequestUserID);
                         product.DatePublish = DateTime.Now;
                         AppGlobal.FinderContentAndDatePublish(html001, product);
-                        if (product.DatePublish.Year > 2019)
+                        if ((product.DatePublish.Year > 2019) && (product.Active == true))
                         {
                             await _productRepository.AsyncInsertSingleItem(product);
                         }

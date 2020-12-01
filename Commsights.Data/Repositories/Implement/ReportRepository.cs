@@ -614,6 +614,7 @@ namespace Commsights.Data.Repositories
                     item.TitleEnglish = row["TitleEnglish"] == DBNull.Value ? "" : (string)row["TitleEnglish"];
                     item.Description = row["Description"] == DBNull.Value ? "" : (string)row["Description"];
                     item.URLCode = row["URLCode"] == DBNull.Value ? "" : (string)row["URLCode"];
+                    item.Summary = row["Summary"] == DBNull.Value ? "" : (string)row["Summary"];
                     list.Add(item);
                 }
             }

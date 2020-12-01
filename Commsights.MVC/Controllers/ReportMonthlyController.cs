@@ -369,21 +369,41 @@ namespace Commsights.MVC.Controllers
         {
             return Json(_reportMonthlyRepository.GetChannelByIDToList(ID));
         }
+        public ActionResult GetChannelByIDWithoutSUMToList(int ID)
+        {
+            return Json(_reportMonthlyRepository.GetChannelByIDWithoutSUMToList(ID));
+        }
         public ActionResult GetChannelAndFeatureByIDToListToJSON(int ID)
         {
             return Json(_reportMonthlyRepository.GetChannelAndFeatureByIDToList(ID));
+        }
+        public ActionResult GetChannelAndFeatureWithoutSUMByIDToList(int ID)
+        {
+            return Json(_reportMonthlyRepository.GetChannelAndFeatureWithoutSUMByIDToList(ID));
         }
         public ActionResult GetChannelAndMentionByIDToListToJSON(int ID)
         {
             return Json(_reportMonthlyRepository.GetChannelAndMentionByIDToList(ID));
         }
+        public ActionResult GetChannelAndMentionWithoutSUMByIDToList(int ID)
+        {
+            return Json(_reportMonthlyRepository.GetChannelAndMentionWithoutSUMByIDToList(ID));
+        }
         public ActionResult GetTierCommsightsByIDToListToJSON(int ID)
         {
             return Json(_reportMonthlyRepository.GetTierCommsightsByIDToList(ID));
         }
+        public ActionResult GetTierCommsightsWithoutSUMByIDToList(int ID)
+        {
+            return Json(_reportMonthlyRepository.GetTierCommsightsWithoutSUMByIDToList(ID));
+        }
         public ActionResult GetCompanyAndYearByIDToListToJSON(int ID)
         {
             return Json(_reportMonthlyRepository.GetCompanyAndYearByIDToList(ID));
+        }
+        public ActionResult GetCompanyAndYearWithoutSUMByIDToList(int ID)
+        {
+            return Json(_reportMonthlyRepository.GetCompanyAndYearWithoutSUMByIDToList(ID));
         }
         public ActionResult GetSegmentProductWithoutSUMByIDToListToJSON(int ID)
         {
@@ -1287,7 +1307,7 @@ namespace Commsights.MVC.Controllers
                                                                     }
                                                                 }
                                                                 break;
-                                                            case "M":                                                                
+                                                            case "M":
                                                                 if (cell.Value == null)
                                                                 {
                                                                     if (!string.IsNullOrEmpty(feature_Product))
@@ -1299,7 +1319,7 @@ namespace Commsights.MVC.Controllers
                                                                 else
                                                                 {
                                                                     row[cell.Start.Column - 1] = cell.Value;
-                                                                }    
+                                                                }
                                                                 break;
                                                             case "O":
                                                                 row[cell.Start.Column - 1] = cell.Value;
@@ -2699,6 +2719,7 @@ namespace Commsights.MVC.Controllers
 
                 row = row + 1;
             }
+            row = row + 1;
             sentiment.Cells[row, 1].Value = "Company";
             sentiment.Cells[row, 1].Style.Font.Bold = true;
             sentiment.Cells[row, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
@@ -2785,7 +2806,7 @@ namespace Commsights.MVC.Controllers
             sentiment.Cells[row, 5].Style.Border.Bottom.Color.SetColor(Color.Black);
 
             List<ReportMonthlySentimentDataTransfer> listReportMonthlySentimentDataTransfer002 = _reportMonthlyRepository.GetSentimentAndFeatureWithoutSUMByIDToList(ID);
-            row = row + 2;
+            row = row + 1;
             foreach (ReportMonthlySentimentDataTransfer item in listReportMonthlySentimentDataTransfer002)
             {
                 sentiment.Cells[row, 1].Value = item.CompanyName;
@@ -5697,8 +5718,12 @@ namespace Commsights.MVC.Controllers
                 data.Cells[row, 6].Value = item.CorpCopy;
                 data.Cells[row, 6].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
 
-                data.Cells[row, 7].Value = item.SOECompany;
-                data.Cells[row, 7].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                if (item.SOECompany != null)
+                {
+                    data.Cells[row, 7].Value = item.SOECompany.Value.ToString("N0") + "%";
+                    data.Cells[row, 7].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                    data.Cells[row, 7].Style.Numberformat.Format = "#,##0";
+                }
 
                 data.Cells[row, 8].Value = item.FeatureCorp;
                 data.Cells[row, 8].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
@@ -5712,9 +5737,12 @@ namespace Commsights.MVC.Controllers
                 data.Cells[row, 11].Value = item.ProductName_ProjectName;
                 data.Cells[row, 11].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
 
-                data.Cells[row, 12].Value = item.SOEProduct;
-                data.Cells[row, 12].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-
+                if (item.SOEProduct != null)
+                {
+                    data.Cells[row, 12].Value = item.SOEProduct.Value.ToString("N0") + "%";
+                    data.Cells[row, 12].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                    data.Cells[row, 12].Style.Numberformat.Format = "#,##0";
+                }
                 data.Cells[row, 13].Value = item.FeatureProduct;
                 data.Cells[row, 13].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
 
@@ -5723,12 +5751,45 @@ namespace Commsights.MVC.Controllers
 
                 data.Cells[row, 15].Value = item.Headline;
                 data.Cells[row, 15].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                if ((!string.IsNullOrEmpty(item.URL)) && (!string.IsNullOrEmpty(item.Headline)))
+                {
+                    try
+                    {
+                        data.Cells[row, 15].Hyperlink = new Uri(item.URL);
+                    }
+                    catch
+                    {
+                    }
+                    data.Cells[row, 15].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                }
 
                 data.Cells[row, 16].Value = item.HeadlineEngLish;
                 data.Cells[row, 16].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                if ((!string.IsNullOrEmpty(item.URL)) && (!string.IsNullOrEmpty(item.HeadlineEngLish)))
+                {
+                    try
+                    {
+                        data.Cells[row, 16].Hyperlink = new Uri(item.URL);
+                    }
+                    catch
+                    {
+                    }
+                    data.Cells[row, 16].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                }
 
                 data.Cells[row, 17].Value = item.URL;
                 data.Cells[row, 17].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                if (!string.IsNullOrEmpty(item.URL))
+                {
+                    try
+                    {
+                        data.Cells[row, 17].Hyperlink = new Uri(item.URL);
+                    }
+                    catch
+                    {
+                    }
+                    data.Cells[row, 17].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                }
 
                 data.Cells[row, 18].Value = item.Page;
                 data.Cells[row, 18].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
@@ -5789,11 +5850,11 @@ namespace Commsights.MVC.Controllers
 
                 data.Cells[row, 34].Value = item.MediaTitle;
                 data.Cells[row, 34].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                data.Cells[row, 34].Value = item.MediaType;
 
+                data.Cells[row, 35].Value = item.MediaType;
                 data.Cells[row, 35].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                data.Cells[row, 35].Value = item.Advalue;
 
+                data.Cells[row, 36].Value = item.Advalue.Value.ToString("N0");
                 data.Cells[row, 36].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                 data.Cells[row, 36].Style.Numberformat.Format = "#,##0";
                 row = row + 1;

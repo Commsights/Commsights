@@ -132,21 +132,28 @@
         var isDescriptionValue = document.getElementById("IsDescription").checked;
         return { search: searchValue, datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, isTitle: isTitleValue, isDescription: isDescriptionValue };
     }
-    function onSearch() {                
+    function onSearch() {                    
+        onSearchList();
         $("#Product").data("kendoGrid").dataSource.read();
     }
     function onExcel() {
+        onSearchList();
         BeginRequestHandler();
-        var IDListValue = $("#ID").val();
+        var IDListValue = $("#SearchList").val();
         $.post("/Report/AsyncExportExcelReportDailyByIDList", { IDList: IDListValue }, function (result) {
             window.location.replace(result);
             EndRequestHandler();
             $("#ID").val("");
+            $("#SearchList").val("");
         });
     }
     function onGridChange(arg) {
-        $("#ID").val(this.selectedKeyNames().join(";")); 
+        $("#ID").val(this.selectedKeyNames().join(";"));         
+    }
+    function onSearchList() {
         var IDListValue = $("#ID").val();
-        console.log(IDListValue);
+        var SearchList = $("#SearchList").val();
+        SearchList = SearchList + ';' + IDListValue;
+        $("#SearchList").val(SearchList); 
     }
 </script>
