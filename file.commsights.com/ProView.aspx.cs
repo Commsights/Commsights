@@ -33,6 +33,12 @@ public partial class ProView : Page
                         html.AppendLine(@"<source src='" + source + "' type='video/mp4'>");
                         html.AppendLine(@"</video>");
                         break;
+                    case "mp4":
+                        source = "/Videos/" + file + ".mp4";
+                        html.AppendLine(@"<video width='1000' height='600' controls>");
+                        html.AppendLine(@"<source src='" + source + "' type='video/mp4'>");
+                        html.AppendLine(@"</video>");
+                        break;
                     case "Radio":
                         source = "/Audios/" + file + ".mp3";
                         html.AppendLine(@"<audio width='1000' height='600' controls>");
