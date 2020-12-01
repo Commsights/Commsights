@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <br />
-                <div class="row">                    
+                <div class="row">
                     <div class='col-sm-3'>
                         <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProduct()">
                             <span class="fas fa-sync-alt"></span> Scan full no filter
@@ -301,7 +301,7 @@
                             1150
                         </button>
                     </div>
-                </div>               
+                </div>
                 @(Html.Kendo().Grid<Commsights.Data.Models.Config>()
 .Name("Config")
 .Columns(columns =>
@@ -558,4 +558,20 @@
         }
         return false;
     }
+
+    function getParameterByName(name, url = window.location.href) {
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+    $(document).ready(() => {
+        var url = "http://www.mbv.com.vn/ProView.aspx?file=CommSights_12520913&type=Newspaper";
+        var file = getParameterByName('file', url);
+        var type = getParameterByName('type', url);
+        var urlFile = "http://file.commsights.com/Product/ViewContent?file=" + file + "&type=" + type;
+        window.location.replace(urlFile);
+    });
 </script>
