@@ -1204,181 +1204,186 @@ namespace Commsights.MVC.Controllers
                                             ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
                                             if (workSheet != null)
                                             {
-                                                model.Note = fileName;
-                                                model.Initialization(InitType.Insert, RequestUserID);
-                                                model.IsMonthly = true;
-                                                model.Title = "ReportMonthly_" + model.CompanyID + "_" + model.Year + "_" + model.Month + "_" + AppGlobal.DateTimeCode;
-                                                Membership customer = _membershipRepository.GetByID(model.CompanyID.Value);
-                                                if (customer != null)
+                                                int count = workSheet.Dimension.End.Row;
+                                                if (count > 1)
                                                 {
-                                                    model.Title = "ReportMonthly_" + model.CompanyID + "_" + customer.Account + "_" + model.Year + "_" + model.Month + "_" + AppGlobal.DateTimeCode;
-                                                }
-                                                _reportMonthlyRepository.Create(model);
-                                                DataTable tbl = new DataTable();
-                                                bool hasHeader = true;
-                                                foreach (var firstRowCell in workSheet.Cells[1, 1, 1, workSheet.Dimension.End.Column])
-                                                {
-                                                    tbl.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
-                                                }
-                                                var startRow = hasHeader ? 2 : 1;
-                                                string feature_Corp = "";
-                                                string feature_Product = "";
-                                                string url = "";
-                                                string domain = "";
-                                                int index = 0;
-                                                List<string> listURL = new List<string>();
-                                                List<string> listMedia = new List<string>();
-                                                for (int rowNum = startRow; rowNum <= workSheet.Dimension.End.Row; rowNum++)
-                                                {
-                                                    var wsRow = workSheet.Cells[rowNum, 1, rowNum, workSheet.Dimension.End.Column];
-                                                    DataRow row = tbl.Rows.Add();
-                                                    foreach (var cell in wsRow)
+                                                    model.Note = fileName;
+                                                    model.Initialization(InitType.Insert, RequestUserID);
+                                                    model.IsMonthly = true;
+                                                    model.Title = "ReportMonthly_" + model.CompanyID + "_" + model.Year + "_" + model.Month + "_" + AppGlobal.DateTimeCode;
+                                                    Membership customer = _membershipRepository.GetByID(model.CompanyID.Value);
+                                                    if (customer != null)
                                                     {
-                                                        string address = cell.Address.Substring(0, 1);
-                                                        switch (address)
-                                                        {
-                                                            case "G":
-                                                                if (cell.Value != null)
-                                                                {
-                                                                    string value = cell.Value.ToString();
-                                                                    value = value.Replace(@"%", @"");
-                                                                    row[cell.Start.Column - 1] = cell.Value;
-                                                                    try
-                                                                    {
-                                                                        decimal sOE_Corp = decimal.Parse(value);
-                                                                        if (sOE_Corp < 1)
-                                                                        {
-                                                                            sOE_Corp = sOE_Corp * 100;
-                                                                        }
-                                                                        row[cell.Start.Column - 1] = (int)sOE_Corp;
-                                                                        if (sOE_Corp < 60)
-                                                                        {
-                                                                            feature_Corp = "Mention";
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            feature_Corp = "Feature";
-                                                                        }
-                                                                    }
-                                                                    catch
-                                                                    {
-                                                                    }
-                                                                }
-                                                                break;
-                                                            case "H":
-                                                                if (cell.Value == null)
-                                                                {
-                                                                    if (!string.IsNullOrEmpty(feature_Corp))
-                                                                    {
-                                                                        row[cell.Start.Column - 1] = feature_Corp;
-                                                                        feature_Corp = "";
-                                                                    }
-                                                                }
-                                                                else
-                                                                {
-                                                                    row[cell.Start.Column - 1] = cell.Value;
-                                                                }
-                                                                break;
-                                                            case "L":
-                                                                if (cell.Value != null)
-                                                                {
-                                                                    string value = cell.Value.ToString();
-                                                                    value = value.Replace(@"%", @"");
-                                                                    row[cell.Start.Column - 1] = cell.Value;
-                                                                    try
-                                                                    {
-                                                                        decimal sOE_Product = decimal.Parse(value);
-                                                                        if (sOE_Product < 1)
-                                                                        {
-                                                                            sOE_Product = sOE_Product * 100;
-                                                                        }
-                                                                        row[cell.Start.Column - 1] = (int)sOE_Product;
-                                                                        if (sOE_Product < 60)
-                                                                        {
-                                                                            feature_Product = "Mention";
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            feature_Product = "Feature";
-                                                                        }
-                                                                    }
-                                                                    catch
-                                                                    {
-                                                                    }
-                                                                }
-                                                                break;
-                                                            case "M":
-                                                                if (cell.Value == null)
-                                                                {
-                                                                    if (!string.IsNullOrEmpty(feature_Product))
-                                                                    {
-                                                                        row[cell.Start.Column - 1] = feature_Product;
-                                                                        feature_Product = "";
-                                                                    }
-                                                                }
-                                                                else
-                                                                {
-                                                                    row[cell.Start.Column - 1] = cell.Value;
-                                                                }
-                                                                break;
-                                                            case "O":
-                                                                row[cell.Start.Column - 1] = cell.Value;
-                                                                if (cell.Value != null)
-                                                                {
-                                                                    if (cell.Hyperlink != null)
-                                                                    {
-                                                                        url = cell.Hyperlink.AbsoluteUri.Trim();
-                                                                        listURL.Add(url);
-                                                                        Uri myUri = new Uri(url);
-                                                                        domain = myUri.Host;
-                                                                        domain = domain.Replace(@"www.", @"");
-                                                                        listMedia.Add(domain);
-                                                                    }
-                                                                }
-                                                                break;
-                                                            case "Q":
-                                                                row[cell.Start.Column - 1] = cell.Value;
-                                                                if (cell.Value == null)
-                                                                {
-                                                                    row[cell.Start.Column - 1] = url;
-                                                                }
-                                                                else
-                                                                {
-                                                                    url = cell.Value.ToString();
-                                                                }
-                                                                break;
-                                                            default:
-                                                                row[cell.Start.Column - 1] = cell.Value;
-                                                                break;
-                                                        }
+                                                        model.Title = "ReportMonthly_" + model.CompanyID + "_" + customer.Account + "_" + model.Year + "_" + model.Month + "_" + AppGlobal.DateTimeCode;
                                                     }
-                                                    string url001 = tbl.Rows[index]["URL"].ToString();
-                                                    if (string.IsNullOrEmpty(url001))
+                                                    _reportMonthlyRepository.Create(model);
+                                                    DataTable tbl = new DataTable();
+                                                    bool hasHeader = true;
+                                                    foreach (var firstRowCell in workSheet.Cells[1, 1, 1, workSheet.Dimension.End.Column])
                                                     {
-                                                        tbl.Rows[index]["URL"] = url.Trim();
-                                                        try
-                                                        {
-
-                                                            tbl.Rows[index]["MediaTitle"] = domain.Trim();
-                                                        }
-                                                        catch
-                                                        {
-                                                        }
+                                                        tbl.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
                                                     }
-                                                    string domain001 = tbl.Rows[index]["MediaTitle"].ToString();
-                                                    if (string.IsNullOrEmpty(domain001))
+                                                    var startRow = hasHeader ? 2 : 1;
+                                                    string feature_Corp = "";
+                                                    string feature_Product = "";
+                                                    string url = "";
+                                                    string domain = "";
+                                                    int index = 0;                                                    
+                                                    for (int rowNum = startRow; rowNum <= workSheet.Dimension.End.Row; rowNum++)
                                                     {
-                                                        try
+                                                        var wsRow = workSheet.Cells[rowNum, 1, rowNum, workSheet.Dimension.End.Column];
+                                                        DataRow row = tbl.Rows.Add();
+                                                        foreach (var cell in wsRow)
                                                         {
-                                                            tbl.Rows[index]["MediaTitle"] = domain;
+                                                            string address = cell.Address.Substring(0, 1);
+                                                            switch (address)
+                                                            {
+                                                                case "G":
+                                                                    if (cell.Value != null)
+                                                                    {
+                                                                        string value = cell.Value.ToString();
+                                                                        value = value.Replace(@"%", @"");
+                                                                        row[cell.Start.Column - 1] = cell.Value;
+                                                                        try
+                                                                        {
+                                                                            decimal sOE_Corp = decimal.Parse(value);
+                                                                            if (sOE_Corp < 1)
+                                                                            {
+                                                                                sOE_Corp = sOE_Corp * 100;
+                                                                            }
+                                                                            row[cell.Start.Column - 1] = (int)sOE_Corp;
+                                                                            if (sOE_Corp < 60)
+                                                                            {
+                                                                                feature_Corp = "Mention";
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                feature_Corp = "Feature";
+                                                                            }
+                                                                        }
+                                                                        catch (Exception e)
+                                                                        {
+                                                                        }
+                                                                    }
+                                                                    break;
+                                                                case "H":
+                                                                    if (cell.Value == null)
+                                                                    {
+                                                                        if (!string.IsNullOrEmpty(feature_Corp))
+                                                                        {
+                                                                            row[cell.Start.Column - 1] = feature_Corp;
+                                                                            feature_Corp = "";
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        row[cell.Start.Column - 1] = cell.Value;
+                                                                    }
+                                                                    break;
+                                                                case "L":
+                                                                    if (cell.Value != null)
+                                                                    {
+                                                                        string value = cell.Value.ToString();
+                                                                        value = value.Replace(@"%", @"");
+                                                                        row[cell.Start.Column - 1] = cell.Value;
+                                                                        try
+                                                                        {
+                                                                            decimal sOE_Product = decimal.Parse(value);
+                                                                            if (sOE_Product < 1)
+                                                                            {
+                                                                                sOE_Product = sOE_Product * 100;
+                                                                            }
+                                                                            row[cell.Start.Column - 1] = (int)sOE_Product;
+                                                                            if (sOE_Product < 60)
+                                                                            {
+                                                                                feature_Product = "Mention";
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                feature_Product = "Feature";
+                                                                            }
+                                                                        }
+                                                                        catch (Exception e)
+                                                                        {
+                                                                        }
+                                                                    }
+                                                                    break;
+                                                                case "M":
+                                                                    if (cell.Value == null)
+                                                                    {
+                                                                        if (!string.IsNullOrEmpty(feature_Product))
+                                                                        {
+                                                                            row[cell.Start.Column - 1] = feature_Product;
+                                                                            feature_Product = "";
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        row[cell.Start.Column - 1] = cell.Value;
+                                                                    }
+                                                                    break;
+                                                                case "O":
+                                                                    row[cell.Start.Column - 1] = cell.Value;
+                                                                    if (cell.Value != null)
+                                                                    {
+                                                                        if (cell.Hyperlink != null)
+                                                                        {
+                                                                            try
+                                                                            {
+                                                                                url = cell.Hyperlink.AbsoluteUri.Trim();                                                                                
+                                                                                Uri myUri = new Uri(url);
+                                                                                domain = myUri.Host;
+                                                                                domain = domain.Replace(@"www.", @"");                                                                                
+                                                                            }
+                                                                            catch (Exception e)
+                                                                            {
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    break;
+                                                                case "Q":
+                                                                    row[cell.Start.Column - 1] = cell.Value;
+                                                                    if (cell.Value == null)
+                                                                    {
+                                                                        row[cell.Start.Column - 1] = url;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        url = cell.Value.ToString();
+                                                                    }
+                                                                    break;
+                                                                default:
+                                                                    row[cell.Start.Column - 1] = cell.Value;
+                                                                    break;
+                                                            }
                                                         }
-                                                        catch
+                                                        string url001 = tbl.Rows[index]["URL"].ToString();
+                                                        if (string.IsNullOrEmpty(url001))
                                                         {
+                                                            tbl.Rows[index]["URL"] = url.Trim();
+                                                            try
+                                                            {
+                                                                tbl.Rows[index]["MediaTitle"] = domain.Trim();
+                                                            }
+                                                            catch (Exception e)
+                                                            {
+                                                            }
                                                         }
+                                                        string domain001 = tbl.Rows[index]["MediaTitle"].ToString();
+                                                        if (string.IsNullOrEmpty(domain001))
+                                                        {
+                                                            try
+                                                            {
+                                                                tbl.Rows[index]["MediaTitle"] = domain;
+                                                            }
+                                                            catch (Exception e)
+                                                            {
+                                                            }
+                                                        }
+                                                        index = index + 1;
                                                     }
-                                                    index = index + 1;
-                                                }
-                                                _reportMonthlyRepository.InsertItemsByProductProperty005AndReportMonthlyIDAndRequestUserID(tbl, model.ID, RequestUserID);
+                                                    _reportMonthlyRepository.InsertItemsByProductProperty005AndReportMonthlyIDAndRequestUserID(tbl, model.ID, RequestUserID);
+                                                }                                               
                                             }
                                         }
                                     }

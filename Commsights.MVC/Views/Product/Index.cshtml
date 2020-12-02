@@ -557,21 +557,5 @@
             });
         }
         return false;
-    }
-
-    function getParameterByName(name, url = window.location.href) {
-        name = name.replace(/[\[\]]/g, '\\$&');
-        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-            results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, ' '));
-    }
-    $(document).ready(() => {
-        var url = "http://www.mbv.com.vn/ProView.aspx?file=CommSights_12520913&type=Newspaper";
-        var file = getParameterByName('file', url);
-        var type = getParameterByName('type', url);
-        var urlFile = "http://file.commsights.com/Product/ViewContent?file=" + file + "&type=" + type;
-        window.location.replace(urlFile);
-    });
+    }   
 </script>
