@@ -423,11 +423,93 @@ namespace Commsights.MVC.Controllers
                     monthLast = 1;
                     yearLast = yearLast - 1;
                 }
+                string monthString = "";
+                string monthLastString = "";
+                switch (model.Month)
+                {
+                    case 1:
+                        monthString = "Jan";
+                        break;
+                    case 2:
+                        monthString = "Feb";
+                        break;
+                    case 3:
+                        monthString = "Mar";
+                        break;
+                    case 4:
+                        monthString = "Apr";
+                        break;
+                    case 5:
+                        monthString = "May";
+                        break;
+                    case 6:
+                        monthString = "Jun";
+                        break;
+                    case 7:
+                        monthString = "Jul";
+                        break;
+                    case 8:
+                        monthString = "Aug";
+                        break;
+                    case 9:
+                        monthString = "Sep";
+                        break;
+                    case 10:
+                        monthString = "Oct";
+                        break;
+                    case 11:
+                        monthString = "Nov";
+                        break;
+                    case 12:
+                        monthString = "Dec";
+                        break;
+                }
+                switch (monthLast)
+                {
+                    case 1:
+                        monthLastString = "Jan";
+                        break;
+                    case 2:
+                        monthLastString = "Feb";
+                        break;
+                    case 3:
+                        monthLastString = "Mar";
+                        break;
+                    case 4:
+                        monthLastString = "Apr";
+                        break;
+                    case 5:
+                        monthLastString = "May";
+                        break;
+                    case 6:
+                        monthLastString = "Jun";
+                        break;
+                    case 7:
+                        monthLastString = "Jul";
+                        break;
+                    case 8:
+                        monthLastString = "Aug";
+                        break;
+                    case 9:
+                        monthLastString = "Sep";
+                        break;
+                    case 10:
+                        monthLastString = "Oct";
+                        break;
+                    case 11:
+                        monthLastString = "Nov";
+                        break;
+                    case 12:
+                        monthLastString = "Dec";
+                        break;
+                }
                 List<ReportMonthlyTrendLineDataTransfer> list = _reportMonthlyRepository.GetTrendLineWithoutSUMByIDToList(ID);
                 List<ReportMonthlyTrendLineDataTransfer> listCompanyName = _reportMonthlyRepository.GetTrendLineDistinctCompanyNameByIDToList(ID);
                 tbl.Columns.Add(new DataColumn("Year"));
                 tbl.Columns.Add(new DataColumn("Month"));
                 tbl.Columns.Add(new DataColumn("Day"));
+                tbl.Columns.Add(new DataColumn("MonthString"));
+                tbl.Columns.Add(new DataColumn("Date"));
                 foreach (ReportMonthlyTrendLineDataTransfer item in listCompanyName)
                 {
                     tbl.Columns.Add(new DataColumn(item.CompanyName));
@@ -438,6 +520,8 @@ namespace Commsights.MVC.Controllers
                     row["Year"] = model.Year;
                     row["Month"] = model.Month;
                     row["Day"] = i;
+                    row["MonthString"] = monthString + "-" + model.Year;
+                    row["Date"] = model.Month + "/" + i + "/" + model.Year;
                     tbl.Rows.Add(row);
                 }
                 for (int i = 1; i < 32; i++)
@@ -446,6 +530,8 @@ namespace Commsights.MVC.Controllers
                     row["Year"] = yearLast;
                     row["Month"] = monthLast;
                     row["Day"] = i;
+                    row["MonthString"] = monthLastString + "-" + yearLast;
+                    row["Date"] = monthLast + "/" + i + "/" + yearLast;
                     tbl.Rows.Add(row);
                 }
                 for (int i = 0; i < tbl.Rows.Count; i++)
@@ -482,7 +568,11 @@ namespace Commsights.MVC.Controllers
                 txt.AppendLine("<tr>");
                 for (int i = 0; i < tbl.Columns.Count; i++)
                 {
-                    txt.AppendLine("<th class='text-center'><a style='cursor:pointer;'>" + tbl.Columns[i].ColumnName + "</a></th>");
+                    string columnName = tbl.Columns[i].ColumnName.Trim();
+                    if ((columnName != "Year") && (columnName != "Month") && (columnName != "Day"))
+                    {
+                        txt.AppendLine("<th class='text-center'><a style='cursor:pointer;'>" + tbl.Columns[i].ColumnName + "</a></th>");
+                    }
                 }
                 txt.AppendLine("</tr>");
                 txt.AppendLine("</thead>");
@@ -497,12 +587,12 @@ namespace Commsights.MVC.Controllers
                     {
                         txt.AppendLine("<tr style='background-color:#f1f1f1;'>");
                     }
-                    txt.AppendLine("<td class='text-center'>" + tbl.Rows[i]["Year"].ToString() + "</td>");
-                    txt.AppendLine("<td class='text-center'>" + tbl.Rows[i]["Month"].ToString() + "</td>");
-                    txt.AppendLine("<td class='text-center'>" + tbl.Rows[i]["Day"].ToString() + "</td>");
-                    for (int j = 3; j < tbl.Columns.Count; j++)
+                    txt.AppendLine("<td class='text-center'>" + tbl.Rows[i]["MonthString"].ToString() + "</td>");
+                    txt.AppendLine("<td class='text-center'>" + tbl.Rows[i]["Date"].ToString() + "</td>");
+                    for (int j = 5; j < tbl.Columns.Count; j++)
                     {
-                        txt.AppendLine("<td class='text-right'>" + tbl.Rows[i][tbl.Columns[j].ColumnName].ToString() + "</td>");
+                        string columnName = tbl.Columns[j].ColumnName.Trim();
+                        txt.AppendLine("<td class='text-right'>" + tbl.Rows[i][columnName].ToString() + "</td>");
                     }
                     txt.AppendLine("</tr>");
                 }
@@ -1228,7 +1318,7 @@ namespace Commsights.MVC.Controllers
                                                     string feature_Product = "";
                                                     string url = "";
                                                     string domain = "";
-                                                    int index = 0;                                                    
+                                                    int index = 0;
                                                     for (int rowNum = startRow; rowNum <= workSheet.Dimension.End.Row; rowNum++)
                                                     {
                                                         var wsRow = workSheet.Cells[rowNum, 1, rowNum, workSheet.Dimension.End.Column];
@@ -1330,10 +1420,10 @@ namespace Commsights.MVC.Controllers
                                                                         {
                                                                             try
                                                                             {
-                                                                                url = cell.Hyperlink.AbsoluteUri.Trim();                                                                                
+                                                                                url = cell.Hyperlink.AbsoluteUri.Trim();
                                                                                 Uri myUri = new Uri(url);
                                                                                 domain = myUri.Host;
-                                                                                domain = domain.Replace(@"www.", @"");                                                                                
+                                                                                domain = domain.Replace(@"www.", @"");
                                                                             }
                                                                             catch (Exception e)
                                                                             {
@@ -1383,7 +1473,7 @@ namespace Commsights.MVC.Controllers
                                                         index = index + 1;
                                                     }
                                                     _reportMonthlyRepository.InsertItemsByProductProperty005AndReportMonthlyIDAndRequestUserID(tbl, model.ID, RequestUserID);
-                                                }                                               
+                                                }
                                             }
                                         }
                                     }
