@@ -5345,7 +5345,7 @@ namespace Commsights.MVC.Controllers
             int row = 1;
             List<ReportMonthlyTrendLineDataTransfer> list = _reportMonthlyRepository.GetTrendLineWithoutSUMByIDToList(ID);
             List<ReportMonthlyTrendLineDataTransfer> listCompanyName = _reportMonthlyRepository.GetTrendLineDistinctCompanyNameByIDToList(ID);
-            trendline.Cells[row, 1].Value = "Year";
+            trendline.Cells[row, 1].Value = "Month";
             trendline.Cells[row, 1].Style.Font.Bold = true;
             trendline.Cells[row, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             trendline.Cells[row, 1].Style.Font.Color.SetColor(System.Drawing.Color.White);
@@ -5362,7 +5362,7 @@ namespace Commsights.MVC.Controllers
             trendline.Cells[row, 1].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
             trendline.Cells[row, 1].Style.Border.Bottom.Color.SetColor(Color.Black);
 
-            trendline.Cells[row, 2].Value = "Month";
+            trendline.Cells[row, 2].Value = "Day";
             trendline.Cells[row, 2].Style.Font.Bold = true;
             trendline.Cells[row, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             trendline.Cells[row, 2].Style.Font.Color.SetColor(System.Drawing.Color.White);
@@ -5377,26 +5377,9 @@ namespace Commsights.MVC.Controllers
             trendline.Cells[row, 2].Style.Border.Right.Style = ExcelBorderStyle.Thin;
             trendline.Cells[row, 2].Style.Border.Right.Color.SetColor(Color.Black);
             trendline.Cells[row, 2].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-            trendline.Cells[row, 2].Style.Border.Bottom.Color.SetColor(Color.Black);
+            trendline.Cells[row, 2].Style.Border.Bottom.Color.SetColor(Color.Black);          
 
-            trendline.Cells[row, 3].Value = "Day";
-            trendline.Cells[row, 3].Style.Font.Bold = true;
-            trendline.Cells[row, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            trendline.Cells[row, 3].Style.Font.Color.SetColor(System.Drawing.Color.White);
-            trendline.Cells[row, 3].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            trendline.Cells[row, 3].Style.Fill.BackgroundColor.SetColor(color);
-            trendline.Cells[row, 3].Style.Font.Name = "Times New Roman";
-            trendline.Cells[row, 3].Style.Font.Size = 12;
-            trendline.Cells[row, 3].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-            trendline.Cells[row, 3].Style.Border.Top.Color.SetColor(Color.Black);
-            trendline.Cells[row, 3].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-            trendline.Cells[row, 3].Style.Border.Left.Color.SetColor(Color.Black);
-            trendline.Cells[row, 3].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-            trendline.Cells[row, 3].Style.Border.Right.Color.SetColor(Color.Black);
-            trendline.Cells[row, 3].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-            trendline.Cells[row, 3].Style.Border.Bottom.Color.SetColor(Color.Black);
-
-            int columnIndex = 4;
+            int columnIndex = 3;
             foreach (ReportMonthlyTrendLineDataTransfer item in listCompanyName)
             {
                 trendline.Cells[row, columnIndex].Value = item.CompanyName;
@@ -5428,27 +5411,133 @@ namespace Commsights.MVC.Controllers
                     monthLast = 1;
                     yearLast = yearLast - 1;
                 }
+                string monthString = "";
+                string monthLastString = "";
+                switch (model.Month)
+                {
+                    case 1:
+                        monthString = "Jan";
+                        break;
+                    case 2:
+                        monthString = "Feb";
+                        break;
+                    case 3:
+                        monthString = "Mar";
+                        break;
+                    case 4:
+                        monthString = "Apr";
+                        break;
+                    case 5:
+                        monthString = "May";
+                        break;
+                    case 6:
+                        monthString = "Jun";
+                        break;
+                    case 7:
+                        monthString = "Jul";
+                        break;
+                    case 8:
+                        monthString = "Aug";
+                        break;
+                    case 9:
+                        monthString = "Sep";
+                        break;
+                    case 10:
+                        monthString = "Oct";
+                        break;
+                    case 11:
+                        monthString = "Nov";
+                        break;
+                    case 12:
+                        monthString = "Dec";
+                        break;
+                }
+                switch (monthLast)
+                {
+                    case 1:
+                        monthLastString = "Jan";
+                        break;
+                    case 2:
+                        monthLastString = "Feb";
+                        break;
+                    case 3:
+                        monthLastString = "Mar";
+                        break;
+                    case 4:
+                        monthLastString = "Apr";
+                        break;
+                    case 5:
+                        monthLastString = "May";
+                        break;
+                    case 6:
+                        monthLastString = "Jun";
+                        break;
+                    case 7:
+                        monthLastString = "Jul";
+                        break;
+                    case 8:
+                        monthLastString = "Aug";
+                        break;
+                    case 9:
+                        monthLastString = "Sep";
+                        break;
+                    case 10:
+                        monthLastString = "Oct";
+                        break;
+                    case 11:
+                        monthLastString = "Nov";
+                        break;
+                    case 12:
+                        monthLastString = "Dec";
+                        break;
+                }
                 tbl.Columns.Add(new DataColumn("Year"));
                 tbl.Columns.Add(new DataColumn("Month"));
                 tbl.Columns.Add(new DataColumn("Day"));
+                tbl.Columns.Add(new DataColumn("MonthString"));
+                tbl.Columns.Add(new DataColumn("Date"));
                 foreach (ReportMonthlyTrendLineDataTransfer item in listCompanyName)
                 {
                     tbl.Columns.Add(new DataColumn(item.CompanyName));
                 }
                 for (int i = 1; i < 32; i++)
                 {
+                    string monthString001 = model.Month.ToString();
+                    if (model.Month < 10)
+                    {
+                        monthString001 = "0" + monthString001;
+                    }
+                    string dayString001 = i.ToString();
+                    if (i < 10)
+                    {
+                        dayString001 = "0" + dayString001;
+                    }
                     DataRow dr = tbl.NewRow();
                     dr["Year"] = model.Year;
                     dr["Month"] = model.Month;
                     dr["Day"] = i;
+                    dr["MonthString"] = monthString + "-" + model.Year;
+                    dr["Date"] = monthString001 + "/" + dayString001 + "/" + model.Year;
                     tbl.Rows.Add(dr);
                 }
                 for (int i = 1; i < 32; i++)
                 {
+                    string monthString001 = monthLast.ToString();
+                    if (monthLast < 10)
+                    {
+                        monthString001 = "0" + monthString001;
+                    }
+                    string dayString001 = i.ToString();
+                    if (i < 10)
+                    {
+                        dayString001 = "0" + dayString001;
+                    }
                     DataRow dr = tbl.NewRow();
                     dr["Year"] = yearLast;
                     dr["Month"] = monthLast;
                     dr["Day"] = i;
+                    dr["MonthString"] = monthLastString + "-" + yearLast;
+                    dr["Date"] = monthString001 + "/" + dayString001 + "/" + yearLast;
                     tbl.Rows.Add(dr);
                 }
                 for (int i = 0; i < tbl.Rows.Count; i++)
@@ -5481,7 +5570,7 @@ namespace Commsights.MVC.Controllers
                 row = row + 1;
                 for (int i = 0; i < tbl.Rows.Count; i++)
                 {
-                    trendline.Cells[row, 1].Value = tbl.Rows[i]["Year"].ToString();
+                    trendline.Cells[row, 1].Value = tbl.Rows[i]["MonthString"].ToString();
                     trendline.Cells[row, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                     trendline.Cells[row, 1].Style.Font.Name = "Times New Roman";
                     trendline.Cells[row, 1].Style.Font.Size = 12;
@@ -5494,7 +5583,7 @@ namespace Commsights.MVC.Controllers
                     trendline.Cells[row, 1].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                     trendline.Cells[row, 1].Style.Border.Bottom.Color.SetColor(Color.Black);
 
-                    trendline.Cells[row, 2].Value = tbl.Rows[i]["Month"].ToString();
+                    trendline.Cells[row, 2].Value = tbl.Rows[i]["Date"].ToString();
                     trendline.Cells[row, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                     trendline.Cells[row, 2].Style.Font.Name = "Times New Roman";
                     trendline.Cells[row, 2].Style.Font.Size = 12;
@@ -5506,34 +5595,23 @@ namespace Commsights.MVC.Controllers
                     trendline.Cells[row, 2].Style.Border.Right.Color.SetColor(Color.Black);
                     trendline.Cells[row, 2].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                     trendline.Cells[row, 2].Style.Border.Bottom.Color.SetColor(Color.Black);
-
-                    trendline.Cells[row, 3].Value = tbl.Rows[i]["Day"].ToString();
-                    trendline.Cells[row, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                    trendline.Cells[row, 3].Style.Font.Name = "Times New Roman";
-                    trendline.Cells[row, 3].Style.Font.Size = 12;
-                    trendline.Cells[row, 3].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                    trendline.Cells[row, 3].Style.Border.Top.Color.SetColor(Color.Black);
-                    trendline.Cells[row, 3].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                    trendline.Cells[row, 3].Style.Border.Left.Color.SetColor(Color.Black);
-                    trendline.Cells[row, 3].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                    trendline.Cells[row, 3].Style.Border.Right.Color.SetColor(Color.Black);
-                    trendline.Cells[row, 3].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                    trendline.Cells[row, 3].Style.Border.Bottom.Color.SetColor(Color.Black);
-                    for (int j = 3; j < tbl.Columns.Count; j++)
+                    
+                    for (int j = 5; j < tbl.Columns.Count; j++)
                     {
-                        trendline.Cells[row, j + 1].Value = tbl.Rows[i][tbl.Columns[j].ColumnName].ToString();
-                        trendline.Cells[row, j + 1].Style.Numberformat.Format = "#,##0";
-                        trendline.Cells[row, j + 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                        trendline.Cells[row, j + 1].Style.Font.Name = "Times New Roman";
-                        trendline.Cells[row, j + 1].Style.Font.Size = 12;
-                        trendline.Cells[row, j + 1].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                        trendline.Cells[row, j + 1].Style.Border.Top.Color.SetColor(Color.Black);
-                        trendline.Cells[row, j + 1].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                        trendline.Cells[row, j + 1].Style.Border.Left.Color.SetColor(Color.Black);
-                        trendline.Cells[row, j + 1].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                        trendline.Cells[row, j + 1].Style.Border.Right.Color.SetColor(Color.Black);
-                        trendline.Cells[row, j + 1].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                        trendline.Cells[row, j + 1].Style.Border.Bottom.Color.SetColor(Color.Black);
+                        int columnsIndex = j - 2;
+                        trendline.Cells[row, columnsIndex].Value = tbl.Rows[i][tbl.Columns[j].ColumnName].ToString();
+                        trendline.Cells[row, columnsIndex].Style.Numberformat.Format = "#,##0";
+                        trendline.Cells[row, columnsIndex].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        trendline.Cells[row, columnsIndex].Style.Font.Name = "Times New Roman";
+                        trendline.Cells[row, columnsIndex].Style.Font.Size = 12;
+                        trendline.Cells[row, columnsIndex].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        trendline.Cells[row, columnsIndex].Style.Border.Top.Color.SetColor(Color.Black);
+                        trendline.Cells[row, columnsIndex].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        trendline.Cells[row, columnsIndex].Style.Border.Left.Color.SetColor(Color.Black);
+                        trendline.Cells[row, columnsIndex].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                        trendline.Cells[row, columnsIndex].Style.Border.Right.Color.SetColor(Color.Black);
+                        trendline.Cells[row, columnsIndex].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                        trendline.Cells[row, columnsIndex].Style.Border.Bottom.Color.SetColor(Color.Black);
                     }
                     row = row + 1;
                 }
