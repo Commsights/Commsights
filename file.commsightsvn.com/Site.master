@@ -1,0 +1,16 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <title>Commsights Viet Nam</title>
+</head>
+<body>
+    <form runat="server">
+        <asp:ScriptManager ID="ScriptManager" runat="server" />
+        <asp:ContentPlaceHolder ID="MainContent" runat="server">
+        </asp:ContentPlaceHolder>
+    </form>
+</body>
+</html>
