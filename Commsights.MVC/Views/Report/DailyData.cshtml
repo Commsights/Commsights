@@ -173,7 +173,7 @@
         var isUploadValue = document.getElementById('IsUpload').checked;
             $.ajax({
                 type: 'GET',
-                url: "@Url.Action("DeleteByDatePublishBeginAndDatePublishEndAndIndustryID", "Report")",
+                url: "@Url.Action("DeleteByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsUpload", "Report")",
                 data: {
                     industryID: industryIDValue,
                     datePublishBegin: datePublishBeginValue,
