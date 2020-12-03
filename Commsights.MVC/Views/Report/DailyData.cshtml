@@ -82,7 +82,7 @@
     columns.Bound(t => t.TargetID).Title("Target").Width(200);
     columns.Bound(t => t.IsSummary).Title("Brief").Width(100);
     columns.Bound(t => t.IsData).Title("Send").Width(100);
-    columns.Bound(t => t.DatePublish).Title("Date").Format("{0:dd/MM/yyyy}").Width(120).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.DatePublish).Title("Date").Format("{0:dd/MM/yyyy}").Width(120).HtmlAttributes(new { @class = "text-right" });   
     columns.Bound(t => t.DateUpdated).Title("Upload").Width(150).Format("{0:dd/MM/yyyy HH:mm}").HtmlAttributes(new { @class = "text-right" });
     columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70);
 })

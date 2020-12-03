@@ -516,22 +516,42 @@ namespace Commsights.MVC.Controllers
                 }
                 for (int i = 1; i < 32; i++)
                 {
+                    string monthString001 = model.Month.ToString();
+                    if (model.Month < 10)
+                    {
+                        monthString001 = "0" + monthString001;
+                    }
+                    string dayString001 = i.ToString();
+                    if (i < 10)
+                    {
+                        dayString001 = "0" + dayString001;
+                    }
                     DataRow row = tbl.NewRow();
                     row["Year"] = model.Year;
                     row["Month"] = model.Month;
                     row["Day"] = i;
                     row["MonthString"] = monthString + "-" + model.Year;
-                    row["Date"] = model.Month + "/" + i + "/" + model.Year;
+                    row["Date"] = monthString001 + "/" + dayString001 + "/" + model.Year;
                     tbl.Rows.Add(row);
                 }
                 for (int i = 1; i < 32; i++)
                 {
+                    string monthString001 = monthLast.ToString();
+                    if (monthLast < 10)
+                    {
+                        monthString001 = "0" + monthString001;
+                    }
+                    string dayString001 = i.ToString();
+                    if (i < 10)
+                    {
+                        dayString001 = "0" + dayString001;
+                    }
                     DataRow row = tbl.NewRow();
                     row["Year"] = yearLast;
                     row["Month"] = monthLast;
                     row["Day"] = i;
                     row["MonthString"] = monthLastString + "-" + yearLast;
-                    row["Date"] = monthLast + "/" + i + "/" + yearLast;
+                    row["Date"] = monthString001 + "/" + dayString001 + "/" + yearLast;
                     tbl.Rows.Add(row);
                 }
                 for (int i = 0; i < tbl.Rows.Count; i++)
@@ -571,7 +591,16 @@ namespace Commsights.MVC.Controllers
                     string columnName = tbl.Columns[i].ColumnName.Trim();
                     if ((columnName != "Year") && (columnName != "Month") && (columnName != "Day"))
                     {
-                        txt.AppendLine("<th class='text-center'><a style='cursor:pointer;'>" + tbl.Columns[i].ColumnName + "</a></th>");
+                        switch (columnName)
+                        {
+                            case "MonthString":
+                                columnName = "Month";
+                                break;
+                            case "Date":
+                                columnName = "Day";
+                                break;
+                        }
+                        txt.AppendLine("<th class='text-center'><a style='cursor:pointer;'>" + columnName + "</a></th>");
                     }
                 }
                 txt.AppendLine("</tr>");
@@ -1300,11 +1329,11 @@ namespace Commsights.MVC.Controllers
                                                     model.Note = fileName;
                                                     model.Initialization(InitType.Insert, RequestUserID);
                                                     model.IsMonthly = true;
-                                                    model.Title = "ReportMonthly_" + model.CompanyID + "_" + model.Year + "_" + model.Month + "_" + AppGlobal.DateTimeCode;
+                                                    model.Title = "ReportMonthly_" + model.CompanyID + "_" + model.Year + "_" + model.Month;
                                                     Membership customer = _membershipRepository.GetByID(model.CompanyID.Value);
                                                     if (customer != null)
                                                     {
-                                                        model.Title = "ReportMonthly_" + model.CompanyID + "_" + customer.Account + "_" + model.Year + "_" + model.Month + "_" + AppGlobal.DateTimeCode;
+                                                        model.Title = "ReportMonthly_" + model.CompanyID + "_" + customer.Account + "_" + model.Year + "_" + model.Month;
                                                     }
                                                     _reportMonthlyRepository.Create(model);
                                                     DataTable tbl = new DataTable();
@@ -1472,6 +1501,12 @@ namespace Commsights.MVC.Controllers
                                                         }
                                                         index = index + 1;
                                                     }
+                                                    int columnsCount = tbl.Columns.Count;
+                                                    for (int i = 36; i < columnsCount; i++)
+                                                    {
+                                                        tbl.Columns.RemoveAt(i);
+                                                    }
+                                                    int columnsCount001 = tbl.Columns.Count;
                                                     _reportMonthlyRepository.InsertItemsByProductProperty005AndReportMonthlyIDAndRequestUserID(tbl, model.ID, RequestUserID);
                                                 }
                                             }

@@ -1085,62 +1085,82 @@ namespace Commsights.MVC.Controllers
                 if (config != null)
                 {
                     List<LinkItem> list = new List<LinkItem>();
-                    AppGlobal.LinkFinder001(config.URLFull, config.URLFull, true, list);
+                    LinkItem link = new LinkItem();
+                    link.Href = "https://vnexpress.net/khoi-to-vu-an-tuong-do-lam-chet-nu-sinh-lop-6-4200013.html";
+                    link.Text = "Đất quanh sân bay Long Thành sang nhượng giấy viết tay sẽ không được bồi thường";
+                    //AppGlobal.LinkFinder001(config.URLFull, config.URLFull, true, list);
+                    list.Add(link);
                     foreach (LinkItem linkItem in list)
                     {
                         try
                         {
-                            Uri myUri = new Uri(linkItem.Href);
-                            string extend = myUri.LocalPath;
-                            string domain = myUri.Host;
-                            if (extend.Contains(".") == true)
+                            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(linkItem.Href);
+                            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                            if (response.StatusCode == HttpStatusCode.OK)
                             {
-                                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(linkItem.Href);
-                                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                                if (response.StatusCode == HttpStatusCode.OK)
+                                Stream receiveStream = response.GetResponseStream();
+                                StreamReader readStream = null;
+                                if (response.CharacterSet == null)
                                 {
-                                    Stream receiveStream = response.GetResponseStream();
-                                    StreamReader readStream = null;
-                                    if (response.CharacterSet == null)
-                                    {
-                                        readStream = new StreamReader(receiveStream, Encoding.UTF8);
-                                    }
-                                    else
-                                    {
-                                        readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
-                                    }
-                                    string html001 = readStream.ReadToEnd();
-                                    string htmlspan001 = html001;
-                                    htmlspan001 = AppGlobal.HTMLReplaceAndSplit(htmlspan001);
-
-                                    string htmlTitle = htmlspan001;
-                                    //if(htmlTitle.Contains()==true)
-                                    //{
-
-                                    //}    
-
-
-                                    if ((domain.Contains(@"nhipcaudoanhnghiep.vn") == true) || (domain.Contains(@"vov.vn") == true))
-                                    {
-                                        if (htmlspan001.Contains(@"</h2>") == true)
-                                        {
-                                            string htmlspan = htmlspan001;
-                                            MatchCollection m1 = Regex.Matches(htmlspan, @"(<h2.*?>.*?</h2>)", RegexOptions.Singleline);
-                                            await AsyncInsertSingleItem(m1, config, linkItem, html001);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (htmlspan001.Contains(@"</h1>") == true)
-                                        {
-                                            string htmlspan = htmlspan001;
-                                            MatchCollection m1 = Regex.Matches(htmlspan, @"(<h1.*?>.*?</h1>)", RegexOptions.Singleline);
-                                            await AsyncInsertSingleItem(m1, config, linkItem, html001);
-                                        }
-                                    }
-                                    response.Close();
-                                    readStream.Close();
+                                    readStream = new StreamReader(receiveStream, Encoding.UTF8);
                                 }
+                                else
+                                {
+                                    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                                }
+                                string html001 = readStream.ReadToEnd();
+                                html001 = html001.Replace(@"~", @"");
+                                html001 = AppGlobal.HTMLReplaceAndSplit(html001);
+                                string title = "";
+                                string htmlTitle = html001;
+                                if ((htmlTitle.Contains(@"<meta property=""og:title"" content=""") == true) || (htmlTitle.Contains(@"<meta property='og:title' content='") == true))
+                                {
+                                    htmlTitle = htmlTitle.Replace(@"<meta property=""og:title"" content=""", @"~");
+                                    htmlTitle = htmlTitle.Replace(@"<meta property='og:title' content='", @"~");
+                                    if (htmlTitle.Split('~').Length > 1)
+                                    {
+                                        htmlTitle = htmlTitle.Split('~')[1];
+                                        htmlTitle = htmlTitle.Replace(@""">", @"~");
+                                        htmlTitle = htmlTitle.Replace(@"'>", @"~");
+                                        htmlTitle = htmlTitle.Split('~')[0];
+                                        title = htmlTitle.Trim();
+                                    }
+                                }
+                                else
+                                {
+                                    MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
+                                    if (m1.Count > 0)
+                                    {
+                                        string value = m1[m1.Count - 1].Groups[1].Value;
+                                        if (!string.IsNullOrEmpty(value))
+                                        {
+                                            value = value.Replace(@"<title>", @"");
+                                            value = value.Replace(@"</title>", @"");
+                                            title = value.Trim();
+                                        }
+                                    }
+                                }
+                                Product product = new Product();
+                                product.Title = title;
+                                product.ParentID = config.ID;
+                                product.CategoryID = config.ID;
+                                product.Source = AppGlobal.SourceAuto;
+                                if (string.IsNullOrEmpty(product.Title))
+                                {
+                                    product.Title = linkItem.Text;
+                                }
+                                product.MetaTitle = AppGlobal.SetName(product.Title);
+                                product.URLCode = linkItem.Href;
+                                product.DatePublish = DateTime.Now;
+                                product.Initialization(InitType.Insert, RequestUserID);
+                                product.DatePublish = DateTime.Now;
+                                AppGlobal.FinderContentAndDatePublish001(html001, product);
+                                if ((product.DatePublish.Year > 2019) && (product.Active == true))
+                                {
+                                    //await _productRepository.AsyncInsertSingleItem(product);
+                                }
+                                response.Close();
+                                readStream.Close();
                             }
                         }
                         catch (Exception e1)
