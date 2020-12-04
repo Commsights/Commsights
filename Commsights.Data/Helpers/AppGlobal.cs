@@ -2603,7 +2603,7 @@ namespace Commsights.Data.Helpers
                         if (index > 20)
                         {
                         }
-                        //LinkFinder001(item.Href, urlRoot, false, list);
+                        LinkFinder001(item.Href, urlRoot, false, list);
                     }
                 }
             }
