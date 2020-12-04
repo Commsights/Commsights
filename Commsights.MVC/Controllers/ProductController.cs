@@ -606,7 +606,7 @@ namespace Commsights.MVC.Controllers
             List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
             foreach (Config item in listConfig)
             {
-                this.CreateProductScanWebsiteNoFilterProduct001(item);
+                this.CreateProductScanWebsiteNoFilterProduct0001(item);
             }
             string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
             return Json(note);
@@ -675,7 +675,7 @@ namespace Commsights.MVC.Controllers
             if (websiteID > 0)
             {
                 Config config = _configResposistory.GetByID(websiteID);
-                await this.AsyncCreateProductScanWebsiteNoFilterProduct001(config);
+                await this.AsyncCreateProductScanWebsiteNoFilterProduct0001(config);
             }
             return "";
         }
@@ -704,7 +704,7 @@ namespace Commsights.MVC.Controllers
                 {
                     i = indexEnd;
                 }
-                await this.AsyncCreateProductScanWebsiteNoFilterProduct001(listConfig[i]);
+                await this.AsyncCreateProductScanWebsiteNoFilterProduct0001(listConfig[i]);
             }
             return "";
         }
@@ -719,7 +719,7 @@ namespace Commsights.MVC.Controllers
                 {
                     i = indexEnd;
                 }
-                await this.AsyncCreateProductScanWebsiteNoFilterProduct001(listConfig[i]);
+                await this.AsyncCreateProductScanWebsiteNoFilterProduct0001(listConfig[i]);
             }
             return "";
         }
