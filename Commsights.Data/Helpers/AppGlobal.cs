@@ -3370,6 +3370,8 @@ namespace Commsights.Data.Helpers
                 string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
                 if ((!string.IsNullOrEmpty(t)) && (t.Contains(@"/") == true))
                 {
+                    t = t.Replace(@"|", @"");
+                    t = t.Replace(@"&nbsp;", @"");
                     t = t.Replace(@"-", @"/");
                     t = t.Replace(@".", @"/");
                     for (int j = 0; j < t.Split(' ').Length; j++)
@@ -3406,6 +3408,20 @@ namespace Commsights.Data.Helpers
                                 }
                                 catch
                                 {
+                                    try
+                                    {
+                                        yearString = date.Split('/')[0];
+                                        monthString = date.Split('/')[1];
+                                        dayString = date.Split('/')[2];
+                                        if (yearString.Length == 2)
+                                        {
+                                            yearString = "20" + yearString;
+                                        }
+                                        datePublish = new DateTime(int.Parse(yearString), int.Parse(monthString), int.Parse(dayString), hour, minute, second);
+                                    }
+                                    catch
+                                    {
+                                    }
                                 }
                             }
                             if (product.DatePublish > datePublish)
@@ -3420,7 +3436,6 @@ namespace Commsights.Data.Helpers
                 }
             }
         }
-
         public static void DatePublish002(string html, string tagName, Product product)
         {
             DateTime datePublish = new DateTime(2019, 1, 1);
@@ -3441,6 +3456,8 @@ namespace Commsights.Data.Helpers
             for (int i = 0; i < m1.Count; i++)
             {
                 string value = m1[i].Groups[1].Value;
+                value = value.Replace(@"|", @"");
+                value = value.Replace(@"&nbsp;", @"");
                 string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
                 if (((t.Contains(@"ngày") == true) && (t.Contains(@"tháng") == true)) || ((t.Contains(@"ng&#224;y") == true) && (t.Contains(@"th&#225;ng") == true)))
                 {
@@ -3485,6 +3502,7 @@ namespace Commsights.Data.Helpers
                             }
                             catch
                             {
+
                             }
                         }
                         if (product.DatePublish > datePublish)
@@ -3595,6 +3613,46 @@ namespace Commsights.Data.Helpers
                 {
                     DatePublish002(html, "div", product);
                 }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "h4", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "h4", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "li", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "li", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "em", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "em", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "i", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "i", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "p", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "p", product);
+                }
                 htmlspan = html;
                 Uri myUri = new Uri(product.URLCode);
                 htmlspan = HTMLReplaceAndSplit(htmlspan);
@@ -3617,44 +3675,6 @@ namespace Commsights.Data.Helpers
                         string t1 = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
                         product.Description = product.Description + " " + t1;
                         product.ContentMain = product.ContentMain + "<br/>" + t1;
-                    }
-                    string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
-                    if (!string.IsNullOrEmpty(t))
-                    {
-                        if (product.Active == false)
-                        {
-                            t = t.Replace(@"-", @"/");
-                            t = t.Replace(@".", @"/");
-                            for (int j = 0; j < t.Split(' ').Length; j++)
-                            {
-                                string date = t.Split(' ')[j];
-                                date = date.Trim();
-                                date = date.Replace(@",", @"");
-                                if ((date.Length > 7) && (date.Length < 11) && (date.Contains(@"/") == true))
-                                {
-                                    try
-                                    {
-                                        datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), hour, minute, second);
-                                    }
-                                    catch
-                                    {
-                                        try
-                                        {
-                                            datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), hour, minute, second);
-                                        }
-                                        catch
-                                        {
-                                        }
-                                    }
-                                    if (product.DatePublish > datePublish)
-                                    {
-                                        product.DatePublish = datePublish;
-                                        product.Active = true;
-                                        j = t.Split('~').Length;
-                                    }
-                                }
-                            }
-                        }
                     }
                 }
             }
