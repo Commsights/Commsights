@@ -3615,11 +3615,51 @@ namespace Commsights.Data.Helpers
                 }
                 if (product.Active == false)
                 {
+                    DatePublish001(html, "h1", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "h1", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "h2", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "h2", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "h3", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "h3", product);
+                }
+                if (product.Active == false)
+                {
                     DatePublish001(html, "h4", product);
                 }
                 if (product.Active == false)
                 {
                     DatePublish002(html, "h4", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "h5", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "h5", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "h6", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "h6", product);
                 }
                 if (product.Active == false)
                 {
