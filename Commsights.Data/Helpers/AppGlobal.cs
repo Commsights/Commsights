@@ -3506,7 +3506,7 @@ namespace Commsights.Data.Helpers
                 string htmlspan = html;
                 MatchCollection m1;
                 product.Active = false;
-                DateTime datePublish = new DateTime(2020, 1, 1);
+                DateTime datePublish = new DateTime(2019, 1, 1);
                 string yearString = "";
                 string monthString = "";
                 string dayString = "";
@@ -3524,7 +3524,7 @@ namespace Commsights.Data.Helpers
                     for (int i = 0; i < m1.Count; i++)
                     {
                         string value = m1[i].Groups[1].Value;
-                        if (value.Contains(@"datePublished") == true)
+                        if ((value.Contains(@"published") == true) || (value.Contains(@"pubdate") == true))
                         {
                             value = value.Replace(@"content=""", @"~");
                             value = value.Replace(@"content='", @"~");
