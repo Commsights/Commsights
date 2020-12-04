@@ -3344,25 +3344,180 @@ namespace Commsights.Data.Helpers
                 product.Active = check;
             }
         }
+        public static void DatePublish001(string html, string tagName, Product product)
+        {
+            DateTime datePublish = new DateTime(2020, 1, 1);
+            string yearString = "";
+            string monthString = "";
+            string dayString = "";
+            int year = DateTime.Now.Year;
+            int month = DateTime.Now.Month;
+            int day = DateTime.Now.Day;
+            int hour = DateTime.Now.Hour;
+            int minute = DateTime.Now.Minute;
+            int second = DateTime.Now.Second;
+            string htmlspan = html;
+            htmlspan = htmlspan.Replace(@"~", @"");
+            htmlspan = htmlspan.Replace(@"</header>", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            MatchCollection m1 = Regex.Matches(htmlspan, @"(<" + tagName + ".*?>.*?</" + tagName + ">)", RegexOptions.Singleline);
+            for (int i = 0; i < m1.Count; i++)
+            {
+                string value = m1[i].Groups[1].Value;
+                string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                if ((!string.IsNullOrEmpty(t)) && (t.Contains(@"/") == true))
+                {
+                    t = t.Replace(@"-", @"/");
+                    t = t.Replace(@".", @"/");
+                    for (int j = 0; j < t.Split(' ').Length; j++)
+                    {
+                        string date = t.Split(' ')[j];
+                        date = date.Trim();
+                        date = date.Replace(@",", @"");
+                        if ((date.Length > 7) && (date.Length < 11) && (date.Contains(@"/") == true))
+                        {
+                            try
+                            {
+                                yearString = date.Split('/')[2];
+                                monthString = date.Split('/')[1];
+                                dayString = date.Split('/')[0];
+                                if (yearString.Length == 2)
+                                {
+                                    yearString = "20" + yearString;
+                                }
+                                datePublish = new DateTime(int.Parse(yearString), int.Parse(monthString), int.Parse(dayString), hour, minute, second);
+                            }
+                            catch
+                            {
+                                try
+                                {
+                                    yearString = date.Split('/')[2];
+                                    monthString = date.Split('/')[1];
+                                    dayString = date.Split('/')[0];
+                                    if (yearString.Length == 2)
+                                    {
+                                        yearString = "20" + yearString;
+                                    }
+                                    datePublish = new DateTime(int.Parse(yearString), int.Parse(monthString), int.Parse(dayString), hour, minute, second);
+
+                                }
+                                catch
+                                {
+                                }
+                            }
+                            if (product.DatePublish > datePublish)
+                            {
+                                product.DatePublish = datePublish;
+                                product.Active = true;
+                                i = m1.Count;
+                                j = t.Split(' ').Length;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void DatePublish002(string html, string tagName, Product product)
+        {
+            DateTime datePublish = new DateTime(2020, 1, 1);
+            int year = DateTime.Now.Year;
+            int month = DateTime.Now.Month;
+            int day = DateTime.Now.Day;
+            int hour = DateTime.Now.Hour;
+            int minute = DateTime.Now.Minute;
+            int second = DateTime.Now.Second;
+            string htmlspan = html;
+            htmlspan = htmlspan.Replace(@"~", @"");
+            htmlspan = htmlspan.Replace(@"</header>", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            MatchCollection m1 = Regex.Matches(htmlspan, @"(<" + tagName + ".*?>.*?</" + tagName + ">)", RegexOptions.Singleline);
+            for (int i = 0; i < m1.Count; i++)
+            {
+                string value = m1[i].Groups[1].Value;
+                string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                if (((t.Contains(@"ngày") == true) && (t.Contains(@"tháng") == true)) || ((t.Contains(@"ng&#224;y") == true) && (t.Contains(@"th&#225;ng") == true)))
+                {
+                    int index = 0;
+                    foreach (string item in t.Split(' '))
+                    {
+                        string date = item;
+                        date = date.Trim();
+                        date = date.Replace(@",", @"");
+                        try
+                        {
+                            int dateValue = int.Parse(date);
+                            switch (index)
+                            {
+                                case 0:
+                                    day = dateValue;
+                                    break;
+                                case 1:
+                                    month = dateValue;
+                                    break;
+                                case 2:
+                                    year = dateValue;
+                                    break;
+                            }
+                            index = index + 1;
+                        }
+                        catch
+                        {
+                        }
+                    }
+                    if (index == 3)
+                    {
+                        try
+                        {
+                            datePublish = new DateTime(year, month, day, hour, minute, second);
+                        }
+                        catch
+                        {
+                            try
+                            {
+                                datePublish = new DateTime(year, day, month, hour, minute, second);
+                            }
+                            catch
+                            {
+                            }
+                        }
+                        if (product.DatePublish > datePublish)
+                        {
+                            product.DatePublish = datePublish;
+                            product.Active = true;
+                            i = m1.Count;
+                        }
+                    }
+                }
+            }
+        }
         public static void FinderContentAndDatePublish001(string html, Product product)
         {
             if (!string.IsNullOrEmpty(html))
             {
+                DateTime now = DateTime.Now;
                 html = html.Replace(@"~", @"");
                 string htmlspan = html;
                 MatchCollection m1;
-                bool check = false;
+                product.Active = false;
                 DateTime datePublish = new DateTime(2020, 1, 1);
                 string yearString = "";
                 string monthString = "";
                 string dayString = "";
-                int year = DateTime.Now.Year;
-                int month = DateTime.Now.Month;
-                int day = DateTime.Now.Day;
-                int hour = DateTime.Now.Hour;
-                int minute = DateTime.Now.Minute;
-                int second = DateTime.Now.Second;
-                if (check == false)
+                int year = now.Year;
+                int month = now.Month;
+                int day = now.Day;
+                int hour = now.Hour;
+                int minute = now.Minute;
+                int second = now.Second;
+                product.DatePublish = now;
+                if (product.Active == false)
                 {
                     htmlspan = html;
                     m1 = Regex.Matches(htmlspan, @"(<meta.*?/>)", RegexOptions.Singleline);
@@ -3401,28 +3556,72 @@ namespace Commsights.Data.Helpers
                                 if (product.DatePublish > datePublish)
                                 {
                                     product.DatePublish = datePublish;
-                                    check = true;
+                                    product.Active = true;
                                     i = m1.Count;
                                 }
                             }
                         }
                     }
                 }
-                if (check == false)
+                if (product.Active == false)
                 {
-                    htmlspan = html;
-                    htmlspan = htmlspan.Replace(@"~", @"");
-                    htmlspan = htmlspan.Replace(@"</header>", @"~");
-                    if (htmlspan.Split('~').Length > 1)
+                    DatePublish001(html, "dd", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "dd", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "time", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "time", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "span", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "span", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "div", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "div", product);
+                }
+                htmlspan = html;
+                Uri myUri = new Uri(product.URLCode);
+                htmlspan = HTMLReplaceAndSplit(htmlspan);
+                htmlspan = htmlspan.Replace(@"~", @"");
+                htmlspan = htmlspan.Replace(@"</header>", @"~");
+                if (htmlspan.Split('~').Length > 1)
+                {
+                    htmlspan = htmlspan.Split('~')[1];
+                }
+                m1 = Regex.Matches(htmlspan, @"(<p.*?>.*?</p>)", RegexOptions.Singleline);
+                for (int i = 0; i < m1.Count; i++)
+                {
+                    string value = m1[i].Groups[1].Value;
+                    if ((value.Contains(@"<img") == true) || (value.Contains(@"</a>") == true) || (value.Contains(@"<a") == true) || (value.Contains(@"href") == true) || (value.Contains(@"function()") == true) || (value.Contains(@"$(") == true))
                     {
-                        htmlspan = htmlspan.Split('~')[1];
+
                     }
-                    m1 = Regex.Matches(htmlspan, @"(<dd.*?>.*?</dd>)", RegexOptions.Singleline);
-                    for (int i = 0; i < m1.Count; i++)
+                    else
                     {
-                        string value = m1[i].Groups[1].Value;
-                        string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
-                        if ((!string.IsNullOrEmpty(t)) && (t.Contains(@"/") == true))
+                        string t1 = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                        product.Description = product.Description + " " + t1;
+                        product.ContentMain = product.ContentMain + "<br/>" + t1;
+                    }
+                    string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                    if (!string.IsNullOrEmpty(t))
+                    {
+                        if (product.Active == false)
                         {
                             t = t.Replace(@"-", @"/");
                             t = t.Replace(@".", @"/");
@@ -3435,28 +3634,13 @@ namespace Commsights.Data.Helpers
                                 {
                                     try
                                     {
-                                        yearString = date.Split('/')[2];
-                                        monthString = date.Split('/')[1];
-                                        dayString = date.Split('/')[0];
-                                        if (yearString.Length == 2)
-                                        {
-                                            yearString = "20" + yearString;
-                                        }
-                                        datePublish = new DateTime(int.Parse(yearString), int.Parse(monthString), int.Parse(dayString), hour, minute, second);
+                                        datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), hour, minute, second);
                                     }
                                     catch
                                     {
                                         try
                                         {
-                                            yearString = date.Split('/')[2];
-                                            monthString = date.Split('/')[1];
-                                            dayString = date.Split('/')[0];
-                                            if (yearString.Length == 2)
-                                            {
-                                                yearString = "20" + yearString;
-                                            }
-                                            datePublish = new DateTime(int.Parse(yearString), int.Parse(monthString), int.Parse(dayString), hour, minute, second);
-
+                                            datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), hour, minute, second);
                                         }
                                         catch
                                         {
@@ -3465,85 +3649,14 @@ namespace Commsights.Data.Helpers
                                     if (product.DatePublish > datePublish)
                                     {
                                         product.DatePublish = datePublish;
-                                        check = true;
-                                        i = m1.Count;
-                                        j = t.Split(' ').Length;
+                                        product.Active = true;
+                                        j = t.Split('~').Length;
                                     }
                                 }
                             }
                         }
                     }
                 }
-                if (check == false)
-                {
-                    htmlspan = html;
-                    htmlspan = htmlspan.Replace(@"~", @"");
-                    htmlspan = htmlspan.Replace(@"</header>", @"~");
-                    if (htmlspan.Split('~').Length > 1)
-                    {
-                        htmlspan = htmlspan.Split('~')[1];
-                    }
-                    m1 = Regex.Matches(htmlspan, @"(<dd.*?>.*?</dd>)", RegexOptions.Singleline);
-                    for (int i = 0; i < m1.Count; i++)
-                    {
-                        string value = m1[i].Groups[1].Value;
-                        string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
-                        if (((t.Contains(@"ngày") == true) && (t.Contains(@"tháng") == true)) || ((t.Contains(@"ng&#224;y") == true) && (t.Contains(@"th&#225;ng") == true)))
-                        {
-                            int index = 0;
-                            foreach (string item in t.Split(' '))
-                            {
-                                string date = item;
-                                date = date.Trim();
-                                date = date.Replace(@",", @"");
-                                try
-                                {
-                                    int dateValue = int.Parse(date);
-                                    switch (index)
-                                    {
-                                        case 0:
-                                            day = dateValue;
-                                            break;
-                                        case 1:
-                                            month = dateValue;
-                                            break;
-                                        case 2:
-                                            year = dateValue;
-                                            break;
-                                    }
-                                    index = index + 1;
-                                }
-                                catch
-                                {
-                                }
-                            }
-                            if (index == 3)
-                            {
-                                try
-                                {
-                                    datePublish = new DateTime(year, month, day, hour, minute, second);
-                                }
-                                catch
-                                {
-                                    try
-                                    {
-                                        datePublish = new DateTime(year, day, month, hour, minute, second);
-                                    }
-                                    catch
-                                    {
-                                    }
-                                }
-                                if (product.DatePublish > datePublish)
-                                {
-                                    product.DatePublish = datePublish;
-                                    check = true;
-                                    i = m1.Count;
-                                }
-                            }
-                        }
-                    }
-                }
-                product.Active = check;
             }
         }
         public static List<LinkItem> ImgFinder(string html)

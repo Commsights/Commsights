@@ -1085,11 +1085,11 @@ namespace Commsights.MVC.Controllers
                 if (config != null)
                 {
                     List<LinkItem> list = new List<LinkItem>();
-                    LinkItem link = new LinkItem();
-                    link.Href = "https://vnexpress.net/khoi-to-vu-an-tuong-do-lam-chet-nu-sinh-lop-6-4200013.html";
-                    link.Text = "Đất quanh sân bay Long Thành sang nhượng giấy viết tay sẽ không được bồi thường";
-                    //AppGlobal.LinkFinder001(config.URLFull, config.URLFull, true, list);
-                    list.Add(link);
+                    //LinkItem link = new LinkItem();
+                    //link.Href = "https://vnexpress.net/khoi-to-vu-an-tuong-do-lam-chet-nu-sinh-lop-6-4200013.html";
+                    //link.Text = "Đất quanh sân bay Long Thành sang nhượng giấy viết tay sẽ không được bồi thường";
+                    //list.Add(link);
+                    AppGlobal.LinkFinder001(config.URLFull, config.URLFull, true, list);                    
                     foreach (LinkItem linkItem in list)
                     {
                         try
@@ -1108,11 +1108,11 @@ namespace Commsights.MVC.Controllers
                                 {
                                     readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
                                 }
-                                string html001 = readStream.ReadToEnd();
-                                html001 = html001.Replace(@"~", @"");
-                                html001 = AppGlobal.HTMLReplaceAndSplit(html001);
+                                string html = readStream.ReadToEnd();
+                                html = html.Replace(@"~", @"");
+                                html = AppGlobal.HTMLReplaceAndSplit(html);
                                 string title = "";
-                                string htmlTitle = html001;
+                                string htmlTitle = html;
                                 if ((htmlTitle.Contains(@"<meta property=""og:title"" content=""") == true) || (htmlTitle.Contains(@"<meta property='og:title' content='") == true))
                                 {
                                     htmlTitle = htmlTitle.Replace(@"<meta property=""og:title"" content=""", @"~");
@@ -1154,10 +1154,10 @@ namespace Commsights.MVC.Controllers
                                 product.DatePublish = DateTime.Now;
                                 product.Initialization(InitType.Insert, RequestUserID);
                                 product.DatePublish = DateTime.Now;
-                                AppGlobal.FinderContentAndDatePublish001(html001, product);
+                                AppGlobal.FinderContentAndDatePublish001(html, product);
                                 if ((product.DatePublish.Year > 2019) && (product.Active == true))
                                 {
-                                    //await _productRepository.AsyncInsertSingleItem(product);
+                                    await _productRepository.AsyncInsertSingleItem(product);
                                 }
                                 response.Close();
                                 readStream.Close();
