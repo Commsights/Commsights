@@ -1089,7 +1089,7 @@ namespace Commsights.MVC.Controllers
                     //link.Href = "https://vnexpress.net/khoi-to-vu-an-tuong-do-lam-chet-nu-sinh-lop-6-4200013.html";
                     //link.Text = "Đất quanh sân bay Long Thành sang nhượng giấy viết tay sẽ không được bồi thường";
                     //list.Add(link);
-                    AppGlobal.LinkFinder001(config.URLFull, config.URLFull, true, list);                    
+                    AppGlobal.LinkFinder001(config.URLFull, config.URLFull, true, list);
                     foreach (LinkItem linkItem in list)
                     {
                         try
@@ -1100,14 +1100,15 @@ namespace Commsights.MVC.Controllers
                             {
                                 Stream receiveStream = response.GetResponseStream();
                                 StreamReader readStream = null;
-                                if (response.CharacterSet == null)
-                                {
-                                    readStream = new StreamReader(receiveStream, Encoding.UTF8);
-                                }
-                                else
-                                {
-                                    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
-                                }
+                                readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                                //if (response.CharacterSet == null)
+                                //{
+                                //    readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                                //}
+                                //else
+                                //{
+                                //    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                                //}
                                 string html = readStream.ReadToEnd();
                                 html = html.Replace(@"~", @"");
                                 html = AppGlobal.HTMLReplaceAndSplit(html);
@@ -1120,8 +1121,8 @@ namespace Commsights.MVC.Controllers
                                     if (htmlTitle.Split('~').Length > 1)
                                     {
                                         htmlTitle = htmlTitle.Split('~')[1];
-                                        htmlTitle = htmlTitle.Replace(@""">", @"~");
-                                        htmlTitle = htmlTitle.Replace(@"'>", @"~");
+                                        htmlTitle = htmlTitle.Replace(@"""", @"~");
+                                        htmlTitle = htmlTitle.Replace(@"'", @"~");
                                         htmlTitle = htmlTitle.Split('~')[0];
                                         title = htmlTitle.Trim();
                                     }
@@ -1140,6 +1141,30 @@ namespace Commsights.MVC.Controllers
                                         }
                                     }
                                 }
+                                bool isUnicode = AppGlobal.ContainsUnicodeCharacter(title);
+                                if ((title.Contains(@"&#") == true) || (isUnicode == false))
+                                {
+                                    MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
+                                    if (m1.Count > 0)
+                                    {
+                                        string value = m1[m1.Count - 1].Groups[1].Value;
+                                        if (!string.IsNullOrEmpty(value))
+                                        {
+                                            value = value.Replace(@"<title>", @"");
+                                            value = value.Replace(@"</title>", @"");
+                                            title = value.Trim();
+                                        }
+                                    }
+                                }
+                                if (title.Split('|').Length > 2)
+                                {
+                                    title = title.Split('|')[1];
+                                }
+                                if (title.Split('|').Length > 1)
+                                {
+                                    title = title.Split('|')[0];
+                                }
+                                title = title.Trim();
                                 Product product = new Product();
                                 product.Title = title;
                                 product.ParentID = config.ID;

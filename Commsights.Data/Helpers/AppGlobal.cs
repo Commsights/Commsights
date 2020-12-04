@@ -3682,6 +3682,11 @@ namespace Commsights.Data.Helpers
             }
             return list;
         }
+        public static bool ContainsUnicodeCharacter(string input)
+        {
+            const int MaxAnsiCode = 255;
+            return input.Any(c => c > MaxAnsiCode);
+        }
         public static string HTMLReplaceAndSplit(string htmlspan001)
         {
             htmlspan001 = htmlspan001.Replace(@"<footer>", @"~");
