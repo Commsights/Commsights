@@ -3346,7 +3346,7 @@ namespace Commsights.Data.Helpers
         }
         public static void DatePublish001(string html, string tagName, Product product)
         {
-            DateTime datePublish = new DateTime(2020, 1, 1);
+            DateTime datePublish = new DateTime(2019, 1, 1);
             string yearString = "";
             string monthString = "";
             string dayString = "";
@@ -3423,7 +3423,7 @@ namespace Commsights.Data.Helpers
 
         public static void DatePublish002(string html, string tagName, Product product)
         {
-            DateTime datePublish = new DateTime(2020, 1, 1);
+            DateTime datePublish = new DateTime(2019, 1, 1);
             int year = DateTime.Now.Year;
             int month = DateTime.Now.Month;
             int day = DateTime.Now.Day;
