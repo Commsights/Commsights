@@ -6,7 +6,6 @@
 <div>
     | <a href="/ReportMonthly/MonthlyReport?ID=@Model.ID" class="text-success" title="Report">Report</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Industry</a> |
-    <a href="/ReportMonthly/MonthlyIndustryCount?ID=@Model.ID" class="text-success" title="Industry">Industry Count</a> |
     <a href="/ReportMonthly/MonthlyCompanyCount?ID=@Model.ID" class="text-success" title="Company">Company Count</a> |
     <a href="/ReportMonthly/MonthlyFeatureIndustry?ID=@Model.ID" class="text-success" title="Feature-Mention">Feature-Mention</a> |
     <a href="/ReportMonthly/MonthlySentimentIndustry?ID=@Model.ID" class="text-success" title="Sentiment">Sentiment</a> |
@@ -16,8 +15,8 @@
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Trendline</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Campaign</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Key Stories</a> |
-    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Brand Growth</a> |
-    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Product segment</a> |
+    <a href="/ReportMonthly/MonthlyCompanyAndYear?ID=@Model.ID" class="text-success" title="MonthlyCompanyAndYear">Brand Growth</a> |
+    <a href="/ReportMonthly/MonthlySegmentProduct?ID=@Model.ID" class="text-success" title="Product segment">Product segment</a> |
     <a href="/ReportMonthly/MonthlyTierCommsightsAndCompanyName?ID=@Model.ID" class="text-success" title="Top titles">Top titles</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Scorecard</a> |
     <a href="/ReportMonthly/MonthlyData?ID=@Model.ID" class="text-success" title="Data">Data</a> |
@@ -31,6 +30,10 @@
             <div class="card-body">
                 <div class="col-md-12">
                     <div id="DataCompany" class='col-sm-12'></div>
+                </div>
+                <hr />
+                <div class="col-md-12">
+                    <div id="DataIndustry" class='col-sm-12'></div>
                 </div>
                 <br />
                 <div class="col-md-12">
@@ -141,6 +144,254 @@
             )
                     </div>
                 </div>
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class='col-sm-2'>
+                            <button type="button" class="btn btn-success" onclick="exportJPG('ChartBarNewsVSMedia')"><span class="fas fa-file-image"></span></button>
+                        </div>
+                    </div>
+                    <div>
+                        @(Html.Kendo().Chart(Model.ListReportMonthlyIndustryDataTransfer)
+.Name("ChartBarNewsVSMedia")
+.Theme("Material")
+.Title(t => t.Text("News vs Media").Color("#0000ff").Font("20px sans-serif"))
+  .HtmlAttributes(new { style = "min-height:400px;" })
+   .Legend(legend => legend
+       .Position(ChartLegendPosition.Bottom)
+   )
+   .ChartArea(chartArea => chartArea
+      .Background("#ffffff")
+  )
+.Series(series =>
+{
+    series.Column(model => model.ProductNewsCount).Name("News (This month)").Axis("Article");
+    series.Column(model => model.ProductNewsLastMonthCount).Name("News (Last month)").Axis("Article");
+    series.Line(model => model.ProductMediaCount).Name("Media (This month)").Axis("Article");
+    series.Column(model => model.ProductMediaLastMonthCount).Name("Media (Last month)").Axis("Article");
+})
+   .CategoryAxis(axis => axis
+      .Name("Customer")
+      .Title("Industry")
+       .Categories(model => model.CompanyName)
+   )
+    .ValueAxis(axis => axis
+       .Numeric()
+       .Name("Article")
+       .Title("Article")
+   )
+
+   .Tooltip(tooltip => tooltip
+       .Visible(true)
+       .Format("{0:N0} article")
+   )
+     .Pannable(pannable => pannable
+            .Lock(ChartAxisLock.Y)
+        )
+        .Zoomable(zoomable => zoomable
+            .Mousewheel(mousewheel => mousewheel.Lock(ChartAxisLock.Y))
+            .Selection(selection => selection.Lock(ChartAxisLock.Y))
+        )
+            )
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class='col-sm-2'>
+                            <button type="button" class="btn btn-success" onclick="exportJPG('ChartBarNewsVSMediaThisMonth')"><span class="fas fa-file-image"></span></button>
+                        </div>
+                    </div>
+                    <div>
+                        @(Html.Kendo().Chart(Model.ListReportMonthlyIndustryDataTransfer)
+.Name("ChartBarNewsVSMediaThisMonth")
+.Theme("Material")
+.Title(t => t.Text("News vs Media (This month)").Color("#0000ff").Font("20px sans-serif"))
+  .HtmlAttributes(new { style = "min-height:400px;" })
+   .Legend(legend => legend
+       .Position(ChartLegendPosition.Bottom)
+   )
+   .ChartArea(chartArea => chartArea
+      .Background("#ffffff")
+  )
+.Series(series =>
+{
+    series.Column(model => model.ProductNewsCount).Name("News").Axis("Article");
+    series.Column(model => model.ProductMediaCount).Name("Media").Axis("Article");
+})
+   .CategoryAxis(axis => axis
+      .Name("Customer")
+      .Title("Industry")
+       .Categories(model => model.CompanyName)
+   )
+    .ValueAxis(axis => axis
+       .Numeric()
+       .Name("Article")
+       .Title("Article")
+   )
+
+   .Tooltip(tooltip => tooltip
+       .Visible(true)
+       .Format("{0:N0} article")
+   )
+     .Pannable(pannable => pannable
+            .Lock(ChartAxisLock.Y)
+        )
+        .Zoomable(zoomable => zoomable
+            .Mousewheel(mousewheel => mousewheel.Lock(ChartAxisLock.Y))
+            .Selection(selection => selection.Lock(ChartAxisLock.Y))
+        )
+            )
+                    </div>
+                </div>
+                <table style="width:100%;">
+                    <tr>
+                        <td valign="top">
+                            <div>
+                                <div class="row">
+                                    <div class='col-sm-2'>
+                                        <button type="button" class="btn btn-success" onclick="exportJPG('chartDonutIndustryNewsCountThisMonth')"><span class="fas fa-file-image"></span></button>
+                                    </div>
+                                </div>
+                                <div>
+                                    @(Html.Kendo().Chart(Model.ListReportMonthlyIndustryDataTransfer)
+        .Name("chartDonutIndustryNewsCountThisMonth")
+       .Theme("Material")
+.Title(t=>t.Text("News (This month)").Color("#0000ff").Font("20px sans-serif"))
+  .HtmlAttributes(new { style = "min-height:400px; font-size:12px;" })
+   .Legend(legend => legend
+       .Position(ChartLegendPosition.Bottom)
+   )
+   .ChartArea(chartArea => chartArea
+      .Background("#ffffff")
+  )
+        .Series(series => {
+            series.Donut(t => t.ProductNewsCountPercent, t => t.CompanyName)
+             .Labels(labels => labels
+            .Visible(true)
+            .Position(ChartPieLabelsPosition.OutsideEnd)
+            .Template("#=category# - #=value#%")
+            .Background("#ffffff")
+        );
+        })
+        .Tooltip(tooltip => tooltip
+        .Visible(true)
+                .Template("#=category#: #=value#%")
+        )
+    )
+                                </div>
+                            </div>
+                        </td>
+                        <td valign="top">
+                            <div>
+                                <div class="row">
+                                    <div class='col-sm-2'>
+                                        <button type="button" class="btn btn-success" onclick="exportJPG('chartDonutIndustryNewsCountLastMonth')"><span class="fas fa-file-image"></span></button>
+                                    </div>
+                                </div>
+                                <div>
+                                    @(Html.Kendo().Chart(Model.ListReportMonthlyIndustryDataTransfer)
+        .Name("chartDonutIndustryNewsCountLastMonth")
+       .Theme("Material")
+.Title(t=>t.Text("News (Last month)").Color("#0000ff").Font("20px sans-serif"))
+  .HtmlAttributes(new { style = "min-height:400px; font-size:12px;" })
+   .Legend(legend => legend
+       .Position(ChartLegendPosition.Bottom)
+   )
+   .ChartArea(chartArea => chartArea
+      .Background("#ffffff")
+  )
+        .Series(series => {
+            series.Donut(t => t.ProductNewsLastMonthCountPercent, t => t.CompanyName)
+           .Labels(labels => labels
+            .Visible(true)
+            .Position(ChartPieLabelsPosition.OutsideEnd)
+            .Template("#=category# - #=value#%")
+            .Background("#ffffff")
+        );
+        })
+        .Tooltip(tooltip => tooltip
+        .Visible(true)
+                .Template("#=category#: #=value#%")
+        )
+    )
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            <div>
+                                <div class="row">
+                                    <div class='col-sm-2'>
+                                        <button type="button" class="btn btn-success" onclick="exportJPG('chartDonutIndustryMediaCountThisMonth')"><span class="fas fa-file-image"></span></button>
+                                    </div>
+                                </div>
+                                <div>
+                                    @(Html.Kendo().Chart(Model.ListReportMonthlyIndustryDataTransfer)
+        .Name("chartDonutIndustryMediaCountThisMonth")
+       .Theme("Material")
+.Title(t=>t.Text("Media (This month)").Color("#0000ff").Font("20px sans-serif"))
+  .HtmlAttributes(new { style = "min-height:400px; font-size:12px;" })
+   .Legend(legend => legend
+       .Position(ChartLegendPosition.Bottom)
+   )
+   .ChartArea(chartArea => chartArea
+      .Background("#ffffff")
+  )
+        .Series(series => {
+            series.Donut(t => t.ProductMediaCountPercent, t => t.CompanyName)
+            .Labels(labels => labels
+            .Visible(true)
+            .Position(ChartPieLabelsPosition.OutsideEnd)
+            .Template("#=category# - #=value#%")
+            .Background("#ffffff")
+        );
+        })
+        .Tooltip(tooltip => tooltip
+        .Visible(true)
+                .Template("#=category#: #=value#%")
+        )
+    )
+                                </div>
+                            </div>
+                        </td>
+                        <td valign="top">
+                            <div>
+                                <div class="row">
+                                    <div class='col-sm-2'>
+                                        <button type="button" class="btn btn-success" onclick="exportJPG('chartDonutIndustryMediaCountLastMonth')"><span class="fas fa-file-image"></span></button>
+                                    </div>
+                                </div>
+                                <div>
+                                    @(Html.Kendo().Chart(Model.ListReportMonthlyIndustryDataTransfer)
+        .Name("chartDonutIndustryMediaCountLastMonth")
+       .Theme("Material")
+.Title(t=>t.Text("News (Last month)").Color("#0000ff").Font("20px sans-serif"))
+  .HtmlAttributes(new { style = "min-height:400px; font-size:12px;" })
+   .Legend(legend => legend
+       .Position(ChartLegendPosition.Bottom)
+   )
+   .ChartArea(chartArea => chartArea
+      .Background("#ffffff")
+  )
+        .Series(series => {
+            series.Donut(t => t.ProductMediaLastMonthCountPercent, t => t.CompanyName)
+           .Labels(labels => labels
+            .Visible(true)
+            .Position(ChartPieLabelsPosition.OutsideEnd)
+            .Template("#=category# - #=value#%")
+            .Background("#ffffff")
+        );
+        })
+        .Tooltip(tooltip => tooltip
+        .Visible(true)
+                .Template("#=category#: #=value#%")
+        )
+    )
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
@@ -148,8 +399,10 @@
 <script>
     $(document).ready(() => {
         onGetCompanyByIDToListToJSON();
+        onGetIndustryByID001ToListToJSON();
     });
     function onGetCompanyByIDToListToJSON() {
+        BeginRequestHandler();
         $("#DataCompany").html('');
         var IDValue = $("#ID").val();
          $.ajax({
@@ -173,6 +426,14 @@
                 var no = 0;
                  for (var index in list) {
                      $(list[index]).each(function (iRec, item) {
+                         let ProductNewsLastMonthCount = Math.round(item.ProductNewsLastMonthCount);
+                         var ProductNewsLastMonthCountString = ProductNewsLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+                         let ProductNewsCount = Math.round(item.ProductNewsCount);
+                         var ProductNewsCountString = ProductNewsCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+                         let ProductMediaLastMonthValue = Math.round(item.ProductMediaLastMonthValue);
+                         var ProductMediaLastMonthValueString = ProductMediaLastMonthValue.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+                         let ProductMediaThisMonthValue = Math.round(item.ProductMediaThisMonthValue);
+                         var ProductMediaThisMonthValueString = ProductMediaThisMonthValue.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
                         no = no + 1;
                         if (no % 2 == 0) {
                             html = html + '<tr style="background-color:#ffffff;">';
@@ -181,10 +442,10 @@
                             html = html + '<tr style="background-color:#f1f1f1;">';
                         }
                          html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
-                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.ProductNewsLastMonthCount + '</td>';
-                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.ProductMediaLastMonthValue + '</td>';
-                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.ProductNewsCount + '</td>';
-                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.ProductMediaThisMonthValue + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + ProductNewsLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + ProductMediaLastMonthValueString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + ProductNewsCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + ProductMediaThisMonthValueString + '</td>';
                          html = html + '</tr>';
                     });
                 }
@@ -193,7 +454,89 @@
                 html = $.parseHTML(html);
                  $("#DataCompany").append(html);
             }
-        }).done(() => {
+         }).done(() => {
+             EndRequestHandler();
+        });
+    }
+    function onGetIndustryByID001ToListToJSON() {
+        BeginRequestHandler();
+        $("#DataIndustry").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetIndustryByID001ToListToJSON", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (list) {
+                 var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                html = html + '<thead>';
+                html = html + '<tr>';
+                 html = html + "<th class='text-center' style='width: 40%;'><a style='cursor:pointer;'>Company</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>News (Last month)</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Media (Last month)</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>News (This month)</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Media (This month)</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Growth News (%)</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Growth Media (%)</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in list) {
+                     $(list[index]).each(function (iRec, item) {      
+                         let ProductNewsLastMonthCount = Math.round(item.ProductNewsLastMonthCount);
+                         var ProductNewsLastMonthCountString = ProductNewsLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+                         let ProductMediaLastMonthCount = Math.round(item.ProductMediaLastMonthCount);
+                         var ProductMediaLastMonthCountString = ProductMediaLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+                         let ProductNewsCount = Math.round(item.ProductNewsCount);
+                         var ProductNewsCountString = ProductNewsCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+                         let ProductMediaCount = Math.round(item.ProductMediaCount);
+                         var ProductMediaCountString = ProductMediaCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                        }
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + ProductNewsLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + ProductMediaLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + ProductNewsCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + ProductMediaCountString + '</td>';
+                         if (item.NewsGrowthPercent >0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + item.NewsGrowthPercent + '</td>';
+                         }
+                         else {
+                             if (item.NewsGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + item.NewsGrowthPercent + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + item.NewsGrowthPercent + '</td>';
+                             }
+                         }
+                         if (item.MediaGrowthPercent >0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + item.MediaGrowthPercent + '</td>';
+                         }
+                         else {
+                             if (item.MediaGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + item.MediaGrowthPercent + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + item.MediaGrowthPercent + '</td>';
+                             }
+                         }
+                         html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                 $("#DataIndustry").append(html);
+            }
+         }).done(() => {
+             EndRequestHandler();
         });
     }
     function exportJPG(control) {

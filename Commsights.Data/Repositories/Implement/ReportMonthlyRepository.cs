@@ -22,7 +22,7 @@ namespace Commsights.Data.Repositories
         }
         public List<ReportMonthly> GetByYearAndMonthToList(int year, int month)
         {
-            return _context.ReportMonthly.Where(item => item.Year == year && item.Month == month).OrderBy(item => item.Title).ToList();
+            return _context.ReportMonthly.Where(item => item.Year == year && item.Month == month).OrderByDescending(item => item.DateUpdated).ToList();
         }
         public string DeleteByID(int ID)
         {
@@ -49,6 +49,36 @@ namespace Commsights.Data.Repositories
                     new SqlParameter("@ReportMonthlyID",reportMonthlyID),
                 };
                 result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertItemsByReportMonthlyID", parameters);
+            }
+            return result;
+        }
+        public string InsertItemsByDataTableAndReportMonthlyIDAndRequestUserID(DataTable table, int reportMonthlyID, int RequestUserID)
+        {
+            string result = "";
+            if (reportMonthlyID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@table",table),
+                    new SqlParameter("@ReportMonthlyID",reportMonthlyID),
+                    new SqlParameter("@RequestUserID",RequestUserID),
+                };
+                result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertItemsByDataTableAndReportMonthlyIDAndRequestUserID", parameters);
+            }
+            return result;
+        }
+        public string InsertItemsByProductProperty005AndReportMonthlyIDAndRequestUserID(DataTable table, int reportMonthlyID, int RequestUserID)
+        {
+            string result = "";
+            if (reportMonthlyID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@table",table),
+                    new SqlParameter("@ReportMonthlyID",reportMonthlyID),
+                    new SqlParameter("@RequestUserID",RequestUserID),
+                };
+                result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertItemsByProductProperty005AndReportMonthlyIDAndRequestUserID", parameters);
             }
             return result;
         }
@@ -385,6 +415,90 @@ namespace Commsights.Data.Repositories
                 };
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectTierCommsightsAndCompanyNameAndIndustryByID", parameters);
                 list = SQLHelper.ToList<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyCompanyAndYearDataTransfer> GetCompanyAndYearByIDToList(int ID)
+        {
+            List<ReportMonthlyCompanyAndYearDataTransfer> list = new List<ReportMonthlyCompanyAndYearDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectCompanyAndYearByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyCompanyAndYearDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyCompanyAndYearDataTransfer> GetCompanyAndYearWithoutSUMByIDToList(int ID)
+        {
+            List<ReportMonthlyCompanyAndYearDataTransfer> list = new List<ReportMonthlyCompanyAndYearDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectCompanyAndYearWithoutSUMByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyCompanyAndYearDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlySegmentProductDataTransfer> GetSegmentProductByIDToList(int ID)
+        {
+            List<ReportMonthlySegmentProductDataTransfer> list = new List<ReportMonthlySegmentProductDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectSegmentProductByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlySegmentProductDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlySegmentProductDataTransfer> GetSegmentProductWithoutSUMByIDToList(int ID)
+        {
+            List<ReportMonthlySegmentProductDataTransfer> list = new List<ReportMonthlySegmentProductDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectSegmentProductWithoutSUMByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlySegmentProductDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyTrendLineDataTransfer> GetTrendLineWithoutSUMByIDToList(int ID)
+        {
+            List<ReportMonthlyTrendLineDataTransfer> list = new List<ReportMonthlyTrendLineDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectTrendLineByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyTrendLineDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<ReportMonthlyTrendLineDataTransfer> GetTrendLineDistinctCompanyNameByIDToList(int ID)
+        {
+            List<ReportMonthlyTrendLineDataTransfer> list = new List<ReportMonthlyTrendLineDataTransfer>();
+            if (ID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@ID",ID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ReportMonthlySelectTrendLineDistinctCompanyNameByID", parameters);
+                list = SQLHelper.ToList<ReportMonthlyTrendLineDataTransfer>(dt);
             }
             return list;
         }

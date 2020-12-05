@@ -2258,7 +2258,24 @@ namespace Commsights.MVC.Controllers
                     workSheet.Cells[rowExcel, column].Style.Border.Bottom.Color.SetColor(Color.Black);
                     column = column + 1;
                 }
-                workSheet.Cells[rowExcel, column].Value = "Date upload";
+                workSheet.Cells[rowExcel, column].Value = "Upload";
+                workSheet.Cells[rowExcel, column].Style.Font.Bold = true;
+                workSheet.Cells[rowExcel, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[rowExcel, column].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[rowExcel, column].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[rowExcel, column].Style.Fill.BackgroundColor.SetColor(color);
+                workSheet.Cells[rowExcel, column].Style.Font.Name = "Times New Roman";
+                workSheet.Cells[rowExcel, column].Style.Font.Size = 11;
+                workSheet.Cells[rowExcel, column].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[rowExcel, column].Style.Border.Top.Color.SetColor(Color.Black);
+                workSheet.Cells[rowExcel, column].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[rowExcel, column].Style.Border.Left.Color.SetColor(Color.Black);
+                workSheet.Cells[rowExcel, column].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[rowExcel, column].Style.Border.Right.Color.SetColor(Color.Black);
+                workSheet.Cells[rowExcel, column].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[rowExcel, column].Style.Border.Bottom.Color.SetColor(Color.Black);
+                column = column + 1;
+                workSheet.Cells[rowExcel, column].Value = "URL";
                 workSheet.Cells[rowExcel, column].Style.Font.Bold = true;
                 workSheet.Cells[rowExcel, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                 workSheet.Cells[rowExcel, column].Style.Font.Color.SetColor(System.Drawing.Color.White);
@@ -2278,7 +2295,7 @@ namespace Commsights.MVC.Controllers
                 rowExcel = rowExcel + 1;
                 for (int row = rowExcel; row <= listData.Count + rowExcel - 1; row++)
                 {
-                    for (int i = 1; i < column; i++)
+                    for (int i = 1; i <= column; i++)
                     {
                         if (i == 1)
                         {
@@ -2381,6 +2398,29 @@ namespace Commsights.MVC.Controllers
                             workSheet.Cells[row, i].Value = listData[index].DescriptionEnglish;
                             workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                         }
+                        if (i == 15)
+                        {
+                            workSheet.Cells[row, i].Value = listData[index].DateUpdated;
+                            workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy HH:mm:ss";
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        }
+                        if (i == 16)
+                        {
+                            if (!string.IsNullOrEmpty(listData[index].URLCode))
+                            {
+                                try
+                                {
+                                    workSheet.Cells[row, column].Value = listData[index].URLCode;
+                                    workSheet.Cells[row, column].Hyperlink = new Uri(listData[index].URLCode);
+                                }
+                                catch
+                                {
+
+                                }
+                            }
+                            workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        }
                         workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
                         workSheet.Cells[row, i].Style.Font.Size = 11;
                         workSheet.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
@@ -2392,19 +2432,7 @@ namespace Commsights.MVC.Controllers
                         workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                         workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
                     }
-                    workSheet.Cells[row, column].Value = listData[index].DateUpdated;
-                    workSheet.Cells[row, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                    workSheet.Cells[row, column].Style.Numberformat.Format = "mm/dd/yyyy HH:mm:ss";
-                    workSheet.Cells[row, column].Style.Font.Name = "Times New Roman";
-                    workSheet.Cells[row, column].Style.Font.Size = 11;
-                    workSheet.Cells[row, column].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                    workSheet.Cells[row, column].Style.Border.Top.Color.SetColor(Color.Black);
-                    workSheet.Cells[row, column].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                    workSheet.Cells[row, column].Style.Border.Left.Color.SetColor(Color.Black);
-                    workSheet.Cells[row, column].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                    workSheet.Cells[row, column].Style.Border.Right.Color.SetColor(Color.Black);
-                    workSheet.Cells[row, column].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                    workSheet.Cells[row, column].Style.Border.Bottom.Color.SetColor(Color.Black);
+
                     index = index + 1;
                 }
                 for (int i = 1; i <= column; i++)
@@ -2546,7 +2574,24 @@ namespace Commsights.MVC.Controllers
                     workSheet.Cells[rowExcel, column].Style.Border.Bottom.Color.SetColor(Color.Black);
                     column = column + 1;
                 }
-                workSheet.Cells[rowExcel, column].Value = "Date upload";
+                workSheet.Cells[rowExcel, column].Value = "Upload";
+                workSheet.Cells[rowExcel, column].Style.Font.Bold = true;
+                workSheet.Cells[rowExcel, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[rowExcel, column].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[rowExcel, column].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[rowExcel, column].Style.Fill.BackgroundColor.SetColor(color);
+                workSheet.Cells[rowExcel, column].Style.Font.Name = "Times New Roman";
+                workSheet.Cells[rowExcel, column].Style.Font.Size = 11;
+                workSheet.Cells[rowExcel, column].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[rowExcel, column].Style.Border.Top.Color.SetColor(Color.Black);
+                workSheet.Cells[rowExcel, column].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[rowExcel, column].Style.Border.Left.Color.SetColor(Color.Black);
+                workSheet.Cells[rowExcel, column].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[rowExcel, column].Style.Border.Right.Color.SetColor(Color.Black);
+                workSheet.Cells[rowExcel, column].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[rowExcel, column].Style.Border.Bottom.Color.SetColor(Color.Black);
+                column = column + 1;
+                workSheet.Cells[rowExcel, column].Value = "URL";
                 workSheet.Cells[rowExcel, column].Style.Font.Bold = true;
                 workSheet.Cells[rowExcel, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                 workSheet.Cells[rowExcel, column].Style.Font.Color.SetColor(System.Drawing.Color.White);
@@ -2566,7 +2611,7 @@ namespace Commsights.MVC.Controllers
                 rowExcel = rowExcel + 1;
                 for (int row = rowExcel; row <= listData.Count + rowExcel - 1; row++)
                 {
-                    for (int i = 1; i < column; i++)
+                    for (int i = 1; i <= column; i++)
                     {
                         if (i == 1)
                         {
@@ -2674,6 +2719,29 @@ namespace Commsights.MVC.Controllers
                             workSheet.Cells[row, i].Value = listData[index].Description;
                             workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                         }
+                        if (i == 15)
+                        {
+                            workSheet.Cells[row, i].Value = listData[index].DateUpdated;
+                            workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy HH:mm:ss";
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        }
+                        if (i == 16)
+                        {
+                            if (!string.IsNullOrEmpty(listData[index].URLCode))
+                            {
+                                try
+                                {
+                                    workSheet.Cells[row, column].Value = listData[index].URLCode;
+                                    workSheet.Cells[row, column].Hyperlink = new Uri(listData[index].URLCode);
+                                }
+                                catch
+                                {
+
+                                }
+                            }
+                            workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        }
                         workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
                         workSheet.Cells[row, i].Style.Font.Size = 11;
                         workSheet.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
@@ -2685,19 +2753,6 @@ namespace Commsights.MVC.Controllers
                         workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                         workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
                     }
-                    workSheet.Cells[row, column].Value = listData[index].DateUpdated;
-                    workSheet.Cells[row, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                    workSheet.Cells[row, column].Style.Numberformat.Format = "mm/dd/yyyy HH:mm:ss";
-                    workSheet.Cells[row, column].Style.Font.Name = "Times New Roman";
-                    workSheet.Cells[row, column].Style.Font.Size = 11;
-                    workSheet.Cells[row, column].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                    workSheet.Cells[row, column].Style.Border.Top.Color.SetColor(Color.Black);
-                    workSheet.Cells[row, column].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                    workSheet.Cells[row, column].Style.Border.Left.Color.SetColor(Color.Black);
-                    workSheet.Cells[row, column].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                    workSheet.Cells[row, column].Style.Border.Right.Color.SetColor(Color.Black);
-                    workSheet.Cells[row, column].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                    workSheet.Cells[row, column].Style.Border.Bottom.Color.SetColor(Color.Black);
                     index = index + 1;
                 }
                 for (int i = 1; i <= column; i++)
@@ -4222,6 +4277,17 @@ namespace Commsights.MVC.Controllers
                                                         {
                                                             model.Duration = workSheet.Cells[i, 12].Value.ToString().Trim();
                                                         }
+                                                        if (workSheet.Cells[i, 13].Value != null)
+                                                        {
+                                                            try
+                                                            {
+                                                                string advalue = workSheet.Cells[i, 13].Value.ToString().Trim();
+                                                                model.Advalue = int.Parse(advalue);
+                                                            }
+                                                            catch
+                                                            {
+                                                            }
+                                                        }
                                                         if (workSheet.Cells[i, 14].Value != null)
                                                         {
                                                             model.Author = workSheet.Cells[i, 14].Value.ToString().Trim();
@@ -5671,13 +5737,30 @@ namespace Commsights.MVC.Controllers
                 workSheet.Cells[1, 12].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                 workSheet.Cells[1, 12].Style.Border.Bottom.Color.SetColor(Color.Black);
 
+                workSheet.Cells[1, 13].Value = "Search";
+                workSheet.Cells[1, 13].Style.Font.Bold = true;
+                workSheet.Cells[1, 13].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, 13].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                workSheet.Cells[1, 13].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                workSheet.Cells[1, 13].Style.Fill.BackgroundColor.SetColor(color);
+                workSheet.Cells[1, 13].Style.Font.Name = "Times New Roman";
+                workSheet.Cells[1, 13].Style.Font.Size = 11;
+                workSheet.Cells[1, 13].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 13].Style.Border.Top.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 13].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 13].Style.Border.Left.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 13].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 13].Style.Border.Right.Color.SetColor(Color.Black);
+                workSheet.Cells[1, 13].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, 13].Style.Border.Bottom.Color.SetColor(Color.Black);
+
                 if (!string.IsNullOrEmpty(IDList))
                 {
                     List<ProductDataTransfer> listData = await _reportRepository.AsyncGetByIDListToList(IDList);
                     int row = 2;
                     foreach (ProductDataTransfer item in listData)
                     {
-                        for (int column = 1; column < 13; column++)
+                        for (int column = 1; column < 14; column++)
                         {
                             switch (column)
                             {
@@ -5737,6 +5820,9 @@ namespace Commsights.MVC.Controllers
                                 case 12:
                                     workSheet.Cells[row, column].Value = item.AdvertisementValue;
                                     workSheet.Cells[row, column].Style.Numberformat.Format = "#,##0";
+                                    break;
+                                case 13:
+                                    workSheet.Cells[row, column].Value = item.Summary;
                                     break;
                             }
                             workSheet.Cells[row, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;

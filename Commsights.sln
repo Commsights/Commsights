@@ -3,16 +3,62 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30406.217
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commsights.Data", "Commsights.Data\Commsights.Data.csproj", "{F1FD30F0-B675-4690-87AE-247FB7F54E3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commsights.Data", "Commsights.Data\Commsights.Data.csproj", "{F1FD30F0-B675-4690-87AE-247FB7F54E3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commsights.MVC", "Commsights.MVC\Commsights.MVC.csproj", "{2BA47C9C-F9CE-424C-B075-1ED0DEDDBE96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commsights.MVC", "Commsights.MVC\Commsights.MVC.csproj", "{2BA47C9C-F9CE-424C-B075-1ED0DEDDBE96}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EDAA9052-3F03-422F-9537-2F69068666CE}"
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commsights.Service", "Commsights.Service\Commsights.Service.csproj", "{7DB56528-0303-4F77-A394-3D3B61875B93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commsights.Service", "Commsights.Service\Commsights.Service.csproj", "{7DB56528-0303-4F77-A394-3D3B61875B93}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "mbv.com.vn(1)", "mbv.com.vn\", "{E2238DD2-08BC-4B81-941C-CEC15B2E2BDB}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.2"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_57548"
+		Debug.AspNetCompiler.PhysicalPath = "mbv.com.vn\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_57548\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_57548"
+		Release.AspNetCompiler.PhysicalPath = "mbv.com.vn\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_57548\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "57548"
+		SlnRelativePath = "mbv.com.vn\"
+	EndProjectSection
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "file.commsightsvn.com", "file.commsightsvn.com\", "{2959A923-7A4D-4C04-80BB-D38856D36435}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.2"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_52232"
+		Debug.AspNetCompiler.PhysicalPath = "file.commsightsvn.com\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_52232\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_52232"
+		Release.AspNetCompiler.PhysicalPath = "file.commsightsvn.com\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_52232\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "52232"
+		SlnRelativePath = "file.commsightsvn.com\"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DuyetFiles", "DuyetFiles\DuyetFiles.csproj", "{03EF3112-69C2-463C-9DD6-24114F5D2CDF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DuyetFiles001", "DuyetFiles001\DuyetFiles001.csproj", "{F63447A7-D7AF-4DCE-8877-7FA618641F48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +78,22 @@ Global
 		{7DB56528-0303-4F77-A394-3D3B61875B93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DB56528-0303-4F77-A394-3D3B61875B93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DB56528-0303-4F77-A394-3D3B61875B93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2238DD2-08BC-4B81-941C-CEC15B2E2BDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2238DD2-08BC-4B81-941C-CEC15B2E2BDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2238DD2-08BC-4B81-941C-CEC15B2E2BDB}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2238DD2-08BC-4B81-941C-CEC15B2E2BDB}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{2959A923-7A4D-4C04-80BB-D38856D36435}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2959A923-7A4D-4C04-80BB-D38856D36435}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2959A923-7A4D-4C04-80BB-D38856D36435}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{2959A923-7A4D-4C04-80BB-D38856D36435}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{03EF3112-69C2-463C-9DD6-24114F5D2CDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03EF3112-69C2-463C-9DD6-24114F5D2CDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03EF3112-69C2-463C-9DD6-24114F5D2CDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03EF3112-69C2-463C-9DD6-24114F5D2CDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F63447A7-D7AF-4DCE-8877-7FA618641F48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F63447A7-D7AF-4DCE-8877-7FA618641F48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F63447A7-D7AF-4DCE-8877-7FA618641F48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F63447A7-D7AF-4DCE-8877-7FA618641F48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

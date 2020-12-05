@@ -9,7 +9,7 @@ namespace Commsights.Data.DataTransferObject
     public class ReportMonthlySentimentDataTransfer
     {
         public string FullName { get; set; }
-        public string SegmentProduct { get; set; }
+        public string CompanyName { get; set; }
         public string FeatureCorp { get; set; }
         public string Sentiment { get; set; }
         public int? PositiveLastMonthCount { get; set; }

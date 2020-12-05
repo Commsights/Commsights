@@ -1041,12 +1041,28 @@ namespace Commsights.Data.Helpers
                 return builder.Build().GetSection("AppSettings").GetSection("Customer").Value;
             }
         }
+        public static string FTPDownloadReprotMonth
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("FTPDownloadReprotMonth").Value;
+            }
+        }
         public static string FTPDownloadReprotDaily
         {
             get
             {
                 var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                 return builder.Build().GetSection("AppSettings").GetSection("FTPDownloadReprotDaily").Value;
+            }
+        }
+        public static string URLDownloadReprotMonth
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("URLDownloadReprotMonth").Value;
             }
         }
         public static string URLDownloadReprotDaily
@@ -2308,10 +2324,10 @@ namespace Commsights.Data.Helpers
             List<LinkItem> list = new List<LinkItem>();
             if (!string.IsNullOrEmpty(html))
             {
-                Uri myUri = new Uri(urlRoot);
-                string host = myUri.Host;
-                string scheme = myUri.Scheme;
-                string localPath = myUri.LocalPath;
+                Uri root = new Uri(urlRoot);
+                string host = root.Host;
+                string scheme = root.Scheme;
+                string localPath = root.LocalPath;
                 MatchCollection m1 = Regex.Matches(html, @"(<a.*?>.*?</a>)", RegexOptions.Singleline);
                 foreach (Match m in m1)
                 {
@@ -2337,6 +2353,7 @@ namespace Commsights.Data.Helpers
                     }
                     if ((!string.IsNullOrEmpty(i.Href)) && (!string.IsNullOrEmpty(i.Text)))
                     {
+
                         if ((i.Href.Contains(@"http") == false) && (i.Href.Contains(@"#") == false) && (i.Href.Contains(@";") == false) && (i.Href.Contains(@"(") == false) && (i.Href.Contains(@")") == false) && (i.Href.Contains(@"{") == false) && (i.Href.Contains(@"}") == false) && (i.Href.Contains(@"[") == false) && (i.Href.Contains(@"]") == false))
                         {
                             string firstlyChar = i.Href[0].ToString();
@@ -2387,7 +2404,14 @@ namespace Commsights.Data.Helpers
                                             }
                                             catch
                                             {
-                                                list.Add(i);
+                                                if ((i.Text.Contains("{") == false) && (i.Text.Contains("[]") == false) && (i.Text.Contains("' trước") == false) && (i.Text.Contains("h trước") == false))
+                                                {
+                                                    Uri myUri = new Uri(i.Href);
+                                                    if (myUri.Host == root.Host)
+                                                    {
+                                                        list.Add(i);
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -2398,6 +2422,195 @@ namespace Commsights.Data.Helpers
                 }
             }
             return list;
+        }
+        public static void LinkFinder001(string urlCategory, string urlRoot, bool repeat, List<LinkItem> list)
+        {
+            try
+            {
+                if (repeat == false)
+                {
+                }
+                int index = -1;
+                Uri root = new Uri(urlRoot);
+                Uri myUri = new Uri(urlRoot);
+                string html = "";
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlCategory);
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    Stream receiveStream = response.GetResponseStream();
+                    StreamReader readStream = null;
+                    if (response.CharacterSet == null)
+                    {
+                        readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                    }
+                    else
+                    {
+                        readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                    }
+                    html = readStream.ReadToEnd();
+                    response.Close();
+                    readStream.Close();
+                }
+                List<LinkItem> listCategory = new List<LinkItem>();
+                if (!string.IsNullOrEmpty(html))
+                {
+                    index = -1;
+                    MatchCollection m1 = Regex.Matches(html, @"(<a.*?>.*?</a>)", RegexOptions.Singleline);
+                    foreach (Match m in m1)
+                    {
+                        index = index + 1;
+                        string value = m.Groups[1].Value;
+                        LinkItem i = new LinkItem();
+                        Match m2 = Regex.Match(value, @"href=\""(.*?)\""", RegexOptions.Singleline);
+                        if (m2.Success)
+                        {
+                            i.Href = m2.Groups[1].Value;
+                        }
+                        else
+                        {
+                            m2 = Regex.Match(value, @"href=\'(.*?)\'", RegexOptions.Singleline);
+                            if (m2.Success)
+                            {
+                                i.Href = m2.Groups[1].Value;
+                            }
+                        }
+                        if (!string.IsNullOrEmpty(i.Href))
+                        {
+                            bool checkHref = false;
+                            try
+                            {
+                                myUri = new Uri(i.Href);
+                                checkHref = true;
+                            }
+                            catch (Exception e)
+                            {
+                                string mes = e.Message;
+                                i.Href = root.OriginalString + i.Href;
+                                try
+                                {
+                                    myUri = new Uri(i.Href);
+                                    checkHref = true;
+                                }
+                                catch (Exception e1)
+                                {
+                                    string mes1 = e1.Message;
+                                }
+                            }
+                            if (checkHref == true)
+                            {
+                                if (myUri.Host == root.Host)
+                                {
+                                    string rootOriginalString = root.OriginalString + "/";
+                                    if (myUri.OriginalString != rootOriginalString)
+                                    {
+                                        string localPath = myUri.LocalPath;
+                                        if (localPath.Contains(@".") == true)
+                                        {
+                                            string extension = localPath.Split('.')[1];
+                                            if ((extension.Contains(@"/") == false) && (extension.Contains(@"#") == false))
+                                            {
+                                                Match m3 = Regex.Match(value, @"title=\""(.*?)\""", RegexOptions.Singleline);
+                                                if (m3.Success)
+                                                {
+                                                    i.Text = m3.Groups[1].Value;
+                                                }
+                                                else
+                                                {
+                                                    m3 = Regex.Match(value, @"title=\'(.*?)\'", RegexOptions.Singleline);
+                                                    if (m3.Success)
+                                                    {
+                                                        i.Text = m3.Groups[1].Value;
+                                                    }
+                                                }
+                                                if (string.IsNullOrEmpty(i.Text))
+                                                {
+                                                    string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                                                    i.Text = t;
+                                                }
+                                                if (!string.IsNullOrEmpty(i.Text))
+                                                {
+                                                    i.Text = DecodeFromUTF8(i.Text);
+                                                    if (i.Text.Split(' ').Length > 4)
+                                                    {
+                                                        checkHref = false;
+                                                        for (int j = 0; j < list.Count; j++)
+                                                        {
+                                                            if (list[j].Href == i.Href)
+                                                            {
+                                                                checkHref = true;
+                                                                j = list.Count;
+                                                            }
+                                                        }
+                                                        if (checkHref == false)
+                                                        {
+                                                            list.Add(i);
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (repeat == true)
+                                                        {
+                                                            checkHref = false;
+                                                            for (int j = 0; j < listCategory.Count; j++)
+                                                            {
+                                                                if (listCategory[j].Href == i.Href)
+                                                                {
+                                                                    checkHref = true;
+                                                                    j = listCategory.Count;
+                                                                }
+                                                            }
+                                                            if (checkHref == false)
+                                                            {
+                                                                listCategory.Add(i);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (repeat == true)
+                                            {
+                                                checkHref = false;
+                                                for (int j = 0; j < listCategory.Count; j++)
+                                                {
+                                                    if (listCategory[j].Href == i.Href)
+                                                    {
+                                                        checkHref = true;
+                                                        j = listCategory.Count;
+                                                    }
+                                                }
+                                                if (checkHref == false)
+                                                {
+                                                    listCategory.Add(i);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (repeat == true)
+                {
+                    index = -1;
+                    foreach (LinkItem item in listCategory)
+                    {
+                        index = index + 1;
+                        if (index > 20)
+                        {
+                        }
+                        LinkFinder001(item.Href, urlRoot, false, list);
+                    }
+                }
+            }
+            catch (Exception e1)
+            {
+                string mes1 = e1.Message;
+            }
         }
         public static void FinderContent(string html, Product product)
         {
@@ -2415,49 +2628,409 @@ namespace Commsights.Data.Helpers
         }
         public static void FinderContentAndDatePublish(string html, Product product)
         {
+            string url = product.URLCode;
+            html = html.Replace(@"~", @"");
             if (!string.IsNullOrEmpty(html))
             {
                 string htmlspan = html;
-                htmlspan = htmlspan.Replace(@"~", @"");
-                htmlspan = htmlspan.Replace(@"</h1>", @"~");
-                if (htmlspan.Split('~').Length > 1)
-                {
-                    htmlspan = htmlspan.Split('~')[1];
-                }
-                htmlspan = htmlspan.Replace(@"</h2>", @"~");
-                if (htmlspan.Split('~').Length > 1)
-                {
-                    htmlspan = htmlspan.Split('~')[1];
-                }
                 MatchCollection m1;
                 bool check = false;
                 if (check == false)
                 {
+                    htmlspan = html;
+                    htmlspan = htmlspan.Replace(@"<meta", @"~<meta");
+                    for (int i = 0; i < htmlspan.Split('~').Length; i++)
+                    {
+                        string value = htmlspan.Split('~')[i];
+                        if (value.Contains(@"published") == true)
+                        {
+                            string date = value.Replace(@"content=""", @"~");
+                            if (date.Split('~').Length > 1)
+                            {
+                                date = date.Split('~')[1];
+                                date = date.Split('"')[0];
+                                date = date.Substring(0, 10);
+                                date = date.Replace(@"-", @"/");
+                                try
+                                {
+                                    DateTime datePublish = new DateTime(int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[2]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                                    if (product.DatePublish > datePublish)
+                                    {
+                                        product.DatePublish = datePublish;
+                                        check = true;
+                                        i = htmlspan.Split('~').Length;
+                                    }
+                                }
+                                catch
+                                {
+                                }
+                            }
+                        }
+                    }
+                }
+                if (check == false)
+                {
+                    htmlspan = html;
+                    htmlspan = htmlspan.Replace(@"""datePublished"":", @"~");
+                    if (htmlspan.Split('~').Length > 1)
+                    {
+                        htmlspan = htmlspan.Split('~')[1];
+                        htmlspan = htmlspan.Trim();
+                        htmlspan = htmlspan.Split(',')[0];
+                        htmlspan = htmlspan.Replace(@"""", @"");
+                        htmlspan = htmlspan.Substring(0, 10);
+                        htmlspan = htmlspan.Replace(@"-", @"/");
+                        string date = htmlspan;
+                        try
+                        {
+                            DateTime datePublish = new DateTime(int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[2]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                            if (product.DatePublish > datePublish)
+                            {
+                                product.DatePublish = datePublish;
+                                check = true;
+                            }
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+                if (check == false)
+                {
+                    htmlspan = html;
+                    htmlspan = htmlspan.Replace(@"~", @"");
+                    htmlspan = htmlspan.Replace(@"</header>", @"~");
+                    if (htmlspan.Split('~').Length > 1)
+                    {
+                        htmlspan = htmlspan.Split('~')[1];
+                    }
+                    m1 = Regex.Matches(htmlspan, @"(<dd.*?>.*?</dd>)", RegexOptions.Singleline);
+                    for (int i = 0; i < m1.Count; i++)
+                    {
+                        string value = m1[i].Groups[1].Value;
+                        string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                        t = t.Replace(@"-", @"/");
+                        t = t.Replace(@".", @"/");
+                        if ((!string.IsNullOrEmpty(t)) && (t.Contains(@"/") == true))
+                        {
+                            for (int j = 0; j < t.Split(' ').Length; j++)
+                            {
+                                string date = t.Split(' ')[j];
+                                date = date.Trim();
+                                date = date.Replace(@",", @"");
+                                if ((date.Length > 7) && (date.Length < 11) && (date.Contains(@"/") == true))
+                                {
+                                    try
+                                    {
+                                        DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                                        if (product.DatePublish > datePublish)
+                                        {
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                            i = htmlspan.Split('~').Length;
+                                        }
+                                    }
+                                    catch
+                                    {
+                                        try
+                                        {
+                                            DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                                            if (product.DatePublish > datePublish)
+                                            {
+                                                product.DatePublish = datePublish;
+                                                check = true;
+                                                i = htmlspan.Split('~').Length;
+                                            }
+                                        }
+                                        catch
+                                        {
+                                        }
+                                    }
+                                    if (check == true)
+                                    {
+                                        i = m1.Count;
+                                        j = t.Split(' ').Length;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (check == false)
+                {
+                    htmlspan = html;
+                    htmlspan = htmlspan.Replace(@"~", @"");
+                    htmlspan = htmlspan.Replace(@"</header>", @"~");
+                    if (htmlspan.Split('~').Length > 1)
+                    {
+                        htmlspan = htmlspan.Split('~')[1];
+                    }
+                    m1 = Regex.Matches(htmlspan, @"(<dd.*?>.*?</dd>)", RegexOptions.Singleline);
+                    for (int i = 0; i < m1.Count; i++)
+                    {
+                        string value = m1[i].Groups[1].Value;
+                        string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                        if (((t.Contains(@"ngày") == true) && (t.Contains(@"tháng") == true)) || ((t.Contains(@"ng&#224;y") == true) && (t.Contains(@"th&#225;ng") == true)))
+                        {
+                            int day = 0;
+                            int month = 0;
+                            int year = 0;
+                            int index = 0;
+                            foreach (string item in t.Split(' '))
+                            {
+                                string date = item;
+                                date = date.Trim();
+                                date = date.Replace(@",", @"");
+                                try
+                                {
+                                    int dateValue = int.Parse(date);
+                                    switch (index)
+                                    {
+                                        case 0:
+                                            day = dateValue;
+                                            break;
+                                        case 1:
+                                            month = dateValue;
+                                            break;
+                                        case 2:
+                                            year = dateValue;
+                                            break;
+                                    }
+                                    index = index + 1;
+                                }
+                                catch
+                                {
+                                }
+                            }
+                            if (index == 3)
+                            {
+                                try
+                                {
+                                    DateTime datePublish = new DateTime(year, month, day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
+                                    if (product.DatePublish > datePublish)
+                                    {
+                                        product.DatePublish = datePublish;
+                                        check = true;
+                                    }
+
+                                }
+                                catch
+                                {
+                                    try
+                                    {
+                                        DateTime datePublish = new DateTime(year, day, month, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
+                                        if (product.DatePublish > datePublish)
+                                        {
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                        }
+
+                                    }
+                                    catch
+                                    {
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (check == false)
+                {
+                    htmlspan = html;
+                    htmlspan = htmlspan.Replace(@"~", @"");
+                    htmlspan = htmlspan.Replace(@"</header>", @"~");
+                    if (htmlspan.Split('~').Length > 1)
+                    {
+                        htmlspan = htmlspan.Split('~')[1];
+                    }
+                    m1 = Regex.Matches(htmlspan, @"(<time.*?>.*?</time>)", RegexOptions.Singleline);
+                    for (int i = 0; i < m1.Count; i++)
+                    {
+                        string value = m1[i].Groups[1].Value;
+                        string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                        t = t.Replace(@"-", @"/");
+                        t = t.Replace(@".", @"/");
+                        if ((!string.IsNullOrEmpty(t)) && (t.Contains(@"/") == true))
+                        {
+                            for (int j = 0; j < t.Split(' ').Length; j++)
+                            {
+                                string date = t.Split(' ')[j];
+                                date = date.Trim();
+                                date = date.Replace(@",", @"");
+                                if ((date.Length > 7) && (date.Length < 11) && (date.Contains(@"/") == true))
+                                {
+                                    try
+                                    {
+                                        DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
+                                        if (product.DatePublish > datePublish)
+                                        {
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                            i = htmlspan.Split('~').Length;
+                                        }
+
+                                    }
+                                    catch
+                                    {
+                                        try
+                                        {
+                                            DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
+                                            if (product.DatePublish > datePublish)
+                                            {
+                                                product.DatePublish = datePublish;
+                                                check = true;
+                                                i = htmlspan.Split('~').Length;
+                                            }
+
+                                        }
+                                        catch
+                                        {
+                                        }
+                                    }
+                                    if (check == true)
+                                    {
+                                        i = m1.Count;
+                                        j = t.Split(' ').Length;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (check == false)
+                {
+                    htmlspan = html;
+                    htmlspan = htmlspan.Replace(@"~", @"");
+                    htmlspan = htmlspan.Replace(@"</header>", @"~");
+                    if (htmlspan.Split('~').Length > 1)
+                    {
+                        htmlspan = htmlspan.Split('~')[1];
+                    }
+                    m1 = Regex.Matches(htmlspan, @"(<time.*?>.*?</time>)", RegexOptions.Singleline);
+                    for (int i = 0; i < m1.Count; i++)
+                    {
+                        string value = m1[i].Groups[1].Value;
+                        string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                        if (((t.Contains(@"ngày") == true) && (t.Contains(@"tháng") == true)) || ((t.Contains(@"ng&#224;y") == true) && (t.Contains(@"th&#225;ng") == true)))
+                        {
+                            int day = 0;
+                            int month = 0;
+                            int year = 0;
+                            int index = 0;
+                            foreach (string item in t.Split(' '))
+                            {
+                                string date = item;
+                                date = date.Trim();
+                                date = date.Replace(@",", @"");
+                                try
+                                {
+                                    int dateValue = int.Parse(date);
+                                    switch (index)
+                                    {
+                                        case 0:
+                                            day = dateValue;
+                                            break;
+                                        case 1:
+                                            month = dateValue;
+                                            break;
+                                        case 2:
+                                            year = dateValue;
+                                            break;
+                                    }
+                                    index = index + 1;
+                                }
+                                catch
+                                {
+                                }
+                            }
+                            if (index == 3)
+                            {
+                                try
+                                {
+                                    DateTime datePublish = new DateTime(year, month, day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
+                                    if (product.DatePublish > datePublish)
+                                    {
+                                        product.DatePublish = datePublish;
+                                        check = true;
+                                    }
+
+                                }
+                                catch
+                                {
+                                    try
+                                    {
+                                        DateTime datePublish = new DateTime(year, day, month, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
+                                        if (product.DatePublish > datePublish)
+                                        {
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                        }
+
+                                    }
+                                    catch
+                                    {
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (check == false)
+                {
+                    htmlspan = html;
+                    htmlspan = htmlspan.Replace(@"~", @"");
+                    htmlspan = htmlspan.Replace(@"</header>", @"~");
+                    if (htmlspan.Split('~').Length > 1)
+                    {
+                        htmlspan = htmlspan.Split('~')[1];
+                    }
                     m1 = Regex.Matches(htmlspan, @"(<span.*?>.*?</span>)", RegexOptions.Singleline);
                     for (int i = 0; i < m1.Count; i++)
                     {
                         string value = m1[i].Groups[1].Value;
                         string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
                         t = t.Replace(@"-", @"/");
+                        t = t.Replace(@".", @"/");
                         if ((!string.IsNullOrEmpty(t)) && (t.Contains(@"/") == true))
                         {
                             for (int j = 0; j < t.Split(' ').Length; j++)
                             {
                                 string date = t.Split(' ')[j];
                                 date = date.Trim();
-                                if ((date.Length == 10) && (date.Contains(@"/") == true))
+                                date = date.Replace(@",", @"");
+                                if ((date.Length > 7) && (date.Length < 11) && (date.Contains(@"/") == true))
                                 {
                                     try
                                     {
-                                        product.DatePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        check = true;
+                                        DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
+                                        if (product.DatePublish > datePublish)
+                                        {
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                            i = htmlspan.Split('~').Length;
+                                        }
+
                                     }
                                     catch
                                     {
                                         try
                                         {
-                                            product.DatePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                            check = true;
+                                            DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
+                                            if (product.DatePublish > datePublish)
+                                            {
+                                                product.DatePublish = datePublish;
+                                                check = true;
+                                                i = htmlspan.Split('~').Length;
+                                            }
+
                                         }
                                         catch
                                         {
@@ -2475,31 +3048,134 @@ namespace Commsights.Data.Helpers
                 }
                 if (check == false)
                 {
+                    htmlspan = html;
+                    htmlspan = htmlspan.Replace(@"~", @"");
+                    htmlspan = htmlspan.Replace(@"</header>", @"~");
+                    if (htmlspan.Split('~').Length > 1)
+                    {
+                        htmlspan = htmlspan.Split('~')[1];
+                    }
+                    m1 = Regex.Matches(htmlspan, @"(<span.*?>.*?</span>)", RegexOptions.Singleline);
+                    for (int i = 0; i < m1.Count; i++)
+                    {
+                        string value = m1[i].Groups[1].Value;
+                        string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                        if (((t.Contains(@"ngày") == true) && (t.Contains(@"tháng") == true)) || ((t.Contains(@"ng&#224;y") == true) && (t.Contains(@"th&#225;ng") == true)))
+                        {
+                            int day = 0;
+                            int month = 0;
+                            int year = 0;
+                            int index = 0;
+                            foreach (string item in t.Split(' '))
+                            {
+                                string date = item;
+                                date = date.Trim();
+                                date = date.Replace(@",", @"");
+                                try
+                                {
+                                    int dateValue = int.Parse(date);
+                                    switch (index)
+                                    {
+                                        case 0:
+                                            day = dateValue;
+                                            break;
+                                        case 1:
+                                            month = dateValue;
+                                            break;
+                                        case 2:
+                                            year = dateValue;
+                                            break;
+                                    }
+                                    index = index + 1;
+                                }
+                                catch
+                                {
+                                }
+                            }
+                            if (index == 3)
+                            {
+                                try
+                                {
+                                    DateTime datePublish = new DateTime(year, month, day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
+                                    if (product.DatePublish > datePublish)
+                                    {
+                                        product.DatePublish = datePublish;
+                                        check = true;
+                                    }
+
+                                }
+                                catch
+                                {
+                                    try
+                                    {
+                                        DateTime datePublish = new DateTime(year, day, month, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
+                                        if (product.DatePublish > datePublish)
+                                        {
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                        }
+
+                                    }
+                                    catch
+                                    {
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (check == false)
+                {
+                    htmlspan = html;
+                    htmlspan = htmlspan.Replace(@"~", @"");
+                    htmlspan = htmlspan.Replace(@"</header>", @"~");
+                    if (htmlspan.Split('~').Length > 1)
+                    {
+                        htmlspan = htmlspan.Split('~')[1];
+                    }
                     m1 = Regex.Matches(htmlspan, @"(<div.*?>.*?</div>)", RegexOptions.Singleline);
                     for (int i = 0; i < m1.Count; i++)
                     {
                         string value = m1[i].Groups[1].Value;
                         string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
                         t = t.Replace(@"-", @"/");
+                        t = t.Replace(@".", @"/");
                         if ((!string.IsNullOrEmpty(t)) && (t.Contains(@"/") == true))
                         {
                             for (int j = 0; j < t.Split(' ').Length; j++)
                             {
                                 string date = t.Split(' ')[j];
                                 date = date.Trim();
-                                if ((date.Length == 10) && (date.Contains(@"/") == true))
+                                date = date.Replace(@",", @"");
+                                if ((date.Length > 7) && (date.Length < 11) && (date.Contains(@"/") == true))
                                 {
                                     try
                                     {
-                                        product.DatePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        check = true;
+                                        DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
+                                        if (product.DatePublish > datePublish)
+                                        {
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                            i = htmlspan.Split('~').Length;
+                                        }
+
                                     }
                                     catch
                                     {
                                         try
                                         {
-                                            product.DatePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                            check = true;
+                                            DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
+                                            if (product.DatePublish > datePublish)
+                                            {
+                                                product.DatePublish = datePublish;
+                                                check = true;
+                                                i = htmlspan.Split('~').Length;
+                                            }
+
                                         }
                                         catch
                                         {
@@ -2515,7 +3191,90 @@ namespace Commsights.Data.Helpers
                         }
                     }
                 }
-                m1 = Regex.Matches(htmlspan, @"(<p.*?>.*?</p>)", RegexOptions.Singleline);
+                if (check == false)
+                {
+                    htmlspan = html;
+                    htmlspan = htmlspan.Replace(@"~", @"");
+                    htmlspan = htmlspan.Replace(@"</header>", @"~");
+                    if (htmlspan.Split('~').Length > 1)
+                    {
+                        htmlspan = htmlspan.Split('~')[1];
+                    }
+                    m1 = Regex.Matches(htmlspan, @"(<div.*?>.*?</div>)", RegexOptions.Singleline);
+                    for (int i = 0; i < m1.Count; i++)
+                    {
+                        string value = m1[i].Groups[1].Value;
+                        string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                        if (((t.Contains(@"ngày") == true) && (t.Contains(@"tháng") == true)) || ((t.Contains(@"ng&#224;y") == true) && (t.Contains(@"th&#225;ng") == true)))
+                        {
+                            int day = 0;
+                            int month = 0;
+                            int year = 0;
+                            int index = 0;
+                            foreach (string item in t.Split(' '))
+                            {
+                                string date = item;
+                                date = date.Trim();
+                                date = date.Replace(@",", @"");
+                                try
+                                {
+                                    int dateValue = int.Parse(date);
+                                    switch (index)
+                                    {
+                                        case 0:
+                                            day = dateValue;
+                                            break;
+                                        case 1:
+                                            month = dateValue;
+                                            break;
+                                        case 2:
+                                            year = dateValue;
+                                            break;
+                                    }
+                                    index = index + 1;
+                                }
+                                catch
+                                {
+                                }
+                            }
+                            if (index == 3)
+                            {
+                                try
+                                {
+                                    DateTime datePublish = new DateTime(year, month, day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
+                                    if (product.DatePublish > datePublish)
+                                    {
+                                        product.DatePublish = datePublish;
+                                        check = true;
+                                    }
+
+                                }
+                                catch
+                                {
+                                    try
+                                    {
+                                        DateTime datePublish = new DateTime(year, day, month, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
+                                        if (product.DatePublish > datePublish)
+                                        {
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                        }
+
+                                    }
+                                    catch
+                                    {
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                string htmlspan001 = html;
+                Uri myUri = new Uri(product.URLCode);
+                htmlspan001 = HTMLReplaceAndSplit(htmlspan001);
+                m1 = Regex.Matches(htmlspan001, @"(<p.*?>.*?</p>)", RegexOptions.Singleline);
                 for (int i = 0; i < m1.Count; i++)
                 {
                     string value = m1[i].Groups[1].Value;
@@ -2535,23 +3294,38 @@ namespace Commsights.Data.Helpers
                         if (check == false)
                         {
                             t = t.Replace(@"-", @"/");
+                            t = t.Replace(@".", @"/");
                             for (int j = 0; j < t.Split(' ').Length; j++)
                             {
                                 string date = t.Split(' ')[j];
                                 date = date.Trim();
-                                if ((date.Length == 10) && (date.Contains(@"/") == true))
+                                date = date.Replace(@",", @"");
+                                if ((date.Length > 7) && (date.Length < 11) && (date.Contains(@"/") == true))
                                 {
                                     try
                                     {
-                                        product.DatePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                        check = true;
+                                        DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                                        if (product.DatePublish > datePublish)
+                                        {
+                                            product.DatePublish = datePublish;
+                                            check = true;
+                                            i = htmlspan.Split('~').Length;
+                                        }
+
                                     }
                                     catch
                                     {
                                         try
                                         {
-                                            product.DatePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                                            check = true;
+                                            DateTime datePublish = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[0]), int.Parse(date.Split('/')[1]), DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
+                                            if (product.DatePublish > datePublish)
+                                            {
+                                                product.DatePublish = datePublish;
+                                                check = true;
+                                                i = htmlspan.Split('~').Length;
+                                            }
+
                                         }
                                         catch
                                         {
@@ -2565,6 +3339,382 @@ namespace Commsights.Data.Helpers
                                 }
                             }
                         }
+                    }
+                }
+                product.Active = check;
+            }
+        }
+        public static void DatePublish001(string html, string tagName, Product product)
+        {
+            DateTime datePublish = new DateTime(2019, 1, 1);
+            string yearString = "";
+            string monthString = "";
+            string dayString = "";
+            int year = DateTime.Now.Year;
+            int month = DateTime.Now.Month;
+            int day = DateTime.Now.Day;
+            int hour = DateTime.Now.Hour;
+            int minute = DateTime.Now.Minute;
+            int second = DateTime.Now.Second;
+            string htmlspan = html;
+            htmlspan = htmlspan.Replace(@"~", @"");
+            htmlspan = htmlspan.Replace(@"</header>", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            MatchCollection m1 = Regex.Matches(htmlspan, @"(<" + tagName + ".*?>.*?</" + tagName + ">)", RegexOptions.Singleline);
+            for (int i = 0; i < m1.Count; i++)
+            {
+                string value = m1[i].Groups[1].Value;
+                string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                if ((!string.IsNullOrEmpty(t)) && (t.Contains(@"/") == true))
+                {
+                    t = t.Replace(@"|", @"");
+                    t = t.Replace(@"&nbsp;", @"");
+                    t = t.Replace(@"-", @"/");
+                    t = t.Replace(@".", @"/");
+                    for (int j = 0; j < t.Split(' ').Length; j++)
+                    {
+                        string date = t.Split(' ')[j];
+                        date = date.Trim();
+                        date = date.Replace(@",", @"");
+                        if ((date.Length > 7) && (date.Length < 11) && (date.Contains(@"/") == true))
+                        {
+                            try
+                            {
+                                yearString = date.Split('/')[2];
+                                monthString = date.Split('/')[1];
+                                dayString = date.Split('/')[0];
+                                if (yearString.Length == 2)
+                                {
+                                    yearString = "20" + yearString;
+                                }
+                                datePublish = new DateTime(int.Parse(yearString), int.Parse(monthString), int.Parse(dayString), hour, minute, second);
+                            }
+                            catch
+                            {
+                                try
+                                {
+                                    yearString = date.Split('/')[2];
+                                    monthString = date.Split('/')[1];
+                                    dayString = date.Split('/')[0];
+                                    if (yearString.Length == 2)
+                                    {
+                                        yearString = "20" + yearString;
+                                    }
+                                    datePublish = new DateTime(int.Parse(yearString), int.Parse(monthString), int.Parse(dayString), hour, minute, second);
+
+                                }
+                                catch
+                                {
+                                    try
+                                    {
+                                        yearString = date.Split('/')[0];
+                                        monthString = date.Split('/')[1];
+                                        dayString = date.Split('/')[2];
+                                        if (yearString.Length == 2)
+                                        {
+                                            yearString = "20" + yearString;
+                                        }
+                                        datePublish = new DateTime(int.Parse(yearString), int.Parse(monthString), int.Parse(dayString), hour, minute, second);
+                                    }
+                                    catch
+                                    {
+                                    }
+                                }
+                            }
+                            if (product.DatePublish > datePublish)
+                            {
+                                product.DatePublish = datePublish;
+                                product.Active = true;
+                                i = m1.Count;
+                                j = t.Split(' ').Length;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        public static void DatePublish002(string html, string tagName, Product product)
+        {
+            DateTime datePublish = new DateTime(2019, 1, 1);
+            int year = DateTime.Now.Year;
+            int month = DateTime.Now.Month;
+            int day = DateTime.Now.Day;
+            int hour = DateTime.Now.Hour;
+            int minute = DateTime.Now.Minute;
+            int second = DateTime.Now.Second;
+            string htmlspan = html;
+            htmlspan = htmlspan.Replace(@"~", @"");
+            htmlspan = htmlspan.Replace(@"</header>", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            MatchCollection m1 = Regex.Matches(htmlspan, @"(<" + tagName + ".*?>.*?</" + tagName + ">)", RegexOptions.Singleline);
+            for (int i = 0; i < m1.Count; i++)
+            {
+                string value = m1[i].Groups[1].Value;
+                value = value.Replace(@"|", @"");
+                value = value.Replace(@"&nbsp;", @"");
+                string t = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                if (((t.Contains(@"ngày") == true) && (t.Contains(@"tháng") == true)) || ((t.Contains(@"ng&#224;y") == true) && (t.Contains(@"th&#225;ng") == true)))
+                {
+                    int index = 0;
+                    foreach (string item in t.Split(' '))
+                    {
+                        string date = item;
+                        date = date.Trim();
+                        date = date.Replace(@",", @"");
+                        try
+                        {
+                            int dateValue = int.Parse(date);
+                            switch (index)
+                            {
+                                case 0:
+                                    day = dateValue;
+                                    break;
+                                case 1:
+                                    month = dateValue;
+                                    break;
+                                case 2:
+                                    year = dateValue;
+                                    break;
+                            }
+                            index = index + 1;
+                        }
+                        catch
+                        {
+                        }
+                    }
+                    if (index == 3)
+                    {
+                        try
+                        {
+                            datePublish = new DateTime(year, month, day, hour, minute, second);
+                        }
+                        catch
+                        {
+                            try
+                            {
+                                datePublish = new DateTime(year, day, month, hour, minute, second);
+                            }
+                            catch
+                            {
+
+                            }
+                        }
+                        if (product.DatePublish > datePublish)
+                        {
+                            product.DatePublish = datePublish;
+                            product.Active = true;
+                            i = m1.Count;
+                        }
+                    }
+                }
+            }
+        }
+        public static void FinderContentAndDatePublish001(string html, Product product)
+        {
+            if (!string.IsNullOrEmpty(html))
+            {
+                DateTime now = DateTime.Now;
+                html = html.Replace(@"~", @"");
+                string htmlspan = html;
+                MatchCollection m1;
+                product.Active = false;
+                DateTime datePublish = new DateTime(2019, 1, 1);
+                string yearString = "";
+                string monthString = "";
+                string dayString = "";
+                int year = now.Year;
+                int month = now.Month;
+                int day = now.Day;
+                int hour = now.Hour;
+                int minute = now.Minute;
+                int second = now.Second;
+                product.DatePublish = now;
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    m1 = Regex.Matches(htmlspan, @"(<meta.*?/>)", RegexOptions.Singleline);
+                    for (int i = 0; i < m1.Count; i++)
+                    {
+                        string value = m1[i].Groups[1].Value;
+                        if ((value.Contains(@"published") == true) || (value.Contains(@"pubdate") == true))
+                        {
+                            value = value.Replace(@"content=""", @"~");
+                            value = value.Replace(@"content='", @"~");
+                            if (value.Split('~').Length > 1)
+                            {
+                                value = value.Split('~')[1];
+                                value = value.Replace(@"""", @"~");
+                                value = value.Replace(@"'", @"~");
+                                value = value.Split('~')[0];
+                                value = value.Trim();
+                                try
+                                {
+                                    datePublish = DateTime.Parse(value);
+                                }
+                                catch
+                                {
+                                    try
+                                    {
+                                        yearString = value.Split('-')[0];
+                                        monthString = value.Split('-')[1];
+                                        dayString = value.Split('-')[2];
+                                        dayString = dayString.Substring(0, 2);
+                                        datePublish = new DateTime(int.Parse(yearString), int.Parse(monthString), int.Parse(dayString), hour, minute, second);
+                                    }
+                                    catch
+                                    {
+                                    }
+                                }
+                                if (product.DatePublish > datePublish)
+                                {
+                                    product.DatePublish = datePublish;
+                                    product.Active = true;
+                                    i = m1.Count;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "dd", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "dd", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "time", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "time", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "span", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "span", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "div", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "div", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "h1", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "h1", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "h2", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "h2", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "h3", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "h3", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "h4", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "h4", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "h5", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "h5", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "h6", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "h6", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "li", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "li", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "em", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "em", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "i", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "i", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish001(html, "p", product);
+                }
+                if (product.Active == false)
+                {
+                    DatePublish002(html, "p", product);
+                }
+                htmlspan = html;
+                Uri myUri = new Uri(product.URLCode);
+                htmlspan = HTMLReplaceAndSplit(htmlspan);
+                htmlspan = htmlspan.Replace(@"~", @"");
+                htmlspan = htmlspan.Replace(@"</header>", @"~");
+                if (htmlspan.Split('~').Length > 1)
+                {
+                    htmlspan = htmlspan.Split('~')[1];
+                }
+                m1 = Regex.Matches(htmlspan, @"(<p.*?>.*?</p>)", RegexOptions.Singleline);
+                for (int i = 0; i < m1.Count; i++)
+                {
+                    string value = m1[i].Groups[1].Value;
+                    if ((value.Contains(@"<img") == true) || (value.Contains(@"</a>") == true) || (value.Contains(@"<a") == true) || (value.Contains(@"href") == true) || (value.Contains(@"function()") == true) || (value.Contains(@"$(") == true))
+                    {
+
+                    }
+                    else
+                    {
+                        string t1 = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                        product.Description = product.Description + " " + t1;
+                        product.ContentMain = product.ContentMain + "<br/>" + t1;
                     }
                 }
             }
@@ -2591,6 +3741,49 @@ namespace Commsights.Data.Helpers
                 }
             }
             return list;
+        }
+        public static bool ContainsUnicodeCharacter(string input)
+        {
+            const int MaxAnsiCode = 255;
+            return input.Any(c => c > MaxAnsiCode);
+        }
+        public static string HTMLReplaceAndSplit(string htmlspan001)
+        {
+            htmlspan001 = htmlspan001.Replace(@"<footer>", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"class=""footer", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"class='footer", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"footer"">", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"footer'>", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"class=""comments", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"class='comments", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"comments"">", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"comments'>", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"class=""fb-comments", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"class='fb-comments", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"fb-comments"">", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"fb-comments'>", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"related-list"">", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"related-list'>", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"related"">", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            htmlspan001 = htmlspan001.Replace(@"related'>", @"~");
+            htmlspan001 = htmlspan001.Split('~')[0];
+            return htmlspan001;
         }
         public void GetAuthorFromURL(Product product)
         {
@@ -2741,6 +3934,12 @@ namespace Commsights.Data.Helpers
                     product.URLCode = url;
                     break;
             }
+        }
+        private static string DecodeFromUTF8(string uTF8String)
+        {
+            byte[] bytes = Encoding.Default.GetBytes(uTF8String);
+            uTF8String = Encoding.UTF8.GetString(bytes);
+            return uTF8String;
         }
         #endregion
     }

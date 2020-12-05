@@ -1,0 +1,223 @@
+﻿@{ ViewData["Title"] = Model.Title + " - Brand Growth"; }
+
+@model Commsights.MVC.Models.ReportMonthlyViewModel
+@Html.HiddenFor(Model => Model.ID)
+@Html.HiddenFor(Model => Model.Title)
+<div>
+    | <a href="/ReportMonthly/MonthlyReport?ID=@Model.ID" class="text-success" title="Report">Report</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Industry</a> |
+    <a href="/ReportMonthly/MonthlyCompanyCount?ID=@Model.ID" class="text-success" title="Company">Company Count</a> |
+    <a href="/ReportMonthly/MonthlyFeatureIndustry?ID=@Model.ID" class="text-success" title="Feature-Mention">Feature-Mention</a> |
+    <a href="/ReportMonthly/MonthlySentimentIndustry?ID=@Model.ID" class="text-success" title="Sentiment">Sentiment</a> |
+    <a href="/ReportMonthly/MonthlyChannel?ID=@Model.ID" class="text-success" title="Channel">Channel</a> |
+    <a href="/ReportMonthly/MonthlyTierCommsights?ID=@Model.ID" class="text-success" title="Media Tiers">Media Tiers</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Category</a> |
+    <a href="/ReportMonthly/MonthlyTrendLine?ID=@Model.ID" class="text-success" title="Trendline">Trendline</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Campaign</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Key Stories</a> |
+    <a href="/ReportMonthly/MonthlyCompanyAndYear?ID=@Model.ID" class="text-success" title="MonthlyCompanyAndYear">Brand Growth</a> |
+    <a href="/ReportMonthly/MonthlySegmentProduct?ID=@Model.ID" class="text-success" title="Product segment">Product segment</a> |
+    <a href="/ReportMonthly/MonthlyTierCommsightsAndCompanyName?ID=@Model.ID" class="text-success" title="Top titles">Top titles</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Scorecard</a> |
+    <a href="/ReportMonthly/MonthlyData?ID=@Model.ID" class="text-success" title="Data">Data</a> |
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">@Model.Title - Brand Growth</h3>
+            </div>
+            <div class="card-body">
+                <div class="col-md-12">
+                    <div id="DataCompanyAndYear" class='col-sm-12'></div>
+                </div>
+                <br />
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class='col-sm-2'>
+                            <button type="button" class="btn btn-success" onclick="exportJPG('ChartBarCompanyVSYear')"><span class="fas fa-file-image"></span></button>
+                        </div>
+                    </div>
+                    <div>
+                        @(Html.Kendo().Chart(Model.ListMonth)
+.Name("ChartBarCompanyVSYear")
+.Theme("Material")
+.Title(t => t.Text("Companny and Year").Color("#0000ff").Font("20px sans-serif"))
+  .HtmlAttributes(new { style = "min-height:400px;" })
+   .Legend(legend => legend
+       .Position(ChartLegendPosition.Bottom)
+   )
+   .ChartArea(chartArea => chartArea
+      .Background("#ffffff")
+  )
+.Series(series =>
+{
+    foreach (var item in Model.ListSeries)
+    {
+        series.Line(item.Data).Name(item.Name).Axis("News");
+    }
+})
+   .CategoryAxis(axis => axis
+      .Name("Customer")
+      .Title("Month")
+       .Categories(item => item.Month)
+       .AxisCrossingValue(0, 100)
+   )
+    .ValueAxis(axis => axis
+       .Numeric()
+       .Name("News")
+       .Title("News")
+   ) 
+
+   .Tooltip(tooltip => tooltip
+       .Visible(true)
+       .Format("{0:N0}")
+   )
+     .Pannable(pannable => pannable
+            .Lock(ChartAxisLock.Y)
+        )
+        .Zoomable(zoomable => zoomable
+            .Mousewheel(mousewheel => mousewheel.Lock(ChartAxisLock.Y))
+            .Selection(selection => selection.Lock(ChartAxisLock.Y))
+        )
+            )    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(() => {
+        onGetCompanyAndYearByIDToListToJSON();
+    });
+    function onGetCompanyAndYearByIDToListToJSON() {
+        BeginRequestHandler();
+        var now = new Date();
+        var year = now.getFullYear();
+        $("#DataCompanyAndYear").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetCompanyAndYearByIDToListToJSON", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (list) {
+                 var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                html = html + '<thead>';
+                html = html + '<tr>';
+                 html = html + "<th class='text-center' style='width: 22%;'><a style='cursor:pointer;'>Company</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>" + year + "</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>01</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>02</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>03</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>04</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>05</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>06</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>07</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>08</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>09</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>10</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>11</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>12</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in list) {
+                     $(list[index]).each(function (iRec, item) {
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                        }
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.YearCount + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month01Count > 0) {
+                             html = html + item.Month01Count;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month02Count > 0) {
+                             html = html + item.Month02Count;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month03Count > 0) {
+                             html = html + item.Month03Count;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month04Count > 0) {
+                             html = html + item.Month04Count;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month05Count > 0) {
+                             html = html + item.Month05Count;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month06Count > 0) {
+                             html = html + item.Month06Count;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month07Count > 0) {
+                             html = html + item.Month07Count;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month08Count > 0) {
+                             html = html + item.Month08Count;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month09Count > 0) {
+                             html = html + item.Month09Count;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month10Count > 0) {
+                             html = html + item.Month10Count;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month11Count > 0) {
+                             html = html + item.Month11Count;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month12Count > 0) {
+                             html = html + item.Month12Count;
+                         }
+                         html = html + '</td>';
+                         html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                 $("#DataCompanyAndYear").append(html);
+            }
+         }).done(() => {
+             EndRequestHandler();
+        });
+    }
+    function exportJPG(control) {
+        var Title = $('#Title').val();
+        var id = "#" + control;
+        var chart = $(id).getKendoChart();
+        chart.exportImage().done(function (data) {
+            kendo.saveAs({
+                dataURI: data,
+                fileName: Title + ".jpg",
+                proxyURL: "@Url.Action("Export_Save", "ReportMonthly")"
+            });
+        });
+    }
+</script>

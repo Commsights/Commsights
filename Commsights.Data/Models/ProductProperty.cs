@@ -68,5 +68,16 @@ namespace Commsights.Data.Models
         public string SentimentCorp { get; set; }
         public int? SentimentProductID { get; set; }
         public string SentimentProduct { get; set; }
+        public int? ReportMonthlyID { get; set; }
+        public string Headline { get; set; }
+        public string URL { get; set; }
+        public string Page { get; set; }
+        public string Journalist { get; set; }
+        public string HeadlineEngLish { get; set; }
+        public string MediaTitle { get; set; }
+        public string MediaType { get; set; }
+        public string Duration { get; set; }
+        public int? Advalue { get; set; }
+        public DateTime? DatePublish { get; set; }
     }
 }

@@ -37,5 +37,7 @@ namespace Commsights.Data.Repositories
         public List<Config> GetByIDListToList(string IDList);
         public Task<string> AsyncInsertSingleItem(Config config);
         public Config GetByGroupNameAndCodeAndParentIDAndTierID(string groupName, string code, int parentID, int tierID);
+
+        public List<Config> GetWebsiteToList();
     }
 }

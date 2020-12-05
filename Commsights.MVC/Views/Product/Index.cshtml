@@ -10,7 +10,7 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class='col-sm-4'>
+                    <div class='col-sm-3'>
                         @(Html.Kendo().DropDownList()
                      .Name("Website")
                      .DataValueField("ID")
@@ -21,39 +21,291 @@
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetWebsiteByGroupNameAndCodeAndActiveToList001", "Config")))
                             )
                     </div>
-                    <div class='col-sm-4'>
+                    <div class='col-sm-3'>
                         <button type="button" class="btn btn-primary" onclick="onScanWebsite()">
                             <span class="fas fa-sync-alt"></span> Scan website
                         </button>
                     </div>
-                    <div class='col-sm-4'>
+                    <div class='col-sm-3'>
                         <button type="button" class="btn btn-primary" onclick="onScanWebsiteNoFilterProduct()">
                             <span class="fas fa-sync-alt"></span> Scan website no filter
+                        </button>
+                    </div>
+                    <div class='col-sm-3'>
+                        <button type="button" class="btn btn-primary" onclick="onScanAutoNoFilterProductAutoLoad()">
+                            <span class="fas fa-sync-alt"></span> Scan auto no filter
                         </button>
                     </div>
                 </div>
                 <br />
                 <div class="row">
-                    <div class='col-sm-4'>
-                        <button type="button" class="btn btn-primary" onclick="onScanAutoNoFilterProduct()">
-                            <span class="fas fa-sync-alt"></span> Scan auto no filter
-                        </button>
-                    </div>
-                    <div class='col-sm-4'>
+                    <div class='col-sm-3'>
                         <button type="button" class="btn btn-primary" onclick="onScanFullNoFilterProduct()">
                             <span class="fas fa-sync-alt"></span> Scan full no filter
                         </button>
                     </div>
-                    <div class='col-sm-4'>
+                    <div class='col-sm-3'>
                         <button type="button" class="btn btn-primary" onclick="onScanFull()">
                             <span class="fas fa-sync-alt"></span> Scan full
+                        </button>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(0)">
+                            0
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(50)">
+                            50
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(100)">
+                            100
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(150)">
+                            150
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(200)">
+                            200
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(250)">
+                            250
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(300)">
+                            300
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(350)">
+                            350
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(400)">
+                            400
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(450)">
+                            450
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(500)">
+                            500
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(550)">
+                            550
+                        </button>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(600)">
+                            600
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(650)">
+                            650
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(700)">
+                            700
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(750)">
+                            750
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(800)">
+                            800
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(850)">
+                            850
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(900)">
+                            900
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(950)">
+                            950
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(1000)">
+                            1000
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(1050)">
+                            1050
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(1100)">
+                            1100
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-info" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd(1150)">
+                            1150
+                        </button>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(0)">
+                            0
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(50)">
+                            50
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(100)">
+                            100
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(150)">
+                            150
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(200)">
+                            200
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(250)">
+                            250
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(300)">
+                            300
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(350)">
+                            350
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(400)">
+                            400
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(450)">
+                            450
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(500)">
+                            500
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(550)">
+                            550
+                        </button>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(600)">
+                            600
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(650)">
+                            650
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(700)">
+                            700
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(750)">
+                            750
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(800)">
+                            800
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(850)">
+                            850
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(900)">
+                            900
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(950)">
+                            950
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(1000)">
+                            1000
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(1050)">
+                            1050
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(1100)">
+                            1100
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" onclick="onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(1150)">
+                            1150
                         </button>
                     </div>
                 </div>
                 @(Html.Kendo().Grid<Commsights.Data.Models.Config>()
 .Name("Config")
 .Columns(columns =>
-{    
+{
     columns.Bound(t => t.Title).Title("Title").Width(200);
     columns.Bound(t => t.URLFull).Title("URLFull").Width(400);
     columns.Bound(t => t.SortOrder).Title("Sort order").Width(200);
@@ -175,11 +427,30 @@
          });
         return false;
     }
+    function onScanFullNoFilterProductByIndexBegin(indexBeginValue) {
+        BeginRequestHandler();
+         $.ajax({
+            url: '@Url.Action("ScanFullNoFilterProductByIndexBegin", "Product")',
+             type: 'GET',
+             data: {
+                 indexBegin: indexBeginValue,
+             },
+            cache: false
+         }).done(function (e) {
+             EndRequestHandler();
+             var response = e;
+             var messageType = response.split('-')[0];
+             var note = response.split('-')[1];
+             var notification = $("#Notification").data("kendoNotification");
+             notification.show(note, messageType);
+         });
+        return false;
+    }
     function onScanWebsiteNoFilterProduct() {
         var websiteIDValue = $("#Website").data("kendoDropDownList").value();
         BeginRequestHandler();
          $.ajax({
-            url: '@Url.Action("ScanWebsiteNoFilterProduct", "Product")',
+            url: '@Url.Action("AsyncScanWebsiteNoFilterProduct", "Product")',
              type: 'GET',
              data: {
                  websiteID: websiteIDValue,
@@ -208,7 +479,7 @@
                        setTimeout(function () {
                            var url = '/Product/ScanWebsiteNoFilterProductVoid?websiteID=' + item.ID;
                            window.open(url, '_blank');
-                       }, index * 3000);                          
+                       }, index * 3000);
                    });
                }
                EndRequestHandler();
@@ -216,6 +487,75 @@
         }).done(() => {
 
         });
+        return false;
+    }
+    function onScanAutoNoFilterProductAutoLoad() {
+       BeginRequestHandler();
+       $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetWebsiteByGroupNameAndCodeAndActiveToList", "Config")",
+            data: {
+            },
+           success: function (Config) {
+               for (var index in Config) {
+                   $(Config[index]).each(function (iRec, item) {
+                       console.log("done: " + item.ID);
+                       $.ajax({
+                        type: 'GET',
+                        url: "@Url.Action("AsyncScanWebsiteNoFilterProductVoid", "Product")",
+                        data: {
+                            websiteID: item.ID,
+                        },
+                        success: function () {
+                            console.log("success: " + item.ID);
+                            EndRequestHandler();
+                        }
+                        }).done(() => {
+                            console.log("done: " + item.ID);
+                        });
+                   });
+               }
+
+           }
+        }).done(() => {
+
+        });
+        return false;
+    }
+    function onScanAutoNoFilterProductByIndexBeginAndIndexEnd(indexBegin) {
+        BeginRequestHandler();
+        var indexEnd = indexBegin + 50;
+        for (var i = indexBegin; i < indexEnd; i = i + 10) {
+            $.ajax({
+            type: 'GET',
+            url: "@Url.Action("AsyncScanWebsiteNoFilterProductByIndexBeginVoid", "Product")",
+            data: {
+                indexBegin: i
+            },
+            success: function () {
+                    EndRequestHandler();
+            }
+            }).done(() => {
+            });
+        }
+        return false;
+    }
+    function onScanAutoNoFilterProductByIndexBeginAndIndexEnd001(indexBegin) {
+        BeginRequestHandler();
+        var indexEnd = indexBegin + 50;
+        for (var i = indexBegin; i < indexEnd; i = i + 10) {
+            $.ajax({
+            type: 'GET',
+            url: "@Url.Action("AsyncScanWebsiteNoFilterProductByIndexBeginVoid001", "Product")",
+            data: {
+                indexBegin: i
+            },
+            success: function () {
+                    EndRequestHandler();
+            }
+            }).done(() => {
+            });
+        }
         return false;
     }   
 </script>

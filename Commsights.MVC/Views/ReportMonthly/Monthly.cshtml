@@ -38,7 +38,7 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
-    columns.Template(@"<a href='/ReportMonthly/MonthlyIndustry?ID=#=ID#' class='btn btn-success' style='color:white;'><i class='fas fa-edit'></i></a>").Title("").Width(70).HtmlAttributes(new { style = "text-align:center;" });
+    columns.Template(@"<a href='/ReportMonthly/MonthlyReport?ID=#=ID#' class='btn btn-success' style='color:white;'><i class='fas fa-edit'></i></a>").Title("").Width(70).HtmlAttributes(new { style = "text-align:center;" });
     columns.Bound(t => t.DateUpdated).Title("Upload").Width(200).HtmlAttributes(new { style = "text-align: right;" }).Format("{0:MM/dd/yyyy HH:mm:ss}");
     columns.Bound(t => t.Year).Title("Year").Width(100).HtmlAttributes(new { style = "text-align: right;" });
     columns.Bound(t => t.Month).Title("Month").Width(100).HtmlAttributes(new { style = "text-align: right;" });

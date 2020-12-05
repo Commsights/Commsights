@@ -1,4 +1,4 @@
-﻿@{ ViewData["Title"] = Model.Title + " - Tier Commsights and Company"; }
+﻿@{ ViewData["Title"] = Model.Title + " - Top titles"; }
 
 @model Commsights.MVC.Models.ReportMonthlyViewModel
 @Html.HiddenFor(Model => Model.ID)
@@ -6,18 +6,17 @@
 <div>
     | <a href="/ReportMonthly/MonthlyReport?ID=@Model.ID" class="text-success" title="Report">Report</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Industry</a> |
-    <a href="/ReportMonthly/MonthlyIndustryCount?ID=@Model.ID" class="text-success" title="Industry">Industry Count</a> |
     <a href="/ReportMonthly/MonthlyCompanyCount?ID=@Model.ID" class="text-success" title="Company">Company Count</a> |
     <a href="/ReportMonthly/MonthlyFeatureIndustry?ID=@Model.ID" class="text-success" title="Feature-Mention">Feature-Mention</a> |
     <a href="/ReportMonthly/MonthlySentimentIndustry?ID=@Model.ID" class="text-success" title="Sentiment">Sentiment</a> |
     <a href="/ReportMonthly/MonthlyChannel?ID=@Model.ID" class="text-success" title="Channel">Channel</a> |
     <a href="/ReportMonthly/MonthlyTierCommsights?ID=@Model.ID" class="text-success" title="Media Tiers">Media Tiers</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Category</a> |
-    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Trendline</a> |
+    <a href="/ReportMonthly/MonthlyTrendLine?ID=@Model.ID" class="text-success" title="Trendline">Trendline</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Campaign</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Key Stories</a> |
-    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Brand Growth</a> |
-    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Product segment</a> |
+    <a href="/ReportMonthly/MonthlyCompanyAndYear?ID=@Model.ID" class="text-success" title="MonthlyCompanyAndYear">Brand Growth</a> |
+    <a href="/ReportMonthly/MonthlySegmentProduct?ID=@Model.ID" class="text-success" title="Product segment">Product segment</a> |
     <a href="/ReportMonthly/MonthlyTierCommsightsAndCompanyName?ID=@Model.ID" class="text-success" title="Top titles">Top titles</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Scorecard</a> |
     <a href="/ReportMonthly/MonthlyData?ID=@Model.ID" class="text-success" title="Data">Data</a> |
@@ -26,7 +25,7 @@
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">@Model.Title - Tier Commsights and Company</h3>
+                <h3 class="card-title">@Model.Title - Top titles</h3>
             </div>
             <div class="card-body">                
                 <div class="col-md-12">
@@ -85,7 +84,7 @@
                              html = html + '<tr style="background-color:#f1f1f1;">';
                          }
                          html = html + '<td class="text-left" style="font-weight: bold;">' + item001.CompanyName + '</td>';       
-                         html = html + '<td class="text-left" valign="top">';
+                         html = html + '<td class="text-right" valign="top">';
                          for (var index in model.ListTierCommsightsAndCompanyNameAndMass) {
                              $(model.ListTierCommsightsAndCompanyNameAndMass[index]).each(function (iRec, item002) { 
                                  if (item001.CompanyName == item002.CompanyName) {
@@ -95,7 +94,7 @@
                              });
                          } 
                          html = html + '</td>';
-                         html = html + '<td class="text-left" valign="top">';
+                         html = html + '<td class="text-right" valign="top">';
                          for (var index in model.ListTierCommsightsAndCompanyNameAndIndustry) {
                              $(model.ListTierCommsightsAndCompanyNameAndIndustry[index]).each(function (iRec, item003) {
                                  if (item001.CompanyName == item003.CompanyName) {
@@ -105,7 +104,7 @@
                              });
                          }
                          html = html + '</td>';
-                         html = html + '<td class="text-left" valign="top">';
+                         html = html + '<td class="text-right" valign="top">';
                          for (var index in model.ListTierCommsightsAndCompanyNameAndPortal) {
                              $(model.ListTierCommsightsAndCompanyNameAndPortal[index]).each(function (iRec, item004) {
                                  if (item001.CompanyName == item004.CompanyName) {
@@ -116,7 +115,7 @@
                          }
                          html = html + '</td>';
                          html = html + '</td>';
-                         html = html + '<td class="text-left" valign="top">';
+                         html = html + '<td class="text-right" valign="top">';
                          for (var index in model.ListTierCommsightsAndCompanyNameAndOther) {
                              $(model.ListTierCommsightsAndCompanyNameAndOther[index]).each(function (iRec, item005) {
                                  if (item001.CompanyName == item005.CompanyName) {

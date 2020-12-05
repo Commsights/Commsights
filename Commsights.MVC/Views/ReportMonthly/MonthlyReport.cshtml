@@ -1,0 +1,1683 @@
+﻿@{ ViewData["Title"] = Model.Title + "- General"; }
+
+@model Commsights.MVC.Models.ReportMonthlyViewModel
+@Html.HiddenFor(Model => Model.ID)
+@Html.HiddenFor(Model => Model.Title)
+<div>
+    | <a href="/ReportMonthly/MonthlyReport?ID=@Model.ID" class="text-success" title="Report">Report</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Industry</a> |
+    <a href="/ReportMonthly/MonthlyCompanyCount?ID=@Model.ID" class="text-success" title="Company">Company Count</a> |
+    <a href="/ReportMonthly/MonthlyFeatureIndustry?ID=@Model.ID" class="text-success" title="Feature-Mention">Feature-Mention</a> |
+    <a href="/ReportMonthly/MonthlySentimentIndustry?ID=@Model.ID" class="text-success" title="Sentiment">Sentiment</a> |
+    <a href="/ReportMonthly/MonthlyChannel?ID=@Model.ID" class="text-success" title="Channel">Channel</a> |
+    <a href="/ReportMonthly/MonthlyTierCommsights?ID=@Model.ID" class="text-success" title="Media Tiers">Media Tiers</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Category</a> |
+    <a href="/ReportMonthly/MonthlyTrendLine?ID=@Model.ID" class="text-success" title="Trendline">Trendline</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Campaign</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Key Stories</a> |
+    <a href="/ReportMonthly/MonthlyCompanyAndYear?ID=@Model.ID" class="text-success" title="MonthlyCompanyAndYear">Brand Growth</a> |
+    <a href="/ReportMonthly/MonthlySegmentProduct?ID=@Model.ID" class="text-success" title="Product segment">Product segment</a> |
+    <a href="/ReportMonthly/MonthlyTierCommsightsAndCompanyName?ID=@Model.ID" class="text-success" title="Top titles">Top titles</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Scorecard</a> |
+    <a href="/ReportMonthly/MonthlyData?ID=@Model.ID" class="text-success" title="Data">Data</a> |
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">@Model.Title - General</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class='col-sm-2'>
+                        <h4>Segment</h4>
+                    </div>
+                    <div class='col-sm-9'>
+
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-success" title="Excel English" onclick="onExcel()">
+                            <span class="fas fa-file-excel"></span>
+                        </button>
+                    </div>
+                </div>
+                <br />
+                <div class="col-md-12">
+                    <div id="DataIndustry" class='col-sm-12'></div>
+                </div>
+                <hr />
+                <h4>Company Count</h4>
+                <div class="col-md-12">
+                    <div id="DataCompany" class='col-sm-12'></div>
+                </div>
+                <br />
+                <div class="col-md-12">
+                    <div id="DataCompanyIndustry" class='col-sm-12'></div>
+                </div>
+                <hr />
+                <h4>Feature</h4>
+                <div class="col-md-12">
+                    <div id="DataFeature" class='col-sm-12'></div>
+                </div>
+                <hr />
+                <h4>Sentiment</h4>
+                <div class="col-md-12">
+                    <div id="DataSentiment" class='col-sm-12'></div>
+                </div>
+                <br />
+                <div class="col-md-12">
+                    <div id="DataSentimentAndMediaType" class='col-sm-12'></div>
+                </div>
+                <br />
+                <div class="col-md-12">
+                    <div id="DataSentimentAndFeature" class='col-sm-12'></div>
+                </div>
+                <hr />
+                <h4>CHANNEL</h4>
+                <div class="col-md-12">
+                    <div id="DataChannel" class='col-sm-12'></div>
+                </div>
+                <br />
+                <h4>CHANNEL BY FEATURE</h4>
+                <div class="col-md-12">
+                    <div id="DataChannelAndFeature" class='col-sm-12'></div>
+                </div>
+                <br />
+                <h4>CHANNEL BY MENTION</h4>
+                <div class="col-md-12">
+                    <div id="DataChannelAndMention" class='col-sm-12'></div>
+                </div>
+                <hr />
+                <h4>Media Tier</h4>
+                <div class="col-md-12">
+                    <div id="DataTierCommsights" class='col-sm-12'></div>
+                </div>
+                <hr />
+                <h4>Trendline</h4>
+                <div class="col-md-12">
+                    <div id="DataTrendline" class='col-sm-12'></div>
+                </div>
+                <hr />
+                <h4>Brand Growth</h4>
+                <div class="col-md-12">
+                    <div id="DataCompanyAndYear" class='col-sm-12'></div>
+                </div>
+                <hr />
+                <h4>Product segment</h4>
+                <div class="col-md-12">
+                    <div id="DataSegmentProduct" class='col-sm-12'></div>
+                </div>
+                <hr />
+                <h4>Top titles</h4>
+                <div class="col-md-12">
+                    <div id="DataTierCommsightsAndCompanyName" class='col-sm-12'></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function onExcel() {
+        BeginRequestHandler();
+        var IDValue = $("#ID").val();
+        $.post("/ReportMonthly/ExportExcelByID", { ID: IDValue }, function (result) {
+            window.location.replace(result);
+            EndRequestHandler();
+        });
+    }
+    $(document).ready(() => {
+        onGetIndustryByIDToListToJSON();
+        onGetCompanyByIDToListToJSON();
+        onGetIndustryByID001ToListToJSON();
+        onGetFeatureIndustryByIDToListToJSON();
+        onGetSentimentByIDToListToJSON();
+        onGetSentimentAndMediaTypeWithoutSUMByIDToListToJSON();
+        onGetSentimentAndFeatureWithoutSUMByIDToListToJSON();
+        onGetChannelByIDToListToJSON();
+        onGetChannelAndFeatureByIDToListToJSON();
+        onGetChannelAndMentionByIDToListToJSON();
+        onGetTierCommsightsByIDToListToJSON();
+        onGetTrendLineWithoutSUMByIDToListToJSON();
+        onGetCompanyAndYearByIDToListToJSON();
+        onGetSegmentProductWithoutSUMByIDToListToJSON();
+        onGetTierCommsightsAndCompanyNameByIDToListToJSON();
+    });
+    function onGetIndustryByIDToListToJSON() {
+        BeginRequestHandler();
+        $("#DataIndustry").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetIndustryByIDToListToJSON", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (list) {
+                 var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                html = html + '<thead>';
+                html = html + '<tr>';
+                 html = html + "<th class='text-center' style='width: 60%;'><a style='cursor:pointer;'>Industry</a></th>";
+                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Count</a></th>";
+                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Percent (%)</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in list) {
+                     $(list[index]).each(function (iRec, item) {
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                        }
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.SegmentProduct + '</td>';
+                         let ProductCount = Math.round(item.ProductCount);
+                         var ProductCountString = ProductCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + ProductCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + item.ProductPercent + '</td>';
+                         html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                 $("#DataIndustry").append(html);
+            }
+         }).done(() => {
+             EndRequestHandler();
+        });
+    }
+    function onGetCompanyByIDToListToJSON() {
+        BeginRequestHandler();
+        $("#DataCompany").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetCompanyByIDToListToJSON", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (list) {
+                 var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                html = html + '<thead>';
+                html = html + '<tr>';
+                html = html + "<th class='text-center' style='width: 40%;'><a style='cursor:pointer;'>Company</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>News (Last month)</a></th>";
+                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Media value (Last month)</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>News (This month)</a></th>";
+                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Media value (This month)</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in list) {
+                     $(list[index]).each(function (iRec, item) {
+                         let ProductNewsLastMonthCount = Math.round(item.ProductNewsLastMonthCount);
+                         var ProductNewsLastMonthCountString = ProductNewsLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let ProductNewsCount = Math.round(item.ProductNewsCount);
+                         var ProductNewsCountString = ProductNewsCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let ProductMediaLastMonthValue = Math.round(item.ProductMediaLastMonthValue);
+                         var ProductMediaLastMonthValueString = ProductMediaLastMonthValue.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let ProductMediaThisMonthValue = Math.round(item.ProductMediaThisMonthValue);
+                         var ProductMediaThisMonthValueString = ProductMediaThisMonthValue.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                        }
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + ProductNewsLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + ProductMediaLastMonthValueString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + ProductNewsCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + ProductMediaThisMonthValueString + '</td>';
+                         html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                 $("#DataCompany").append(html);
+            }
+         }).done(() => {
+             EndRequestHandler();
+        });
+    }
+    function onGetIndustryByID001ToListToJSON() {
+        BeginRequestHandler();
+        $("#DataCompanyIndustry").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetIndustryByID001ToListToJSON", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (list) {
+                 var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                html = html + '<thead>';
+                html = html + '<tr>';
+                 html = html + "<th class='text-center' style='width: 40%;'><a style='cursor:pointer;'>Company</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>News (Last month)</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Media (Last month)</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>News (This month)</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Media (This month)</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Growth News (%)</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Growth Media (%)</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in list) {
+                     $(list[index]).each(function (iRec, item) {
+                         let ProductNewsLastMonthCount = Math.round(item.ProductNewsLastMonthCount);
+                         var ProductNewsLastMonthCountString = ProductNewsLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let ProductMediaLastMonthCount = Math.round(item.ProductMediaLastMonthCount);
+                         var ProductMediaLastMonthCountString = ProductMediaLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let ProductNewsCount = Math.round(item.ProductNewsCount);
+                         var ProductNewsCountString = ProductNewsCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let ProductMediaCount = Math.round(item.ProductMediaCount);
+                         var ProductMediaCountString = ProductMediaCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let NewsGrowthPercent = Math.round(item.NewsGrowthPercent);
+                         var NewsGrowthPercentString = NewsGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                         let MediaGrowthPercent = Math.round(item.MediaGrowthPercent);
+                         var MediaGrowthPercentString = MediaGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                        }
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + ProductNewsLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + ProductMediaLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + ProductNewsCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + ProductMediaCountString + '</td>';
+                         
+                         if (item.NewsGrowthPercent >0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + NewsGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.NewsGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + NewsGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + NewsGrowthPercentString + '</td>';
+                             }
+                         }
+                         if (item.MediaGrowthPercent >0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + MediaGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.MediaGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + MediaGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + MediaGrowthPercentString + '</td>';
+                             }
+                         }
+                         html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                 $("#DataCompanyIndustry").append(html);
+            }
+         }).done(() => {
+             EndRequestHandler();
+        });
+    }
+    function onGetFeatureIndustryByIDToListToJSON() {
+        BeginRequestHandler();
+        $("#DataFeature").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetFeatureIndustryByIDToListToJSON", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (list) {
+                 var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                html = html + '<thead>';
+                html = html + '<tr>';
+                 html = html + "<th class='text-center' style='width: 40%;'><a style='cursor:pointer;'>Company</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Feature (Last month)</a></th>";
+                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Mention (Last month)</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Feature (This month)</a></th>";
+                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Mention (This month)</a></th>";
+                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Growth Feature (%)</a></th>";
+                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Growth Mention (%)</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in list) {
+                     $(list[index]).each(function (iRec, item) {
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                         }
+                         let FeatureLastMonthCount = Math.round(item.FeatureLastMonthCount);
+                         var FeatureLastMonthCountString = FeatureLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let MentionLastMonthCount = Math.round(item.MentionLastMonthCount);
+                         var MentionLastMonthCountString = MentionLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let FeatureCount = Math.round(item.FeatureCount);
+                         var FeatureCountString = FeatureCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let MentionCount = Math.round(item.MentionCount);
+                         var MentionCountString = MentionCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");                         
+
+                         let FeatureGrowthPercent = Math.round(item.FeatureGrowthPercent);
+                         var FeatureGrowthPercentString = FeatureGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                         let MentionGrowthPercent = Math.round(item.MentionGrowthPercent);
+                         var MentionGrowthPercentString = MentionGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + FeatureLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + MentionLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + FeatureCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + MentionCountString + '</td>';
+                        
+                         if (item.FeatureGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + FeatureGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.FeatureGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + FeatureGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + FeatureGrowthPercentString + '</td>';
+                             }
+                         }
+                         if (item.MentionGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + MentionGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.MentionGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + MentionGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + MentionGrowthPercentString + '</td>';
+                             }
+                         }
+                         html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                 $("#DataFeature").append(html);
+            }
+         }).done(() => {
+             EndRequestHandler();
+        });
+    }
+    function onGetSentimentByIDToListToJSON() {
+        BeginRequestHandler();
+        $("#DataSentiment").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetSentimentByIDToListToJSON", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (list) {
+                 var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                 html = html + '<thead>';
+                 html = html + '<tr>';
+                 html = html + "<th class='text-center'><a style='cursor:pointer;'></a></th>";
+                 html = html + "<th class='text-center' colspan='3'><a style='cursor:pointer;'>Last month</a></th>";
+                 html = html + "<th class='text-center' colspan='3'><a style='cursor:pointer;'>This month</a></th>";
+                 html = html + "<th class='text-center' colspan='3'><a style='cursor:pointer;'>Growth (%)</a></th>";
+                 html = html + '</tr>';
+                html = html + '<tr>';
+                 html = html + "<th class='text-center' style='width: 28%;'><a style='cursor:pointer;'>Company</a></th>";
+                 html = html + "<th class='text-center' style='width: 8%;'><a style='cursor:pointer; color: green;'>Positive</a></th>";
+                 html = html + "<th class='text-center' style='width: 8%;'><a style='cursor:pointer;'>Neutral</a></th>";
+                 html = html + "<th class='text-center' style='width: 8%;'><a style='cursor:pointer; color: red;'>Negative</a></th>";
+                 html = html + "<th class='text-center' style='width: 8%;'><a style='cursor:pointer; color: green;'>Positive</a></th>";
+                 html = html + "<th class='text-center' style='width: 8%;'><a style='cursor:pointer;'>Neutral</a></th>";
+                 html = html + "<th class='text-center' style='width: 8%;'><a style='cursor:pointer; color: red;'>Negative</a></th>";
+                 html = html + "<th class='text-center' style='width: 8%;'><a style='cursor:pointer; color: green;'>Positive</a></th>";
+                 html = html + "<th class='text-center' style='width: 8%;'><a style='cursor:pointer;'>Neutral</a></th>";
+                 html = html + "<th class='text-center' style='width: 8%;'><a style='cursor:pointer; color: red;'>Negative</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in list) {
+                     $(list[index]).each(function (iRec, item) {
+                         let PositiveLastMonthCount = Math.round(item.PositiveLastMonthCount);
+                         var PositiveLastMonthCountString = PositiveLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let NeutralLastMonthCount = Math.round(item.NeutralLastMonthCount);
+                         var NeutralLastMonthCountString = NeutralLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let NegativeLastMonthCount = Math.round(item.NegativeLastMonthCount);
+                         var NegativeLastMonthCountString = NegativeLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let PositiveCount = Math.round(item.PositiveCount);
+                         var PositiveCountString = PositiveCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let NeutralCount = Math.round(item.NeutralCount);
+                         var NeutralCountString = NeutralCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let NegativeCount = Math.round(item.NegativeCount);
+                         var NegativeCountString = NegativeCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let PositiveGrowthPercent = Math.round(item.PositiveGrowthPercent);
+                         var PositiveGrowthPercentString = PositiveGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                         let NeutralGrowthPercent = Math.round(item.NeutralGrowthPercent);
+                         var NeutralGrowthPercentString = NeutralGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                         let NegativeGrowthPercent = Math.round(item.NegativeGrowthPercent);
+                         var NegativeGrowthPercentString = NegativeGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                         }
+                         
+
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold; color: green;">' + PositiveLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + NeutralLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold; color: red;">' + NegativeLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold; color: green;">' + PositiveCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + NeutralCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold; color: red;">' + NegativeCountString + '</td>';
+                         if (item.PositiveGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + PositiveGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.PositiveGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + PositiveGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + PositiveGrowthPercentString + '</td>';
+                             }
+                         }
+                         if (item.NeutralGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + NeutralGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.NeutralGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + NeutralGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + NeutralGrowthPercentString + '</td>';
+                             }
+                         }
+                         if (item.NegativeGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + NegativeGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.NegativeGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + NegativeGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + NegativeGrowthPercentString + '</td>';
+                             }
+                         }
+                        html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                 $("#DataSentiment").append(html);
+            }
+         }).done(() => {
+             EndRequestHandler();
+        });
+    }
+    function onGetSentimentAndMediaTypeWithoutSUMByIDToListToJSON() {
+        BeginRequestHandler();
+        $("#DataSentimentAndMediaType").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetSentimentAndMediaTypeWithoutSUMByIDToListToJSON", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (list) {
+                 var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                 html = html + '<thead>';
+                 html = html + '<tr>';
+                 html = html + "<th class='text-center' style='width: 40%;'><a style='cursor:pointer;'>Company</a></th>";
+                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Sentiment</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>TV</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                 var no = 0;                 
+                 for (var index in list) {
+                     $(list[index]).each(function (iRec, item) {      
+                         let OnlineCount = Math.round(item.OnlineCount);
+                         var OnlineCountString = OnlineCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let NewspaperCount = Math.round(item.NewspaperCount);
+                         var NewspaperCountString = NewspaperCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let TVCount = Math.round(item.TVCount);
+                         var TVCountString = TVCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let MagazineCount = Math.round(item.MagazineCount);
+                         var MagazineCountString = MagazineCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                         }
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';               
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.Sentiment + '</td>';
+                         switch (item.Sentiment) {
+                             case "Positive":
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: green;">' + OnlineCountString + '</td>';
+                                 break;
+                             case "Negative":
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: red;">' + OnlineCountString + '</td>';
+                                 break;
+                             default:
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + OnlineCountString + '</td>';
+                         }
+                         switch (item.Sentiment) {
+                             case "Positive":
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: green;">' + NewspaperCountString + '</td>';
+                                 break;
+                             case "Negative":
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: red;">' + NewspaperCountString + '</td>';
+                                 break;
+                             default:
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + NewspaperCountString + '</td>';
+                         }
+                         switch (item.Sentiment) {
+                             case "Positive":
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: green;">' + TVCountString + '</td>';
+                                 break;
+                             case "Negative":
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: red;">' + TVCountString + '</td>';
+                                 break;
+                             default:
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + TVCountString + '</td>';
+                         }
+                         switch (item.Sentiment) {
+                             case "Positive":
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: green;">' + MagazineCountString + '</td>';
+                                 break;
+                             case "Negative":
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: red;">' + MagazineCountString + '</td>';
+                                 break;
+                             default:
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + MagazineCountString + '</td>';
+                         }
+                        html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                 $("#DataSentimentAndMediaType").append(html);
+            }
+         }).done(() => {
+             EndRequestHandler();
+        });
+    }
+    function onGetSentimentAndFeatureWithoutSUMByIDToListToJSON() {
+        BeginRequestHandler();
+        $("#DataSentimentAndFeature").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetSentimentAndFeatureWithoutSUMByIDToListToJSON", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (list) {
+                 var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                 html = html + '<thead>';
+                 html = html + '<tr>';
+                 html = html + "<th class='text-center' style='width: 40%;'><a style='cursor:pointer;'>Company</a></th>";
+                 html = html + "<th class='text-center' style='width: 30%;'><a style='cursor:pointer;'>Feature/Mention</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer; color: green;'>Positive</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Neutral</a></th>";
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer; color: red;'>Negative</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in list) {
+                     $(list[index]).each(function (iRec, item) {                       
+
+                         let PositiveCount = Math.round(item.PositiveCount);
+                         var PositiveCountString = PositiveCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let NeutralCount = Math.round(item.NeutralCount);
+                         var NeutralCountString = NeutralCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let NegativeCount = Math.round(item.NegativeCount);
+                         var NegativeCountString = NegativeCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                        }
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.FeatureCorp + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold; color: green;">' + PositiveCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + NeutralCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold; color: red;">' + NegativeCountString + '</td>';
+                        html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                 $("#DataSentimentAndFeature").append(html);
+            }
+         }).done(() => {
+             EndRequestHandler();
+        });
+    }
+    function onGetChannelByIDToListToJSON() {
+        BeginRequestHandler();
+        $("#DataChannel").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetChannelByIDWithoutSUMToList", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (list) {
+                 var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                 html = html + '<thead>';
+                 html = html + '<tr>';
+                 html = html + "<th class='text-center'><a style='cursor:pointer;'></a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Last month</a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>This month</a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Growth</a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Growth (%)</a></th>";
+                 html = html + '</tr>';
+                html = html + '<tr>';
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Company</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in list) {
+                     $(list[index]).each(function (iRec, item) {
+
+                         let OnlineLastMonthCount = Math.round(item.OnlineLastMonthCount);
+                         var OnlineLastMonthCountString = OnlineLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let NewspaperLastMonthCount = Math.round(item.NewspaperLastMonthCount);
+                         var NewspaperLastMonthCountString = NewspaperLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let MagazineLastMonthCount = Math.round(item.MagazineLastMonthCount);
+                         var MagazineLastMonthCountString = MagazineLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let TVLastMonthCount = Math.round(item.TVLastMonthCount);
+                         var TVLastMonthCountString = TVLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let OnlineCount = Math.round(item.OnlineCount);
+                         var OnlineCountString = OnlineCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let NewspaperCount = Math.round(item.NewspaperCount);
+                         var NewspaperCountString = NewspaperCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let MagazineCount = Math.round(item.MagazineCount);
+                         var MagazineCountString = MagazineCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let TVCount = Math.round(item.TVCount);
+                         var TVCountString = TVCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let OnlineGrowth = Math.round(item.OnlineGrowth);
+                         var OnlineGrowthString = OnlineGrowth.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let NewspaperGrowth = Math.round(item.NewspaperGrowth);
+                         var NewspaperGrowthString = NewspaperGrowth.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let MagazineGrowth = Math.round(item.MagazineGrowth);
+                         var MagazineGrowthString = MagazineGrowth.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let TVGrowth = Math.round(item.TVGrowth);
+                         var TVGrowthString = TVGrowth.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let OnlineGrowthPercent = Math.round(item.OnlineGrowthPercent);
+                         var OnlineGrowthPercentString = OnlineGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                         let NewspaperGrowthPercent = Math.round(item.NewspaperGrowthPercent);
+                         var NewspaperGrowthPercentString = NewspaperGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                         let MagazineGrowthPercent = Math.round(item.MagazineGrowthPercent);
+                         var MagazineGrowthPercentString = MagazineGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                         let TVGrowthPercent = Math.round(item.TVGrowthPercent);
+                         var TVGrowthPercentString = TVGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                        }
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + OnlineLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + NewspaperLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + MagazineLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + TVLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + OnlineCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + NewspaperCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + MagazineCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + TVCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + OnlineGrowthString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + NewspaperGrowthString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + MagazineGrowthString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + TVGrowthString + '</td>';
+                         if (item.OnlineGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + OnlineGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.OnlineGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + OnlineGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + OnlineGrowthPercentString + '</td>';
+                             }
+                         }
+                         if (item.NewspaperGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + NewspaperGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.NewspaperGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + NewspaperGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + NewspaperGrowthPercentString + '</td>';
+                             }
+                         }
+                         if (item.MagazineGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + MagazineGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.MagazineGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + MagazineGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + MagazineGrowthPercentString + '</td>';
+                             }
+                         }
+                         if (item.TVGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + TVGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.TVGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + TVGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + TVGrowthPercentString + '</td>';
+                             }
+                         }
+                        html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                 $("#DataChannel").append(html);
+            }
+         }).done(() => {
+             EndRequestHandler();
+        });
+    }
+    function onGetChannelAndFeatureByIDToListToJSON() {
+        BeginRequestHandler();
+        $("#DataChannelAndFeature").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetChannelAndFeatureWithoutSUMByIDToList", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (list) {
+                 var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                 html = html + '<thead>';
+                 html = html + '<tr>';
+                 html = html + "<th class='text-center'><a style='cursor:pointer;'></a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Last month</a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>This month</a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Growth</a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Growth (%)</a></th>";
+                 html = html + '</tr>';
+                html = html + '<tr>';
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Company</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in list) {
+                     $(list[index]).each(function (iRec, item) {
+                         let OnlineLastMonthCount = Math.round(item.OnlineLastMonthCount);
+                         var OnlineLastMonthCountString = OnlineLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let NewspaperLastMonthCount = Math.round(item.NewspaperLastMonthCount);
+                         var NewspaperLastMonthCountString = NewspaperLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let MagazineLastMonthCount = Math.round(item.MagazineLastMonthCount);
+                         var MagazineLastMonthCountString = MagazineLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let TVLastMonthCount = Math.round(item.TVLastMonthCount);
+                         var TVLastMonthCountString = TVLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let OnlineCount = Math.round(item.OnlineCount);
+                         var OnlineCountString = OnlineCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let NewspaperCount = Math.round(item.NewspaperCount);
+                         var NewspaperCountString = NewspaperCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let MagazineCount = Math.round(item.MagazineCount);
+                         var MagazineCountString = MagazineCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let TVCount = Math.round(item.TVCount);
+                         var TVCountString = TVCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let OnlineGrowth = Math.round(item.OnlineGrowth);
+                         var OnlineGrowthString = OnlineGrowth.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let NewspaperGrowth = Math.round(item.NewspaperGrowth);
+                         var NewspaperGrowthString = NewspaperGrowth.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let MagazineGrowth = Math.round(item.MagazineGrowth);
+                         var MagazineGrowthString = MagazineGrowth.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let TVGrowth = Math.round(item.TVGrowth);
+                         var TVGrowthString = TVGrowth.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let OnlineGrowthPercent = Math.round(item.OnlineGrowthPercent);
+                         var OnlineGrowthPercentString = OnlineGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                         let NewspaperGrowthPercent = Math.round(item.NewspaperGrowthPercent);
+                         var NewspaperGrowthPercentString = NewspaperGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                         let MagazineGrowthPercent = Math.round(item.MagazineGrowthPercent);
+                         var MagazineGrowthPercentString = MagazineGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                         let TVGrowthPercent = Math.round(item.TVGrowthPercent);
+                         var TVGrowthPercentString = TVGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                        }
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + OnlineLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + NewspaperLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + MagazineLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + TVLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + OnlineCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + NewspaperCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + MagazineCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + TVCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + OnlineGrowthString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + NewspaperGrowthString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + MagazineGrowthString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + TVGrowthString + '</td>';
+                         if (item.OnlineGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + OnlineGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.OnlineGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + OnlineGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + OnlineGrowthPercentString + '</td>';
+                             }
+                         }
+                         if (item.NewspaperGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + NewspaperGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.NewspaperGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + NewspaperGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + NewspaperGrowthPercentString + '</td>';
+                             }
+                         }
+                         if (item.MagazineGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + MagazineGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.MagazineGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + MagazineGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + MagazineGrowthPercentString + '</td>';
+                             }
+                         }
+                         if (item.TVGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + TVGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.TVGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + TVGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + TVGrowthPercentString + '</td>';
+                             }
+                         }
+                        html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                 $("#DataChannelAndFeature").append(html);
+            }
+         }).done(() => {
+             EndRequestHandler();
+        });
+    }
+    function onGetChannelAndMentionByIDToListToJSON() {
+        BeginRequestHandler();
+        $("#DataChannelAndMention").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetChannelAndMentionWithoutSUMByIDToList", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (list) {
+                 var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                 html = html + '<thead>';
+                 html = html + '<tr>';
+                 html = html + "<th class='text-center'><a style='cursor:pointer;'></a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Last month</a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>This month</a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Growth</a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Growth (%)</a></th>";
+                 html = html + '</tr>';
+                html = html + '<tr>';
+                 html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Company</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Online</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Newspaper</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>Magazine</a></th>";
+                 html = html + "<th class='text-center' style='width: 5%;'><a style='cursor:pointer;'>TV</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in list) {
+                     $(list[index]).each(function (iRec, item) {
+                         let OnlineLastMonthCount = Math.round(item.OnlineLastMonthCount);
+                         var OnlineLastMonthCountString = OnlineLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let NewspaperLastMonthCount = Math.round(item.NewspaperLastMonthCount);
+                         var NewspaperLastMonthCountString = NewspaperLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let MagazineLastMonthCount = Math.round(item.MagazineLastMonthCount);
+                         var MagazineLastMonthCountString = MagazineLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let TVLastMonthCount = Math.round(item.TVLastMonthCount);
+                         var TVLastMonthCountString = TVLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let OnlineCount = Math.round(item.OnlineCount);
+                         var OnlineCountString = OnlineCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let NewspaperCount = Math.round(item.NewspaperCount);
+                         var NewspaperCountString = NewspaperCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let MagazineCount = Math.round(item.MagazineCount);
+                         var MagazineCountString = MagazineCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let TVCount = Math.round(item.TVCount);
+                         var TVCountString = TVCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let OnlineGrowth = Math.round(item.OnlineGrowth);
+                         var OnlineGrowthString = OnlineGrowth.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let NewspaperGrowth = Math.round(item.NewspaperGrowth);
+                         var NewspaperGrowthString = NewspaperGrowth.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let MagazineGrowth = Math.round(item.MagazineGrowth);
+                         var MagazineGrowthString = MagazineGrowth.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let TVGrowth = Math.round(item.TVGrowth);
+                         var TVGrowthString = TVGrowth.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let OnlineGrowthPercent = Math.round(item.OnlineGrowthPercent);
+                         var OnlineGrowthPercentString = OnlineGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                         let NewspaperGrowthPercent = Math.round(item.NewspaperGrowthPercent);
+                         var NewspaperGrowthPercentString = NewspaperGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                         let MagazineGrowthPercent = Math.round(item.MagazineGrowthPercent);
+                         var MagazineGrowthPercentString = MagazineGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                         let TVGrowthPercent = Math.round(item.TVGrowthPercent);
+                         var TVGrowthPercentString = TVGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                        }
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + OnlineLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + NewspaperLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + MagazineLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + TVLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + OnlineCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + NewspaperCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + MagazineCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + TVCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + OnlineGrowthString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + NewspaperGrowthString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + MagazineGrowthString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + TVGrowthString + '</td>';
+                         if (item.OnlineGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + OnlineGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.OnlineGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + OnlineGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + OnlineGrowthPercentString + '</td>';
+                             }
+                         }
+                         if (item.NewspaperGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + NewspaperGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.NewspaperGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + NewspaperGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + NewspaperGrowthPercentString + '</td>';
+                             }
+                         }
+                         if (item.MagazineGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + MagazineGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.MagazineGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + MagazineGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + MagazineGrowthPercentString + '</td>';
+                             }
+                         }
+                         if (item.TVGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + TVGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.TVGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + TVGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + TVGrowthPercentString + '</td>';
+                             }
+                         }
+                        html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                 $("#DataChannelAndMention").append(html);
+            }
+         }).done(() => {
+             EndRequestHandler();
+        });
+    }
+    function onGetTierCommsightsByIDToListToJSON() {
+        BeginRequestHandler();
+        $("#DataTierCommsights").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetTierCommsightsWithoutSUMByIDToList", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (list) {
+                 var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                 html = html + '<thead>';
+                 html = html + '<tr>';
+                 html = html + "<th class='text-center'><a style='cursor:pointer;'></a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Last month</a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>This month</a></th>";
+                 html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Growth (%)</a></th>";
+                 html = html + '</tr>';
+                html = html + '<tr>';
+                 html = html + "<th class='text-center' style='width: 16%;'><a style='cursor:pointer;'>Company</a></th>";
+                 html = html + "<th class='text-center' style='width: 7%;'><a style='cursor:pointer;'>Mass media</a></th>";
+                 html = html + "<th class='text-center' style='width: 7%;'><a style='cursor:pointer;'>Industry media</a></th>";
+                 html = html + "<th class='text-center' style='width: 7%;'><a style='cursor:pointer;'>Portal</a></th>";
+                 html = html + "<th class='text-center' style='width: 7%;'><a style='cursor:pointer;'>Others</a></th>";
+                 html = html + "<th class='text-center' style='width: 7%;'><a style='cursor:pointer;'>Mass media</a></th>";
+                 html = html + "<th class='text-center' style='width: 7%;'><a style='cursor:pointer;'>Industry media</a></th>";
+                 html = html + "<th class='text-center' style='width: 7%;'><a style='cursor:pointer;'>Portal</a></th>";
+                 html = html + "<th class='text-center' style='width: 7%;'><a style='cursor:pointer;'>Others</a></th>";
+                 html = html + "<th class='text-center' style='width: 7%;'><a style='cursor:pointer;'>Mass media</a></th>";
+                 html = html + "<th class='text-center' style='width: 7%;'><a style='cursor:pointer;'>Industry media</a></th>";
+                 html = html + "<th class='text-center' style='width: 7%;'><a style='cursor:pointer;'>Portal</a></th>";
+                 html = html + "<th class='text-center' style='width: 7%;'><a style='cursor:pointer;'>Others</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in list) {
+                     $(list[index]).each(function (iRec, item) {
+                         let MassLastMonthCount = Math.round(item.MassLastMonthCount);
+                         var MassLastMonthCountString = MassLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let IndustryLastMonthCount = Math.round(item.IndustryLastMonthCount);
+                         var IndustryLastMonthCountString = IndustryLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let PortalLastMonthCount = Math.round(item.PortalLastMonthCount);
+                         var PortalLastMonthCountString = PortalLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let OrthersLastMonthCount = Math.round(item.OrthersLastMonthCount);
+                         var OrthersLastMonthCountString = OrthersLastMonthCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let MassCount = Math.round(item.MassCount);
+                         var MassCountString = MassCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let IndustryCount = Math.round(item.IndustryCount);
+                         var IndustryCountString = IndustryCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let PortalCount = Math.round(item.PortalCount);
+                         var PortalCountString = PortalCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let OrthersCount = Math.round(item.OrthersCount);
+                         var OrthersCountString = OrthersCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let MassGrowthPercent = Math.round(item.MassGrowthPercent);
+                         var MassGrowthPercentString = MassGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                         let IndustryGrowthPercent = Math.round(item.IndustryGrowthPercent);
+                         var IndustryGrowthPercentString = IndustryGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                         let PortalGrowthPercent = Math.round(item.PortalGrowthPercent);
+                         var PortalGrowthPercentString = PortalGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                         let OrthersGrowthPercent = Math.round(item.OrthersGrowthPercent);
+                         var OrthersGrowthPercentString = OrthersGrowthPercent.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " %";
+
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                        }
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + MassLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + IndustryLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + PortalLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + OrthersLastMonthCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + MassCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + IndustryCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + PortalCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + OrthersCountString + '</td>';
+                         if (item.MassGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + MassGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.MassGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + MassGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + MassGrowthPercentString + '</td>';
+                             }
+                         }
+                         if (item.IndustryGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + IndustryGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.IndustryGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + IndustryGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + IndustryGrowthPercentString + '</td>';
+                             }
+                         }
+                         if (item.PortalGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + PortalGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.PortalGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + PortalGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + PortalGrowthPercentString + '</td>';
+                             }
+                         }
+                         if (item.OrthersGrowthPercent > 0) {
+                             html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: green;">' + OrthersGrowthPercentString + '</td>';
+                         }
+                         else {
+                             if (item.OrthersGrowthPercent == 0) {
+                                 html = html + '<td class="text-right" style="font-weight: bold;">' + OrthersGrowthPercentString + '</td>';
+                             }
+                             else {
+                                 html = html + '<td class="text-right" style="font-weight: bold; color: #ffffff; background-color: red;">' + OrthersGrowthPercentString + '</td>';
+                             }
+                         }
+                        html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                 $("#DataTierCommsights").append(html);
+            }
+         }).done(() => {
+             EndRequestHandler();
+        });
+    }
+    function onGetTrendLineWithoutSUMByIDToListToJSON() {
+        BeginRequestHandler();
+        $("#DataTrendline").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetTrendLineWithoutSUMByIDToListToJSON", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (list) {
+                 var html = '';
+                 html = $.parseHTML(list);
+                 $("#DataTrendline").append(html);
+            }
+         }).done(() => {
+             EndRequestHandler();
+        });
+    }
+    function onGetCompanyAndYearByIDToListToJSON() {
+        BeginRequestHandler();
+        var now = new Date();
+        var year = now.getFullYear();
+        $("#DataCompanyAndYear").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetCompanyAndYearWithoutSUMByIDToList", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (list) {
+                 var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                html = html + '<thead>';
+                html = html + '<tr>';
+                 html = html + "<th class='text-center' style='width: 22%;'><a style='cursor:pointer;'>Company</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>" + year + "</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>01</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>02</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>03</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>04</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>05</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>06</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>07</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>08</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>09</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>10</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>11</a></th>";
+                 html = html + "<th class='text-center' style='width: 6%;'><a style='cursor:pointer;'>12</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in list) {
+                     $(list[index]).each(function (iRec, item) {
+
+                         let YearCount = Math.round(item.YearCount);
+                         var YearCountString = YearCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let Month01Count = Math.round(item.Month01Count);
+                         var Month01CountString = Month01Count.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let Month02Count = Math.round(item.Month02Count);
+                         var Month02CountString = Month02Count.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let Month03Count = Math.round(item.Month03Count);
+                         var Month03CountString = Month03Count.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let Month04Count = Math.round(item.Month04Count);
+                         var Month04CountString = Month04Count.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let Month05Count = Math.round(item.Month05Count);
+                         var Month05CountString = Month05Count.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let Month06Count = Math.round(item.Month06Count);
+                         var Month06CountString = Month06Count.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let Month07Count = Math.round(item.Month07Count);
+                         var Month07CountString = Month07Count.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let Month08Count = Math.round(item.Month08Count);
+                         var Month08CountString = Month08Count.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let Month09Count = Math.round(item.Month09Count);
+                         var Month09CountString = Month09Count.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let Month10Count = Math.round(item.Month10Count);
+                         var Month10CountString = Month10Count.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let Month11Count = Math.round(item.Month11Count);
+                         var Month11CountString = Month11Count.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+                         let Month12Count = Math.round(item.Month12Count);
+                         var Month12CountString = Month12Count.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                        }
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + YearCountString + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month01Count > 0) {
+                             html = html + Month01CountString;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month02Count > 0) {
+                             html = html + Month02CountString;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month03Count > 0) {
+                             html = html + Month03CountString;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month04Count > 0) {
+                             html = html + Month04CountString;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month05Count > 0) {
+                             html = html + Month05CountString;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month06Count > 0) {
+                             html = html + Month06CountString;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month07Count > 0) {
+                             html = html + Month07CountString;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month08Count > 0) {
+                             html = html + Month08CountString;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month09Count > 0) {
+                             html = html + Month09CountString;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month10Count > 0) {
+                             html = html + Month10CountString;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month11Count > 0) {
+                             html = html + Month11CountString;
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">';
+                         if (item.Month12Count > 0) {
+                             html = html + Month12CountString;
+                         }
+                         html = html + '</td>';
+                         html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                 $("#DataCompanyAndYear").append(html);
+            }
+         }).done(() => {
+             EndRequestHandler();
+        });
+    }
+    function onGetSegmentProductWithoutSUMByIDToListToJSON() {
+        BeginRequestHandler();
+        $("#DataSegmentProduct").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetSegmentProductWithoutSUMByIDToListToJSON", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (list) {
+                 var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                 html = html + '<thead>';
+                 html = html + '<tr>';
+                 html = html + "<th class='text-center'><a style='cursor:pointer;'></a></th>";
+                 html = html + "<th class='text-center'><a style='cursor:pointer;'>Segment</a></th>";
+                 html = html + "<th class='text-center'><a style='cursor:pointer;'>Product</a></th>";
+                 html = html + "<th class='text-center'><a style='cursor:pointer;'>Count</a></th>";
+                 html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in list) {
+                     $(list[index]).each(function (iRec, item) {
+                         let ProductPropertyCount = Math.round(item.ProductPropertyCount);
+                         var ProductPropertyCountString = ProductPropertyCount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                         }
+                         html = html + '<td class="text-center" style="font-weight: bold;">' + no + '</td>';
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.SegmentProduct + '</td>';
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.ProductName_ProjectName + '</td>';
+                         html = html + '<td class="text-right" style="font-weight: bold;">' + ProductPropertyCountString + '</td>';
+
+                        html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                 $("#DataSegmentProduct").append(html);
+            }
+         }).done(() => {
+             EndRequestHandler();
+        });
+    }
+    function onGetTierCommsightsAndCompanyNameByIDToListToJSON() {
+        BeginRequestHandler();
+        $("#DataTierCommsights").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetMonthlyTierCommsightsAndCompanyNameToJSON", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (model) {
+                 var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                 html = html + '<thead>';
+                 html = html + '<tr>';
+                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Company</a></th>";
+                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Mass</a></th>";
+                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Industry</a></th>";
+                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Portal</a></th>";
+                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Other</a></th>";
+                 html = html + '</tr>';
+                 html = html + '</thead>';
+                 html = html + '<tbody>';
+                 var no = 0;
+                 for (var index in model.ListCompanyName) {
+                     $(model.ListCompanyName[index]).each(function (iRec, item001) {
+                         no = no + 1;
+                         if (no % 2 == 0) {
+                             html = html + '<tr style="background-color:#ffffff;">';
+                         }
+                         else {
+                             html = html + '<tr style="background-color:#f1f1f1;">';
+                         }
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item001.CompanyName + '</td>';
+                         html = html + '<td class="text-right" valign="top">';
+                         for (var index in model.ListTierCommsightsAndCompanyNameAndMass) {
+                             $(model.ListTierCommsightsAndCompanyNameAndMass[index]).each(function (iRec, item002) {
+                                 if (item001.CompanyName == item002.CompanyName) {
+                                     html = html + '' + item002.Media + ' (' + item002.TierCount + ')';
+                                     html = html + '<br/>';
+                                 }
+                             });
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" valign="top">';
+                         for (var index in model.ListTierCommsightsAndCompanyNameAndIndustry) {
+                             $(model.ListTierCommsightsAndCompanyNameAndIndustry[index]).each(function (iRec, item003) {
+                                 if (item001.CompanyName == item003.CompanyName) {
+                                     html = html + '' + item003.Media + ' (' + item003.TierCount + ')';
+                                     html = html + '<br/>';
+                                 }
+                             });
+                         }
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" valign="top">';
+                         for (var index in model.ListTierCommsightsAndCompanyNameAndPortal) {
+                             $(model.ListTierCommsightsAndCompanyNameAndPortal[index]).each(function (iRec, item004) {
+                                 if (item001.CompanyName == item004.CompanyName) {
+                                     html = html + '' + item004.Media + ' (' + item004.TierCount + ')';
+                                     html = html + '<br/>';
+                                 }
+                             });
+                         }
+                         html = html + '</td>';
+                         html = html + '</td>';
+                         html = html + '<td class="text-right" valign="top">';
+                         for (var index in model.ListTierCommsightsAndCompanyNameAndOther) {
+                             $(model.ListTierCommsightsAndCompanyNameAndOther[index]).each(function (iRec, item005) {
+                                 if (item001.CompanyName == item005.CompanyName) {
+                                     html = html + '' + item005.Media + ' (' + item005.TierCount + ')';
+                                     html = html + '<br/>';
+                                 }
+                             });
+                         }
+                         html = html + '</td>';
+                     });
+                 }
+                 html = html + '</tbody>';
+                 html = html + '</table>';
+                 html = $.parseHTML(html);
+                 $("#DataTierCommsightsAndCompanyName").append(html);
+            }
+         }).done(() => {
+             EndRequestHandler();
+        });
+    }
+</script>

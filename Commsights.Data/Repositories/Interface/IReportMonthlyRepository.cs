@@ -37,5 +37,13 @@ namespace Commsights.Data.Repositories
         public List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> GetTierCommsightsAndCompanyNameAndOtherByIDToList(int ID);
         public List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> GetTierCommsightsAndCompanyNameAndMassByIDToList(int ID);
         public List<ReportMonthlyTierCommsightsAndCompanyNameDataTransfer> GetTierCommsightsAndCompanyNameAndIndustryByIDToList(int ID);
+        public List<ReportMonthlyCompanyAndYearDataTransfer> GetCompanyAndYearByIDToList(int ID);
+        public List<ReportMonthlyCompanyAndYearDataTransfer> GetCompanyAndYearWithoutSUMByIDToList(int ID);
+        public string InsertItemsByDataTableAndReportMonthlyIDAndRequestUserID(DataTable table, int reportMonthlyID, int RequestUserID);
+        public string InsertItemsByProductProperty005AndReportMonthlyIDAndRequestUserID(DataTable table, int reportMonthlyID, int RequestUserID);
+        public List<ReportMonthlySegmentProductDataTransfer> GetSegmentProductWithoutSUMByIDToList(int ID);
+        public List<ReportMonthlySegmentProductDataTransfer> GetSegmentProductByIDToList(int ID);
+        public List<ReportMonthlyTrendLineDataTransfer> GetTrendLineWithoutSUMByIDToList(int ID);
+        public List<ReportMonthlyTrendLineDataTransfer> GetTrendLineDistinctCompanyNameByIDToList(int ID);
     }
 }

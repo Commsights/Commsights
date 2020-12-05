@@ -75,6 +75,10 @@ namespace Commsights.Data.Repositories
         {
             return _context.ProductProperty.Where(item => item.ParentID == parentID && item.Code.Equals(code)).OrderBy(item => item.DateUpdated).ToList();
         }
+        public List<ProductProperty> GetByReportMonthlyIDToList(int reportMonthlyID)
+        {
+            return _context.ProductProperty.Where(item => item.ReportMonthlyID == reportMonthlyID).OrderBy(item => item.ID).ToList();
+        }
         public List<ProductProperty> GetByParentIDAndCompanyIDAndArticleTypeIDToList(int parentID, int companyID, int articleTypeID)
         {
             return _context.ProductProperty.Where(item => item.ParentID == parentID && item.CompanyID == companyID && item.ArticleTypeID == articleTypeID).OrderBy(item => item.DateUpdated).ToList();
@@ -175,7 +179,8 @@ namespace Commsights.Data.Repositories
                       {
                 new SqlParameter("@ID",ID),
             };
-            return SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertItemByID", parameters);
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertItemByID", parameters);
+            return result;
         }
     }
 }

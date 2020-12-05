@@ -344,6 +344,21 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
+        public IActionResult UpdateProductCompact(ProductCompact model)
+        {
+            string note = AppGlobal.InitString;
+            _productRepository.UpdateProductCompactSingleItem(model);
+            int result = 1;
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
         public IActionResult Delete(int ID)
         {
             string note = AppGlobal.InitString;
@@ -591,7 +606,23 @@ namespace Commsights.MVC.Controllers
             List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
             foreach (Config item in listConfig)
             {
-                this.CreateProductScanWebsiteNoFilterProduct001(item);
+                this.CreateProductScanWebsiteNoFilterProduct0001(item);
+            }
+            string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
+            return Json(note);
+        }
+        public IActionResult ScanFullNoFilterProductByIndexBegin(int indexBegin)
+        {
+            List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
+            int listConfigCount = listConfig.Count;
+            int indexEnd = indexBegin + 10;
+            for (int i = indexBegin; i < indexEnd; i++)
+            {
+                if (i == listConfigCount)
+                {
+                    i = indexEnd;
+                }
+                this.CreateProductScanWebsiteNoFilterProduct001(listConfig[i]);
             }
             string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
             return Json(note);
@@ -602,6 +633,7 @@ namespace Commsights.MVC.Controllers
             {
                 Config config = _configResposistory.GetByID(websiteID);
                 this.CreateProductScanWebsiteNoFilterProduct001(config);
+                //this.CreateProductScanWebsiteNoFilterProduct002();
             }
 
             //HttpWebRequest request;
@@ -620,7 +652,16 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
             return Json(note);
         }
-
+        public async Task<string> AsyncScanWebsiteNoFilterProduct(int websiteID)
+        {
+            if (websiteID > 0)
+            {
+                Config config = _configResposistory.GetByID(websiteID);
+                await this.AsyncCreateProductScanWebsiteNoFilterProduct0001(config);
+            }
+            string note = AppGlobal.Success + " - " + AppGlobal.ScanFinish;
+            return note;
+        }
         public void ScanWebsiteNoFilterProductVoid(int websiteID)
         {
             if (websiteID > 0)
@@ -628,6 +669,59 @@ namespace Commsights.MVC.Controllers
                 Config config = _configResposistory.GetByID(websiteID);
                 this.CreateProductScanWebsiteNoFilterProduct001(config);
             }
+        }
+        public async Task<string> AsyncScanWebsiteNoFilterProductVoid(int websiteID)
+        {
+            if (websiteID > 0)
+            {
+                Config config = _configResposistory.GetByID(websiteID);
+                await this.AsyncCreateProductScanWebsiteNoFilterProduct0001(config);
+            }
+            return "";
+        }
+        public void ScanWebsiteNoFilterProductByIndexBeginVoid(int indexBegin)
+        {
+            List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
+            int listConfigCount = listConfig.Count;
+            int indexEnd = indexBegin + 10;
+            for (int i = indexBegin; i < indexEnd; i++)
+            {
+                if (i == listConfigCount)
+                {
+                    i = indexEnd;
+                }
+                this.CreateProductScanWebsiteNoFilterProduct001(listConfig[i]);
+            }
+        }
+        public async Task<string> AsyncScanWebsiteNoFilterProductByIndexBeginVoid(int indexBegin)
+        {
+            List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
+            int listConfigCount = listConfig.Count;
+            int indexEnd = indexBegin + 10;
+            for (int i = indexBegin; i < indexEnd; i++)
+            {
+                if (i == listConfigCount)
+                {
+                    i = indexEnd;
+                }
+                await this.AsyncCreateProductScanWebsiteNoFilterProduct0001(listConfig[i]);
+            }
+            return "";
+        }
+        public async Task<string> AsyncScanWebsiteNoFilterProductByIndexBeginVoid001(int indexBegin)
+        {
+            List<Config> listConfig = _configResposistory.GetWebsiteToList();
+            int listConfigCount = listConfig.Count;
+            int indexEnd = indexBegin + 10;
+            for (int i = indexBegin; i < indexEnd; i++)
+            {
+                if (i == listConfigCount)
+                {
+                    i = indexEnd;
+                }
+                await this.AsyncCreateProductScanWebsiteNoFilterProduct0001(listConfig[i]);
+            }
+            return "";
         }
         public void CreateProductScanWebsiteNoFilterProduct(Config config)
         {
@@ -750,9 +844,22 @@ namespace Commsights.MVC.Controllers
         }
         public void CreateProductScanWebsiteNoFilterProduct001(Config config)
         {
+
             if (config != null)
             {
                 List<Config> listConfig = _configResposistory.GetByParentIDAndGroupNameAndCodeToList(config.ID, AppGlobal.CRM, AppGlobal.Website);
+                if (listConfig.Count == 0)
+                {
+                    try
+                    {
+                        string filename = DateTime.Now.ToString("yyyyMMdd") + "-" + config.ID + "-" + config.Title + "-0.txt";
+                        var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", filename);
+                        System.IO.File.Create(physicalPath);
+                    }
+                    catch
+                    {
+                    }
+                }
                 foreach (Config item in listConfig)
                 {
                     WebClient webClient = new WebClient();
@@ -764,29 +871,192 @@ namespace Commsights.MVC.Controllers
                         List<LinkItem> list = AppGlobal.LinkFinder(html, config.URLFull);
                         foreach (LinkItem linkItem in list)
                         {
-                            if (_productRepository.IsValid(linkItem.Href) == true)
+                            //if (_productRepository.IsValidBySQL(linkItem.Href) == true)
+                            //{
+                            try
                             {
+                                WebClient webClient001 = new WebClient();
+                                webClient001.Encoding = System.Text.Encoding.UTF8;
+                                string html001 = webClient001.DownloadString(linkItem.Href);
+                                Product product = new Product();
+                                product.ParentID = config.ID;
+                                product.CategoryID = config.ID;
+                                product.Source = AppGlobal.SourceAuto;
+                                product.Title = linkItem.Text;
+                                product.MetaTitle = AppGlobal.SetName(product.Title);
+                                product.URLCode = linkItem.Href;
+                                product.DatePublish = DateTime.Now;
+                                product.Initialization(InitType.Insert, RequestUserID);
+                                product.DatePublish = DateTime.Now;
+                                AppGlobal.FinderContentAndDatePublish(html001, product);
+                                _productRepository.AsyncInsertSingleItem(product);
+                            }
+                            catch (Exception e1)
+                            {
+                                string mes1 = e1.Message;
                                 try
                                 {
-                                    WebClient webClient001 = new WebClient();
-                                    webClient001.Encoding = System.Text.Encoding.UTF8;
-                                    string html001 = webClient001.DownloadString(linkItem.Href);
-                                    Product product = new Product();
-                                    product.ParentID = config.ID;
-                                    product.CategoryID = config.ID;
-                                    product.Source = AppGlobal.SourceAuto;
-                                    product.Title = linkItem.Text;
-                                    product.MetaTitle = AppGlobal.SetName(product.Title);
-                                    product.URLCode = linkItem.Href;
-                                    product.DatePublish = DateTime.Now;
-                                    product.Initialization(InitType.Insert, RequestUserID);
-                                    product.DatePublish = DateTime.Now;
-                                    AppGlobal.FinderContentAndDatePublish(html001, product);
-                                    _productRepository.AsyncInsertSingleItem(product);
+                                    string filename = DateTime.Now.ToString("yyyyMMdd") + "-" + config.ID + "-" + config.Title + "-" + item.ID + "-" + item.URLFull + "-" + mes1 + ".txt";
+                                    var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", filename);
+                                    System.IO.File.Create(physicalPath);
                                 }
-                                catch (Exception e1)
+                                catch
                                 {
-                                    string mes1 = e1.Message;
+                                }
+                            }
+                            //}
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        string mes = e.Message;
+                        try
+                        {
+                            string filename = DateTime.Now.ToString("yyyyMMdd") + "-" + config.ID + "-" + config.Title + "-" + mes + ".txt";
+                            var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", filename);
+                            System.IO.File.Create(physicalPath);
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+            }
+        }
+        public void CreateProductScanWebsiteNoFilterProduct0001(Config config)
+        {
+            if (config != null)
+            {
+                WebClient webClient = new WebClient();
+                webClient.Encoding = System.Text.Encoding.UTF8;
+                string html = "";
+                try
+                {
+                    html = webClient.DownloadString(config.URLFull);
+                    List<LinkItem> list = AppGlobal.LinkFinder(html, config.URLFull);
+                    foreach (LinkItem linkItem in list)
+                    {
+                        try
+                        {
+                            WebClient webClient001 = new WebClient();
+                            webClient001.Encoding = System.Text.Encoding.UTF8;
+                            string html001 = webClient001.DownloadString(linkItem.Href);
+                            Product product = new Product();
+                            product.ParentID = config.ID;
+                            product.CategoryID = config.ID;
+                            product.Source = AppGlobal.SourceAuto;
+                            product.Title = linkItem.Text;
+                            product.MetaTitle = AppGlobal.SetName(product.Title);
+                            product.URLCode = linkItem.Href;
+                            product.DatePublish = DateTime.Now;
+                            product.Initialization(InitType.Insert, RequestUserID);
+                            product.DatePublish = DateTime.Now;
+                            AppGlobal.FinderContentAndDatePublish(html001, product);
+                            if (product.Active == true)
+                            {
+                                _productRepository.AsyncInsertSingleItem(product);
+                            }
+                        }
+                        catch (Exception e1)
+                        {
+                            string mes1 = e1.Message;
+
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    string mes = e.Message;
+                }
+
+            }
+        }
+        public async Task<string> AsyncCreateProductScanWebsiteNoFilterProduct001(Config config)
+        {
+            if (config != null)
+            {
+                List<Config> listConfig = _configResposistory.GetByParentIDAndGroupNameAndCodeToList(config.ID, AppGlobal.CRM, AppGlobal.Website);
+                if (listConfig.Count == 0)
+                {
+                    try
+                    {
+                        string filename = DateTime.Now.ToString("yyyyMMdd") + "-" + config.ID + "-" + config.Title + "-0.txt";
+                        var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", filename);
+                        System.IO.File.Create(physicalPath);
+                    }
+                    catch
+                    {
+                    }
+                }
+                foreach (Config item in listConfig)
+                {
+                    WebClient webClient = new WebClient();
+                    webClient.Encoding = System.Text.Encoding.UTF8;
+                    string html = "";
+                    try
+                    {
+                        html = webClient.DownloadString(item.URLFull);
+                        List<LinkItem> list = AppGlobal.LinkFinder(html, config.URLFull);
+                        foreach (LinkItem linkItem in list)
+                        {
+                            try
+                            {
+                                Uri myUri = new Uri(linkItem.Href);
+                                string extend = myUri.LocalPath;
+                                string domain = myUri.Host;
+                                if (extend.Contains(".") == true)
+                                {
+                                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(linkItem.Href);
+                                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                                    if (response.StatusCode == HttpStatusCode.OK)
+                                    {
+                                        Stream receiveStream = response.GetResponseStream();
+                                        StreamReader readStream = null;
+                                        if (response.CharacterSet == null)
+                                        {
+                                            readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                                        }
+                                        else
+                                        {
+                                            readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                                        }
+                                        string html001 = readStream.ReadToEnd();
+                                        string htmlspan001 = html001;
+                                        htmlspan001 = AppGlobal.HTMLReplaceAndSplit(htmlspan001);
+                                        if ((domain.Contains(@"nhipcaudoanhnghiep.vn") == true) || (domain.Contains(@"vov.vn") == true))
+                                        {
+                                            if (htmlspan001.Contains(@"</h2>") == true)
+                                            {
+                                                string htmlspan = htmlspan001;
+                                                MatchCollection m1 = Regex.Matches(htmlspan, @"(<h2.*?>.*?</h2>)", RegexOptions.Singleline);
+                                                await AsyncInsertSingleItem(m1, config, linkItem, html001);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (htmlspan001.Contains(@"</h1>") == true)
+                                            {
+                                                string htmlspan = htmlspan001;
+                                                MatchCollection m1 = Regex.Matches(htmlspan, @"(<h1.*?>.*?</h1>)", RegexOptions.Singleline);
+                                                await AsyncInsertSingleItem(m1, config, linkItem, html001);
+                                            }
+                                        }
+                                        response.Close();
+                                        readStream.Close();
+                                    }
+                                }
+                            }
+                            catch (Exception e1)
+                            {
+                                string mes1 = e1.Message;
+                                try
+                                {
+                                    string filename = DateTime.Now.ToString("yyyyMMdd") + "-" + config.ID + "-" + config.Title + "-" + item.ID + "-" + item.URLFull + "-" + mes1 + ".txt";
+                                    var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", filename);
+                                    System.IO.File.Create(physicalPath);
+                                }
+                                catch
+                                {
                                 }
                             }
                         }
@@ -794,9 +1064,272 @@ namespace Commsights.MVC.Controllers
                     catch (Exception e)
                     {
                         string mes = e.Message;
+                        try
+                        {
+                            string filename = DateTime.Now.ToString("yyyyMMdd") + "-" + config.ID + "-" + config.Title + "-" + mes + ".txt";
+                            var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, "Error", filename);
+                            System.IO.File.Create(physicalPath);
+                        }
+                        catch
+                        {
+                        }
                     }
                 }
+            }
+            return "";
+        }
+        public async Task<string> AsyncCreateProductScanWebsiteNoFilterProduct0001(Config config)
+        {
+            try
+            {
+                if (config != null)
+                {
+                    List<LinkItem> list = new List<LinkItem>();
+                    //LinkItem link = new LinkItem();
+                    //link.Href = "https://vnexpress.net/khoi-to-vu-an-tuong-do-lam-chet-nu-sinh-lop-6-4200013.html";
+                    //link.Text = "Đất quanh sân bay Long Thành sang nhượng giấy viết tay sẽ không được bồi thường";
+                    //list.Add(link);
+                    AppGlobal.LinkFinder001(config.URLFull, config.URLFull, true, list);
+                    foreach (LinkItem linkItem in list)
+                    {
+                        try
+                        {
+                            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(linkItem.Href);
+                            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                            if (response.StatusCode == HttpStatusCode.OK)
+                            {
+                                Stream receiveStream = response.GetResponseStream();
+                                StreamReader readStream = null;
+                                readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                                //if (response.CharacterSet == null)
+                                //{
+                                //    readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                                //}
+                                //else
+                                //{
+                                //    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                                //}
+                                string html = readStream.ReadToEnd();
+                                html = html.Replace(@"~", @"");
+                                html = AppGlobal.HTMLReplaceAndSplit(html);
+                                string title = "";
+                                string htmlTitle = html;
+                                if ((htmlTitle.Contains(@"<meta property=""og:title"" content=""") == true) || (htmlTitle.Contains(@"<meta property='og:title' content='") == true))
+                                {
+                                    htmlTitle = htmlTitle.Replace(@"<meta property=""og:title"" content=""", @"~");
+                                    htmlTitle = htmlTitle.Replace(@"<meta property='og:title' content='", @"~");
+                                    if (htmlTitle.Split('~').Length > 1)
+                                    {
+                                        htmlTitle = htmlTitle.Split('~')[1];
+                                        htmlTitle = htmlTitle.Replace(@"""", @"~");
+                                        htmlTitle = htmlTitle.Replace(@"'", @"~");
+                                        htmlTitle = htmlTitle.Split('~')[0];
+                                        title = htmlTitle.Trim();
+                                    }
+                                }
+                                else
+                                {
+                                    MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
+                                    if (m1.Count > 0)
+                                    {
+                                        string value = m1[m1.Count - 1].Groups[1].Value;
+                                        if (!string.IsNullOrEmpty(value))
+                                        {
+                                            value = value.Replace(@"<title>", @"");
+                                            value = value.Replace(@"</title>", @"");
+                                            title = value.Trim();
+                                        }
+                                    }
+                                }
+                                bool isUnicode = AppGlobal.ContainsUnicodeCharacter(title);
+                                if ((title.Contains(@"&#") == true) || (isUnicode == false))
+                                {
+                                    MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
+                                    if (m1.Count > 0)
+                                    {
+                                        string value = m1[m1.Count - 1].Groups[1].Value;
+                                        if (!string.IsNullOrEmpty(value))
+                                        {
+                                            value = value.Replace(@"<title>", @"");
+                                            value = value.Replace(@"</title>", @"");
+                                            title = value.Trim();
+                                        }
+                                    }
+                                }
+                                if (title.Split('|').Length > 2)
+                                {
+                                    title = title.Split('|')[1];
+                                }
+                                if (title.Split('|').Length > 1)
+                                {
+                                    title = title.Split('|')[0];
+                                }
+                                title = title.Trim();
+                                title = title.Replace(@"&#32;", @" ");
+                                title = title.Replace(@"&quot;", @"""");
+                                title = title.Replace(@"&#249;", @"ù");
+                                title = title.Replace(@"&#224;", @"à");
+                                title = title.Replace(@"&#225;", @"á");                                
+                                title = title.Replace(@"&#7899;", @"ớ");
+                                title = title.Replace(@"&#7873;", @"ề");
+                                title = title.Replace(@"&#7879;", @"ệ");
+                                title = title.Replace(@"&ocirc;", @"ô");
+                                title = title.Replace(@"&atilde;", @"ã");
+                                title = title.Replace(@"&oacute;", @"ó");
+                                title = title.Replace(@"&aacute;", @"á");
+                                title = title.Replace(@"&agrave;", @"à");
+                                title = title.Replace(@"&igrave;", @"ì");
+                                title = title.Replace(@"&#226;", @"â");
+                                title = title.Replace(@"&#236;", @"ì");
+                                title = title.Replace(@"&uacute;", @"ú");
+                                title = title.Replace(@"&oacute;", @"ầ");
+                                title = title.Replace(@"&uacute;", @"ú");
+                                title = title.Replace(@"&uacute;", @"ú");
+                                title = title.Replace(@"&uacute;", @"ú");
+                                title = title.Replace(@"&ecirc;", @"ê");
+                                Product product = new Product();
+                                product.Title = title;
+                                product.ParentID = config.ID;
+                                product.CategoryID = config.ID;
+                                product.Source = AppGlobal.SourceAuto;
+                                if (string.IsNullOrEmpty(product.Title))
+                                {
+                                    product.Title = linkItem.Text;
+                                }
+                                product.MetaTitle = AppGlobal.SetName(product.Title);
+                                product.URLCode = linkItem.Href;
+                                product.DatePublish = DateTime.Now;
+                                product.Initialization(InitType.Insert, RequestUserID);
+                                product.DatePublish = DateTime.Now;
+                                AppGlobal.FinderContentAndDatePublish001(html, product);
+                                if ((product.DatePublish.Year > 2019) && (product.Active == true))
+                                {
+                                    await _productRepository.AsyncInsertSingleItem(product);
+                                }
+                                response.Close();
+                                readStream.Close();
+                            }
+                        }
+                        catch (Exception e1)
+                        {
+                            string mes1 = e1.Message;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                string mes = e.Message;
+            }
+            return "";
+        }
+        public async Task<string> AsyncInsertSingleItem(MatchCollection m1, Config config, LinkItem linkItem, string html001)
+        {
+            if (m1.Count > 0)
+            {
+                string value = m1[m1.Count - 1].Groups[1].Value;
+                if (!string.IsNullOrEmpty(value))
+                {
+                    if ((value.Contains("</span>") == false) && (value.Contains("</p>") == false) && (value.Contains("</a>") == false) && (value.Contains("</div>") == false))
+                    {
+                        string title = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                        title = title.Trim();
+                        Product product = new Product();
+                        product.Title = title;
+                        product.ParentID = config.ID;
+                        product.CategoryID = config.ID;
+                        product.Source = AppGlobal.SourceAuto;
+                        if (string.IsNullOrEmpty(product.Title))
+                        {
+                            product.Title = linkItem.Text;
+                        }
+                        product.MetaTitle = AppGlobal.SetName(product.Title);
+                        product.URLCode = linkItem.Href;
+                        product.DatePublish = DateTime.Now;
+                        product.Initialization(InitType.Insert, RequestUserID);
+                        product.DatePublish = DateTime.Now;
+                        AppGlobal.FinderContentAndDatePublish(html001, product);
+                        if ((product.DatePublish.Year > 2019) && (product.Active == true))
+                        {
+                            await _productRepository.AsyncInsertSingleItem(product);
+                        }
+                    }
+                }
+            }
+            return "";
+        }
+        public void CreateProductScanWebsiteNoFilterProduct002()
+        {
+
+            LinkItem linkItem = new LinkItem();
+            linkItem.Text = "More tourism festivals to occur as Covid-19 contained";
+            linkItem.Href = "https://congthuong.vn/bo-cong-thuong-dieu-chinh-chinh-sach-quan-ly-phat-trien-cum-cong-nghiep-126465.html";
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(linkItem.Href);
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    Stream receiveStream = response.GetResponseStream();
+                    StreamReader readStream = null;
+                    if (response.CharacterSet == null)
+                    {
+                        readStream = new StreamReader(receiveStream);
+                    }
+                    else
+                    {
+                        readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                    }
+                    string html001 = readStream.ReadToEnd();
+                    html001 = html001.Replace(@"class=""tags", @"~");
+                    html001 = html001.Split('~')[0];
+                    html001 = html001.Replace(@"class='tags", @"~");
+                    html001 = html001.Split('~')[0];
+                    html001 = html001.Replace(@"tags"">", @"~");
+                    html001 = html001.Split('~')[0];
+                    html001 = html001.Replace(@"tags'>", @"~");
+                    html001 = html001.Split('~')[0];
+                    if (html001.Contains(@"</h1>") == true)
+                    {
+                        string htmlspan = html001;
+                        MatchCollection m1 = Regex.Matches(htmlspan, @"(<h1.*?>.*?</h1>)", RegexOptions.Singleline);
+                        if (m1.Count > 0)
+                        {
+                            string value = m1[m1.Count - 1].Groups[1].Value;
+                            if (!string.IsNullOrEmpty(value))
+                            {
+                                if ((value.Contains("</span>") == false) && (value.Contains("</p>") == false) && (value.Contains("</a>") == false) && (value.Contains("</div>") == false))
+                                {
+                                    string title = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                                    title = title.Trim();
+                                    Product product = new Product();
+                                    product.Title = title;
+                                    product.ParentID = 0;
+                                    product.CategoryID = 0;
+                                    product.Source = AppGlobal.SourceAuto;
+                                    if (string.IsNullOrEmpty(product.Title))
+                                    {
+                                        product.Title = linkItem.Text;
+                                    }
+                                    product.MetaTitle = AppGlobal.SetName(product.Title);
+                                    product.URLCode = linkItem.Href;
+                                    product.DatePublish = DateTime.Now;
+                                    product.Initialization(InitType.Insert, RequestUserID);
+                                    product.DatePublish = DateTime.Now;
+                                    AppGlobal.FinderContentAndDatePublish(html001, product);
+                                }
+                            }
+                        }
+                    }
+                    response.Close();
+                    readStream.Close();
+                }
+            }
+            catch (Exception e1)
+            {
+                string mes1 = e1.Message;
             }
         }
     }
 }
+

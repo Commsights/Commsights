@@ -6,18 +6,17 @@
 <div>
     | <a href="/ReportMonthly/MonthlyReport?ID=@Model.ID" class="text-success" title="Report">Report</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Industry</a> |
-    <a href="/ReportMonthly/MonthlyIndustryCount?ID=@Model.ID" class="text-success" title="Industry">Industry Count</a> |
     <a href="/ReportMonthly/MonthlyCompanyCount?ID=@Model.ID" class="text-success" title="Company">Company Count</a> |
     <a href="/ReportMonthly/MonthlyFeatureIndustry?ID=@Model.ID" class="text-success" title="Feature-Mention">Feature-Mention</a> |
     <a href="/ReportMonthly/MonthlySentimentIndustry?ID=@Model.ID" class="text-success" title="Sentiment">Sentiment</a> |
     <a href="/ReportMonthly/MonthlyChannel?ID=@Model.ID" class="text-success" title="Channel">Channel</a> |
     <a href="/ReportMonthly/MonthlyTierCommsights?ID=@Model.ID" class="text-success" title="Media Tiers">Media Tiers</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Category</a> |
-    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Trendline</a> |
+    <a href="/ReportMonthly/MonthlyTrendLine?ID=@Model.ID" class="text-success" title="Trendline">Trendline</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Campaign</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Key Stories</a> |
-    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Brand Growth</a> |
-    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Product segment</a> |
+    <a href="/ReportMonthly/MonthlyCompanyAndYear?ID=@Model.ID" class="text-success" title="MonthlyCompanyAndYear">Brand Growth</a> |
+    <a href="/ReportMonthly/MonthlySegmentProduct?ID=@Model.ID" class="text-success" title="Product segment">Product segment</a> |
     <a href="/ReportMonthly/MonthlyTierCommsightsAndCompanyName?ID=@Model.ID" class="text-success" title="Top titles">Top titles</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Scorecard</a> |
     <a href="/ReportMonthly/MonthlyData?ID=@Model.ID" class="text-success" title="Data">Data</a> |
@@ -63,7 +62,7 @@
       .Background("#ffffff")
   )
         .Series(series => {
-            series.Donut(t => t.PositivePercent, t => t.SegmentProduct)
+            series.Donut(t => t.PositivePercent, t => t.CompanyName)
             .Labels(labels => labels
             .Visible(true)
             .Position(ChartPieLabelsPosition.OutsideEnd)
@@ -99,7 +98,7 @@
       .Background("#ffffff")
   )
         .Series(series => {
-            series.Donut(t => t.NeutralPercent, t => t.SegmentProduct)
+            series.Donut(t => t.NeutralPercent, t => t.CompanyName)
            .Labels(labels => labels
             .Visible(true)
             .Position(ChartPieLabelsPosition.OutsideEnd)
@@ -135,7 +134,7 @@
       .Background("#ffffff")
   )
         .Series(series => {
-            series.Donut(t => t.NegativePercent, t => t.SegmentProduct)
+            series.Donut(t => t.NegativePercent, t => t.CompanyName)
            .Labels(labels => labels
             .Visible(true)
             .Position(ChartPieLabelsPosition.OutsideEnd)
@@ -179,19 +178,19 @@
         )
 .Series(series =>
 {
-    series.Bar(model => model.PositiveCount).Name("Positive").Axis("Feature").Color("Green");
-    series.Bar(model => model.NeutralCount).Name("Neutral").Axis("Feature").Color("Black");
-    series.Bar(model => model.NegativeCount).Name("Negative").Axis("Feature").Color("Red");
+    series.Bar(model => model.PositiveCount).Name("Positive").Axis("Sentiment").Color("Green");
+    series.Bar(model => model.NeutralCount).Name("Neutral").Axis("Sentiment").Color("Black");
+    series.Bar(model => model.NegativeCount).Name("Negative").Axis("Sentiment").Color("Red");
 })
    .CategoryAxis(axis => axis
       .Name("Customer")
-      .Title("Industry")
-       .Categories(model => model.SegmentProduct)
+      .Title("Company")
+       .Categories(model => model.CompanyName)
    )
     .ValueAxis(axis => axis
        .Numeric()
-       .Name("Feature")
-       .Title("Feature")
+       .Name("Sentiment")
+       .Title("")
    )
    .Tooltip(tooltip => tooltip
        .Visible(true)
@@ -281,14 +280,14 @@
             <div class="col-md-12">
                 <div class="row">
                     <div class='col-sm-2'>
-                        <button type="button" class="btn btn-success" onclick="exportJPG('ChartColumnSentimentAndFeature')"><span class="fas fa-file-image"></span></button>
+                        <button type="button" class="btn btn-success" onclick="exportJPG('ChartColumnSentimentAndCompany')"><span class="fas fa-file-image"></span></button>
                     </div>
                 </div>
                 <div>
-                    @(Html.Kendo().Chart(Model.ListReportMonthlySentimentAndFeatureDataTransfer)
-.Name("ChartColumnSentimentAndFeature")
+                    @(Html.Kendo().Chart(Model.ListReportMonthlySentimentDataTransfer)
+.Name("ChartColumnSentimentAndCompany")
 .Theme("Material")
-.Title(t => t.Text("Sentiment vs Feature").Color("#0000ff").Font("20px sans-serif"))
+.Title(t => t.Text("Sentiment vs Company").Color("#0000ff").Font("20px sans-serif"))
   .HtmlAttributes(new { style = "min-height:400px;" })
    .Legend(legend => legend
        .Position(ChartLegendPosition.Bottom)
@@ -296,22 +295,25 @@
    .ChartArea(chartArea => chartArea
       .Background("#ffffff")
   )
+     .SeriesDefaults(seriesDefaults =>
+            seriesDefaults.Column().Stack(true)
+        )
 .Series(series =>
 {
-    series.Column(model => model.PositiveCount).Name("Positive").Axis("Online");
-    series.Column(model => model.NeutralCount).Name("Neutral").Axis("Online");
-    series.Column(model => model.NegativeCount).Name("Negative").Axis("Online");    
+    series.Column(model => model.PositiveCount).Name("Positive").Axis("Sentiment");
+    series.Column(model => model.NeutralCount).Name("Neutral").Axis("Sentiment");
+    series.Column(model => model.NegativeCount).Name("Negative").Axis("Sentiment");
 })
 
    .CategoryAxis(axis => axis
       .Name("Customer")
-      .Title("")
-       .Categories(model => model.FullName)
-   )    
+      .Title("Company")
+       .Categories(model => model.CompanyName)
+   )
     .ValueAxis(axis => axis
        .Numeric()
-       .Name("Online")
-       .Title("Online")
+       .Name("Sentiment")
+       .Title("Sentiment")
    )
 
    .Tooltip(tooltip => tooltip
@@ -328,6 +330,7 @@
             )
                 </div>
             </div>
+            
         </div>
     </div>
 </div>
@@ -350,6 +353,7 @@
         onGetSentimentAndFeatureWithoutSUMByIDToListToJSON();        
     });
     function onGetSentimentByIDToListToJSON() {
+        BeginRequestHandler();
         $("#DataSentiment").html('');
         var IDValue = $("#ID").val();
          $.ajax({
@@ -368,7 +372,7 @@
                  html = html + "<th class='text-center' colspan='3'><a style='cursor:pointer;'>Growth (%)</a></th>";
                  html = html + '</tr>';
                 html = html + '<tr>';
-                 html = html + "<th class='text-center' style='width: 28%;'><a style='cursor:pointer;'>Brand</a></th>";
+                 html = html + "<th class='text-center' style='width: 28%;'><a style='cursor:pointer;'>Company</a></th>";
                  html = html + "<th class='text-center' style='width: 8%;'><a style='cursor:pointer; color: green;'>Positive</a></th>";
                  html = html + "<th class='text-center' style='width: 8%;'><a style='cursor:pointer;'>Neutral</a></th>";
                  html = html + "<th class='text-center' style='width: 8%;'><a style='cursor:pointer; color: red;'>Negative</a></th>";
@@ -391,7 +395,7 @@
                         else {
                             html = html + '<tr style="background-color:#f1f1f1;">';
                         }
-                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.SegmentProduct + '</td>';
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold; color: green;">' + item.PositiveLastMonthCount + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold;">' + item.NeutralLastMonthCount + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold; color: red;">' + item.NegativeLastMonthCount + '</td>';
@@ -439,10 +443,12 @@
                 html = $.parseHTML(html);
                  $("#DataSentiment").append(html);
             }
-        }).done(() => {
+         }).done(() => {
+             EndRequestHandler();
         });
     }
     function onGetSentimentAndMediaTypeWithoutSUMByIDToListToJSON() {
+        BeginRequestHandler();
         $("#DataSentimentAndMediaType").html('');
         var IDValue = $("#ID").val();
          $.ajax({
@@ -455,7 +461,7 @@
                  var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
                  html = html + '<thead>';
                  html = html + '<tr>';
-                 html = html + "<th class='text-center' style='width: 40%;'><a style='cursor:pointer;'>Brand</a></th>";
+                 html = html + "<th class='text-center' style='width: 40%;'><a style='cursor:pointer;'>Company</a></th>";
                  html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Sentiment</a></th>";
                  html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Online</a></th>";
                  html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Newspaper</a></th>";
@@ -477,7 +483,7 @@
                          if (item.SegmentProduct != "#N/A") {
                              switch (item.Sentiment) {
                                  case "Negative":
-                                     html = html + '<td rowspan="3" class="text-left" style="font-weight: bold;">' + item.SegmentProduct + '</td>';
+                                     html = html + '<td rowspan="3" class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
                                      break;
                              }
                          }
@@ -533,10 +539,12 @@
                 html = $.parseHTML(html);
                  $("#DataSentimentAndMediaType").append(html);
             }
-        }).done(() => {
+         }).done(() => {
+             EndRequestHandler();
         });
     }
     function onGetSentimentAndFeatureWithoutSUMByIDToListToJSON() {
+        BeginRequestHandler();
         $("#DataSentimentAndFeature").html('');
         var IDValue = $("#ID").val();
          $.ajax({
@@ -549,7 +557,7 @@
                  var html = '<table class="border01" id="Data01" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
                  html = html + '<thead>';
                  html = html + '<tr>';
-                 html = html + "<th class='text-center' style='width: 40%;'><a style='cursor:pointer;'>Brand</a></th>";
+                 html = html + "<th class='text-center' style='width: 40%;'><a style='cursor:pointer;'>Company</a></th>";
                  html = html + "<th class='text-center' style='width: 30%;'><a style='cursor:pointer;'>Feature/Mention</a></th>";
                  html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer; color: green;'>Positive</a></th>";
                  html = html + "<th class='text-center' style='width: 10%;'><a style='cursor:pointer;'>Neutral</a></th>";
@@ -567,7 +575,7 @@
                         else {
                             html = html + '<tr style="background-color:#f1f1f1;">';
                         }
-                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.SegmentProduct + '</td>';
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
                          html = html + '<td class="text-left" style="font-weight: bold;">' + item.FeatureCorp + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold; color: green;">' + item.PositiveCount + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold;">' + item.NeutralCount + '</td>';
@@ -580,7 +588,8 @@
                 html = $.parseHTML(html);
                  $("#DataSentimentAndFeature").append(html);
             }
-        }).done(() => {
+         }).done(() => {
+             EndRequestHandler();
         });
     }
 </script>

@@ -3,6 +3,8 @@
 @model Commsights.Data.Models.ProductSearch
 
 @Html.HiddenFor(Model => Model.ID)
+<input type="hidden" id="IDList">
+<input type="hidden" id="SearchList">
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
@@ -52,12 +54,13 @@
 .Name("Product")
 .Columns(columns =>
 {
-    //columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" });}).Width(150);
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" });}).Width(150);
+    columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70);
     columns.Select().Width(50);
-    columns.Bound(t => t.DatePublish).Title("Date").Format("{0: MM/dd/yyyy}").Width(120).HtmlAttributes(new { @class = "text-right" }).HeaderHtmlAttributes(new { @class = "text-center" });
-    columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' style='color: blue; cursor: pointer;'>#=Title#</a>").Title("Headline (Vie)").Width(1000);
+    columns.Bound(t => t.IsError).Title("Error").Width(80);
+    columns.Bound(t => t.DatePublish).Title("Publish").Format("{0: MM/dd/yyyy}").Width(200).HtmlAttributes(new { @class = "text-right" }).HeaderHtmlAttributes(new { @class = "text-center" });
+    columns.Bound(t => t.Title).Title("Headline (Vie)").Width(1000);
     columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
-    columns.Bound(t => t.URLCode).Title("URL").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
 })
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
@@ -84,19 +87,18 @@
 .FileName("Config.pdf")
 )
 .HtmlAttributes(new { @class = "KendoGrid" })
-.Search(search => { search.Field(f => f.Title); search.Field(f => f.URLCode); search.Field(f => f.Description); search.Field(f => f.TitleEnglish); search.Field(f => f.DescriptionEnglish); })
+.Search(search => { search.Field(f => f.Title); search.Field(f => f.URLCode); search.Field(f => f.TitleEnglish); })
 .Events(ev => ev.Change("onGridChange"))
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(10000)
 .Model(model =>
 {
-    model.Id(t => t.ID);
-    model.Field(t => t.ID).Editable(false);
+    model.Id(t => t.SearchAndID);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceToList", "Product").Data("filterProduct"))
-.Update(t => t.Action("Update", "Product"))
+.Update(t => t.Action("UpdateProductCompact", "Product"))
 )
 )
             </div>
@@ -130,18 +132,28 @@
         var isDescriptionValue = document.getElementById("IsDescription").checked;
         return { search: searchValue, datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, isTitle: isTitleValue, isDescription: isDescriptionValue };
     }
-    function onSearch() {
+    function onSearch() {                    
+        onSearchList();
         $("#Product").data("kendoGrid").dataSource.read();
     }
     function onExcel() {
+        onSearchList();
         BeginRequestHandler();
-        var IDListValue = $("#ID").val();
+        var IDListValue = $("#SearchList").val();
         $.post("/Report/AsyncExportExcelReportDailyByIDList", { IDList: IDListValue }, function (result) {
             window.location.replace(result);
             EndRequestHandler();
+            $("#ID").val("");
+            $("#SearchList").val("");
         });
     }
     function onGridChange(arg) {
-        $("#ID").val(this.selectedKeyNames().join(";"));
+        $("#ID").val(this.selectedKeyNames().join(";"));         
+    }
+    function onSearchList() {
+        var IDListValue = $("#ID").val();
+        var SearchList = $("#SearchList").val();
+        SearchList = SearchList + ';' + IDListValue;
+        $("#SearchList").val(SearchList); 
     }
 </script>

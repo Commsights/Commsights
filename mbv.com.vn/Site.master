@@ -1,0 +1,32 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <title>Commsights Viet Nam</title>
+    <script>
+        function getParameterByName(name, url = window.location.href) {
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+        function onReplace() {
+            var file = getParameterByName('file');
+            var type = getParameterByName('type');
+            var urlFile = "//file.commsights.com/ProView.aspx?file=" + file + "&type=" + type;
+            window.location.replace(urlFile);
+        }        
+    </script>
+</head>
+<body onload="onReplace()">
+    <form runat="server">
+        <asp:ScriptManager ID="ScriptManager" runat="server" />
+        <asp:ContentPlaceHolder ID="MainContent" runat="server">
+        </asp:ContentPlaceHolder>
+    </form>
+</body>
+</html>

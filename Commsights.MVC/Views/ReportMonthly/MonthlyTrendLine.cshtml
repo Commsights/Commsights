@@ -1,0 +1,73 @@
+﻿@{ ViewData["Title"] = Model.Title + " - Trendline"; }
+
+@model Commsights.MVC.Models.ReportMonthlyViewModel
+@Html.HiddenFor(Model => Model.ID)
+@Html.HiddenFor(Model => Model.Title)
+<div>
+    | <a href="/ReportMonthly/MonthlyReport?ID=@Model.ID" class="text-success" title="Report">Report</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Industry</a> |
+    <a href="/ReportMonthly/MonthlyCompanyCount?ID=@Model.ID" class="text-success" title="Company">Company Count</a> |
+    <a href="/ReportMonthly/MonthlyFeatureIndustry?ID=@Model.ID" class="text-success" title="Feature-Mention">Feature-Mention</a> |
+    <a href="/ReportMonthly/MonthlySentimentIndustry?ID=@Model.ID" class="text-success" title="Sentiment">Sentiment</a> |
+    <a href="/ReportMonthly/MonthlyChannel?ID=@Model.ID" class="text-success" title="Channel">Channel</a> |
+    <a href="/ReportMonthly/MonthlyTierCommsights?ID=@Model.ID" class="text-success" title="Media Tiers">Media Tiers</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Category</a> |
+    <a href="/ReportMonthly/MonthlyTrendLine?ID=@Model.ID" class="text-success" title="Trendline">Trendline</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Campaign</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Key Stories</a> |
+    <a href="/ReportMonthly/MonthlyCompanyAndYear?ID=@Model.ID" class="text-success" title="MonthlyCompanyAndYear">Brand Growth</a> |
+    <a href="/ReportMonthly/MonthlySegmentProduct?ID=@Model.ID" class="text-success" title="Product segment">Product segment</a> |
+    <a href="/ReportMonthly/MonthlyTierCommsightsAndCompanyName?ID=@Model.ID" class="text-success" title="Top titles">Top titles</a> |
+    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Scorecard</a> |
+    <a href="/ReportMonthly/MonthlyData?ID=@Model.ID" class="text-success" title="Data">Data</a> |
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">@Model.Title - Trendline</h3>
+            </div>
+            <div class="card-body">                
+                <div class="col-md-12">
+                    <div id="DataTrendline" class='col-sm-12'></div>
+                </div>                   
+            </div>        
+        </div>
+    </div>
+</div>
+<script>
+    function exportJPG(control) {
+        var Title = $('#Title').val();
+        var id = "#" + control;
+        var chart = $(id).getKendoChart();
+        chart.exportImage().done(function (data) {
+            kendo.saveAs({
+                dataURI: data,
+                fileName: Title + ".jpg",
+                proxyURL: "@Url.Action("Export_Save", "ReportMonthly")"
+            });
+        });
+    }
+    $(document).ready(() => {
+        onGetTrendLineWithoutSUMByIDToListToJSON();        
+    });
+    function onGetTrendLineWithoutSUMByIDToListToJSON() {
+        BeginRequestHandler();
+        $("#DataTrendline").html('');
+        var IDValue = $("#ID").val();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetTrendLineWithoutSUMByIDToListToJSON", "ReportMonthly")",
+            data: {
+                ID: IDValue,
+            },
+             success: function (list) {              
+                 var html = '';                
+                 html = $.parseHTML(list);
+                 $("#DataTrendline").append(html);
+            }
+         }).done(() => {
+             EndRequestHandler();
+        });
+    }   
+</script>

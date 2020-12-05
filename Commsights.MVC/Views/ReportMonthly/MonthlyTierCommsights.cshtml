@@ -6,18 +6,17 @@
 <div>
     | <a href="/ReportMonthly/MonthlyReport?ID=@Model.ID" class="text-success" title="Report">Report</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Industry</a> |
-    <a href="/ReportMonthly/MonthlyIndustryCount?ID=@Model.ID" class="text-success" title="Industry">Industry Count</a> |
     <a href="/ReportMonthly/MonthlyCompanyCount?ID=@Model.ID" class="text-success" title="Company">Company Count</a> |
     <a href="/ReportMonthly/MonthlyFeatureIndustry?ID=@Model.ID" class="text-success" title="Feature-Mention">Feature-Mention</a> |
     <a href="/ReportMonthly/MonthlySentimentIndustry?ID=@Model.ID" class="text-success" title="Sentiment">Sentiment</a> |
     <a href="/ReportMonthly/MonthlyChannel?ID=@Model.ID" class="text-success" title="Channel">Channel</a> |
     <a href="/ReportMonthly/MonthlyTierCommsights?ID=@Model.ID" class="text-success" title="Media Tiers">Media Tiers</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Category</a> |
-    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Trendline</a> |
+    <a href="/ReportMonthly/MonthlyTrendLine?ID=@Model.ID" class="text-success" title="Trendline">Trendline</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Campaign</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Key Stories</a> |
-    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Brand Growth</a> |
-    <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Product segment</a> |
+    <a href="/ReportMonthly/MonthlyCompanyAndYear?ID=@Model.ID" class="text-success" title="MonthlyCompanyAndYear">Brand Growth</a> |
+    <a href="/ReportMonthly/MonthlySegmentProduct?ID=@Model.ID" class="text-success" title="Product segment">Product segment</a> |
     <a href="/ReportMonthly/MonthlyTierCommsightsAndCompanyName?ID=@Model.ID" class="text-success" title="Top titles">Top titles</a> |
     <a href="/ReportMonthly/MonthlyIndustry?ID=@Model.ID" class="text-success" title="Industtry">Scorecard</a> |
     <a href="/ReportMonthly/MonthlyData?ID=@Model.ID" class="text-success" title="Data">Data</a> |
@@ -39,14 +38,14 @@
                             <div>
                                 <div class="row">
                                     <div class='col-sm-2'>
-                                        <button type="button" class="btn btn-success" onclick="exportJPG('ChartBarTierCommsightsThisMonth')"><span class="fas fa-file-image"></span></button>
+                                        <button type="button" class="btn btn-success" onclick="exportJPG('ChartBarTierCommSightsThisMonth')"><span class="fas fa-file-image"></span></button>
                                     </div>
                                 </div>
                                 <div>
                                     @(Html.Kendo().Chart(Model.ListReportMonthlyTierCommsightsDataTransfer)
-.Name("ChartBarTierCommsightsThisMonth")
+.Name("ChartBarTierCommSightsThisMonth")
 .Theme("Material")
-.Title(t => t.Text("Tier Commsights").Color("#0000ff").Font("20px sans-serif"))
+.Title(t => t.Text("Tier CommSights").Color("#0000ff").Font("20px sans-serif"))
   .HtmlAttributes(new { style = "min-height:400px;" })
    .Legend(legend => legend
        .Position(ChartLegendPosition.Bottom)
@@ -59,20 +58,19 @@
         )
 .Series(series =>
 {
-    series.Bar(model => model.MassCount).Name("Mass").Axis("Feature");
-    series.Bar(model => model.IndustryCount).Name("Industry").Axis("Feature");
-    series.Bar(model => model.PortalCount).Name("Portal").Axis("Feature");
-    series.Bar(model => model.OrthersCount).Name("Orthers").Axis("Feature");
+    series.Bar(model => model.MassCount).Name("Mass").Axis("TierCommSights");
+    series.Bar(model => model.IndustryCount).Name("Industry").Axis("TierCommSights");
+    series.Bar(model => model.PortalCount).Name("Portal").Axis("TierCommSights");
+    series.Bar(model => model.OrthersCount).Name("Orthers").Axis("TierCommSights");
 })
    .CategoryAxis(axis => axis
       .Name("Customer")
-      .Title("Industry")
-       .Categories(model => model.SegmentProduct)
+      .Title("Company")
+       .Categories(model => model.CompanyName)
    )
     .ValueAxis(axis => axis
        .Numeric()
-       .Name("Feature")
-       .Title("Tier Commsights")
+       .Name("TierCommSights")
    )
    .Tooltip(tooltip => tooltip
        .Visible(true)
@@ -88,7 +86,7 @@
             )
                                 </div>
                             </div>
-                        </td>
+                        </td>            
                     </tr>
                 </table>
             </div>        
@@ -112,6 +110,7 @@
         onGetTierCommsightsByIDToListToJSON();        
     });
     function onGetTierCommsightsByIDToListToJSON() {
+        BeginRequestHandler();
         $("#DataTierCommsights").html('');
         var IDValue = $("#ID").val();
          $.ajax({
@@ -130,7 +129,7 @@
                  html = html + "<th class='text-center' colspan='4'><a style='cursor:pointer;'>Growth (%)</a></th>";
                  html = html + '</tr>';
                 html = html + '<tr>';
-                 html = html + "<th class='text-center' style='width: 16%;'><a style='cursor:pointer;'>Brand</a></th>";
+                 html = html + "<th class='text-center' style='width: 16%;'><a style='cursor:pointer;'>Company</a></th>";
                  html = html + "<th class='text-center' style='width: 7%;'><a style='cursor:pointer;'>Mass media</a></th>";
                  html = html + "<th class='text-center' style='width: 7%;'><a style='cursor:pointer;'>Industry media</a></th>";
                  html = html + "<th class='text-center' style='width: 7%;'><a style='cursor:pointer;'>Portal</a></th>";
@@ -156,7 +155,7 @@
                         else {
                             html = html + '<tr style="background-color:#f1f1f1;">';
                         }
-                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.SegmentProduct + '</td>';
+                         html = html + '<td class="text-left" style="font-weight: bold;">' + item.CompanyName + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold;">' + item.MassLastMonthCount + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold;">' + item.IndustryLastMonthCount + '</td>';
                          html = html + '<td class="text-right" style="font-weight: bold;">' + item.PortalLastMonthCount + '</td>';
@@ -217,7 +216,8 @@
                 html = $.parseHTML(html);
                  $("#DataTierCommsights").append(html);
             }
-        }).done(() => {
+         }).done(() => {
+             EndRequestHandler();
         });
     }   
 </script>

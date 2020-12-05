@@ -303,6 +303,13 @@ namespace Commsights.Data.Repositories
             list = SQLHelper.ToList<Config>(dt);
             return list;
         }
+        public List<Config> GetWebsiteToList()
+        {
+            List<Config> list = new List<Config>();
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectWebsite");
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
         public async Task<string> AsyncInsertSingleItem(Config config)
         {
 

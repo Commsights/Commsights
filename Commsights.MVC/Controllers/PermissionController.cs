@@ -37,7 +37,10 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult Setup()
         {
-            return View();
+            ReportMonthly model = new ReportMonthly();
+            model.Year = DateTime.Now.Year;
+            model.Month = DateTime.Now.Month;
+            return View(model);
         }
         public IActionResult UpdatePressList()
         {
@@ -45,6 +48,17 @@ namespace Commsights.MVC.Controllers
             foreach (Config item in list)
             {
                 item.Title = AppGlobal.ToUpperFirstLetter(item.Title);
+                _configResposistory.Update(item.ID, item);
+            }
+            string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            return Json(note);
+        }
+        public IActionResult UpdateWebsiteList()
+        {
+            List<Config> list = _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
+            foreach (Config item in list)
+            {
+                item.Title = item.Title.Replace(@"www.", @"");
                 _configResposistory.Update(item.ID, item);
             }
             string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
