@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Xml;
 
 namespace Commsights.Data.Helpers
@@ -3747,6 +3748,44 @@ namespace Commsights.Data.Helpers
             const int MaxAnsiCode = 255;
             return input.Any(c => c > MaxAnsiCode);
         }
+        public static string ConvertASCIIToUnicode(string input)
+        {
+            Encoding ascii = Encoding.ASCII;
+            Encoding unicode = Encoding.Unicode;
+            byte[] asciiBytes = ascii.GetBytes(input);
+            byte[] unicodeBytes = Encoding.Convert(ascii, unicode, asciiBytes);
+            char[] unicodeChars = new char[unicode.GetCharCount(unicodeBytes, 0, unicodeBytes.Length)];
+            unicode.GetChars(unicodeBytes, 0, unicodeBytes.Length, unicodeChars, 0);
+            input = new string(unicodeChars);
+            return input;
+        }
+        public static string ConvertEntityToUnicode(string input)
+        {
+            var replacements = new Dictionary<string, string>();
+            var regex = new Regex("(&[a-z]{2,5};)");
+            foreach (Match match in regex.Matches(input))
+            {
+                if (!replacements.ContainsKey(match.Value))
+                {
+                    var unicode = HttpUtility.HtmlDecode(match.Value);
+                    if (unicode.Length == 1)
+                    {
+                        replacements.Add(match.Value, string.Concat("&#", Convert.ToInt32(unicode[0]), ";"));
+                    }
+                }
+            }
+            foreach (var replacement in replacements)
+            {
+                input = input.Replace(replacement.Key, replacement.Value);
+            }
+            return input;
+        }
+        public static string Decode(string input)
+        {
+            string html = System.Text.RegularExpressions.Regex.Replace(input, @"\\u[0-9A-F]{4}", match => ((char)int.Parse(match.Value.Substring(2), System.Globalization.NumberStyles.HexNumber)).ToString(), RegexOptions.IgnoreCase);
+            return System.Net.WebUtility.HtmlDecode(html);
+        }
+
         public static string HTMLReplaceAndSplit(string htmlspan001)
         {
             htmlspan001 = htmlspan001.Replace(@"<footer>", @"~");

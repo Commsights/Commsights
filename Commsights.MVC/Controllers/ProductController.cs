@@ -1164,29 +1164,7 @@ namespace Commsights.MVC.Controllers
                                 {
                                     title = title.Split('|')[0];
                                 }
-                                title = title.Trim();
-                                title = title.Replace(@"&#32;", @" ");
-                                title = title.Replace(@"&quot;", @"""");
-                                title = title.Replace(@"&#249;", @"ù");
-                                title = title.Replace(@"&#224;", @"à");
-                                title = title.Replace(@"&#225;", @"á");                                
-                                title = title.Replace(@"&#7899;", @"ớ");
-                                title = title.Replace(@"&#7873;", @"ề");
-                                title = title.Replace(@"&#7879;", @"ệ");
-                                title = title.Replace(@"&ocirc;", @"ô");
-                                title = title.Replace(@"&atilde;", @"ã");
-                                title = title.Replace(@"&oacute;", @"ó");
-                                title = title.Replace(@"&aacute;", @"á");
-                                title = title.Replace(@"&agrave;", @"à");
-                                title = title.Replace(@"&igrave;", @"ì");
-                                title = title.Replace(@"&#226;", @"â");
-                                title = title.Replace(@"&#236;", @"ì");
-                                title = title.Replace(@"&uacute;", @"ú");
-                                title = title.Replace(@"&oacute;", @"ầ");
-                                title = title.Replace(@"&uacute;", @"ú");
-                                title = title.Replace(@"&uacute;", @"ú");
-                                title = title.Replace(@"&uacute;", @"ú");
-                                title = title.Replace(@"&ecirc;", @"ê");
+                                title = title.Trim();                                
                                 Product product = new Product();
                                 product.Title = title;
                                 product.ParentID = config.ID;
@@ -1204,6 +1182,10 @@ namespace Commsights.MVC.Controllers
                                 AppGlobal.FinderContentAndDatePublish001(html, product);
                                 if ((product.DatePublish.Year > 2019) && (product.Active == true))
                                 {
+                                    product.Title = AppGlobal.ConvertEntityToUnicode(product.Title);
+                                    product.Description = AppGlobal.ConvertEntityToUnicode(product.Description);
+                                    product.Title = AppGlobal.ConvertASCIIToUnicode(product.Title);
+                                    product.Description = AppGlobal.ConvertASCIIToUnicode(product.Description);
                                     await _productRepository.AsyncInsertSingleItem(product);
                                 }
                                 response.Close();
