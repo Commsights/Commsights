@@ -729,8 +729,8 @@ namespace Commsights.MVC.Controllers
             foreach (ProductCompact001 item in list)
             {
                 string title = item.Title;
-                item.Title = AppGlobal.Decode(item.Title);
-                item.Title = AppGlobal.ConvertASCIIToUnicode(item.Title);
+                //item.Title = AppGlobal.Decode(item.Title);
+                item.Title = AppGlobal.ConvertLatin1ToUnicode(item.Title);
                 await _productRepository.AsyncUpdateProductCompact001SingleItem(item);
             }
             return "";

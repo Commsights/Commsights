@@ -3748,16 +3748,19 @@ namespace Commsights.Data.Helpers
 
         public static string ConvertASCIIToUnicode(string input)
         {
-            Encoding ascii = Encoding.ASCII;
-            Encoding unicode = Encoding.Unicode;
-            byte[] asciiBytes = ascii.GetBytes(input);
-            byte[] unicodeBytes = Encoding.Convert(ascii, unicode, asciiBytes);
-            char[] unicodeChars = new char[unicode.GetCharCount(unicodeBytes, 0, unicodeBytes.Length)];
-            unicode.GetChars(unicodeBytes, 0, unicodeBytes.Length, unicodeChars, 0);
-            string result = new string(unicodeChars);
+            string result = Encoding.UTF8.GetString(Encoding.GetEncoding(Encoding.ASCII).getBytes(input))
             return result;
         }
-
+        public static string ConvertWind1252ToUnicode(string input)
+        {
+            string result = Encoding.UTF8.GetString(Encoding.GetEncoding(1252).getBytes(input))
+            return result;
+        }
+        public static string ConvertLatin1ToUnicode(string input)
+        {
+            string result = Encoding.UTF8.GetString(Encoding.GetEncoding("iso-8859-1").getBytes(input))
+            return result;
+        }
         public static string HTMLReplaceAndSplit(string htmlspan001)
         {
             htmlspan001 = htmlspan001.Replace(@"<footer>", @"~");

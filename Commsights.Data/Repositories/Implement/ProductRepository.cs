@@ -716,8 +716,8 @@ namespace Commsights.Data.Repositories
             List<ProductCompact001> list = new List<ProductCompact001>();
             SqlParameter[] parameters =
                    {
-                    new SqlParameter("@Source",source),
-                    };
+                new SqlParameter("@Source",source),
+            };
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectBySourceWithIDAndTitle", parameters);
             list = SQLHelper.ToList<ProductCompact001>(dt);
             return list;
@@ -725,16 +725,12 @@ namespace Commsights.Data.Repositories
         public Product GetByID001(int ID)
         {
             Product model = new Product();
-            if (ID > 0)
-            {
-                SqlParameter[] parameters =
-                       {
+            SqlParameter[] parameters =
+                   {
                 new SqlParameter("@ID",ID),
             };
-                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectByID", parameters);
-                model = SQLHelper.ToList<Product>(dt).FirstOrDefault();
-            }
-
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectByID", parameters);
+            model = SQLHelper.ToList<Product>(dt).FirstOrDefault();
             return model;
         }
         public void FilterProduct(Product product, List<ProductProperty> listProductProperty, int RequestUserID)
