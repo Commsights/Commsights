@@ -728,9 +728,7 @@ namespace Commsights.MVC.Controllers
             List<ProductCompact001> list = _productRepository.GetProductCompact001BySourceWithIDAndTitleToList(AppGlobal.SourceAuto);
             foreach (ProductCompact001 item in list)
             {
-                string title = item.Title;
-                //item.Title = AppGlobal.Decode(item.Title);
-                item.Title = AppGlobal.ConvertLatin1ToUnicode(item.Title);
+                item.Title = AppGlobal.ConvertStringToUnicode(item.Title);
                 await _productRepository.AsyncUpdateProductCompact001SingleItem(item);
             }
             return "";
@@ -1181,8 +1179,8 @@ namespace Commsights.MVC.Controllers
                                 AppGlobal.FinderContentAndDatePublish001(html, product);
                                 if ((product.DatePublish.Year > 2019) && (product.Active == true))
                                 {
-                                    product.Title = AppGlobal.Decode(product.Title);
-                                    product.Description = AppGlobal.Decode(product.Description);
+                                    product.Title = AppGlobal.ConvertStringToUnicode(product.Title);
+                                    product.Description = AppGlobal.ConvertStringToUnicode(product.Description);
                                     product.MetaTitle = AppGlobal.SetName(product.Title);
                                     await _productRepository.AsyncInsertSingleItem(product);
                                 }

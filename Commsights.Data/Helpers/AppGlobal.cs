@@ -3745,20 +3745,60 @@ namespace Commsights.Data.Helpers
             string result = System.Net.WebUtility.HtmlDecode(html);
             return result;
         }
-
         public static string ConvertASCIIToUnicode(string input)
         {
-            string result = Encoding.UTF8.GetString(Encoding.GetEncoding(Encoding.ASCII).getBytes(input))
+            string result = Encoding.UTF8.GetString(Encoding.ASCII.GetBytes(input));
             return result;
         }
         public static string ConvertWind1252ToUnicode(string input)
         {
-            string result = Encoding.UTF8.GetString(Encoding.GetEncoding(1252).getBytes(input))
+            string result = Encoding.UTF8.GetString(Encoding.GetEncoding(1252).GetBytes(input));
             return result;
         }
         public static string ConvertLatin1ToUnicode(string input)
         {
-            string result = Encoding.UTF8.GetString(Encoding.GetEncoding("iso-8859-1").getBytes(input))
+            string result = Encoding.UTF8.GetString(Encoding.GetEncoding("iso-8859-1").GetBytes(input));
+            return result;
+        }
+        public static string ConvertStringToUnicode(string input)
+        {
+            string result = "";
+            Encoding encoding = Encoding.GetEncoding("us-ascii", new EncoderReplacementFallback("(unknown)"), new DecoderReplacementFallback("(error)"));
+            byte[] encodedBytes = new byte[encoding.GetByteCount(input)];
+            int numberOfEncodedBytes = encoding.GetBytes(input, 0, input.Length, encodedBytes, 0);
+            string decodedString = encoding.GetString(encodedBytes);
+            if (decodedString.Contains(@"unknown") == false)
+            {
+                result = ConvertASCIIToUnicode(input);
+            }
+            else
+            {
+                encoding = Encoding.GetEncoding("iso-8859-1", new EncoderReplacementFallback("(unknown)"), new DecoderReplacementFallback("(error)"));
+                encodedBytes = new byte[encoding.GetByteCount(input)];
+                numberOfEncodedBytes = encoding.GetBytes(input, 0, input.Length, encodedBytes, 0);
+                decodedString = encoding.GetString(encodedBytes);
+                if (decodedString.Contains(@"unknown") == false)
+                {
+                    result = ConvertLatin1ToUnicode(input);
+                }
+                else
+                {
+                    encoding = Encoding.GetEncoding(1252, new EncoderReplacementFallback("(unknown)"), new DecoderReplacementFallback("(error)"));
+                    encodedBytes = new byte[encoding.GetByteCount(input)];
+                    numberOfEncodedBytes = encoding.GetBytes(input, 0, input.Length, encodedBytes, 0);
+                    decodedString = encoding.GetString(encodedBytes);
+                    if (decodedString.Contains(@"unknown") == false)
+                    {
+                        result = ConvertWind1252ToUnicode(input);
+                    }
+                    else
+                    {
+                        result = Decode(input);
+                    }
+                }
+            }
+            result = result.Replace(@"ä",@"a");
+            result = result.Replace(@"&nbsp;", @" ");            
             return result;
         }
         public static string HTMLReplaceAndSplit(string htmlspan001)
