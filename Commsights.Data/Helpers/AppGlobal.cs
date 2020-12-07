@@ -2427,10 +2427,7 @@ namespace Commsights.Data.Helpers
         public static void LinkFinder001(string urlCategory, string urlRoot, bool repeat, List<LinkItem> list)
         {
             try
-            {
-                if (repeat == false)
-                {
-                }
+            {              
                 int index = -1;
                 Uri root = new Uri(urlRoot);
                 Uri myUri = new Uri(urlRoot);
@@ -2597,13 +2594,8 @@ namespace Commsights.Data.Helpers
                 }
                 if (repeat == true)
                 {
-                    index = -1;
                     foreach (LinkItem item in listCategory)
                     {
-                        index = index + 1;
-                        if (index > 20)
-                        {
-                        }
                         LinkFinder001(item.Href, urlRoot, false, list);
                     }
                 }
@@ -3747,43 +3739,12 @@ namespace Commsights.Data.Helpers
         {
             const int MaxAnsiCode = 255;
             return input.Any(c => c > MaxAnsiCode);
-        }
-        public static string ConvertASCIIToUnicode(string input)
-        {
-            Encoding ascii = Encoding.ASCII;
-            Encoding unicode = Encoding.Unicode;
-            byte[] asciiBytes = ascii.GetBytes(input);
-            byte[] unicodeBytes = Encoding.Convert(ascii, unicode, asciiBytes);
-            char[] unicodeChars = new char[unicode.GetCharCount(unicodeBytes, 0, unicodeBytes.Length)];
-            unicode.GetChars(unicodeBytes, 0, unicodeBytes.Length, unicodeChars, 0);
-            input = new string(unicodeChars);
-            return input;
-        }
-        public static string ConvertEntityToUnicode(string input)
-        {
-            var replacements = new Dictionary<string, string>();
-            var regex = new Regex("(&[a-z]{2,5};)");
-            foreach (Match match in regex.Matches(input))
-            {
-                if (!replacements.ContainsKey(match.Value))
-                {
-                    var unicode = HttpUtility.HtmlDecode(match.Value);
-                    if (unicode.Length == 1)
-                    {
-                        replacements.Add(match.Value, string.Concat("&#", Convert.ToInt32(unicode[0]), ";"));
-                    }
-                }
-            }
-            foreach (var replacement in replacements)
-            {
-                input = input.Replace(replacement.Key, replacement.Value);
-            }
-            return input;
-        }
+        }        
         public static string Decode(string input)
         {
             string html = System.Text.RegularExpressions.Regex.Replace(input, @"\\u[0-9A-F]{4}", match => ((char)int.Parse(match.Value.Substring(2), System.Globalization.NumberStyles.HexNumber)).ToString(), RegexOptions.IgnoreCase);
-            return System.Net.WebUtility.HtmlDecode(html);
+            string result = System.Net.WebUtility.HtmlDecode(html);
+            return result;
         }
 
         public static string HTMLReplaceAndSplit(string htmlspan001)

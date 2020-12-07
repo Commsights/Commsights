@@ -1085,10 +1085,6 @@ namespace Commsights.MVC.Controllers
                 if (config != null)
                 {
                     List<LinkItem> list = new List<LinkItem>();
-                    //LinkItem link = new LinkItem();
-                    //link.Href = "https://vnexpress.net/khoi-to-vu-an-tuong-do-lam-chet-nu-sinh-lop-6-4200013.html";
-                    //link.Text = "Đất quanh sân bay Long Thành sang nhượng giấy viết tay sẽ không được bồi thường";
-                    //list.Add(link);
                     AppGlobal.LinkFinder001(config.URLFull, config.URLFull, true, list);
                     foreach (LinkItem linkItem in list)
                     {
@@ -1101,14 +1097,6 @@ namespace Commsights.MVC.Controllers
                                 Stream receiveStream = response.GetResponseStream();
                                 StreamReader readStream = null;
                                 readStream = new StreamReader(receiveStream, Encoding.UTF8);
-                                //if (response.CharacterSet == null)
-                                //{
-                                //    readStream = new StreamReader(receiveStream, Encoding.UTF8);
-                                //}
-                                //else
-                                //{
-                                //    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
-                                //}
                                 string html = readStream.ReadToEnd();
                                 html = html.Replace(@"~", @"");
                                 html = AppGlobal.HTMLReplaceAndSplit(html);
@@ -1164,7 +1152,7 @@ namespace Commsights.MVC.Controllers
                                 {
                                     title = title.Split('|')[0];
                                 }
-                                title = title.Trim();                                
+                                title = title.Trim();
                                 Product product = new Product();
                                 product.Title = title;
                                 product.ParentID = config.ID;
@@ -1174,18 +1162,16 @@ namespace Commsights.MVC.Controllers
                                 {
                                     product.Title = linkItem.Text;
                                 }
-                                product.MetaTitle = AppGlobal.SetName(product.Title);
                                 product.URLCode = linkItem.Href;
                                 product.DatePublish = DateTime.Now;
                                 product.Initialization(InitType.Insert, RequestUserID);
                                 product.DatePublish = DateTime.Now;
                                 AppGlobal.FinderContentAndDatePublish001(html, product);
                                 if ((product.DatePublish.Year > 2019) && (product.Active == true))
-                                {
-                                    product.Title = AppGlobal.ConvertEntityToUnicode(product.Title);
-                                    product.Description = AppGlobal.ConvertEntityToUnicode(product.Description);
-                                    product.Title = AppGlobal.ConvertASCIIToUnicode(product.Title);
-                                    product.Description = AppGlobal.ConvertASCIIToUnicode(product.Description);
+                                {                                    
+                                    product.Title = AppGlobal.Decode(product.Title);
+                                    product.Description = AppGlobal.Decode(product.Description);
+                                    product.MetaTitle = AppGlobal.SetName(product.Title);
                                     await _productRepository.AsyncInsertSingleItem(product);
                                 }
                                 response.Close();
