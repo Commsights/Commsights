@@ -49,6 +49,11 @@
                             <span class="fas fa-sync-alt"></span> Scan full
                         </button>
                     </div>
+                    <div class='col-sm-3'>
+                        <button type="button" class="btn btn-primary" onclick="onDecode()">
+                            <span class="fas fa-sync-alt"></span> Decode
+                        </button>
+                    </div>
                 </div>
                 <br />
                 <div class="row">
@@ -557,5 +562,19 @@
             });
         }
         return false;
-    }   
+    }
+    function onDecode() {
+        BeginRequestHandler();
+        $.ajax({
+            type: 'GET',
+            url: "@Url.Action("AsyncDecode", "Product")",
+            data: {
+            },
+            success: function () {
+                    EndRequestHandler();
+            }
+            }).done(() => {
+            });
+        return false;
+    }
 </script>

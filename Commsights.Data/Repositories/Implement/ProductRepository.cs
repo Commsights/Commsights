@@ -711,6 +711,17 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<ProductCompact001> GetProductCompact001BySourceWithIDAndTitleToList(string source)
+        {
+            List<ProductCompact001> list = new List<ProductCompact001>();
+            SqlParameter[] parameters =
+                   {
+                    new SqlParameter("@Source",source),
+                    };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectBySourceWithIDAndTitle", parameters);
+            list = SQLHelper.ToList<ProductCompact001>(dt);
+            return list;
+        }
         public Product GetByID001(int ID)
         {
             Product model = new Product();
@@ -1240,6 +1251,16 @@ new SqlParameter("@DatePublish",product.DatePublish),
 new SqlParameter("@TitleEnglish",product.TitleEnglish),
 };
             string result = await SQLHelper.ExecuteNonQueryAsync(AppGlobal.ConectionString, "sp_ProductUpdateSingleItem", parameters);
+            return result;
+        }
+        public async Task<string> AsyncUpdateProductCompact001SingleItem(ProductCompact001 product)
+        {
+            SqlParameter[] parameters =
+            {
+new SqlParameter("@ID",product.ID),
+new SqlParameter("@Title",product.Title),
+};
+            string result = await SQLHelper.ExecuteNonQueryAsync(AppGlobal.ConectionString, "sp_ProductUpdateSingleItemWithIDAndTitle", parameters);
             return result;
         }
         public string UpdateProductCompactSingleItem(ProductCompact product)

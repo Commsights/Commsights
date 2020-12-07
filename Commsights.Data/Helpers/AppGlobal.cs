@@ -2427,7 +2427,7 @@ namespace Commsights.Data.Helpers
         public static void LinkFinder001(string urlCategory, string urlRoot, bool repeat, List<LinkItem> list)
         {
             try
-            {              
+            {
                 int index = -1;
                 Uri root = new Uri(urlRoot);
                 Uri myUri = new Uri(urlRoot);
@@ -2528,7 +2528,6 @@ namespace Commsights.Data.Helpers
                                                 }
                                                 if (!string.IsNullOrEmpty(i.Text))
                                                 {
-                                                    i.Text = DecodeFromUTF8(i.Text);
                                                     if (i.Text.Split(' ').Length > 4)
                                                     {
                                                         checkHref = false;
@@ -3739,11 +3738,23 @@ namespace Commsights.Data.Helpers
         {
             const int MaxAnsiCode = 255;
             return input.Any(c => c > MaxAnsiCode);
-        }        
+        }
         public static string Decode(string input)
         {
             string html = System.Text.RegularExpressions.Regex.Replace(input, @"\\u[0-9A-F]{4}", match => ((char)int.Parse(match.Value.Substring(2), System.Globalization.NumberStyles.HexNumber)).ToString(), RegexOptions.IgnoreCase);
             string result = System.Net.WebUtility.HtmlDecode(html);
+            return result;
+        }
+
+        public static string ConvertASCIIToUnicode(string input)
+        {
+            Encoding ascii = Encoding.ASCII;
+            Encoding unicode = Encoding.Unicode;
+            byte[] asciiBytes = ascii.GetBytes(input);
+            byte[] unicodeBytes = Encoding.Convert(ascii, unicode, asciiBytes);
+            char[] unicodeChars = new char[unicode.GetCharCount(unicodeBytes, 0, unicodeBytes.Length)];
+            unicode.GetChars(unicodeBytes, 0, unicodeBytes.Length, unicodeChars, 0);
+            string result = new string(unicodeChars);
             return result;
         }
 
@@ -3934,12 +3945,6 @@ namespace Commsights.Data.Helpers
                     product.URLCode = url;
                     break;
             }
-        }
-        private static string DecodeFromUTF8(string uTF8String)
-        {
-            byte[] bytes = Encoding.Default.GetBytes(uTF8String);
-            uTF8String = Encoding.UTF8.GetString(bytes);
-            return uTF8String;
         }
         #endregion
     }

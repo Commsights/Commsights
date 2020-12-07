@@ -723,6 +723,18 @@ namespace Commsights.MVC.Controllers
             }
             return "";
         }
+        public async Task<string> AsyncDecode()
+        {
+            List<ProductCompact001> list = _productRepository.GetProductCompact001BySourceWithIDAndTitleToList(AppGlobal.SourceAuto);
+            foreach (ProductCompact001 item in list)
+            {
+                string title = item.Title;
+                item.Title = AppGlobal.Decode(item.Title);
+                item.Title = AppGlobal.ConvertASCIIToUnicode(item.Title);
+                await _productRepository.AsyncUpdateProductCompact001SingleItem(item);
+            }
+            return "";
+        }
         public void CreateProductScanWebsiteNoFilterProduct(Config config)
         {
             if (config != null)
@@ -1168,7 +1180,7 @@ namespace Commsights.MVC.Controllers
                                 product.DatePublish = DateTime.Now;
                                 AppGlobal.FinderContentAndDatePublish001(html, product);
                                 if ((product.DatePublish.Year > 2019) && (product.Active == true))
-                                {                                    
+                                {
                                     product.Title = AppGlobal.Decode(product.Title);
                                     product.Description = AppGlobal.Decode(product.Description);
                                     product.MetaTitle = AppGlobal.SetName(product.Title);
