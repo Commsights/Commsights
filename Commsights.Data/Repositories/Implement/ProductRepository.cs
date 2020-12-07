@@ -1259,6 +1259,16 @@ new SqlParameter("@Title",product.Title),
             string result = await SQLHelper.ExecuteNonQueryAsync(AppGlobal.ConectionString, "sp_ProductUpdateSingleItemWithIDAndTitle", parameters);
             return result;
         }
+        public async Task<string> AsyncUpdateProductCompact001SingleItemWithIDAndDescription(ProductCompact001 product)
+        {
+            SqlParameter[] parameters =
+            {
+new SqlParameter("@ID",product.ID),
+new SqlParameter("@Description",product.Description),
+};
+            string result = await SQLHelper.ExecuteNonQueryAsync(AppGlobal.ConectionString, "sp_ProductUpdateSingleItemWithIDAndDescription", parameters);
+            return result;
+        }
         public string UpdateProductCompactSingleItem(ProductCompact product)
         {
             SqlParameter[] parameters =

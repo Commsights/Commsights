@@ -3760,6 +3760,35 @@ namespace Commsights.Data.Helpers
             string result = Encoding.UTF8.GetString(Encoding.GetEncoding("iso-8859-1").GetBytes(input));
             return result;
         }
+        public static string GetDescription(string html)
+        {
+            string result = "";
+            string htmlspan = html;
+            htmlspan = HTMLReplaceAndSplit(htmlspan);
+            htmlspan = htmlspan.Replace(@"~", @"");
+            htmlspan = htmlspan.Replace(@"</header>", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            MatchCollection m1 = Regex.Matches(htmlspan, @"(<p.*?>.*?</p>)", RegexOptions.Singleline);
+            for (int i = 0; i < m1.Count; i++)
+            {
+                string value = m1[i].Groups[1].Value;
+                if ((value.Contains(@"<img") == true) || (value.Contains(@"</a>") == true) || (value.Contains(@"</script>") == true) || (value.Contains(@"</noscript>") == true))
+                {
+
+                }
+                else
+                {
+                    string t1 = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                    result = result + " " + t1;
+                }
+            }
+            result = result.Replace(@"ä", @"a");
+            result = result.Replace(@"�", @"á");
+            return result;
+        }
         public static string ConvertStringToUnicode(string input)
         {
             string result = "";
@@ -3797,46 +3826,204 @@ namespace Commsights.Data.Helpers
                     }
                 }
             }
-            result = result.Replace(@"ä",@"a");
-            result = result.Replace(@"&nbsp;", @" ");            
+            result = result.Replace(@"ä", @"a");
+            result = result.Replace(@"�", @"á");
             return result;
         }
         public static string HTMLReplaceAndSplit(string htmlspan001)
         {
-            htmlspan001 = htmlspan001.Replace(@"<footer>", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"class=""footer", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"class='footer", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"footer"">", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"footer'>", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"class=""comments", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"class='comments", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"comments"">", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"comments'>", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"class=""fb-comments", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"class='fb-comments", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"fb-comments"">", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"fb-comments'>", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"related-list"">", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"related-list'>", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"related"">", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"related'>", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
+            bool check = false;
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"Bình luận") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"Bình luận", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"Tin khác") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"Tin khác", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"Tin liên quan") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"Tin liên quan", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"Bài viết liên quan") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"Bài viết liên quan", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"Tin nóng") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"Tin nóng", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"Tin mới") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"Tin mới", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"Tin nổi bật") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"Tin nổi bật", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"Đọc thêm") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"Đọc thêm", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"Cùng chuyên mục") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"Cùng chuyên mục", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"tag"">") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"tag"">", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"tag'>") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"tag'>", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"class=""tag") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"class=""tag", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"class='tag") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"class='tag", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"-tags") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"-tags", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"</main>") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"</main>", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"related-post") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"related-post", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"<footer>") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"<footer>", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"class=""footer") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"class=""footer", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"class='footer") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"class='footer", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"footer"">") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"footer"">", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"footer'>") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"footer'>", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            
             return htmlspan001;
         }
         public void GetAuthorFromURL(Product product)

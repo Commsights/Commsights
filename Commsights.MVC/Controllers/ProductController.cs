@@ -733,6 +733,35 @@ namespace Commsights.MVC.Controllers
             }
             return "";
         }
+        public async Task<string> AsyncDescription()
+        {
+            List<ProductCompact001> list = _productRepository.GetProductCompact001BySourceWithIDAndTitleToList(AppGlobal.SourceAuto);
+            foreach (ProductCompact001 item in list)
+            {
+                if ((item.URLCode.Contains(@"zing.vn") == false) && (item.URLCode.Contains(@"zingnews.vn") == false))
+                {
+                    string html = "";
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(item.URLCode);
+                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        Stream receiveStream = response.GetResponseStream();
+                        StreamReader readStream = null;
+                        readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                        html = readStream.ReadToEnd();
+                    }
+                    if (!string.IsNullOrEmpty(html))
+                    {
+                        item.Description = AppGlobal.GetDescription(html);
+                        if (!string.IsNullOrEmpty(item.Description))
+                        {
+                            //await _productRepository.AsyncUpdateProductCompact001SingleItemWithIDAndDescription(item);
+                        }
+                    }
+                }
+            }
+            return "";
+        }
         public void CreateProductScanWebsiteNoFilterProduct(Config config)
         {
             if (config != null)
@@ -1021,15 +1050,7 @@ namespace Commsights.MVC.Controllers
                                     if (response.StatusCode == HttpStatusCode.OK)
                                     {
                                         Stream receiveStream = response.GetResponseStream();
-                                        StreamReader readStream = null;
-                                        if (response.CharacterSet == null)
-                                        {
-                                            readStream = new StreamReader(receiveStream, Encoding.UTF8);
-                                        }
-                                        else
-                                        {
-                                            readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
-                                        }
+                                        StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8);
                                         string html001 = readStream.ReadToEnd();
                                         string htmlspan001 = html001;
                                         htmlspan001 = AppGlobal.HTMLReplaceAndSplit(htmlspan001);

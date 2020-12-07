@@ -12,5 +12,6 @@ namespace Commsights.Data.DataTransferObject
         public string Title { get; set; }        
         public string URLCode { get; set; }
         public string Source { get; set; }
+        public string Description { get; set; }
     }
 }
