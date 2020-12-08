@@ -138,6 +138,10 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult CategorySub()
+        {
+            return View();
+        }
         public IActionResult Feature()
         {
             return View();
@@ -329,6 +333,11 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetCategoryMainToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategoryMain).Where(item => item.ParentID == 0);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCategorySubToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategorySub).Where(item => item.ParentID == 0);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetMediaTierToList([DataSourceRequest] DataSourceRequest request)
@@ -789,6 +798,29 @@ namespace Commsights.MVC.Controllers
             return Json(note);
         }
         public IActionResult CreateCategoryMain(Config model)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.CategoryMain;
+            model.ParentID = 0;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            if (_configResposistory.IsValidByGroupNameAndCodeAndCodeName(model.GroupName, model.Code, model.CodeName) == true)
+            {
+                result = _configResposistory.Create(model);
+            }
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateCategorySub(Config model)
         {
             Initialization(model);
             model.GroupName = AppGlobal.CRM;

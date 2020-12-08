@@ -3350,7 +3350,17 @@ namespace Commsights.Data.Helpers
             int second = DateTime.Now.Second;
             string htmlspan = html;
             htmlspan = htmlspan.Replace(@"~", @"");
-            htmlspan = htmlspan.Replace(@"</header>", @"~");
+            htmlspan = htmlspan.Replace(@"<body", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            htmlspan = htmlspan.Replace(@"<main", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            htmlspan = htmlspan.Replace(@"<header", @"~");
             if (htmlspan.Split('~').Length > 1)
             {
                 htmlspan = htmlspan.Split('~')[1];
@@ -3439,7 +3449,17 @@ namespace Commsights.Data.Helpers
             int second = DateTime.Now.Second;
             string htmlspan = html;
             htmlspan = htmlspan.Replace(@"~", @"");
-            htmlspan = htmlspan.Replace(@"</header>", @"~");
+            htmlspan = htmlspan.Replace(@"<body", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            htmlspan = htmlspan.Replace(@"<main", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            htmlspan = htmlspan.Replace(@"<header", @"~");
             if (htmlspan.Split('~').Length > 1)
             {
                 htmlspan = htmlspan.Split('~')[1];
@@ -3689,7 +3709,17 @@ namespace Commsights.Data.Helpers
                 Uri myUri = new Uri(product.URLCode);
                 htmlspan = HTMLReplaceAndSplit(htmlspan);
                 htmlspan = htmlspan.Replace(@"~", @"");
-                htmlspan = htmlspan.Replace(@"</header>", @"~");
+                htmlspan = htmlspan.Replace(@"<body", @"~");
+                if (htmlspan.Split('~').Length > 1)
+                {
+                    htmlspan = htmlspan.Split('~')[1];
+                }
+                htmlspan = htmlspan.Replace(@"<main", @"~");
+                if (htmlspan.Split('~').Length > 1)
+                {
+                    htmlspan = htmlspan.Split('~')[1];
+                }
+                htmlspan = htmlspan.Replace(@"<header", @"~");
                 if (htmlspan.Split('~').Length > 1)
                 {
                     htmlspan = htmlspan.Split('~')[1];
@@ -4023,7 +4053,7 @@ namespace Commsights.Data.Helpers
                     check = true;
                 }
             }
-            
+
             return htmlspan001;
         }
         public void GetAuthorFromURL(Product product)

@@ -2964,6 +2964,8 @@ namespace Commsights.MVC.Controllers
                 productProperty.ArticleTypeID = model.ArticleType.ID;
                 productProperty.AssessID = model.AssessType.ID;
                 productProperty.ProductID = model.Product.ID;
+
+                productProperty.SentimentCorpID = model.AssessID;
                 if (model.Company.ID == 0)
                 {
                     productProperty.CompanyID = null;
@@ -4137,11 +4139,16 @@ namespace Commsights.MVC.Controllers
                                                 int totalRows = workSheet.Dimension.Rows + 1;
                                                 for (int i = 6; i <= totalRows; i++)
                                                 {
+                                                    string categoryMain = "";
                                                     List<ProductProperty> listProductPropertyURLCode = new List<ProductProperty>();
                                                     Product model = new Product();
                                                     model.Note = fileName;
                                                     model.Initialization(InitType.Insert, RequestUserID);
                                                     model.AssessID = AppGlobal.AssessID;
+                                                    if (workSheet.Cells[i, 2].Value != null)
+                                                    {
+                                                        categoryMain = workSheet.Cells[i, 2].Value.ToString().Trim();
+                                                    }
                                                     if (workSheet.Cells[i, 11].Value != null)
                                                     {
                                                         model.Page = workSheet.Cells[i, 11].Value.ToString().Trim();
@@ -4348,6 +4355,7 @@ namespace Commsights.MVC.Controllers
                                                                         listProductPropertyURLCode[j].ArticleTypeID = product.ArticleTypeID;
                                                                         listProductPropertyURLCode[j].AssessID = product.AssessID;
                                                                         listProductPropertyURLCode[j].IsDaily = true;
+                                                                        listProductPropertyURLCode[j].CategoryMain = categoryMain;
                                                                     }
                                                                     _productPropertyRepository.Range(listProductPropertyURLCode);
                                                                 }
@@ -4423,6 +4431,7 @@ namespace Commsights.MVC.Controllers
                                                                             productProperty.Code = AppGlobal.Company;
                                                                             productProperty.IndustryID = item.IndustryID;
                                                                             productProperty.IsDaily = true;
+                                                                            productProperty.CategoryMain = categoryMain;
                                                                             if (_productPropertyRepository.IsExist(productProperty) == true)
                                                                             {
                                                                                 _productPropertyRepository.Create(productProperty);
@@ -4441,6 +4450,7 @@ namespace Commsights.MVC.Controllers
                                                                         productProperty.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
                                                                         productProperty.Code = AppGlobal.Company;
                                                                         productProperty.IsDaily = true;
+                                                                        productProperty.CategoryMain = categoryMain;
                                                                         if (_productPropertyRepository.IsExist(productProperty) == true)
                                                                         {
                                                                             _productPropertyRepository.Create(productProperty);
@@ -4463,6 +4473,7 @@ namespace Commsights.MVC.Controllers
                                                                 productProperty.GUICode = product.GUICode;
                                                                 productProperty.IndustryID = baseViewModel.IndustryIDUploadAndiSource;
                                                                 productProperty.IsDaily = true;
+                                                                productProperty.CategoryMain = categoryMain;
                                                                 if (_productPropertyRepository.IsExist(productProperty) == true)
                                                                 {
                                                                     _productPropertyRepository.Create(productProperty);
