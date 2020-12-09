@@ -3561,6 +3561,41 @@ namespace Commsights.Data.Helpers
                 }
             }
         }
+        public static string FinderContent003(string html, string tagName)
+        {
+            string description = "";
+            string htmlspan = html;
+            htmlspan = HTMLReplaceAndSplit(htmlspan);
+            htmlspan = htmlspan.Replace(@"~", @"");
+            htmlspan = htmlspan.Replace(@"<body", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            htmlspan = htmlspan.Replace(@"<main", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            MatchCollection m1 = Regex.Matches(htmlspan, @"(<" + tagName + ".*?>.*?</" + tagName + ">)", RegexOptions.Singleline);
+            for (int i = 0; i < m1.Count; i++)
+            {
+                string value = m1[i].Groups[1].Value;
+                if ((value.Contains(@"<img") == true) || (value.Contains(@"</a>") == true) || (value.Contains(@"</script>") == true) || (value.Contains(@"</noscript>") == true))
+                {
+
+                }
+                else
+                {
+                    string t1 = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                    if (!string.IsNullOrEmpty(t1))
+                    {
+                        description = description + " " + t1;
+                    }
+                }
+            }
+            return description;
+        }
         public static void FinderContentAndDatePublish001(string html, Product product)
         {
             if (!string.IsNullOrEmpty(html))
@@ -3833,43 +3868,11 @@ namespace Commsights.Data.Helpers
         {
             string result = "";
             string htmlspan = html;
-            htmlspan = HTMLReplaceAndSplit(htmlspan);
-            htmlspan = htmlspan.Replace(@"~", @"");
-            htmlspan = htmlspan.Replace(@"<main", @"~");
-            if (htmlspan.Split('~').Length > 1)
-            {
-                htmlspan = htmlspan.Split('~')[1];
-            }
-            MatchCollection m1 = Regex.Matches(htmlspan, @"(<p.*?>.*?</p>)", RegexOptions.Singleline);
-            for (int i = 0; i < m1.Count; i++)
-            {
-                string value = m1[i].Groups[1].Value;
-                if ((value.Contains(@"<img") == true) || (value.Contains(@"</a>") == true) || (value.Contains(@"</script>") == true) || (value.Contains(@"</noscript>") == true))
-                {
-
-                }
-                else
-                {
-                    string t1 = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
-                    result = result + " " + t1;
-                }
-            }
+            result = FinderContent003(htmlspan, "p");
             if (string.IsNullOrEmpty(result) || (result.Length < 500))
             {
-                m1 = Regex.Matches(htmlspan, @"(<div.*?>.*?</div>)", RegexOptions.Singleline);
-                for (int i = 0; i < m1.Count; i++)
-                {
-                    string value = m1[i].Groups[1].Value;
-                    if ((value.Contains(@"<img") == true) || (value.Contains(@"</a>") == true) || (value.Contains(@"</script>") == true) || (value.Contains(@"</noscript>") == true))
-                    {
-
-                    }
-                    else
-                    {
-                        string t1 = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
-                        result = result + " " + t1;
-                    }
-                }
+                htmlspan = html;
+                result = FinderContent003(htmlspan, "div");
             }
             result = result.Replace(@"ä", @"a");
             result = result.Replace(@"�", @"á");
