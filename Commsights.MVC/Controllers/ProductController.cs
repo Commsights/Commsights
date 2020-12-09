@@ -723,6 +723,21 @@ namespace Commsights.MVC.Controllers
             }
             return "";
         }
+        public async Task<string> AsyncScanWebsitePriorityNoFilterProductByIndexBeginVoid001(int indexBegin)
+        {
+            List<Config> listConfig = _configResposistory.GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftToList(AppGlobal.CRM, AppGlobal.Website, true, true);
+            int listConfigCount = listConfig.Count;
+            int indexEnd = indexBegin + 5;
+            for (int i = indexBegin; i < indexEnd; i++)
+            {
+                if (i == listConfigCount)
+                {
+                    i = indexEnd;
+                }
+                await this.AsyncCreateProductScanWebsiteNoFilterProduct0001(listConfig[i]);
+            }
+            return "";
+        }
         public async Task<string> AsyncDecode()
         {
             List<ProductCompact001> list = _productRepository.GetProductCompact001BySourceWithIDAndTitleToList(AppGlobal.SourceAuto);
@@ -755,7 +770,7 @@ namespace Commsights.MVC.Controllers
                         item.Description = AppGlobal.GetDescription(html);
                         if (!string.IsNullOrEmpty(item.Description))
                         {
-                            //await _productRepository.AsyncUpdateProductCompact001SingleItemWithIDAndDescription(item);
+                            await _productRepository.AsyncUpdateProductCompact001SingleItemWithIDAndDescription(item);
                         }
                     }
                 }

@@ -303,6 +303,33 @@ namespace Commsights.Data.Repositories
             list = SQLHelper.ToList<Config>(dt);
             return list;
         }
+        public List<Config> GetSQLWebsiteByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@Active",active),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectWebsiteByGroupNameAndCodeAndActive", parameters);
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
+        public List<Config> GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftToList(string groupName, string code, bool active, bool isMenuLeft)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@Active",active),
+                new SqlParameter("@IsMenuLeft",isMenuLeft),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeft", parameters);
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
         public List<Config> GetWebsiteToList()
         {
             List<Config> list = new List<Config>();
@@ -345,6 +372,19 @@ new SqlParameter("@IndustryID",config.IndustryID),
 new SqlParameter("@TierID",config.TierID),
 };
             string result = await SQLHelper.ExecuteNonQueryAsync(AppGlobal.ConectionString, "sp_ConfigInsertSingleItem", parameters);
+            return result;
+        }
+        public string UpdateSingleItem001(Config config)
+        {
+
+            SqlParameter[] parameters =
+            {
+new SqlParameter("@ID",config.ID),
+new SqlParameter("@URLFull",config.URLFull),
+new SqlParameter("@Title",config.Title),
+new SqlParameter("@IsMenuLeft",config.IsMenuLeft),
+};
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ConfigUpdateSingleItem001", parameters);
             return result;
         }
     }

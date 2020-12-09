@@ -55,7 +55,7 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" });}).Width(150);
-    columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70);
+    columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=URLCode#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70);
     columns.Select().Width(50);
     columns.Bound(t => t.IsError).Title("Error").Width(80);
     columns.Bound(t => t.DatePublish).Title("Publish").Format("{0: MM/dd/yyyy}").Width(200).HtmlAttributes(new { @class = "text-right" }).HeaderHtmlAttributes(new { @class = "text-center" });

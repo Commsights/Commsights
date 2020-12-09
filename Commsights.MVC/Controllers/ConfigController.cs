@@ -114,6 +114,10 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult WebsiteSite()
+        {
+            return View();
+        }
         public IActionResult WebsiteCategory()
         {
             return View();
@@ -413,6 +417,11 @@ namespace Commsights.MVC.Controllers
         public List<Config> GetWebsiteByGroupNameAndCodeAndActiveToList()
         {
             return _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
+        }
+        public ActionResult GetSQLWebsiteByGroupNameAndCodeAndActiveToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetSQLWebsiteByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
+            return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetWebsiteByGroupNameAndCodeAndActiveToList001([DataSourceRequest] DataSourceRequest request)
         {
@@ -1032,11 +1041,6 @@ namespace Commsights.MVC.Controllers
             int result = 0;
             if (_configResposistory.IsValidByGroupNameAndCodeAndURL(model.GroupName, model.Code, model.URLFull) == true)
             {
-                //Config parent = _configResposistory.GetByID(parentID);
-                //if (parent != null)
-                //{
-                //    model.IsMenuLeft = parent.IsMenuLeft;
-                //}
                 model.ID = 0;
                 result = _configResposistory.Create(model);
             }
@@ -1100,6 +1104,21 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
             int result = _configResposistory.Update(model.ID, model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
+        public IActionResult UpdateSingleItem001(Config model)
+        {
+            string note = AppGlobal.InitString;
+            _configResposistory.UpdateSingleItem001(model);
+            int result = 1;
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;

@@ -311,7 +311,70 @@
                             1150
                         </button>
                     </div>
-                </div>               
+                </div>
+                <br />
+                <div class="row">
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-warning" onclick="onAsyncScanWebsitePriorityNoFilterProductByIndexBeginVoid001(0)">
+                            0
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-warning" onclick="onAsyncScanWebsitePriorityNoFilterProductByIndexBeginVoid001(5)">
+                            5
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-warning" onclick="onAsyncScanWebsitePriorityNoFilterProductByIndexBeginVoid001(10)">
+                            10
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-warning" onclick="onAsyncScanWebsitePriorityNoFilterProductByIndexBeginVoid001(15)">
+                            15
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-warning" onclick="onAsyncScanWebsitePriorityNoFilterProductByIndexBeginVoid001(20)">
+                            20
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-warning" onclick="onAsyncScanWebsitePriorityNoFilterProductByIndexBeginVoid001(25)">
+                            25
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-warning" onclick="onAsyncScanWebsitePriorityNoFilterProductByIndexBeginVoid001(30)">
+                            30
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-warning" onclick="onAsyncScanWebsitePriorityNoFilterProductByIndexBeginVoid001(35)">
+                            35
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-warning" onclick="onAsyncScanWebsitePriorityNoFilterProductByIndexBeginVoid001(40)">
+                            40
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-warning" onclick="onAsyncScanWebsitePriorityNoFilterProductByIndexBeginVoid001(45)">
+                            45
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-warning" onclick="onAsyncScanWebsitePriorityNoFilterProductByIndexBeginVoid001(50)">
+                            50
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-warning" onclick="onAsyncScanWebsitePriorityNoFilterProductByIndexBeginVoid001(55)">
+                            55
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -521,6 +584,21 @@
             }).done(() => {
             });
         }
+        return false;
+    }
+    function onAsyncScanWebsitePriorityNoFilterProductByIndexBeginVoid001(indexBegin) {
+        BeginRequestHandler();
+        $.ajax({
+            type: 'GET',
+            url: "@Url.Action("AsyncScanWebsitePriorityNoFilterProductByIndexBeginVoid001", "Product")",
+            data: {
+                indexBegin: indexBegin
+            },
+            success: function () {
+                    EndRequestHandler();
+            }
+            }).done(() => {
+        });
         return false;
     }
     function onDecode() {
