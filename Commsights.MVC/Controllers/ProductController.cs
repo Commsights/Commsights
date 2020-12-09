@@ -1133,8 +1133,8 @@ namespace Commsights.MVC.Controllers
                     List<LinkItem> list = new List<LinkItem>();
                     AppGlobal.LinkFinder001(config.URLFull, config.URLFull, true, list);
                     //LinkItem item = new LinkItem();
-                    //item.Href = "https://thanhnien.vn/thoi-su/giai-cuu-thanh-cong-nan-nhan-bi-bat-coc-doi-45-ti-dong-tien-chuoc-1314791.html";
-                    //item.Text = "Giải cứu thành công nạn nhân bị bắt cóc đòi 4,5 tỉ đồng tiền chuộc";
+                    //item.Href = "https://thanhnien.vn/thoi-su/sai-pham-o-saigon-coop-kiem-diem-nhieu-ca-nhan-to-chuc-1314984.html";
+                    //item.Text = "Sai phạm ở Saigon Co.op: Kiểm điểm nhiều cá nhân, tổ chức";
                     //list.Add(item);
                     foreach (LinkItem linkItem in list)
                     {

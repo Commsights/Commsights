@@ -3542,11 +3542,6 @@ namespace Commsights.Data.Helpers
             {
                 htmlspan = htmlspan.Split('~')[1];
             }
-            htmlspan = htmlspan.Replace(@"<header", @"~");
-            if (htmlspan.Split('~').Length > 1)
-            {
-                htmlspan = htmlspan.Split('~')[1];
-            }
             MatchCollection m1 = Regex.Matches(htmlspan, @"(<" + tagName + ".*?>.*?</" + tagName + ">)", RegexOptions.Singleline);
             for (int i = 0; i < m1.Count; i++)
             {
@@ -3634,124 +3629,154 @@ namespace Commsights.Data.Helpers
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "dd", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "dd", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "dd", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "dd", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "time", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "time", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "time", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "time", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "span", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "span", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "span", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "span", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "div", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "div", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "div", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "div", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "h1", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "h1", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "h1", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h1", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "h2", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "h2", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "h2", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h2", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "h3", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "h3", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "h3", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h3", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "h4", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "h4", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "h4", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h4", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "h5", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "h5", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "h5", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h5", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "h6", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "h6", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "h6", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h6", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "li", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "li", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "li", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "li", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "em", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "em", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "em", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "em", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "i", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "i", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "i", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "i", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "p", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "p", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "p", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "p", product);
                 }
                 if (string.IsNullOrEmpty(product.Description) || product.Description.Length < 1000)
                 {
-                    FinderContent002(html, "p", product);
+                    htmlspan = html;
+                    FinderContent002(htmlspan, "p", product);
                 }
-                if (string.IsNullOrEmpty(product.Description) || product.Description.Length < 1000)
+                if (string.IsNullOrEmpty(product.Description) || product.Description.Length < 500)
                 {
+                    htmlspan = html;
                     product.Description = "";
-                    FinderContent002(html, "div", product);
+                    FinderContent002(htmlspan, "div", product);
                 }
             }
         }
@@ -3810,7 +3835,7 @@ namespace Commsights.Data.Helpers
             string htmlspan = html;
             htmlspan = HTMLReplaceAndSplit(htmlspan);
             htmlspan = htmlspan.Replace(@"~", @"");
-            htmlspan = htmlspan.Replace(@"</header>", @"~");
+            htmlspan = htmlspan.Replace(@"<main", @"~");
             if (htmlspan.Split('~').Length > 1)
             {
                 htmlspan = htmlspan.Split('~')[1];
@@ -3827,6 +3852,23 @@ namespace Commsights.Data.Helpers
                 {
                     string t1 = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
                     result = result + " " + t1;
+                }
+            }
+            if (string.IsNullOrEmpty(result) || (result.Length < 500))
+            {
+                m1 = Regex.Matches(htmlspan, @"(<div.*?>.*?</div>)", RegexOptions.Singleline);
+                for (int i = 0; i < m1.Count; i++)
+                {
+                    string value = m1[i].Groups[1].Value;
+                    if ((value.Contains(@"<img") == true) || (value.Contains(@"</a>") == true) || (value.Contains(@"</script>") == true) || (value.Contains(@"</noscript>") == true))
+                    {
+
+                    }
+                    else
+                    {
+                        string t1 = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                        result = result + " " + t1;
+                    }
                 }
             }
             result = result.Replace(@"ä", @"a");
