@@ -3527,6 +3527,45 @@ namespace Commsights.Data.Helpers
                 }
             }
         }
+        public static void FinderContent002(string html, string tagName, Product product)
+        {
+            string htmlspan = html;
+            htmlspan = HTMLReplaceAndSplit(htmlspan);
+            htmlspan = htmlspan.Replace(@"~", @"");
+            htmlspan = htmlspan.Replace(@"<body", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            htmlspan = htmlspan.Replace(@"<main", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            htmlspan = htmlspan.Replace(@"<header", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            MatchCollection m1 = Regex.Matches(htmlspan, @"(<" + tagName + ".*?>.*?</" + tagName + ">)", RegexOptions.Singleline);
+            for (int i = 0; i < m1.Count; i++)
+            {
+                string value = m1[i].Groups[1].Value;
+                if ((value.Contains(@"<img") == true) || (value.Contains(@"</a>") == true) || (value.Contains(@"</script>") == true) || (value.Contains(@"</noscript>") == true))
+                {
+
+                }
+                else
+                {
+                    string t1 = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                    if (!string.IsNullOrEmpty(t1))
+                    {
+                        product.Description = product.Description + " " + t1;
+                        product.ContentMain = product.ContentMain + "<br/>" + t1;
+                    }
+                }
+            }
+        }
         public static void FinderContentAndDatePublish001(string html, Product product)
         {
             if (!string.IsNullOrEmpty(html))
@@ -3705,39 +3744,14 @@ namespace Commsights.Data.Helpers
                 {
                     DatePublish002(html, "p", product);
                 }
-                htmlspan = html;
-                Uri myUri = new Uri(product.URLCode);
-                htmlspan = HTMLReplaceAndSplit(htmlspan);
-                htmlspan = htmlspan.Replace(@"~", @"");
-                htmlspan = htmlspan.Replace(@"<body", @"~");
-                if (htmlspan.Split('~').Length > 1)
+                if (string.IsNullOrEmpty(product.Description) || product.Description.Length < 1000)
                 {
-                    htmlspan = htmlspan.Split('~')[1];
+                    FinderContent002(html, "p", product);
                 }
-                htmlspan = htmlspan.Replace(@"<main", @"~");
-                if (htmlspan.Split('~').Length > 1)
+                if (string.IsNullOrEmpty(product.Description) || product.Description.Length < 1000)
                 {
-                    htmlspan = htmlspan.Split('~')[1];
-                }
-                htmlspan = htmlspan.Replace(@"<header", @"~");
-                if (htmlspan.Split('~').Length > 1)
-                {
-                    htmlspan = htmlspan.Split('~')[1];
-                }
-                m1 = Regex.Matches(htmlspan, @"(<p.*?>.*?</p>)", RegexOptions.Singleline);
-                for (int i = 0; i < m1.Count; i++)
-                {
-                    string value = m1[i].Groups[1].Value;
-                    if ((value.Contains(@"<img") == true) || (value.Contains(@"</a>") == true) || (value.Contains(@"<a") == true) || (value.Contains(@"href") == true) || (value.Contains(@"function()") == true) || (value.Contains(@"$(") == true))
-                    {
-
-                    }
-                    else
-                    {
-                        string t1 = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
-                        product.Description = product.Description + " " + t1;
-                        product.ContentMain = product.ContentMain + "<br/>" + t1;
-                    }
+                    product.Description = "";
+                    FinderContent002(html, "div", product);
                 }
             }
         }
@@ -3865,15 +3879,6 @@ namespace Commsights.Data.Helpers
             bool check = false;
             if (check == false)
             {
-                if (htmlspan001.Contains(@"Bình luận") == true)
-                {
-                    htmlspan001 = htmlspan001.Replace(@"Bình luận", @"~");
-                    htmlspan001 = htmlspan001.Split('~')[0];
-                    check = true;
-                }
-            }
-            if (check == false)
-            {
                 if (htmlspan001.Contains(@"Tin khác") == true)
                 {
                     htmlspan001 = htmlspan001.Replace(@"Tin khác", @"~");
@@ -3895,33 +3900,6 @@ namespace Commsights.Data.Helpers
                 if (htmlspan001.Contains(@"Bài viết liên quan") == true)
                 {
                     htmlspan001 = htmlspan001.Replace(@"Bài viết liên quan", @"~");
-                    htmlspan001 = htmlspan001.Split('~')[0];
-                    check = true;
-                }
-            }
-            if (check == false)
-            {
-                if (htmlspan001.Contains(@"Tin nóng") == true)
-                {
-                    htmlspan001 = htmlspan001.Replace(@"Tin nóng", @"~");
-                    htmlspan001 = htmlspan001.Split('~')[0];
-                    check = true;
-                }
-            }
-            if (check == false)
-            {
-                if (htmlspan001.Contains(@"Tin mới") == true)
-                {
-                    htmlspan001 = htmlspan001.Replace(@"Tin mới", @"~");
-                    htmlspan001 = htmlspan001.Split('~')[0];
-                    check = true;
-                }
-            }
-            if (check == false)
-            {
-                if (htmlspan001.Contains(@"Tin nổi bật") == true)
-                {
-                    htmlspan001 = htmlspan001.Replace(@"Tin nổi bật", @"~");
                     htmlspan001 = htmlspan001.Split('~')[0];
                     check = true;
                 }

@@ -1132,6 +1132,10 @@ namespace Commsights.MVC.Controllers
                 {
                     List<LinkItem> list = new List<LinkItem>();
                     AppGlobal.LinkFinder001(config.URLFull, config.URLFull, true, list);
+                    //LinkItem item = new LinkItem();
+                    //item.Href = "https://thanhnien.vn/thoi-su/giai-cuu-thanh-cong-nan-nhan-bi-bat-coc-doi-45-ti-dong-tien-chuoc-1314791.html";
+                    //item.Text = "Giải cứu thành công nạn nhân bị bắt cóc đòi 4,5 tỉ đồng tiền chuộc";
+                    //list.Add(item);
                     foreach (LinkItem linkItem in list)
                     {
                         try
@@ -1200,6 +1204,7 @@ namespace Commsights.MVC.Controllers
                                 }
                                 title = title.Trim();
                                 Product product = new Product();
+                                product.Description = "";
                                 product.Title = title;
                                 product.ParentID = config.ID;
                                 product.CategoryID = config.ID;
@@ -1215,9 +1220,15 @@ namespace Commsights.MVC.Controllers
                                 AppGlobal.FinderContentAndDatePublish001(html, product);
                                 if ((product.DatePublish.Year > 2019) && (product.Active == true))
                                 {
-                                    product.Title = AppGlobal.ConvertStringToUnicode(product.Title);
-                                    product.Description = AppGlobal.ConvertStringToUnicode(product.Description);
-                                    product.MetaTitle = AppGlobal.SetName(product.Title);
+                                    if (!string.IsNullOrEmpty(product.Title))
+                                    {
+                                        product.Title = AppGlobal.ConvertStringToUnicode(product.Title);
+                                        product.MetaTitle = AppGlobal.SetName(product.Title);
+                                    }
+                                    if (!string.IsNullOrEmpty(product.Description))
+                                    {
+                                        product.Description = AppGlobal.ConvertStringToUnicode(product.Description);
+                                    }
                                     await _productRepository.AsyncInsertSingleItem(product);
                                 }
                                 response.Close();
