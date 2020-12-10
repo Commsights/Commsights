@@ -770,9 +770,43 @@ namespace Commsights.MVC.Controllers
                         item.Description = AppGlobal.GetDescription(html);
                         if (!string.IsNullOrEmpty(item.Description))
                         {
+                            item.Description = AppGlobal.ConvertStringToUnicode(item.Description);
                             await _productRepository.AsyncUpdateProductCompact001SingleItemWithIDAndDescription(item);
                         }
                     }
+                }
+            }
+            return "";
+        }
+        public async Task<string> AsyncDescriptionBySourceAndRowBeginAndRowEnd(int rowBegin, int rowEnd)
+        {
+            List<ProductCompact001> list = _productRepository.GetProductCompact001BySourceAndRowBeginAndRowEndWithIDAndDescriptionToList(AppGlobal.SourceAuto, rowBegin, rowEnd);
+            foreach (ProductCompact001 item in list)
+            {
+                if (string.IsNullOrEmpty(item.Description))
+                {
+                    if ((item.URLCode.Contains(@"zing.vn") == false) && (item.URLCode.Contains(@"zingnews.vn") == false))
+                    {
+                        string html = "";
+                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(item.URLCode);
+                        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            Stream receiveStream = response.GetResponseStream();
+                            StreamReader readStream = null;
+                            readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                            html = readStream.ReadToEnd();
+                        }
+                        if (!string.IsNullOrEmpty(html))
+                        {
+                            item.Description = AppGlobal.GetDescription(html);
+                        }
+                    }
+                }
+                if (!string.IsNullOrEmpty(item.Description))
+                {
+                    item.Description = AppGlobal.ConvertStringToUnicode(item.Description);
+                    await _productRepository.AsyncUpdateProductCompact001SingleItemWithIDAndDescription(item);
                 }
             }
             return "";

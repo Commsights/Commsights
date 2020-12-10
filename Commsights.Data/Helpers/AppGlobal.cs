@@ -3849,6 +3849,57 @@ namespace Commsights.Data.Helpers
             string result = System.Net.WebUtility.HtmlDecode(html);
             return result;
         }
+        private static char[] tcvnchars = {
+        'µ', '¸', '¶', '·', '¹',
+        '¨', '»', '¾', '¼', '½', 'Æ',
+        '©', 'Ç', 'Ê', 'È', 'É', 'Ë',
+        '®', 'Ì', 'Ð', 'Î', 'Ï', 'Ñ',
+        'ª', 'Ò', 'Õ', 'Ó', 'Ô', 'Ö',
+        '×', 'Ý', 'Ø', 'Ü', 'Þ',
+        'ß', 'ã', 'á', 'â', 'ä',
+        '«', 'å', 'è', 'æ', 'ç', 'é',
+        '¬', 'ê', 'í', 'ë', 'ì', 'î',
+        'ï', 'ó', 'ñ', 'ò', 'ô',
+        '­', 'õ', 'ø', 'ö', '÷', 'ù',
+        'ú', 'ý', 'û', 'ü', 'þ',
+        '¡', '¢', '§', '£', '¤', '¥', '¦'
+        };
+        private static char[] unichars = {
+        'à', 'á', 'ả', 'ã', 'ạ',
+        'ă', 'ằ', 'ắ', 'ẳ', 'ẵ', 'ặ',
+        'â', 'ầ', 'ấ', 'ẩ', 'ẫ', 'ậ',
+        'đ', 'è', 'é', 'ẻ', 'ẽ', 'ẹ',
+        'ê', 'ề', 'ế', 'ể', 'ễ', 'ệ',
+        'ì', 'í', 'ỉ', 'ĩ', 'ị',
+        'ò', 'ó', 'ỏ', 'õ', 'ọ',
+        'ô', 'ồ', 'ố', 'ổ', 'ỗ', 'ộ',
+        'ơ', 'ờ', 'ớ', 'ở', 'ỡ', 'ợ',
+        'ù', 'ú', 'ủ', 'ũ', 'ụ',
+        'ư', 'ừ', 'ứ', 'ử', 'ữ', 'ự',
+        'ỳ', 'ý', 'ỷ', 'ỹ', 'ỵ',
+        'Ă', 'Â', 'Đ', 'Ê', 'Ô', 'Ơ', 'Ư'
+         };
+        public static string TCVN3ToUnicode(string value)
+        {
+            char[] convertTable = new char[256];
+            for (int i = 0; i < 256; i++)
+            {
+                convertTable[i] = (char)i;
+            }
+            for (int i = 0; i < tcvnchars.Length; i++)
+            {
+                convertTable[tcvnchars[i]] = unichars[i];
+            }
+            char[] chars = value.ToCharArray();
+            for (int i = 0; i < chars.Length; i++)
+            {
+                if (chars[i] < (char)256)
+                {
+                    chars[i] = convertTable[chars[i]];
+                }
+            }
+            return new string(chars);
+        }
         public static string ConvertASCIIToUnicode(string input)
         {
             string result = Encoding.UTF8.GetString(Encoding.ASCII.GetBytes(input));
@@ -3881,42 +3932,48 @@ namespace Commsights.Data.Helpers
         public static string ConvertStringToUnicode(string input)
         {
             string result = "";
-            Encoding encoding = Encoding.GetEncoding("us-ascii", new EncoderReplacementFallback("(unknown)"), new DecoderReplacementFallback("(error)"));
-            byte[] encodedBytes = new byte[encoding.GetByteCount(input)];
-            int numberOfEncodedBytes = encoding.GetBytes(input, 0, input.Length, encodedBytes, 0);
-            string decodedString = encoding.GetString(encodedBytes);
-            if (decodedString.Contains(@"unknown") == false)
+            if (input.Contains(@"&#") == true)
             {
-                result = ConvertASCIIToUnicode(input);
+                result = Decode(input);
             }
             else
             {
-                encoding = Encoding.GetEncoding("iso-8859-1", new EncoderReplacementFallback("(unknown)"), new DecoderReplacementFallback("(error)"));
-                encodedBytes = new byte[encoding.GetByteCount(input)];
-                numberOfEncodedBytes = encoding.GetBytes(input, 0, input.Length, encodedBytes, 0);
-                decodedString = encoding.GetString(encodedBytes);
+                Encoding encoding = Encoding.GetEncoding("us-ascii", new EncoderReplacementFallback("(unknown)"), new DecoderReplacementFallback("(error)"));
+                byte[] encodedBytes = new byte[encoding.GetByteCount(input)];
+                int numberOfEncodedBytes = encoding.GetBytes(input, 0, input.Length, encodedBytes, 0);
+                string decodedString = encoding.GetString(encodedBytes);
                 if (decodedString.Contains(@"unknown") == false)
                 {
-                    result = ConvertLatin1ToUnicode(input);
+                    result = ConvertASCIIToUnicode(input);
                 }
                 else
                 {
-                    encoding = Encoding.GetEncoding(1252, new EncoderReplacementFallback("(unknown)"), new DecoderReplacementFallback("(error)"));
+                    encoding = Encoding.GetEncoding("iso-8859-1", new EncoderReplacementFallback("(unknown)"), new DecoderReplacementFallback("(error)"));
                     encodedBytes = new byte[encoding.GetByteCount(input)];
                     numberOfEncodedBytes = encoding.GetBytes(input, 0, input.Length, encodedBytes, 0);
                     decodedString = encoding.GetString(encodedBytes);
                     if (decodedString.Contains(@"unknown") == false)
                     {
-                        result = ConvertWind1252ToUnicode(input);
+                        result = ConvertLatin1ToUnicode(input);
                     }
                     else
                     {
-                        result = Decode(input);
+                        encoding = Encoding.GetEncoding(1252, new EncoderReplacementFallback("(unknown)"), new DecoderReplacementFallback("(error)"));
+                        encodedBytes = new byte[encoding.GetByteCount(input)];
+                        numberOfEncodedBytes = encoding.GetBytes(input, 0, input.Length, encodedBytes, 0);
+                        decodedString = encoding.GetString(encodedBytes);
+                        if (decodedString.Contains(@"unknown") == false)
+                        {
+                            result = ConvertWind1252ToUnicode(input);
+                        }
+                        else
+                        {
+                            result = Decode(input);
+                        }
                     }
                 }
             }
-            result = result.Replace(@"ä", @"a");
-            result = result.Replace(@"�", @"á");
+            result = TCVN3ToUnicode(result);
             return result;
         }
         public static string HTMLReplaceAndSplit(string htmlspan001)

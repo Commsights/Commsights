@@ -375,6 +375,20 @@
                         </button>
                     </div>
                 </div>
+                <br />
+                <div class="row">
+                    <div class='col-sm-3'>
+                        <input type="text" id="RowBegin" class="form-control" value="0" />
+                    </div>
+                    <div class='col-sm-3'>
+                        <input type="text" id="RowEnd" class="form-control" value="1000" />
+                    </div>
+                    <div class='col-sm-3'>
+                        <button type="button" class="btn btn-primary" onclick="onDescriptionByRowBeginAndRowEnd()">
+                            <span class="fas fa-sync-alt"></span> Description
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -621,6 +635,24 @@
             type: 'GET',
             url: "@Url.Action("AsyncDescription", "Product")",
             data: {
+            },
+            success: function () {
+                    EndRequestHandler();
+            }
+            }).done(() => {
+            });
+        return false;
+    }
+    function onDescriptionByRowBeginAndRowEnd() {
+        BeginRequestHandler();
+        var rowBeginValue = $("#RowBegin").val();
+        var rowEndValue = $("#RowEnd").val();
+        $.ajax({
+            type: 'GET',
+            url: "@Url.Action("AsyncDescriptionBySourceAndRowBeginAndRowEnd", "Product")",
+            data: {
+                rowBegin: rowBeginValue,
+                rowEnd: rowEndValue
             },
             success: function () {
                     EndRequestHandler();

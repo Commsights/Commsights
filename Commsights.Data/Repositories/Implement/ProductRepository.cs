@@ -722,6 +722,19 @@ namespace Commsights.Data.Repositories
             list = SQLHelper.ToList<ProductCompact001>(dt);
             return list;
         }
+        public List<ProductCompact001> GetProductCompact001BySourceAndRowBeginAndRowEndWithIDAndDescriptionToList(string source, int rowBegin, int rowEnd)
+        {
+            List<ProductCompact001> list = new List<ProductCompact001>();
+            SqlParameter[] parameters =
+                   {
+                new SqlParameter("@Source",source),
+                new SqlParameter("@RowBegin",rowBegin),
+                new SqlParameter("@RowEnd",rowEnd),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectBySourceAndRowBeginAndRowEndWithIDAndDescription", parameters);
+            list = SQLHelper.ToList<ProductCompact001>(dt);
+            return list;
+        }
         public Product GetByID001(int ID)
         {
             Product model = new Product();

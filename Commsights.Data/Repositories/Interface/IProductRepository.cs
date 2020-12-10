@@ -57,5 +57,6 @@ namespace Commsights.Data.Repositories
         public Task<string> AsyncUpdateProductCompact001SingleItem(ProductCompact001 product);
         public Task<string> AsyncUpdateProductCompact001SingleItemWithIDAndDescription(ProductCompact001 product);
         public List<ProductCompact001> GetProductCompact001BySourceWithIDAndTitleToList(string source);
+        public List<ProductCompact001> GetProductCompact001BySourceAndRowBeginAndRowEndWithIDAndDescriptionToList(string source, int rowBegin, int rowEnd);
     }
 }
