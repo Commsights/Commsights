@@ -750,6 +750,12 @@ namespace Commsights.MVC.Controllers
         }
         public async Task<string> AsyncDescription()
         {
+            //string result = "B&#7843;n&#32;tin&#32;GolfNews&#32;360:&#32;K&#7923;&#32;156";
+            //result = AppGlobal.Decode(result);
+            //result = AppGlobal.ConvertASCIIToUnicode(result);
+            //result = AppGlobal.ConvertLatin1ToUnicode(result);
+            //result = AppGlobal.ConvertWind1252ToUnicode(result);
+            //result = AppGlobal.TCVN3ToUnicode(result);
             List<ProductCompact001> list = _productRepository.GetProductCompact001BySourceWithIDAndTitleToList(AppGlobal.SourceAuto);
             foreach (ProductCompact001 item in list)
             {
@@ -776,6 +782,12 @@ namespace Commsights.MVC.Controllers
                     }
                 }
             }
+            //List<ProductCompact001> list = _productRepository.GetProductCompact001BySourceWithIDAndTitleToList(AppGlobal.SourceAuto);
+            //foreach (ProductCompact001 item in list)
+            //{
+            //    item.Title = AppGlobal.Decode(item.Title);
+            //    await _productRepository.AsyncUpdateProductCompact001SingleItem(item);
+            //}
             return "";
         }
         public async Task<string> AsyncDescriptionBySourceAndRowBeginAndRowEnd(int rowBegin, int rowEnd)
@@ -803,7 +815,7 @@ namespace Commsights.MVC.Controllers
                 }
                 if (!string.IsNullOrEmpty(description))
                 {
-                    item.Description = AppGlobal.ConvertStringToUnicode(description);
+                    item.Description = AppGlobal.Decode(description);
                     await _productRepository.AsyncUpdateProductCompact001SingleItemWithIDAndDescription(item);
                 }
             }
@@ -1254,12 +1266,12 @@ namespace Commsights.MVC.Controllers
                                 {
                                     if (!string.IsNullOrEmpty(product.Title))
                                     {
-                                        product.Title = AppGlobal.ConvertStringToUnicode(product.Title);
+                                        product.Title = AppGlobal.Decode(product.Title);
                                         product.MetaTitle = AppGlobal.SetName(product.Title);
                                     }
                                     if (!string.IsNullOrEmpty(product.Description))
                                     {
-                                        product.Description = AppGlobal.ConvertStringToUnicode(product.Description);
+                                        product.Description = AppGlobal.Decode(product.Description);
                                     }
                                     await _productRepository.AsyncInsertSingleItem(product);
                                 }
