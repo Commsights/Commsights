@@ -41,5 +41,6 @@ namespace Commsights.Data.Repositories
         public List<Config> GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftToList(string groupName, string code, bool active, bool isMenuLeft);
         public List<Config> GetWebsiteToList();
         public string UpdateSingleItem001(Config config);
+        public List<Config> GetSQLByGroupNameAndCodeToList(string groupName, string code);
     }
 }

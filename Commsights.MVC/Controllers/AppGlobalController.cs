@@ -30,5 +30,15 @@ namespace Commsights.MVC.Controllers
             var data = MonthFinance.GetAllToList();
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetSEOToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = SOE.GetAllToList();
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCorpCopyToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = CorpCopy.GetAllToList();
+            return Json(data.ToDataSourceResult(request));
+        }
     }
 }

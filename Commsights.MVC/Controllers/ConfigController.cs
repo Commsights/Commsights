@@ -336,12 +336,17 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetCategoryMainToList([DataSourceRequest] DataSourceRequest request)
         {
-            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategoryMain).Where(item => item.ParentID == 0);
+            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategoryMain).Where(item => item.ParentID == 0).OrderByDescending(item => item.Active);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCodeDataCategoryMainActiveToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategoryMain).Where(item => item.Active == true).OrderBy(item => item.SortOrder);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetCategorySubToList([DataSourceRequest] DataSourceRequest request)
         {
-            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategorySub).Where(item => item.ParentID == 0);
+            var data = _configResposistory.GetSQLByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategorySub);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetMediaTierToList([DataSourceRequest] DataSourceRequest request)
@@ -833,8 +838,7 @@ namespace Commsights.MVC.Controllers
         {
             Initialization(model);
             model.GroupName = AppGlobal.CRM;
-            model.Code = AppGlobal.CategoryMain;
-            model.ParentID = 0;
+            model.Code = AppGlobal.CategorySub;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;

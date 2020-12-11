@@ -86,7 +86,7 @@ namespace Commsights.Data.Repositories
         public List<Config> GetByParentIDAndGroupNameAndCodeToList(int parentID, string groupName, string code)
         {
             return _context.Config.Where(item => item.GroupName.Equals(AppGlobal.CRM) && item.Code.Equals(AppGlobal.Website) && item.ParentID == parentID).OrderBy(item => item.ID).ToList();
-        }
+        }       
         public List<Config> GetMediaByGroupNameAndActiveToList(string groupName, bool active)
         {
             List<Config> list = new List<Config>();
@@ -327,6 +327,18 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@IsMenuLeft",isMenuLeft),
             };
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeft", parameters);
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
+        public List<Config> GetSQLByGroupNameAndCodeToList(string groupName, string code)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+            {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectByGroupNameAndCode", parameters);
             list = SQLHelper.ToList<Config>(dt);
             return list;
         }

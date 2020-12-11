@@ -56,6 +56,42 @@ namespace Commsights.Data.Helpers
             return list;
         }
     }
+    public class SOE
+    {
+        public int Display { get; set; }
+        public SOE()
+        {
+        }
+        public static List<SOE> GetAllToList()
+        {
+            List<SOE> list = new List<SOE>();
+            for (int i = 0; i <= 100; i = i + 5)
+            {
+                SOE model = new SOE();
+                model.Display = i;
+                list.Add(model);
+            }
+            return list;
+        }
+    }
+    public class CorpCopy
+    {
+        public string Display { get; set; }
+        public CorpCopy()
+        {
+        }
+        public static List<CorpCopy> GetAllToList()
+        {
+            List<CorpCopy> list = new List<CorpCopy>();
+            CorpCopy model = new CorpCopy();
+            model.Display = "";
+            list.Add(model);
+            model = new CorpCopy();
+            model.Display = "Origin";
+            list.Add(model);
+            return list;
+        }
+    }
     public class AppGlobal
     {
         #region Init
@@ -3546,7 +3582,7 @@ namespace Commsights.Data.Helpers
             for (int i = 0; i < m1.Count; i++)
             {
                 string value = m1[i].Groups[1].Value;
-                if ((value.Contains(@"<img") == true) || (value.Contains(@"</a>") == true) || (value.Contains(@"</script>") == true) || (value.Contains(@"</noscript>") == true))
+                if ((value.Contains(@"<img") == true) || (value.Contains(@"</a>") == true) || (value.Contains(@"</script>") == true) || (value.Contains(@"</noscript>") == true) || (value.Contains(@"</style>") == true))
                 {
 
                 }
