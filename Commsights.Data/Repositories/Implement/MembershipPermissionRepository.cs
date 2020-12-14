@@ -242,16 +242,22 @@ namespace Commsights.Data.Repositories
         public List<MembershipPermissionProductDataTransfer> GetProductByAccountAndCodeToList(string account, string code)
         {
             List<MembershipPermissionProductDataTransfer> list = new List<MembershipPermissionProductDataTransfer>();
-            Membership membership = _context.Membership.Where(item => item.Account.Equals(account)).FirstOrDefault();
-            if (membership.ID > 0)
+            if (!string.IsNullOrEmpty(account))
             {
-                SqlParameter[] parameters =
-                      {
-                new SqlParameter("@MembershipID",membership.ID),
-                new SqlParameter("@Code",code)
-            };
-                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectProductByMembershipIDAndCode", parameters);
-                list = SQLHelper.ToList<MembershipPermissionProductDataTransfer>(dt);
+                Membership membership = _context.Membership.Where(item => item.Account.Equals(account)).FirstOrDefault();
+                if (membership != null)
+                {
+                    if (membership.ID > 0)
+                    {
+                        SqlParameter[] parameters =
+                        {
+                    new SqlParameter("@MembershipID",membership.ID),
+                    new SqlParameter("@Code",code)
+                    };
+                        DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectProductByMembershipIDAndCode", parameters);
+                        list = SQLHelper.ToList<MembershipPermissionProductDataTransfer>(dt);
+                    }
+                }
             }
             return list;
         }

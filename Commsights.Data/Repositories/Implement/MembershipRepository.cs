@@ -117,7 +117,7 @@ namespace Commsights.Data.Repositories
         {
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectAllCompany001");
             return SQLHelper.ToList<MembershipCompanyDataTransfer>(dt);
-        }
+        }        
         public List<MembershipCompanyDataTransfer> GetAllCompany001ByActiveToList()
         {
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectCompany001ByActive");
@@ -133,6 +133,20 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@IndustryID",industryID),
                 };
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectByIndustryID001", parameters);
+                list = SQLHelper.ToList<MembershipCompanyDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<MembershipCompanyDataTransfer> GetByIndustryID001ByActiveToList(int industryID)
+        {
+            List<MembershipCompanyDataTransfer> list = new List<MembershipCompanyDataTransfer>();
+            if (industryID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@IndustryID",industryID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectByIndustryID001ByActive", parameters);
                 list = SQLHelper.ToList<MembershipCompanyDataTransfer>(dt);
             }
             return list;

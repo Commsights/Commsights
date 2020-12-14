@@ -12,6 +12,7 @@ namespace Commsights.Data.Repositories
         public string InsertItemsByID(int ID);
         public string InsertItemByID(int ID);
         public string UpdateItemsWithParentIDIsZero();
+        public string UpdateSingleItemByIDAndFileName(int ID, string fileName);
         public bool IsExistByProductIDAndCodeAndCompanyID(int productID, string code, int companyID);
         public bool IsExistByGUICodeAndCodeAndCompanyID(string gUICode, string code, int companyID);
         public bool IsExistByGUICodeAndCodeAndIndustryID(string gUICode, string code, int industryID);

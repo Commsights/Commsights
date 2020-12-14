@@ -131,7 +131,7 @@ namespace Commsights.Data.Helpers
 
         public static string DateTimeCode => DateTime.Now.ToString("yyyyMMddHHmmss");
         public static string HourCode => DateTime.Now.ToString("yyyyMMddHH");
-
+        public static string DateTimeCodeYearMonthDay => DateTime.Now.ToString("yyyyMMdd");
         public static string InitGuiCode => Guid.NewGuid().ToString();
         #endregion
 

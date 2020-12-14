@@ -35,25 +35,25 @@ namespace Commsights.Data.DataTransferObject
         public string CompetitiveWhat { get; set; }
         public string SpokePersonName { get; set; }
         public string SpokePersonTitle { get; set; }
-        public int? SpokePersonValue { get; set; }
-        public int? ToneValue { get; set; }
-        public int? HeadlineValue { get; set; }
-        public int? FeatureValue { get; set; }
-        public int? TierValue { get; set; }
-        public int? PictureValue { get; set; }
-        public int? SentimentValue { get; set; }
-        public int? KOLValue { get; set; }
-        public int? OtherValue { get; set; }
-        public int? TasteValue { get; set; }
-        public int? PriceValue { get; set; }
-        public int? NutritionFactValue { get; set; }
-        public int? VitaminValue { get; set; }
-        public int? GoodForHealthValue { get; set; }
-        public int? Bottle_CanDesignValue { get; set; }
-        public int? CompetitiveNewsValue { get; set; }
-        public int? MPS { get; set; }
-        public int? ROME_Corp_VND { get; set; }
-        public int? ROME_Product_VND { get; set; }
+        public decimal? SpokePersonValue { get; set; }
+        public decimal? ToneValue { get; set; }
+        public decimal? HeadlineValue { get; set; }
+        public decimal? FeatureValue { get; set; }
+        public decimal? TierValue { get; set; }
+        public decimal? PictureValue { get; set; }
+        public decimal? SentimentValue { get; set; }
+        public decimal? KOLValue { get; set; }
+        public decimal? OtherValue { get; set; }
+        public decimal? TasteValue { get; set; }
+        public decimal? PriceValue { get; set; }
+        public decimal? NutritionFactValue { get; set; }
+        public decimal? VitaminValue { get; set; }
+        public decimal? GoodForHealthValue { get; set; }
+        public decimal? Bottle_CanDesignValue { get; set; }
+        public decimal? CompetitiveNewsValue { get; set; }
+        public decimal? MPS { get; set; }
+        public decimal? ROME_Corp_VND { get; set; }
+        public decimal? ROME_Product_VND { get; set; }
         public int? ProductID { get; set; }
         public string Title { get; set; }
         public string TitleEnglish { get; set; }
@@ -70,5 +70,17 @@ namespace Commsights.Data.DataTransferObject
         public bool? IsSummary { get; set; }
         public DateTime DatePublish { get; set; }
         public DateTime DateUpload { get; set; }
+        public string AdvalueString
+        {
+            get
+            {
+                string resut = "";
+                if (Advalue != null)
+                {
+                    resut = Advalue.Value.ToString("N0");
+                }
+                return resut;
+            }
+        }
     }
 }

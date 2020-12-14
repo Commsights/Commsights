@@ -31,10 +31,12 @@ namespace Commsights.MVC.Controllers
     {
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly ICodeDataRepository _codeDataRepository;
-        public CodeDataController(IWebHostEnvironment hostingEnvironment, ICodeDataRepository codeDataRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
+        private readonly IProductPropertyRepository _productPropertyRepository;
+        public CodeDataController(IWebHostEnvironment hostingEnvironment, ICodeDataRepository codeDataRepository, IProductPropertyRepository productPropertyRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
             _hostingEnvironment = hostingEnvironment;
             _codeDataRepository = codeDataRepository;
+            _productPropertyRepository = productPropertyRepository;
         }
         public IActionResult Data()
         {
@@ -72,6 +74,7 @@ namespace Commsights.MVC.Controllers
                 model.RowLast = model.RowCount - 1;
                 model.RowBack = rowIndex - 1;
                 model.RowCurrent = rowIndex + 1;
+
             }
             return View(model);
         }
@@ -82,8 +85,27 @@ namespace Commsights.MVC.Controllers
             Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), CookieExpires);
             Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), CookieExpires);
             Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), CookieExpires);
-            var data = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
-            return Json(data.ToDataSourceResult(request));
+            List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
+            foreach (CodeData model in list)
+            {
+                if (string.IsNullOrEmpty(model.FileName))
+                {
+                    string domain = model.MediaTitle;
+                    if (!string.IsNullOrEmpty(domain))
+                    {
+                        domain = domain.Replace(@" ", @"");
+                        domain = domain.Split('.')[0];
+                    }
+                    string page = model.Page;
+                    if (!string.IsNullOrEmpty(page))
+                    {
+                        page = AppGlobal.SetName(page);
+                    }
+                    model.FileName = AppGlobal.DateTimeCodeYearMonthDay + "_" + model.MediaType + "_" + domain + "_" + page + "_" + model.RowCurrent;
+                    _productPropertyRepository.UpdateSingleItemByIDAndFileName(model.ProductPropertyID.Value, model.FileName);
+                }
+            }
+            return Json(list.ToDataSourceResult(request));
         }
         public ActionResult GetCategorySubByCategoryMainToList([DataSourceRequest] DataSourceRequest request, string categoryMain)
         {

@@ -225,6 +225,11 @@ namespace Commsights.MVC.Controllers
             }
             return Json(model);
         }
+        public ActionResult GetByIndustryID002ToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {            
+            var data = _membershipRepository.GetByIndustryID001ToList(industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetByIndustryID001ToList([DataSourceRequest] DataSourceRequest request)
         {
             int industryID = 0;
@@ -237,6 +242,20 @@ namespace Commsights.MVC.Controllers
 
             }
             var data = _membershipRepository.GetByIndustryID001ToList(industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetByIndustryID001ByActiveToList([DataSourceRequest] DataSourceRequest request)
+        {
+            int industryID = 0;
+            try
+            {
+                industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
+            }
+            catch
+            {
+
+            }
+            var data = _membershipRepository.GetByIndustryID001ByActiveToList(industryID);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetAllCompany001ToList([DataSourceRequest] DataSourceRequest request)
