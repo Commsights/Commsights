@@ -90,6 +90,11 @@ namespace Commsights.MVC.Controllers
             var data = _membershipPermissionRepository.GetDataTransferIndustryByMembershipIDAndCodeToList(membershipID, AppGlobal.Industry);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetProductByMembershipIDAndCodeToList([DataSourceRequest] DataSourceRequest request, string account)
+        {
+            var data = _membershipPermissionRepository.GetProductByAccountAndCodeToList(account, AppGlobal.Product);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetDataTransferSegmentByMembershipIDAndProductToList([DataSourceRequest] DataSourceRequest request, int membershipID)
         {
             var data = _membershipPermissionRepository.GetDataTransferSegmentByMembershipIDAndCodeToList(membershipID, AppGlobal.Product);

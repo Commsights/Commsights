@@ -107,10 +107,35 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+
         public List<MembershipDataTransfer> GetAllCompanyToList()
         {
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectAllCompany");
             return SQLHelper.ToList<MembershipDataTransfer>(dt);
+        }
+        public List<MembershipCompanyDataTransfer> GetAllCompany001ToList()
+        {
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectAllCompany001");
+            return SQLHelper.ToList<MembershipCompanyDataTransfer>(dt);
+        }
+        public List<MembershipCompanyDataTransfer> GetAllCompany001ByActiveToList()
+        {
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectCompany001ByActive");
+            return SQLHelper.ToList<MembershipCompanyDataTransfer>(dt);
+        }
+        public List<MembershipCompanyDataTransfer> GetByIndustryID001ToList(int industryID)
+        {
+            List<MembershipCompanyDataTransfer> list = new List<MembershipCompanyDataTransfer>();
+            if (industryID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@IndustryID",industryID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectByIndustryID001", parameters);
+                list = SQLHelper.ToList<MembershipCompanyDataTransfer>(dt);
+            }
+            return list;
         }
         public List<Membership> GetByCompanyToList()
         {
@@ -249,6 +274,16 @@ namespace Commsights.Data.Repositories
                 ID = _context.Membership.FirstOrDefault(item => item.Account.Equals(account)).ID;
             }
             return ID;
+        }
+        public string UpdateSingleItem001(int ID, bool active, string account)
+        {
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ID",ID),
+                new SqlParameter("@Active",active),
+                new SqlParameter("@Account",account),
+            };
+            return SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_MembershipUpdateSingleItem001", parameters);
         }
     }
 }

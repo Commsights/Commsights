@@ -40,5 +40,15 @@ namespace Commsights.MVC.Controllers
             var data = CorpCopy.GetAllToList();
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetCodeDataValueToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = CodeDataValue.GetAllToList();
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCodeDataValueItem0ToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = CodeDataValue.GetItem0ToList();
+            return Json(data.ToDataSourceResult(request));
+        }
     }
 }

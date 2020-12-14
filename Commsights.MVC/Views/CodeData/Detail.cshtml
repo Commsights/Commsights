@@ -6,9 +6,6 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
-            <div class="card-header">
-                <h3 class="card-title">Code data - Detail</h3>
-            </div>
             <div class="card-body">
                 <form asp-action="SaveCodeData" asp-controller="CodeData">
                     @Html.HiddenFor(Model => Model.IndustryID)
@@ -16,7 +13,7 @@
                     @Html.HiddenFor(Model => Model.ProductID)
                     @Html.HiddenFor(Model => Model.ProductPropertyID)
                     <div class="row">
-                        <div class='col-md-5'>
+                        <div class='col-md-4'>
                         </div>
                         <div class='col-md-1'>
                             <a href="/CodeData/Detail?RowIndex=0" style="color:#ffffff;" title="First" class="btn btn-info">
@@ -42,6 +39,10 @@
                             </a>
                         </div>
                         <div class='col-md-1'>
+                            <a target='_blank' href='@Model.URLCode' title='@Model.Title' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>
+                        </div>
+
+                        <div class='col-md-1'>
                             <button style="width:100%;" type="submit" title="Save" class="btn btn-primary">
                                 <span class="fas fa-save"></span>
                             </button>
@@ -49,7 +50,7 @@
                     </div>
                     <hr />
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class='form-group'>
                                 <label for='Title'>Headline (Vie)</label>
                                 @(Html.TextBoxFor(Model => Model.Title, new { @class = "form-control" }))
@@ -67,15 +68,39 @@
                                 @(Html.TextBoxFor(Model => Model.DescriptionEnglish, new { @class = "form-control" }))
                             </div>
                             <div class='form-group'>
+                                <label for='Author'>Journalist</label>
+                                @(Html.TextBoxFor(Model => Model.Author, new { @class = "form-control" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='SpokePersonName'>Spoke person name</label>
+                                @(Html.TextBoxFor(Model => Model.SpokePersonName, new { @class = "form-control" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='SpokePersonTitle'>Spoke person title</label>
+                                @(Html.TextBoxFor(Model => Model.SpokePersonTitle, new { @class = "form-control" }))
+                            </div>
+                            <div class='form-group'>
                                 <label for='Source'>Source</label>
                                 @(Html.TextBoxFor(Model => Model.Source, new { @class = "form-control" }))
                             </div>
                             <div class='form-group'>
-                                <label for='FileName'>FileName</label>
+                                <label for='FileName'>File name</label>
                                 @(Html.TextBoxFor(Model => Model.FileName, new { @class = "form-control" }))
                             </div>
+                            <div class='form-group'>
+                                <label for='Advalue'>Advalue</label>
+                                @(Html.TextBoxFor(Model => Model.Advalue,"{0:N0}",new { @class = "form-control text-right", @readonly = "readonly" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='DatePublish'>Date Publish</label>
+                                @(Html.TextBoxFor(Model => Model.DatePublish, "{0:MM/dd/yyyy}", new { @class = "form-control text-right", @readonly = "readonly" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='DateUpload'>Date Upload</label>
+                                @(Html.TextBoxFor(Model => Model.DateUpload, "{0:MM/dd/yyyy HH:mm}", new { @class = "form-control text-right", @readonly = "readonly" }))
+                            </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class='form-group'>
                                 <label for='CategoryMain'>Category Main</label>
                                 @(Html.Kendo().DropDownListFor(Model => Model.CategoryMain)
@@ -97,7 +122,6 @@
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCategorySubByCategoryMainToList", "CodeData").Data("filterCategorySub")))
                             )
                             </div>
-
                             <div class='form-group'>
                                 <label for='SentimentCorp'>Sentiment</label>
                                 @(Html.Kendo().DropDownListFor(Model => Model.SentimentCorp)
@@ -105,26 +129,40 @@
                      .DataTextField("CodeName")
                     .HtmlAttributes(new { @class = "form-control" })
                        .Filter(FilterType.StartsWith)
+                        .Events(e => e.DataBound("onSentimentCorpDataBound").Change("onSentimentCorpChange"))
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetSentimentToList", "Config")))
                             )
                             </div>
                             <div class='form-group'>
                                 <label for='CompanyName'>Company</label>
-                                @(Html.TextBoxFor(Model => Model.CompanyName, new { @class = "form-control" }))
+                                @(Html.Kendo().DropDownListFor(Model => Model.CompanyName)
+                     .DataValueField("Account")
+                     .DataTextField("Account")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.StartsWith)
+                       .Events(e => e.DataBound("onCompanyNameDataBound").Change("onCompanyNameChange"))
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByIndustryID001ToList", "Membership")))
+                            )
                             </div>
                             <div class='form-group'>
                                 <label for='CorpCopy'>Corp Copy</label>
                                 @(Html.Kendo().DropDownListFor(Model => Model.CorpCopy)
-                     .DataValueField("Display")
-                     .DataTextField("Display")
+                     .DataValueField("CodeName")
+                     .DataTextField("CodeName")
                     .HtmlAttributes(new { @class = "form-control" })
                        .Filter(FilterType.StartsWith)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCorpCopyToList", "AppGlobal")))
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCorpCopyToList", "Config")))
                             )
                             </div>
                             <div class='form-group'>
                                 <label for='ProductName_ProjectName'>Product</label>
-                                @(Html.TextBoxFor(Model => Model.ProductName_ProjectName, new { @class = "form-control" }))
+                                @(Html.Kendo().DropDownListFor(Model => Model.ProductName_ProjectName)
+                     .DataValueField("ProductName")
+                     .DataTextField("ProductName")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.StartsWith)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetProductByMembershipIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermission")))
+                            )
                             </div>
                             <div class='form-group'>
                                 <label for='SOECompany'>SOE Corp (%)</label>
@@ -133,6 +171,7 @@
                      .DataTextField("Display")
                     .HtmlAttributes(new { @class = "form-control" })
                        .Filter(FilterType.StartsWith)
+                       .Events(e => e.DataBound("onSOECompanyDataBound").Change("onSOECompanyChange"))
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetSEOToList", "AppGlobal")))
                             )
                             </div>
@@ -143,8 +182,9 @@
                      .DataTextField("Display")
                     .HtmlAttributes(new { @class = "form-control" })
                        .Filter(FilterType.StartsWith)
+                       .Events(e => e.DataBound("onSOEProductDataBound").Change("onSOEProductChange"))
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetSEOToList", "AppGlobal")))
-                            )                                
+                            )
                             </div>
                             <div class='form-group'>
                                 <label for='TierCommsights'>Tier Commsights</label>
@@ -156,44 +196,208 @@
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetMediaTierToList", "Config")))
                             )
                             </div>
+                            <div class='form-group'>
+                                <label for='CampaignName'>Campaign name</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.CampaignName)
+                     .DataValueField("ID")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.StartsWith)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueItem0ToList", "AppGlobal")))
+                            )
+                            </div>
+                            <div class='form-group'>
+                                <label for='KeyMessage'>Key message</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.KeyMessage)
+                     .DataValueField("ID")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.StartsWith)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueItem0ToList", "AppGlobal")))
+                            )
+                            </div>
+                            <div class='form-group'>
+                                <label for='CompetitiveWhat'>Competitive</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.CompetitiveWhat)
+                     .DataValueField("Account")
+                     .DataTextField("Account")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.StartsWith)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByIndustryID001ToList", "Membership")))
+                            )
+                            </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <div class='form-group'>
+                                <label for='HeadlineValue'>Headline Value/Brand mention in Headline</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.HeadlineValue)
+                     .DataValueField("ID")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.StartsWith)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
+                            )
+                            </div>
 
                             <div class='form-group'>
+                                <label for='TierValue'>Tier Value</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.TierValue)
+                     .DataValueField("ID")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.StartsWith)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
+                            )
+                            </div>
+                            <div class='form-group'>
+                                <label for='PictureValue'>Picture Value/Image (related to brand/company)</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.PictureValue)
+                     .DataValueField("ID")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.StartsWith)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
+                            )
+                            </div>
+                            <div class='form-group'>
+                                <label for='KOLValue'>KOL value</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.KOLValue)
+                     .DataValueField("ID")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.StartsWith)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
+                            )
+                            </div>
+                            <div class='form-group'>
+                                <label for='OtherValue'>Other value</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.OtherValue)
+                     .DataValueField("ID")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.StartsWith)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
+                            )
+                            </div>
+                            <div class='form-group'>
+                                <label for='CompetitiveNewsValue'>Competitive News value</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.CompetitiveNewsValue)
+                     .DataValueField("ID")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.StartsWith)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
+                            )
+                            </div>
+                            <div class='form-group'>
+                                <label for='TasteValue'>Taste value</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.TasteValue)
+                     .DataValueField("ID")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.StartsWith)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
+                            )
+                            </div>
+                            <div class='form-group'>
+                                <label for='PriceValue'>Price value</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.PriceValue)
+                     .DataValueField("ID")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.StartsWith)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
+                            )
+                            </div>
+                            <div class='form-group'>
+                                <label for='NutritionFactValue'>Nutrition fact value</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.NutritionFactValue)
+                     .DataValueField("ID")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.StartsWith)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
+                            )
+                            </div>
+                            <div class='form-group'>
+                                <label for='VitaminValue'>Vitamin value</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.VitaminValue)
+                     .DataValueField("ID")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.StartsWith)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
+                            )
+                            </div>
+                            <div class='form-group'>
+                                <label for='GoodForHealthValue'>Good for health value</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.GoodForHealthValue)
+                     .DataValueField("ID")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.StartsWith)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
+                            )
+                            </div>
+                            <div class='form-group'>
+                                <label for='Bottle_CanDesignValue'>Bottle / Can Design</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.Bottle_CanDesignValue)
+                     .DataValueField("ID")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.StartsWith)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
+                            )
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class='form-group'>
+                                <label for='FeatureValue'>News title/Feature value</label>
+                                @(Html.TextBoxFor(Model => Model.FeatureValue, new { placeholder = "Auto by Feature Corp", @class = "form-control", @readonly = "readonly" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='SpokePersonValue'>Spoke person value</label>
+                                @(Html.TextBoxFor(Model => Model.SpokePersonValue, new { placeholder = "Auto by Spoke person name", @class = "form-control", @readonly = "readonly" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='ToneValue'>Sentiment(MPS & ROME)/Tone Value</label>
+                                @(Html.TextBoxFor(Model => Model.ToneValue, new { placeholder = "Auto by sentiment", @class = "form-control", @readonly = "readonly" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='MPS'>MPS</label>
+                                @(Html.TextBoxFor(Model => Model.MPS, new { placeholder = "Auto", @class = "form-control", @readonly = "readonly" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='ROME_Corp_VND'>Media Value Corp</label>
+                                @(Html.TextBoxFor(Model => Model.ROME_Corp_VND, new { placeholder = "Auto", @class = "form-control", @readonly = "readonly" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='ROME_Product_VND'>Media Value Product</label>
+                                @(Html.TextBoxFor(Model => Model.ROME_Product_VND, new { placeholder = "Auto", @class = "form-control", @readonly = "readonly" }))
+                            </div>
+                            <div class='form-group'>
                                 <label for='Segment'>Segment</label>
-                                @(Html.TextBoxFor(Model => Model.Segment, new { @class = "form-control", @readonly = "readonly" }))
+                                @(Html.TextBoxFor(Model => Model.Segment, new { placeholder = "Auto by product", @class = "form-control", @readonly = "readonly" }))
                             </div>
                             <div class='form-group'>
                                 <label for='FeatureCorp'>Feature Corp</label>
-                                @(Html.TextBoxFor(Model => Model.FeatureCorp, new { @class = "form-control", @readonly = "readonly" }))
+                                @(Html.TextBoxFor(Model => Model.FeatureCorp, new { placeholder = "Auto by SOE Corp", @class = "form-control", @readonly = "readonly" }))
                             </div>
                             <div class='form-group'>
                                 <label for='FeatureProduct'>Feature Product</label>
-                                @(Html.TextBoxFor(Model => Model.FeatureProduct, new { @class = "form-control", @readonly = "readonly" }))
+                                @(Html.TextBoxFor(Model => Model.FeatureProduct, new { placeholder = "Auto by SOE Product", @class = "form-control", @readonly = "readonly" }))
                             </div>
                             <div class='form-group'>
-                                <label for='MediaTitle'>Media</label>
+                                <label for='MediaTitle'>Media Title</label>
                                 @(Html.TextBoxFor(Model => Model.MediaTitle, new { @class = "form-control", @readonly = "readonly" }))
                             </div>
                             <div class='form-group'>
-                                <label for='MediaType'>Type</label>
+                                <label for='MediaType'>Media Type</label>
                                 @(Html.TextBoxFor(Model => Model.MediaType, new { @class = "form-control", @readonly = "readonly" }))
                             </div>
                             <div class='form-group'>
-                                <label for='ProductSource'>Upload</label>
+                                <label for='ProductSource'>Source Upload</label>
                                 @(Html.TextBoxFor(Model => Model.ProductSource, new { @class = "form-control", @readonly = "readonly" }))
-                            </div>
-                            <div class='form-group'>
-                                <label for='Advalue'>Advalue</label>
-                                @(Html.TextBoxFor(Model => Model.Advalue,"{0:N0}",new { @class = "form-control text-right", @readonly = "readonly" }))
-                            </div>
-                            <div class='form-group'>
-                                <label for='DatePublish'>Publish</label>
-                                @(Html.TextBoxFor(Model => Model.DatePublish, "{0:MM/dd/yyyy}", new { @class = "form-control text-right", @readonly = "readonly" }))
-                            </div>
-                            <div class='form-group'>
-                                <label for='DateUpload'>Upload</label>
-                                @(Html.TextBoxFor(Model => Model.DateUpload, "{0:MM/dd/yyyy HH:mm}", new { @class = "form-control text-right", @readonly = "readonly" }))
                             </div>
                         </div>
                     </div>
@@ -202,12 +406,104 @@
         </div>
     </div>
 </div>
-<script>  
+<script>
     function filterCategorySub(e) {
-        var categoryMainValue = $("#CategoryMain").data("kendoDropDownList").value();       
-        return { categoryMain: categoryMainValue};
+        var categoryMainValue = $("#CategoryMain").data("kendoDropDownList").value();
+        return { categoryMain: categoryMainValue };
     }
     function onCategoryMainChange() {
         $("#CategorySub").data("kendoDropDownList").dataSource.read();
+    }
+    function filterMembershipPermission(e) {
+        var accountValue = $("#CompanyName").data("kendoDropDownList").value();
+        return { account: accountValue };
+    }
+    function onCompanyNameChange() {
+        $("#ProductName_ProjectName").data("kendoDropDownList").dataSource.read();
+    }
+    function onCompanyNameDataBound() {
+        var companyName = $("#CompanyName").data("kendoDropDownList");
+        var companyNameLength = companyName.dataSource.data().length;
+        if (companyNameLength > 0) {
+            companyName.select(0);
+            companyName.trigger("change");
+        }
+    }
+    function onSOECompanyDataBound() {
+        var sOECompany = $("#SOECompany").data("kendoDropDownList");
+        var sOECompanyLength = sOECompany.dataSource.data().length;
+        if (sOECompanyLength > 0) {
+            sOECompany.select(0);
+            sOECompany.trigger("change");
+        }
+    }
+    function onSOECompanyChange() {
+        var featureCorp = "";
+        var featureValue = 0;
+        var featureCorpValue = $("#SOECompany").data("kendoDropDownList").value();
+        if (featureCorpValue >= 60) {
+            featureCorp = "Feature";
+            featureValue = 1;
+        }
+        else {
+            featureCorp = "Mention";
+            featureValue = 0;
+        }
+        $("#FeatureCorp").val(featureCorp);
+        $("#FeatureValue").val(featureValue);
+    }
+    function onSOEProductDataBound() {
+        var sOEProduct = $("#SOEProduct").data("kendoDropDownList");
+        var sOEProductLength = sOEProduct.dataSource.data().length;
+        if (sOEProductLength > 0) {
+            sOEProduct.select(0);
+            sOEProduct.trigger("change");
+        }
+    }
+    function onSOEProductChange() {
+        var featureProduct = "";        
+        var featureProductValue = $("#SOEProduct").data("kendoDropDownList").value();
+        if (featureProductValue >= 60) {
+            featureProduct = "Feature";            
+        }
+        else {
+            featureProduct = "Mention";            
+        }
+        $("#FeatureProduct").val(featureProduct);        
+    }
+    function onSentimentCorpDataBound() {
+        var sentimentCorp = $("#SentimentCorp").data("kendoDropDownList");
+        var sentimentCorpLength = sentimentCorp.dataSource.data().length;
+        if (sentimentCorpLength > 0) {
+            sentimentCorp.select(0);
+            sentimentCorp.trigger("change");
+        }
+    }
+    function onSentimentCorpChange() {
+        var sentimentValue = 0;
+        var sentimentCorp = $("#SentimentCorp").data("kendoDropDownList").value();
+        if (sentimentCorp == "Positive") {
+            sentimentValue = 1;
+        }
+        if (sentimentCorp == "Neutral") {
+            sentimentValue = 0.5;
+        }
+        if (sentimentCorp == "Negative") {
+            sentimentValue = -1;
+        }
+        $("#ToneValue").val(sentimentValue);
+    }
+    $("#SpokePersonName").change(function () {
+        onCheckSpokePersonName();
+    });
+    jQuery(function ($) {
+        onCheckSpokePersonName();
+    });
+    function onCheckSpokePersonName() {
+        var spokePersonName = $("#SpokePersonName").val();
+        $("#SpokePersonValue").val(0);
+        if (spokePersonName.length > 0) {
+            $("#SpokePersonValue").val(1);
+        }
     }
 </script>

@@ -4,6 +4,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Commsights.Data.DataTransferObject;
 using Commsights.Data.Enum;
 using Commsights.Data.Helpers;
 using Commsights.Data.Models;
@@ -223,6 +224,30 @@ namespace Commsights.MVC.Controllers
                 model.Note = "/Membership/CustomerDetail/" + ID;
             }
             return Json(model);
+        }
+        public ActionResult GetByIndustryID001ToList([DataSourceRequest] DataSourceRequest request)
+        {
+            int industryID = 0;
+            try
+            {
+                industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
+            }
+            catch
+            {
+
+            }
+            var data = _membershipRepository.GetByIndustryID001ToList(industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetAllCompany001ToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _membershipRepository.GetAllCompany001ToList();
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetAllCompany001ByActiveToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _membershipRepository.GetAllCompany001ByActiveToList();
+            return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetAllToList([DataSourceRequest] DataSourceRequest request)
         {
@@ -494,7 +519,21 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
-
+        public IActionResult Update001(MembershipCompanyDataTransfer model)
+        {
+            string note = AppGlobal.InitString;
+            int result = 0;
+            _membershipRepository.UpdateSingleItem001(model.ID, model.Active.Value, model.Account);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
         public IActionResult Delete(Membership model)
         {
             model.Active = false;

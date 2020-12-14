@@ -30,6 +30,30 @@ namespace Commsights.Data.DataTransferObject
         public string SentimentCorp { get; set; }
         public decimal? Advalue { get; set; }
         public string TierCommsights { get; set; }
+        public string CampaignName { get; set; }
+        public string KeyMessage { get; set; }
+        public string CompetitiveWhat { get; set; }
+        public string SpokePersonName { get; set; }
+        public string SpokePersonTitle { get; set; }
+        public int? SpokePersonValue { get; set; }
+        public int? ToneValue { get; set; }
+        public int? HeadlineValue { get; set; }
+        public int? FeatureValue { get; set; }
+        public int? TierValue { get; set; }
+        public int? PictureValue { get; set; }
+        public int? SentimentValue { get; set; }
+        public int? KOLValue { get; set; }
+        public int? OtherValue { get; set; }
+        public int? TasteValue { get; set; }
+        public int? PriceValue { get; set; }
+        public int? NutritionFactValue { get; set; }
+        public int? VitaminValue { get; set; }
+        public int? GoodForHealthValue { get; set; }
+        public int? Bottle_CanDesignValue { get; set; }
+        public int? CompetitiveNewsValue { get; set; }
+        public int? MPS { get; set; }
+        public int? ROME_Corp_VND { get; set; }
+        public int? ROME_Product_VND { get; set; }
         public int? ProductID { get; set; }
         public string Title { get; set; }
         public string TitleEnglish { get; set; }
@@ -41,6 +65,8 @@ namespace Commsights.Data.DataTransferObject
         public string ProductSource { get; set; }
         public string MediaTitle { get; set; }
         public string MediaType { get; set; }
+        public string Page { get; set; }
+        public string Duration { get; set; }
         public bool? IsSummary { get; set; }
         public DateTime DatePublish { get; set; }
         public DateTime DateUpload { get; set; }

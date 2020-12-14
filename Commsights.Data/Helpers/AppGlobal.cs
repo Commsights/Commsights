@@ -36,7 +36,7 @@ namespace Commsights.Data.Helpers
                 list.Add(model);
             }
             return list;
-        }
+        }      
     }
     public class MonthFinance
     {
@@ -88,6 +88,36 @@ namespace Commsights.Data.Helpers
             list.Add(model);
             model = new CorpCopy();
             model.Display = "Origin";
+            list.Add(model);
+            return list;
+        }
+    }
+    public class CodeDataValue
+    {
+        public int ID { get; set; }
+        public string Display { get; set; }
+        public CodeDataValue()
+        {
+        }
+        public static List<CodeDataValue> GetAllToList()
+        {
+            List<CodeDataValue> list = new List<CodeDataValue>();
+            CodeDataValue model = new CodeDataValue();
+            model.ID = 0;
+            model.Display = "";
+            list.Add(model);
+            model = new CodeDataValue();
+            model.ID = 1;
+            model.Display = "1";
+            list.Add(model);
+            return list;
+        }
+        public static List<CodeDataValue> GetItem0ToList()
+        {
+            List<CodeDataValue> list = new List<CodeDataValue>();
+            CodeDataValue model = new CodeDataValue();
+            model.ID = 0;
+            model.Display = "";
             list.Add(model);
             return list;
         }

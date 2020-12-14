@@ -44,6 +44,10 @@ namespace Commsights.MVC.Controllers
             model.IndustryID = AppGlobal.IndustryID;
             return View(model);
         }
+        public IActionResult Company()
+        {
+            return View();
+        }
         public IActionResult Detail(int rowIndex)
         {
             CodeData model = new CodeData();
@@ -77,7 +81,7 @@ namespace Commsights.MVC.Controllers
             CookieExpires.Expires = DateTime.Now.AddDays(1);
             Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), CookieExpires);
             Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), CookieExpires);
-            Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), CookieExpires);            
+            Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), CookieExpires);
             var data = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
             return Json(data.ToDataSourceResult(request));
         }

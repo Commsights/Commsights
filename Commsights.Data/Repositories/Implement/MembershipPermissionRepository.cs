@@ -224,6 +224,37 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<MembershipPermissionProductDataTransfer> GetProductByMembershipIDAndCodeToList(int membershipID, string code)
+        {
+            List<MembershipPermissionProductDataTransfer> list = new List<MembershipPermissionProductDataTransfer>();
+            if (membershipID > 0)
+            {
+                SqlParameter[] parameters =
+                      {
+                new SqlParameter("@MembershipID",membershipID),
+                new SqlParameter("@Code",code)
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectProductByMembershipIDAndCode", parameters);
+                list = SQLHelper.ToList<MembershipPermissionProductDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<MembershipPermissionProductDataTransfer> GetProductByAccountAndCodeToList(string account, string code)
+        {
+            List<MembershipPermissionProductDataTransfer> list = new List<MembershipPermissionProductDataTransfer>();
+            Membership membership = _context.Membership.Where(item => item.Account.Equals(account)).FirstOrDefault();
+            if (membership.ID > 0)
+            {
+                SqlParameter[] parameters =
+                      {
+                new SqlParameter("@MembershipID",membership.ID),
+                new SqlParameter("@Code",code)
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectProductByMembershipIDAndCode", parameters);
+                list = SQLHelper.ToList<MembershipPermissionProductDataTransfer>(dt);
+            }
+            return list;
+        }
         public List<MembershipPermissionDataTransfer> GetDataTransferSegmentByMembershipIDAndIndustryIDAndCodeToList(int membershipID, int industryID, string code)
         {
             List<MembershipPermissionDataTransfer> list = new List<MembershipPermissionDataTransfer>();

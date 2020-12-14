@@ -45,10 +45,9 @@
 .Name("CodeData")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70).Locked(true);    
+    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70).Locked(true);
     columns.Template(@"<a target='_blank' href='/CodeData/Detail?RowIndex=#=RowIndex#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-edit'></i></a>").Title("Edit").Width(70).Locked(true);
     columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70).Locked(true);
-    columns.Bound(t => t.RowIndex).Title("No").Width(100).HtmlAttributes(new { @class = "text-center" });
     columns.Bound(t => t.Source).Title("Source").Width(200);
     columns.Bound(t => t.FileName).Title("FileName").Width(200);
     columns.Bound(t => t.CategoryMain).Title("Category Main").Width(300);
@@ -73,8 +72,7 @@
     columns.Bound(t => t.MediaTitle).Title("Media").Width(300);
     columns.Bound(t => t.MediaType).Title("Type").Width(150);
     columns.Bound(t => t.Advalue).Title("Advalue").Width(150);
-    
-
+    columns.Bound(t => t.RowIndex).Title("No").Width(100).HtmlAttributes(new { @class = "text-center" });
 })
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
@@ -107,7 +105,7 @@
 .PageSize(10000)
 .Model(model =>
 {
-    model.Id(t => t.RowIndex);   
+    model.Id(t => t.RowIndex);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList", "CodeData").Data("filterCodeData"))
