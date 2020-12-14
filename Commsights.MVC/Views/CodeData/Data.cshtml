@@ -62,6 +62,29 @@
     columns.Bound(t => t.Description).Title("Summary").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.Title).Title("Headline (Vie)").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.SpokePersonName).Title("Spoke Person Name").Width(150);
+    columns.Bound(t => t.SpokePersonTitle).Title("Spoke Person Title").Width(150);
+    columns.Bound(t => t.CampaignName).Title("Campaign Name").Width(150);
+    columns.Bound(t => t.KeyMessage).Title("Key Message").Width(150);
+    columns.Bound(t => t.CompetitiveWhat).Title("Competitive What").Width(150);
+    columns.Bound(t => t.ToneValue).Title("Tone Value").Width(150);
+    columns.Bound(t => t.HeadlineValue).Title("Headline Value").Width(150);
+    columns.Bound(t => t.FeatureValue).Title("Feature Value").Width(150);
+    columns.Bound(t => t.SpokePersonValue).Title("Spoke Person Value").Width(200);
+    columns.Bound(t => t.TierValue).Title("Tier Value").Width(150);
+    columns.Bound(t => t.PictureValue).Title("Picture Value").Width(150);
+    columns.Bound(t => t.KOLValue).Title("KOL Value").Width(150);
+    columns.Bound(t => t.OtherValue).Title("Other Value").Width(150);
+    columns.Bound(t => t.TasteValue).Title("Taste Value").Width(150);
+    columns.Bound(t => t.PriceValue).Title("Price Value").Width(150);
+    columns.Bound(t => t.NutritionFactValue).Title("Nutrition Fact Value").Width(200);
+    columns.Bound(t => t.VitaminValue).Title("Vitamin Value").Width(150);
+    columns.Bound(t => t.GoodForHealthValue).Title("Good For Health Value").Width(200);
+    columns.Bound(t => t.Bottle_CanDesignValue).Title("Bottle/Can Design Value").Width(200);
+    columns.Bound(t => t.CompetitiveNewsValue).Title("Competitive News Value").Width(200);
+    columns.Bound(t => t.MPS).Title("MPS").Width(150);
+    columns.Bound(t => t.ROME_Corp_VND).Title("Media Value Corp").Width(200);
+    columns.Bound(t => t.ROME_Product_VND).Title("Media Value Product").Width(200);
     columns.Bound(t => t.ProductSource).Title("Upload").Width(100);
     columns.Bound(t => t.Author).Title("Journalist").Width(200);
     columns.Bound(t => t.FeatureCorp).Title("Feature Corp").Width(150);
@@ -102,7 +125,7 @@
 .Search(search => { search.Field(f => f.TierCommsights); search.Field(f => f.Source); search.Field(f => f.FileName); search.Field(f => f.CategoryMain); search.Field(f => f.CategorySub); search.Field(f => f.URLCode); search.Field(f => f.Title); search.Field(f => f.TitleEnglish); search.Field(f => f.Description); search.Field(f => f.DescriptionEnglish); search.Field(f => f.MediaTitle); search.Field(f => f.MediaType); search.Field(f => f.CompanyName); search.Field(f => f.ProductName_ProjectName); search.Field(f => f.Segment); search.Field(f => f.SentimentCorp); })
 .DataSource(dataSource => dataSource
 .Ajax()
-.PageSize(10000)
+.PageSize(10)
 .Model(model =>
 {
     model.Id(t => t.RowIndex);
