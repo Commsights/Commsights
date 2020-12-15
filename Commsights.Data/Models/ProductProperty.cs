@@ -97,6 +97,7 @@ namespace Commsights.Data.Models
         public bool? IsAnalysis { get; set; }
         public bool? IsDownload { get; set; }
         public bool? IsSend { get; set; }
+        public string CampaignKeyMessage { get; set; }
 
     }
 }

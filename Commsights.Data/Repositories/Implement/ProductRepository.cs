@@ -1295,5 +1295,19 @@ new SqlParameter("@IsError",product.IsError),
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductUpdateSingleItem", parameters);
             return result;
         }
+        public string UpdateSingleItemByCodeData(CodeData model)
+        {
+            SqlParameter[] parameters =
+            {
+new SqlParameter("@ID",model.ProductID),
+new SqlParameter("@Title",model.Title),
+new SqlParameter("@TitleEnglish",model.TitleEnglish),
+new SqlParameter("@Description",model.Description),
+new SqlParameter("@DescriptionEnglish",model.DescriptionEnglish),
+new SqlParameter("@Author",model.Author),
+};
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductUpdateSingleItemByCodeData", parameters);
+            return result;
+        }
     }
 }

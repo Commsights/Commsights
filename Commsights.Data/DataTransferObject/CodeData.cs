@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Commsights.Data.Models;
 
@@ -21,38 +22,83 @@ namespace Commsights.Data.DataTransferObject
         public string CategorySub { get; set; }
         public string CompanyName { get; set; }
         public string CorpCopy { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? SOECompany { get; set; }
         public string FeatureCorp { get; set; }
         public string Segment { get; set; }
         public string ProductName_ProjectName { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? SOEProduct { get; set; }
         public string FeatureProduct { get; set; }
         public string SentimentCorp { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? Advalue { get; set; }
         public string TierCommsights { get; set; }
         public string CampaignName { get; set; }
+        public string CampaignKeyMessage { get; set; }
         public string KeyMessage { get; set; }
         public string CompetitiveWhat { get; set; }
         public string SpokePersonName { get; set; }
         public string SpokePersonTitle { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? SpokePersonValue { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? ToneValue { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? HeadlineValue { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? FeatureValue { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? TierValue { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? PictureValue { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? SentimentValue { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? KOLValue { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? OtherValue { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? TasteValue { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? PriceValue { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? NutritionFactValue { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? VitaminValue { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? GoodForHealthValue { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? Bottle_CanDesignValue { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? CompetitiveNewsValue { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? MPS { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? ROME_Corp_VND { get; set; }
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? ROME_Product_VND { get; set; }
         public int? ProductID { get; set; }
         public string Title { get; set; }
@@ -68,8 +114,8 @@ namespace Commsights.Data.DataTransferObject
         public string Page { get; set; }
         public string Duration { get; set; }
         public bool? IsSummary { get; set; }
-        public DateTime DatePublish { get; set; }
-        public DateTime DateUpload { get; set; }
+        public DateTime DatePublish { get; set; }        
+        public DateTime DateUpdated { get; set; }
         public string AdvalueString
         {
             get
