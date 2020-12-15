@@ -33,6 +33,16 @@ namespace Commsights.Data.Repositories
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyUpdateSingleItemByIDAndFileName", parameters);
             return result;
         }
+        public async Task<string> AsyncUpdateSingleItemByIDAndFileName(int ID, string fileName)
+        {
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ID",ID),
+                new SqlParameter("@FileName",fileName),
+            };
+            string result = await SQLHelper.ExecuteNonQueryAsync(AppGlobal.ConectionString, "sp_ProductPropertyUpdateSingleItemByIDAndFileName", parameters);
+            return result;
+        }
         public bool IsExist(ProductProperty model)
         {
             return _context.ProductProperty.FirstOrDefault(item => item.ParentID == model.ParentID && item.Code.Equals(model.Code) && item.CompanyID == model.CompanyID && item.IndustryID == model.IndustryID) == null ? true : false;

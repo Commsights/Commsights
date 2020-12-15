@@ -15,7 +15,7 @@ namespace Commsights.Data.DataTransferObject
         public int? IndustryID { get; set; }
         public string Industry { get; set; }
         public int? ProductPropertyID { get; set; }
-        public string Source { get; set; }
+        public int? Source { get; set; }
         public string FileName { get; set; }
         public string CategoryMain { get; set; }
         public string CategorySub { get; set; }

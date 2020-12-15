@@ -14,44 +14,44 @@
                     @Html.HiddenFor(Model => Model.ProductID)
                     @Html.HiddenFor(Model => Model.ProductPropertyID)
                     <div class="row">
-                        <div class='col-md-2'>
+                        <div class='col-md-1'>
                         </div>
                         <div class='col-md-1'>
-                            <a href="/CodeData/Detail?RowIndex=0" style="color:#ffffff;" title="First" class="btn btn-info">
-                                <span class="fas fa-angle-double-left"></span>
+                            <a id="RowFirst" onclick="onRowMove('/CodeData/Detail?RowIndex=0')" style="color:#ffffff;" title="First" class="btn btn-info">
+                                <span class="fas fa-angle-double-left"></span> (1)
                             </a>
                         </div>
                         <div class='col-md-1'>
-                            <a href="/CodeData/Detail?RowIndex=@Model.RowBack" style="color:#ffffff;" title="First" class="btn btn-info">
-                                <span class="fas fa-angle-left"></span>
+                            <a id="RowBack" onclick="onRowMove('/CodeData/Detail?RowIndex=@Model.RowBack')" style="color:#ffffff;" title="Back" class="btn btn-info">
+                                <span class="fas fa-angle-left"></span> (2)
                             </a>
                         </div>
                         <div class='col-md-2 text-center'>
                             <span style="font-weight:bold; font-size:18px;">@Model.RowCurrent / @Model.RowCount</span>
                         </div>
                         <div class='col-md-1'>
-                            <a href="/CodeData/Detail?RowIndex=@Model.RowCurrent" style="color:#ffffff;" title="First" class="btn btn-info">
-                                <span class="fas fa-angle-right"></span>
+                            <a id="RowNext" onclick="onRowMove('/CodeData/Detail?RowIndex=@Model.RowCurrent')" style="color:#ffffff;" title="First" class="btn btn-info">
+                                <span class="fas fa-angle-right"></span> (3)
                             </a>
                         </div>
                         <div class='col-md-1'>
-                            <a href="/CodeData/Detail?RowIndex=@Model.RowLast" style="color:#ffffff;" title="Last" class="btn btn-info">
-                                <span class="fas fa-angle-double-right"></span>
+                            <a id="RowLast" onclick="onRowMove('/CodeData/Detail?RowIndex=@Model.RowLast')" style="color:#ffffff;" title="Last" class="btn btn-info">
+                                <span class="fas fa-angle-double-right"></span> (4)
                             </a>
                         </div>
                         <div class='col-md-1'>
-                            <a target='_blank' href='@Model.URLCode' title='@Model.Title' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>
+                            <a id="URLCode" onclick="onOpenBlank('@Model.URLCode')" title='@Model.Title' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i> (5)</a>
                         </div>
-                        <div class='col-md-1'>
+                        <div class='col-md-2'>
                             @(Html.CheckBoxFor(Model => Model.IsSummary.Value))
-                            <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Brief</p>
+                            <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Brief (6)</p>
                         </div>
                         <div class='col-md-1'>
-                            <a onclick="onCopy()" title='Copy' class='btn btn-primary' style='color:white; cursor: pointer;'>Copy</a>
+                            <a id="Copy" onclick="onCopy()" title='Copy' class='btn btn-primary' style='color:white; cursor: pointer;'>Copy (7)</a>
                         </div>
                         <div class='col-md-1'>
-                            <button style="width:100%;" type="submit" title="Save" class="btn btn-primary">
-                                <span class="fas fa-save"></span>
+                            <button style="width:100%;" type="submit" title="Save" class="btn btn-primary" autofocus="autofocus">
+                                <span class="fas fa-save"></span> (8)
                             </button>
                         </div>
                     </div>
@@ -158,28 +158,28 @@
                             </div>
                             <div class='form-group'>
                                 <label for='Title'>Headline (Vie)</label>
-                                @(Html.TextBoxFor(Model => Model.Title, new { @class = "form-control" }))
+                                @(Html.TextBoxFor(Model => Model.Title, new { @class = "form-control", @title = Model.Title }))
                             </div>
                             <div class='form-group'>
                                 <label for='TitleEnglish'>Headline (Eng)</label>
-                                @(Html.TextBoxFor(Model => Model.TitleEnglish, new { @class = "form-control" }))
+                                @(Html.TextBoxFor(Model => Model.TitleEnglish, new { @class = "form-control", @title = Model.TitleEnglish }))
                             </div>
                             <div class='form-group'>
                                 <label for='Description'>Summary (Vie)</label>
-                                @(Html.TextBoxFor(Model => Model.Description, new { @class = "form-control" }))
+                                @(Html.TextBoxFor(Model => Model.Description, new { @class = "form-control", @title = Model.Description }))
                             </div>
                             <div class='form-group'>
                                 <label for='DescriptionEnglish'>Summary (Eng)</label>
-                                @(Html.TextBoxFor(Model => Model.DescriptionEnglish, new { @class = "form-control" }))
+                                @(Html.TextBoxFor(Model => Model.DescriptionEnglish, new { @class = "form-control", @title = Model.DescriptionEnglish }))
                             </div>
                             <div class='form-group'>
                                 <label for='Author'>Journalist</label>
-                                @(Html.TextBoxFor(Model => Model.Author, new { @class = "form-control" }))
+                                @(Html.TextBoxFor(Model => Model.Author, new { @class = "form-control", @title = Model.Author }))
                             </div>
 
                             <div class='form-group'>
                                 <label for='CampaignName'>Campaign name</label>
-                                @(Html.TextBoxFor(Model => Model.CampaignName, new { @class = "form-control" }))
+                                @(Html.TextBoxFor(Model => Model.CampaignName, new { @class = "form-control", @title = Model.CampaignName }))
                             </div>
                             <div class='form-group'>
                                 <label for='KeyMessage'>Key message</label>
@@ -365,7 +365,7 @@
                             </div>
                             <div class='form-group'>
                                 <label for='FileName'>File name</label>
-                                @(Html.TextBoxFor(Model => Model.FileName, new { @class = "form-control",  @readonly = "readonly" }))
+                                @(Html.TextBoxFor(Model => Model.FileName, new { @class = "form-control",  @readonly = "readonly", @title = Model.FileName }))
                             </div>
                             <div class='form-group'>
                                 <label for='Advalue'>Advalue</label>
@@ -716,4 +716,44 @@
         $("#ROME_Product_VND").val(rOME_Product_VNDString);
         $("#MPS").val(mPS);
     }
+    function onRowMove(url) {
+        location.replace(url);
+    }
+    function onOpenBlank(url) {
+        window.open(url, '_blank');
+    }
+    $(document).keyup(function (e) {
+        var e = e || window.event;
+        if (e.altKey == true) {
+            switch (e.keyCode) {
+                case 49:
+                    document.getElementById('RowFirst').click();
+                    break;
+                case 50:
+                    document.getElementById('RowBack').click();
+                    break;
+                case 51:
+                    document.getElementById('RowNext').click();
+                    break;
+                case 52:
+                    document.getElementById('RowLast').click();
+                    break;
+                case 53:
+                    document.getElementById('URLCode').click();
+                    break;
+                case 54:
+                    var isSummary_ValueChecked = document.getElementById("IsSummary_Value").checked;
+                    if (isSummary_ValueChecked == true) {
+                        document.getElementById("IsSummary_Value").checked = false;
+                    }
+                    else {
+                        document.getElementById("IsSummary_Value").checked = true;
+                    }
+                    break;
+                case 55:
+                    document.getElementById('Copy').click();
+                    break;
+            }
+        }
+    });
 </script>

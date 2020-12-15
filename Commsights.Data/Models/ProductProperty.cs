@@ -6,7 +6,7 @@ namespace Commsights.Data.Models
 {
     public partial class ProductProperty : BaseModel
     {
-        public string Source { get; set; }
+        public int? Source { get; set; }
         public string Day { get; set; }
         public string Week { get; set; }
         public string Month { get; set; }

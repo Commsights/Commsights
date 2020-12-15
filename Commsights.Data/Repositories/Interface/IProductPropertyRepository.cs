@@ -3,6 +3,7 @@ using Commsights.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Commsights.Data.Repositories
 {
@@ -13,6 +14,7 @@ namespace Commsights.Data.Repositories
         public string InsertItemByID(int ID);
         public string UpdateItemsWithParentIDIsZero();
         public string UpdateSingleItemByIDAndFileName(int ID, string fileName);
+        public Task<string> AsyncUpdateSingleItemByIDAndFileName(int ID, string fileName);
         public bool IsExistByProductIDAndCodeAndCompanyID(int productID, string code, int companyID);
         public bool IsExistByGUICodeAndCodeAndCompanyID(string gUICode, string code, int companyID);
         public bool IsExistByGUICodeAndCodeAndIndustryID(string gUICode, string code, int industryID);

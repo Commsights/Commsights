@@ -22,16 +22,23 @@ namespace Commsights.Data.Repositories
             List<CodeData> list = new List<CodeData>();
             if (industryID > 0)
             {
-                datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
-                datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
-                SqlParameter[] parameters =
+                try
                 {
+                    datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+                    datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+                    SqlParameter[] parameters =
+                    {
                 new SqlParameter("@DatePublishBegin",datePublishBegin),
                 new SqlParameter("@DatePublishEnd",datePublishEnd),
                 new SqlParameter("@IndustryID",industryID),
                 };
-                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataSelectByDatePublishBeginAndDatePublishEndAndIndustryID", parameters);
-                list = SQLHelper.ToList<CodeData>(dt);
+                    DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataSelectByDatePublishBeginAndDatePublishEndAndIndustryID", parameters);
+                    list = SQLHelper.ToList<CodeData>(dt);
+                }
+                catch (Exception e)
+                {
+                    string mes = e.Message;
+                }
             }
             return list;
         }

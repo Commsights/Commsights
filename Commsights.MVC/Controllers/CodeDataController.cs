@@ -85,26 +85,7 @@ namespace Commsights.MVC.Controllers
             Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), CookieExpires);
             Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), CookieExpires);
             Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), CookieExpires);
-            List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
-            foreach (CodeData model in list)
-            {
-                if (string.IsNullOrEmpty(model.FileName))
-                {
-                    string domain = model.MediaTitle;
-                    if (!string.IsNullOrEmpty(domain))
-                    {
-                        domain = domain.Replace(@" ", @"");
-                        domain = domain.Split('.')[0];
-                    }
-                    string page = model.Page;
-                    if (!string.IsNullOrEmpty(page))
-                    {
-                        page = AppGlobal.SetName(page);
-                    }
-                    model.FileName = AppGlobal.DateTimeCodeYearMonthDay + "_" + model.MediaType + "_" + domain + "_" + page + "_" + model.RowCurrent;
-                    _productPropertyRepository.UpdateSingleItemByIDAndFileName(model.ProductPropertyID.Value, model.FileName);
-                }
-            }
+            List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);            
             return Json(list.ToDataSourceResult(request));
         }
         public ActionResult GetCategorySubByCategoryMainToList([DataSourceRequest] DataSourceRequest request, string categoryMain)
