@@ -42,5 +42,8 @@ namespace Commsights.Data.Repositories
         public List<Config> GetWebsiteToList();
         public string UpdateSingleItem001(Config config);
         public List<Config> GetSQLByGroupNameAndCodeToList(string groupName, string code);
+        public List<Config> GetByGroupNameAndCodeAndParentIDAndIndustryIDToList(string groupName, string code, int parentID, int industryID);
+        public List<Config> GetByGroupNameAndCodeAndIndustryIDToList(string groupName, string code, int industryID);
+        public List<Config> GetSQLByGroupNameAndCodeAndIndustryIDToList(string groupName, string code, int industryID);
     }
 }

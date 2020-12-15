@@ -1,10 +1,10 @@
-﻿@{ ViewData["Title"] = "Category Sub"; }
+﻿@{ ViewData["Title"] = "Campaign Name"; }
 
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">System - Category Sub</h3>
+                <h3 class="card-title">System - Campaign Name</h3>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -20,20 +20,7 @@
                        .Filter(FilterType.StartsWith)                       
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
                             )
-                    </div>
-                    <div class='col-md-2'>
-                        Category main
-                    </div>
-                    <div class='col-md-3'>
-                        @(Html.Kendo().DropDownList()
-                        .Name("CategoryMain")
-                     .DataValueField("ID")
-                     .DataTextField("CodeName")
-                    .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)                       
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCategoryMainToList", "Config")))
-                            )
-                    </div>
+                    </div>                   
                     <div class='col-md-1'>
                         <a id="Search" onclick="onSearch()" title='Search' class='btn btn-success' style='color:white; cursor: pointer;'><span class="fas fa-search"></span></a>
                     </div>
@@ -85,9 +72,9 @@
     model.Field(t => t.ID).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetCategorySubByParentIDAndIndustryIDToList", "Config").Data("filterCategorySub"))
+.Read(t => t.Action("GetCampaignNameByIndustryIDToList", "Config").Data("filterCampaignName"))
 .Destroy(t => t.Action("Delete", "Config"))
-.Create(t => t.Action("CreateCategorySub", "Config").Data("filterCategorySub"))
+.Create(t => t.Action("CreateCampaignName", "Config").Data("filterCampaignName"))
 .Update(t => t.Action("Update", "Config"))
 )
 )
@@ -114,10 +101,9 @@
             $("#Config").data("kendoGrid").dataSource.read();
         }
     }
-    function filterCategorySub(e) {
-        var parentIDValue = $("#CategoryMain").data("kendoDropDownList").value();
+    function filterCampaignName(e) {        
         var industryIDValue = $("#Industry").data("kendoDropDownList").value();       
-        return { parentID: parentIDValue, industryID: industryIDValue };
+        return { industryID: industryIDValue };
     }
     function onSearch() {
         $("#Config").data("kendoGrid").dataSource.read();

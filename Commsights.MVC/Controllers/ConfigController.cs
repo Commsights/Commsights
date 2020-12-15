@@ -146,6 +146,18 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult CampaignName()
+        {
+            return View();
+        }
+        public IActionResult CampaignKeyMessage()
+        {
+            return View();
+        }
+        public IActionResult KeyMessage()
+        {
+            return View();
+        }
         public IActionResult Feature()
         {
             return View();
@@ -342,6 +354,70 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetCodeDataCategoryMainActiveToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategoryMain).Where(item => item.Active == true).OrderBy(item => item.SortOrder);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCampaignKeyMessageByCampaignNameAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, string campaignName)
+        {
+            int industryID = 0;
+            try
+            {
+                industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
+            }
+            catch
+            {
+            }
+            Config parent = new Config();
+            if (!string.IsNullOrEmpty(campaignName))
+            {
+                parent = _configResposistory.GetByGroupNameAndCodeAndCodeName(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Campaign, campaignName);
+            }
+            var data = _configResposistory.GetByGroupNameAndCodeAndParentIDAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CampaignKeyMessage, parent.ID, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCampaignKeyMessageByParentIDAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, int parentID, int industryID)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeAndParentIDAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CampaignKeyMessage, parentID, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCategorySubByParentIDAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, int parentID, int industryID)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeAndParentIDAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategorySub, parentID, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCampaignNameByIndustryID001ToList([DataSourceRequest] DataSourceRequest request)
+        {
+            int industryID = 0;
+            try
+            {
+                industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
+            }
+            catch
+            {
+            }
+            var data = _configResposistory.GetSQLByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Campaign, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCampaignNameByIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Campaign, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetKeyMessageByIndustryID001ToList([DataSourceRequest] DataSourceRequest request)
+        {
+            int industryID = 0;
+            try
+            {
+                industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
+            }
+            catch
+            {
+            }
+            var data = _configResposistory.GetSQLByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.KeyMessage, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetKeyMessageByIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.KeyMessage, industryID);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetCategorySubToList([DataSourceRequest] DataSourceRequest request)
@@ -834,18 +910,78 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
-        public IActionResult CreateCategorySub(Config model)
+        public IActionResult CreateKeyMessage(Config model, int industryID)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.KeyMessage;
+            model.IndustryID = industryID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _configResposistory.Create(model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateCampaignName(Config model, int industryID)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.Campaign;
+            model.IndustryID = industryID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _configResposistory.Create(model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateCampaignKeyMessage(Config model, int parentID, int industryID)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.CampaignKeyMessage;
+            model.ParentID = parentID;
+            model.IndustryID = industryID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _configResposistory.Create(model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateCategorySub(Config model, int parentID, int industryID)
         {
             Initialization(model);
             model.GroupName = AppGlobal.CRM;
             model.Code = AppGlobal.CategorySub;
+            model.ParentID = parentID;
+            model.IndustryID = industryID;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
-            if (_configResposistory.IsValidByGroupNameAndCodeAndCodeName(model.GroupName, model.Code, model.CodeName) == true)
-            {
-                result = _configResposistory.Create(model);
-            }
+            result = _configResposistory.Create(model);
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;

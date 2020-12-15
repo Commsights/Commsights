@@ -58,6 +58,7 @@ namespace Commsights.Data.Repositories
             Config item = _context.Set<Config>().FirstOrDefault(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.ParentID == parentID && item.TierID == tierID);
             return item;
         }
+
         public Config GetByGroupNameAndCodeAndTitle(string groupName, string code, string title)
         {
             Config item = _context.Set<Config>().FirstOrDefault(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.Title.Equals(title));
@@ -86,7 +87,15 @@ namespace Commsights.Data.Repositories
         public List<Config> GetByParentIDAndGroupNameAndCodeToList(int parentID, string groupName, string code)
         {
             return _context.Config.Where(item => item.GroupName.Equals(AppGlobal.CRM) && item.Code.Equals(AppGlobal.Website) && item.ParentID == parentID).OrderBy(item => item.ID).ToList();
-        }       
+        }
+        public List<Config> GetByGroupNameAndCodeAndParentIDAndIndustryIDToList(string groupName, string code, int parentID, int industryID)
+        {
+            return _context.Config.Where(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.ParentID == parentID && item.IndustryID == industryID).OrderBy(item => item.SortOrder).ToList();
+        }
+        public List<Config> GetByGroupNameAndCodeAndIndustryIDToList(string groupName, string code, int industryID)
+        {
+            return _context.Config.Where(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.IndustryID == industryID).OrderBy(item => item.SortOrder).ToList();
+        }
         public List<Config> GetMediaByGroupNameAndActiveToList(string groupName, bool active)
         {
             List<Config> list = new List<Config>();
@@ -160,6 +169,19 @@ namespace Commsights.Data.Repositories
         {
             List<Config> list = new List<Config>();
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigToUpperFirstLetter");
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
+        public List<Config> GetSQLByGroupNameAndCodeAndIndustryIDToList(string groupName, string code, int industryID)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@IndustryID",industryID),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectByGroupNameAndCodeAndIndustryID", parameters);
             list = SQLHelper.ToList<Config>(dt);
             return list;
         }

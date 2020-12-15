@@ -216,6 +216,30 @@ namespace Commsights.Data.Helpers
                 return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DateEnd").Value);
             }
         }
+        public static string KeyMessage
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("KeyMessage").Value;
+            }
+        }
+        public static string CampaignKeyMessage
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("CampaignKeyMessage").Value;
+            }
+        }
+        public static string Campaign
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Campaign").Value;
+            }
+        }
         public static string CorpCopy
         {
             get

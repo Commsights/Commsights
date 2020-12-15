@@ -15,7 +15,7 @@
                     @Html.HiddenFor(Model => Model.ProductPropertyID)
                     @Html.HiddenFor(Model => Model.KeyMessage)
                     <div class="row">
-                        <div class='col-md-1'>                            
+                        <div class='col-md-1'>
                         </div>
                         <div class='col-md-1'>
                             <a id="RowFirst" onclick="onRowMove(0)" style="color:#ffffff;" title="First" class="btn btn-info">
@@ -179,16 +179,16 @@
                                 <label for='Author'>Journalist</label>
                                 @(Html.TextBoxFor(Model => Model.Author, new { @class = "form-control", @title = Model.Author }))
                             </div>
-
                             <div class='form-group'>
-                                <label for='CampaignName'>Campaign name</label>
-                                @(Html.TextBoxFor(Model => Model.CampaignName, new { @class = "form-control", @title = Model.CampaignName }))
+                                <label for='KeyMessage'>Key message</label>                               
+                                @(Html.Kendo().DropDownListFor(Model => Model.KeyMessage)
+                                 .DataValueField("CodeName")
+                                 .DataTextField("CodeName")
+                                .HtmlAttributes(new { @class = "form-control" })
+                                   .Filter(FilterType.StartsWith)
+                                 .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetKeyMessageByIndustryID001ToList", "Config")))
+                            )
                             </div>
-                            <div class='form-group'>
-                                <label for='CampaignKeyMessage'>Campaign key message</label>
-                                @(Html.TextBoxFor(Model => Model.CampaignKeyMessage, new { @class = "form-control" }))
-                            </div>
-
                         </div>
                         <div class="col-md-2">
                             <div class='form-group'>
@@ -202,7 +202,7 @@
                             )
                             </div>
                             <div class='form-group'>
-                                <label for='CompetitiveNewsValue'>Competitors products/ brands</label>
+                                <label for='CompetitiveNewsValue'>Competitors</label>
                                 @(Html.Kendo().DropDownListFor(Model => Model.CompetitiveNewsValue)
                      .DataValueField("ID")
                      .DataTextField("Display")
@@ -435,7 +435,7 @@
         $.ajax({
             type: 'GET',
             url: "@Url.Action("ExportExcelEnglish", "CodeData")",
-            data: {                
+            data: {
             },
             success: function () {
                     EndRequestHandler();

@@ -182,11 +182,24 @@
 
                             <div class='form-group'>
                                 <label for='CampaignName'>Campaign name</label>
-                                @(Html.TextBoxFor(Model => Model.CampaignName, new { @class = "form-control", @title = Model.CampaignName }))
+                                @(Html.Kendo().DropDownListFor(Model => Model.CampaignName)
+                                 .DataValueField("CodeName")
+                                 .DataTextField("CodeName")
+                                .HtmlAttributes(new { @class = "form-control" })
+                                   .Filter(FilterType.StartsWith)
+                                   .Events(e => e.Change("onCampaignNameChange"))
+                                 .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCampaignNameByIndustryID001ToList", "Config")))
+                            )
                             </div>
                             <div class='form-group'>
-                                <label for='CampaignKeyMessage'>Campaign key message</label>
-                                @(Html.TextBoxFor(Model => Model.CampaignKeyMessage, new { @class = "form-control" }))
+                                <label for='CampaignKeyMessage'>Campaign key</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.CampaignKeyMessage)
+                                 .DataValueField("CodeName")
+                                 .DataTextField("CodeName")
+                                .HtmlAttributes(new { @class = "form-control" })
+                                   .Filter(FilterType.StartsWith)
+                                 .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCampaignKeyMessageByCampaignNameAndIndustryIDToList", "Config").Data("filterCampaignKeyMessage")))
+                            )
                             </div>
 
                         </div>
@@ -443,9 +456,16 @@
             }).done(() => {
         });
     }
+    function filterCampaignKeyMessage(e) {
+        var campaignNameValue = $("#CampaignName").data("kendoDropDownList").value();     
+        return { campaignName: campaignNameValue };
+    }
     function filterCategorySub(e) {
         var categoryMainValue = $("#CategoryMain").data("kendoDropDownList").value();
         return { categoryMain: categoryMainValue };
+    }
+    function onCampaignNameChange() {
+        $("#CampaignKeyMessage").data("kendoDropDownList").dataSource.read();
     }
     function onCategoryMainChange() {
         $("#CategorySub").data("kendoDropDownList").dataSource.read();
