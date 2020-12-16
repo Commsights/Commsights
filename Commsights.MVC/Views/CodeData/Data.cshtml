@@ -49,17 +49,21 @@
     columns.Template(@"<a target='_blank' href='/CodeData/DetailBasic?RowIndex=#=RowIndex#' title='#=Title#' class='btn btn-info' style='color:white; cursor: pointer;'><i class='fas fa-bold'></i></a>").Title("Basic").Width(70).Locked(true);
     columns.Template(@"<a target='_blank' href='/CodeData/Detail?RowIndex=#=RowIndex#' title='#=Title#' class='btn btn-primary' style='color:white; cursor: pointer;'><i class='fas fa-ad'></i></a>").Title("Advance").Width(90).Locked(true);
     columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70).Locked(true);
+    columns.Bound(t => t.IsCoding).Title("Coding").Width(100).HtmlAttributes(new { @class = "text-center" });
+    columns.Bound(t => t.IsAnalysis).Title("Analysis").Width(100).HtmlAttributes(new { @class = "text-center" });
     columns.Bound(t => t.RowIndex).Title("No").Width(100).HtmlAttributes(new { @class = "text-center" });
     columns.Bound(t => t.Source).Title("Source").Width(100).HtmlAttributes(new { @class = "text-right" });
-    columns.Bound(t => t.CategoryMain).Title("Category Main").Width(300);
-    columns.Bound(t => t.CategorySub).Title("Category Sub").Width(300);
-    columns.Bound(t => t.CompanyName).Title("Company").Width(300);
+    columns.Bound(t => t.CategoryMain).Title("Category Main").Width(200);
+    columns.Bound(t => t.CategorySub).Title("Category Sub").Width(200);
+    columns.Bound(t => t.CompanyName).Title("Company").Width(200);
     columns.Bound(t => t.CorpCopy).Title("Corp Copy").Width(200);
     columns.Bound(t => t.SOECompany).Title("SOE (%)").Width(200);
-    columns.Bound(t => t.ProductName_ProjectName).Title("Product").Width(300);
-    columns.Bound(t => t.SentimentCorp).Title("Sentiment").Width(300);
-    columns.Bound(t => t.TierCommsights).Title("Tier Commsights").Width(300);
+    columns.Bound(t => t.ProductName_ProjectName).Title("Product").Width(200);
+    columns.Bound(t => t.SentimentCorp).Title("Sentiment").Width(200);    
     columns.Bound(t => t.Title).Title("Headline (Vie)").Width(500).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.TierCommsights).Title("Tier Commsights").Width(200);
+    columns.Bound(t => t.MediaTitle).Title("Media").Width(200);
+    columns.Bound(t => t.MediaType).Title("Type").Width(150);
     columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(500).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.Description).Title("Summary").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });    
@@ -93,8 +97,7 @@
     columns.Bound(t => t.Segment).Title("Segment").Width(300);
     columns.Bound(t => t.DatePublish).Title("Date").Format("{0:dd/MM/yyyy}").Width(150).HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.DateUpdated).Title("Updated").Width(200).Format("{0:dd/MM/yyyy HH:mm}").HtmlAttributes(new { @class = "text-right" });
-    columns.Bound(t => t.MediaTitle).Title("Media").Width(300);
-    columns.Bound(t => t.MediaType).Title("Type").Width(150);
+    
     columns.Bound(t => t.Advalue).Title("Advalue").Width(150);    
     columns.Bound(t => t.FileName).Title("FileName").Width(300);
     columns.Bound(t => t.ProductID).Title("ProductID").Width(100);

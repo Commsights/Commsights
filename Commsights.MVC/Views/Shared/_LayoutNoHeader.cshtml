@@ -80,7 +80,7 @@
         }
     </style>
 </head>
-<body id="BackGround" class="hold-transition sidebar-mini">
+<body id="BackGround" class="hold-transition sidebar-mini sidebar-collapse">
     <div id="Dim" style="display: none;">
         <div class="msgbox">
             <img src="@Commsights.Data.Helpers.AppGlobal.LoadingURLFull" alt="Processing, please wait!"
@@ -88,7 +88,7 @@
         </div>
     </div>
 
-    <div class="wrapper">       
+    <div class="wrapper">
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <a href="@Commsights.Data.Helpers.AppGlobal.Domain" class="brand-link" title="CRM">
                 <img src="@Commsights.Data.Helpers.AppGlobal.LogoURLFull"
@@ -98,13 +98,7 @@
                 <span class="brand-text font-weight-light">CRM</span>
             </a>
             <div class="sidebar">
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
-                        <img src="/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="Lê Thanh Sơn">
-                    </div>
-                    <div class="info">
-                        <a href="#" class="d-block" title="Lê Thanh Sơn">Lê Thanh Sơn</a>
-                    </div>
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex" id="SideBar">
                 </div>
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -169,6 +163,60 @@
                                         <p>Company</p>
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a href="/Config/CampaignName" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Campaign Name</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/Config/CampaignKeyMessage" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Campaign Key Message</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/Config/KeyMessage" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Key Message</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/Config/CategoryMainByIndustryID" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Category Main</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/Config/CategorySub" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Category Sub</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/Membership/Employee" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Employee</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/ProductPermission/ProductPermission" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Product Permission</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/Config/IndustryKeyWord" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Industry Key</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/Membership/CompanyName" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Company name</p>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         <li class="nav-item has-treeview">
@@ -200,53 +248,6 @@
                                 </li>
                             </ul>
                         </li>
-                        @*<li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-database"></i>
-                                    <p>
-                                        Data
-                                        <i class="right fas fa-angle-left"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a href="/Product/ArticleByProduct" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Article by product</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/Product/ArticleByCompany" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Article by company</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/Product/ArticleByIndustry" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Article by industry</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/Product/Article" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Article</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/Product/GoogleSearch" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Google search</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/Product/Index" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Scan article</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>*@
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-paper-plane"></i>
@@ -286,29 +287,29 @@
                                     </a>
                                 </li>
                                 @*<li class="nav-item">
-                                        <a href="/Membership/CompetitorByCompany" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Competitor by company</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/Membership/DailyReportSectionByCompany" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Daily report section</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/Membership/DailyReportColumnByCompany" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Report column</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/Membership/ProductName" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Product</p>
-                                        </a>
-                                    </li>*@
+                                    <a href="/Membership/CompetitorByCompany" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Competitor by company</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/Membership/DailyReportSectionByCompany" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Daily report section</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/Membership/DailyReportColumnByCompany" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Report column</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/Membership/ProductName" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Product</p>
+                                    </a>
+                                </li>*@
                             </ul>
                         </li>
                         <li class="nav-item has-treeview">
@@ -463,18 +464,7 @@
                                         <p>Sentiment</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a href="/Config/CategoryMain" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Category Main</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="/Config/CategorySub" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Category Sub</p>
-                                    </a>
-                                </li>
+
                                 <li class="nav-item">
                                     <a href="/Config/CorpCopy" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
@@ -528,12 +518,7 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="/Membership/Employee" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Employee</p>
-                                    </a>
-                                </li>
+
                                 <li class="nav-item">
                                     <a href="/MembershipPermission/Index" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
@@ -560,6 +545,23 @@
                                 </li>
                             </ul>
                         </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-user-tie"></i>
+                                <p>
+                                    User
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/Membership/EmployeeInfo" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Infomation</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                         <li class="nav-item">
                             <a href="@Url.Action("Logout", "Membership", new {area = ""})" title="Sign out" class="nav-link">
                                 <i class="nav-icon fas fa-power-off"></i>
@@ -576,7 +578,6 @@
             <section class="content" style="padding-top:10px;">
                 <div class="container-fluid">
                     @RenderBody()
-
                 </div>
             </section>
         </div>

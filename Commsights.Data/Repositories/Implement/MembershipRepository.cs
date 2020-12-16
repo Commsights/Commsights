@@ -80,6 +80,22 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public Membership GetByAccountAndIndustryIDAndActive(string account, int industryID, bool active)
+        {
+            Membership model = new Membership();
+            if (industryID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@IndustryID",industryID),
+                    new SqlParameter("@Account",account),
+                    new SqlParameter("@Active",active),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectByAccountAndIndustryIDAndActive", parameters);
+                model = SQLHelper.ToList<Membership>(dt).FirstOrDefault();
+            }
+            return model;
+        }
         public List<Membership> GetByIndustryIDWithIDAndAccountToList(int industryID)
         {
             List<Membership> list = new List<Membership>();
@@ -134,7 +150,7 @@ namespace Commsights.Data.Repositories
         {
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectAllCompany001");
             return SQLHelper.ToList<MembershipCompanyDataTransfer>(dt);
-        }        
+        }
         public List<MembershipCompanyDataTransfer> GetAllCompany001ByActiveToList()
         {
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectCompany001ByActive");

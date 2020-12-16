@@ -68,7 +68,7 @@
 {
     model.Id(t => t.ID);
     model.Field(t => t.Employee).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
-    model.Field(t => t.RowPercent).DefaultValue(0);
+    model.Field(t => t.RowPercent).DefaultValue(100);
     model.Field(t => t.SortOrder).DefaultValue(0);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })

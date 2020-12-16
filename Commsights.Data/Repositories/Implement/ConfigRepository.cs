@@ -101,6 +101,15 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public Config GetByGroupNameAndCodeAndIndustryIDAndCodeName(string groupName, string code, int industryID, string codeName)
+        {
+            Config model = new Config();
+            if (industryID > 0)
+            {
+                model = _context.Config.Where(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.IndustryID == industryID && item.CodeName.Equals(codeName)).FirstOrDefault();
+            }
+            return model;
+        }
         public List<Config> GetMediaByGroupNameAndActiveToList(string groupName, bool active)
         {
             List<Config> list = new List<Config>();

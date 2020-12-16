@@ -387,13 +387,9 @@ namespace Commsights.MVC.Controllers
             var data = _configResposistory.GetByGroupNameAndCodeAndParentIDAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CampaignKeyMessage, parentID, industryID);
             return Json(data.ToDataSourceResult(request));
         }
-        public ActionResult GetCategorySubByParentIDAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, int parentID, int industryID)
+        public ActionResult GetCategorySubByCategoryMainAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, string categoryMain)
         {
-            var data = _configResposistory.GetByGroupNameAndCodeAndParentIDAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategorySub, parentID, industryID);
-            return Json(data.ToDataSourceResult(request));
-        }
-        public ActionResult GetCampaignNameByIndustryID001ToList([DataSourceRequest] DataSourceRequest request)
-        {
+            int parentID = 0;
             int industryID = 0;
             try
             {
@@ -402,9 +398,20 @@ namespace Commsights.MVC.Controllers
             catch
             {
             }
-            var data = _configResposistory.GetSQLByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Campaign, industryID);
+            Config categoryMain001 = _configResposistory.GetByGroupNameAndCodeAndIndustryIDAndCodeName(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategoryMain, industryID, categoryMain);
+            if (categoryMain001 != null)
+            {
+                parentID = categoryMain001.ID;
+            }
+            var data = _configResposistory.GetByGroupNameAndCodeAndParentIDAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategorySub, parentID, industryID);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetCategorySubByParentIDAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, int parentID, int industryID)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeAndParentIDAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategorySub, parentID, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        
         public ActionResult GetCampaignNameByIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)
         {
             var data = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Campaign, industryID);
@@ -421,6 +428,32 @@ namespace Commsights.MVC.Controllers
             {
             }
             var data = _configResposistory.GetSQLByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.KeyMessage, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCampaignNameByIndustryID001ToList([DataSourceRequest] DataSourceRequest request)
+        {
+            int industryID = 0;
+            try
+            {
+                industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
+            }
+            catch
+            {
+            }
+            var data = _configResposistory.GetSQLByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Campaign, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCategoryMainByIndustryID001ToList([DataSourceRequest] DataSourceRequest request)
+        {
+            int industryID = 0;
+            try
+            {
+                industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
+            }
+            catch
+            {
+            }
+            var data = _configResposistory.GetSQLByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategoryMain, industryID);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetCategoryMainByIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)

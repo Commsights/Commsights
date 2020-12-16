@@ -252,22 +252,62 @@ namespace Commsights.Data.Repositories
             List<MembershipPermissionProductDataTransfer> list = new List<MembershipPermissionProductDataTransfer>();
             if (!string.IsNullOrEmpty(account))
             {
-                Membership membership = _context.Membership.Where(item => item.Account.Equals(account)).FirstOrDefault();
-                if (membership != null)
+                int ID = 0;
+                try
                 {
-                    if (membership.ID > 0)
+                    ID = int.Parse(account.Split('-')[0]);
+                }
+                catch
+                {
+                }
+                if (ID > 0)
+                {
+                    SqlParameter[] parameters =
                     {
-                        SqlParameter[] parameters =
-                        {
-                    new SqlParameter("@MembershipID",membership.ID),
+                    new SqlParameter("@MembershipID",ID),
                     new SqlParameter("@Code",code)
                     };
-                        DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectProductByMembershipIDAndCode", parameters);
-                        list = SQLHelper.ToList<MembershipPermissionProductDataTransfer>(dt);
-                    }
+                    DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectProductByMembershipIDAndCode", parameters);
+                    list = SQLHelper.ToList<MembershipPermissionProductDataTransfer>(dt);
                 }
             }
             return list;
+        }
+        public List<MembershipPermissionProductDataTransfer> GetProductByAccountAndCodeAndIndustryIDToList(string account, string code, int industryID)
+        {
+            List<MembershipPermissionProductDataTransfer> list = new List<MembershipPermissionProductDataTransfer>();
+            if ((!string.IsNullOrEmpty(account)) && (industryID > 0))
+            {
+                Membership membership = GetByAccountAndIndustryIDAndActive(account, industryID);
+                if (membership != null)
+                {
+                    SqlParameter[] parameters =
+                    {
+                    new SqlParameter("@MembershipID",membership.ID),
+                    new SqlParameter("@Code",code)
+                    };
+                    DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectProductByMembershipIDAndCode", parameters);
+                    list = SQLHelper.ToList<MembershipPermissionProductDataTransfer>(dt);
+                }
+            }
+            return list;
+        }
+        public Membership GetByAccountAndIndustryIDAndActive(string account, int industryID)
+        {
+            Membership model = new Membership();
+            if ((!string.IsNullOrEmpty(account)) && (industryID > 0))
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@Account",account),
+                    new SqlParameter("@IndustryID",industryID),
+                    new SqlParameter("@Active",true),
+                    };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectByAccountAndIndustryIDAndActive", parameters);
+                model = SQLHelper.ToList<Membership>(dt).FirstOrDefault();
+
+            }
+            return model;
         }
         public List<MembershipPermissionDataTransfer> GetDataTransferSegmentByMembershipIDAndIndustryIDAndCodeToList(int membershipID, int industryID, string code)
         {

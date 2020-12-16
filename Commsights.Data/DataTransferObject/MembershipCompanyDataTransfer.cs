@@ -10,6 +10,7 @@ namespace Commsights.Data.DataTransferObject
         public int ID { get; set; }
         public bool? Active { get; set; }
         public string Account { get; set; }
+        public string FullName { get; set; }
 
     }
 }

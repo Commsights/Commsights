@@ -53,6 +53,7 @@ namespace Commsights.Data.Repositories
         public MembershipPermission GetByCodeAndProductName(string code, string productName);
         public List<MembershipPermissionProductDataTransfer> GetProductByMembershipIDAndCodeToList(int membershipID, string code);
         public List<MembershipPermissionProductDataTransfer> GetProductByAccountAndCodeToList(string account, string code);
+        public List<MembershipPermissionProductDataTransfer> GetProductByAccountAndCodeAndIndustryIDToList(string account, string code, int industryID);
         public MembershipPermission GetByCodeAndMembershipIDAndIndustryIDAndSegmentIDAndProductName(string code, int membershipID, int industryID, int segmentID, string productName);
         public MembershipPermission GetByCodeAndMembershipIDAndSegmentIDAndProductName(string code, int membershipID, int segmentID, string productName);
     }
