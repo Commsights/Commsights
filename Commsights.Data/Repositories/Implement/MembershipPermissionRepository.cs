@@ -38,6 +38,14 @@ namespace Commsights.Data.Repositories
         {
             return _context.MembershipPermission.FirstOrDefault(item => item.Code.Equals(code) && item.FullName.Equals(fullName));
         }
+        public MembershipPermission GetByCodeAndMembershipIDAndIndustryIDAndSegmentIDAndProductName(string code, int membershipID, int industryID, int segmentID, string productName)
+        {
+            return _context.MembershipPermission.FirstOrDefault(item => item.Code.Equals(code) && item.MembershipID == membershipID && item.IndustryID == industryID && item.SegmentID == segmentID && item.ProductName.Equals(productName));
+        }
+        public MembershipPermission GetByCodeAndMembershipIDAndSegmentIDAndProductName(string code, int membershipID, int segmentID, string productName)
+        {
+            return _context.MembershipPermission.FirstOrDefault(item => item.Code.Equals(code) && item.MembershipID == membershipID && item.SegmentID == segmentID && item.ProductName.Equals(productName));
+        }
         public MembershipPermission GetByCodeAndFullNameContains(string code, string fullName)
         {
             return _context.MembershipPermission.FirstOrDefault(item => item.Code.Equals(code) && item.FullName.Contains(fullName));

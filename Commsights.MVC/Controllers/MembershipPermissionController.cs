@@ -307,7 +307,7 @@ namespace Commsights.MVC.Controllers
                 model.SegmentID = AppGlobal.SegmentID;
             }
             model.Initialization(InitType.Insert, RequestUserID);
-            int result = 1;
+            int result = 0;
             if ((model.MembershipID > 0) && (model.IndustryID > 0) && (model.SegmentID > 0))
             {
                 MembershipPermission membershipPermission = new MembershipPermission();
@@ -332,7 +332,11 @@ namespace Commsights.MVC.Controllers
                         membershipPermission.IndustryID = model.IndustryID;
                         membershipPermission.SegmentID = model.SegmentID;
                         membershipPermission.ProductName = product.Trim();
-                        result = result + _membershipPermissionRepository.Create(membershipPermission);
+                        MembershipPermission membershipPermissionCheck = _membershipPermissionRepository.GetByCodeAndMembershipIDAndIndustryIDAndSegmentIDAndProductName(AppGlobal.Product, model.MembershipID.Value, model.IndustryID.Value, model.SegmentID.Value, product);
+                        if (membershipPermissionCheck == null)
+                        {
+                            result = result + _membershipPermissionRepository.Create(membershipPermission);
+                        }
                     }
                 }
                 else

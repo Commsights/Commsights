@@ -103,6 +103,10 @@ namespace Commsights.MVC.Controllers
                     break;
             }
         }
+        public IActionResult CompanyName()
+        {
+            return View();
+        }
         public IActionResult Index()
         {
             return View();
@@ -321,6 +325,11 @@ namespace Commsights.MVC.Controllers
             var data = _membershipRepository.GetByIndustryID001ByActiveToList(industryID);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetByIndustryIDByActiveToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {            
+            var data = _membershipRepository.GetByIndustryID002ByActiveToList(industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetAllCompany001ToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _membershipRepository.GetAllCompany001ToList();
@@ -358,7 +367,7 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetEmployeeToList([DataSourceRequest] DataSourceRequest request)
         {
-            var data = _membershipRepository.GetByParentIDToList(AppGlobal.ParentIDEmployee);
+            var data = _membershipRepository.GetByParentIDToList(AppGlobal.ParentIDEmployee).OrderBy(item => item.FullName);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetCustomerToList([DataSourceRequest] DataSourceRequest request)
@@ -482,6 +491,14 @@ namespace Commsights.MVC.Controllers
                     {
                         file.CopyTo(stream);
                         model.Avatar = fileName;
+                        var CookieExpires = new CookieOptions();
+                        string avatar = "";
+                        if (!string.IsNullOrEmpty(model.Avatar))
+                        {
+                            avatar = model.Avatar;
+                        }
+                        CookieExpires.Expires = DateTime.Now.AddMonths(3);
+                        Response.Cookies.Append("Avatar", avatar, CookieExpires);
                     }
                 }
             }
@@ -565,12 +582,9 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
-            if (_membershipRepository.IsExistEmail(model.Email) == false)
+            if (_membershipRepository.IsExistPhone(model.Phone) == false)
             {
-                if (_membershipRepository.IsExistPhone(model.Phone) == false)
-                {
-                    result = _membershipRepository.Create(model);
-                }
+                result = _membershipRepository.Create(model);
             }
             if (result > 0)
             {

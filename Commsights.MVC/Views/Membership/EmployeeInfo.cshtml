@@ -12,6 +12,7 @@
                 <form asp-action="SaveEmployeeInfo" asp-controller="Membership">
                     @Html.HiddenFor(Model => Model.ID)
                     @Html.HiddenFor(Model => Model.ParentID)
+                    @Html.HiddenFor(Model => Model.GUICode)
                     <div class="row">
                         <div class='col-md-11'>
                         </div>

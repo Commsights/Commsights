@@ -154,6 +154,20 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<MembershipCompanyDataTransfer> GetByIndustryID002ByActiveToList(int industryID)
+        {
+            List<MembershipCompanyDataTransfer> list = new List<MembershipCompanyDataTransfer>();
+            if (industryID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@IndustryID",industryID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectByIndustryID002ByActive", parameters);
+                list = SQLHelper.ToList<MembershipCompanyDataTransfer>(dt);
+            }
+            return list;
+        }
         public List<MembershipCompanyDataTransfer> GetByIndustryID001ByActiveToList(int industryID)
         {
             List<MembershipCompanyDataTransfer> list = new List<MembershipCompanyDataTransfer>();

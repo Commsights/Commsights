@@ -37,5 +37,6 @@ namespace Commsights.Data.Repositories
         public List<MembershipCompanyDataTransfer> GetByIndustryID001ByActiveToList(int industryID);
         public string UpdateSingleItem001(int ID, bool active, string account);
         public Membership GetByPhoneAndPassword(string phone, string password);
+        public List<MembershipCompanyDataTransfer> GetByIndustryID002ByActiveToList(int industryID);
     }
 }
