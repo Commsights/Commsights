@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.IO;
@@ -13,6 +14,7 @@ using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
@@ -78,6 +80,10 @@ namespace Commsights.MVC.Controllers
             {
                 model.Password = "0";
             }
+            if (string.IsNullOrEmpty(model.GUICode))
+            {
+                model.InitDefaultValue();
+            }
             switch (action)
             {
                 case 0:
@@ -112,6 +118,15 @@ namespace Commsights.MVC.Controllers
         public IActionResult Customer()
         {
             return View();
+        }
+        public IActionResult EmployeeInfo()
+        {
+            Membership model = new Membership();
+            if (RequestUserID > 0)
+            {
+                model = _membershipRepository.GetByID(RequestUserID);
+            }
+            return View(model);
         }
         public IActionResult CustomerFiles(int ID)
         {
@@ -219,6 +234,40 @@ namespace Commsights.MVC.Controllers
         {
             return RedirectToAction("CustomerDetail", new { ID = 0 });
         }
+        public string Sidebar()
+        {
+            string result = "";
+            StringBuilder txt = new StringBuilder();
+            string fullName = Request.Cookies["FullName"];
+            string avatarURL = Request.Cookies["AvatarURL"];
+            txt.AppendLine(@"<div class='image'>");
+            txt.AppendLine(@"<img src='" + avatarURL + "' class='img-circle elevation-2' alt='" + fullName + "' title='" + fullName + "'>");
+            txt.AppendLine(@"</div>");
+            txt.AppendLine(@"<div class='info'>");
+            txt.AppendLine(@"<a href='#' class='d-block' title='" + fullName + "'>" + fullName + "</a>");
+            txt.AppendLine(@"</div>");
+            result = txt.ToString();
+            return result;
+        }
+        public IActionResult Login(Membership model)
+        {
+            string controller = "Home";
+            string action = "Index";
+            Membership membership = _membershipRepository.GetByPhoneAndPassword(model.Phone, model.Password);
+            if (membership != null)
+            {
+                var CookieExpires = new CookieOptions();
+                CookieExpires.Expires = DateTime.Now.AddMonths(3);
+                Response.Cookies.Append("UserID", membership.ID.ToString(), CookieExpires);
+                Response.Cookies.Append("FullName", membership.FullName, CookieExpires);
+                Response.Cookies.Append("Avatar", membership.Avatar, CookieExpires);
+                string avatarURL = Commsights.Data.Helpers.AppGlobal.Domain + Commsights.Data.Helpers.AppGlobal.URLImagesMembership + "/" + membership.Avatar;
+                Response.Cookies.Append("AvatarURL", avatarURL, CookieExpires);
+                controller = "CodeData";
+                action = "Data";
+            }
+            return RedirectToAction(action, controller);
+        }
         public IActionResult GetByID(int ID)
         {
             Membership model = _membershipRepository.GetByID(ID);
@@ -230,7 +279,7 @@ namespace Commsights.MVC.Controllers
             return Json(model);
         }
         public ActionResult GetByIndustryID002ToList([DataSourceRequest] DataSourceRequest request, int industryID)
-        {            
+        {
             var data = _membershipRepository.GetByIndustryID001ToList(industryID);
             return Json(data.ToDataSourceResult(request));
         }
@@ -350,7 +399,6 @@ namespace Commsights.MVC.Controllers
         [AcceptVerbs("Post")]
         public IActionResult SaveCompany(Membership model)
         {
-            //model.ParentID = AppGlobal.ParentIDCompetitor;
             model.Active = true;
             if (model.ID > 0)
             {
@@ -372,7 +420,6 @@ namespace Commsights.MVC.Controllers
         [AcceptVerbs("Post")]
         public IActionResult SaveCustomer(Membership model)
         {
-            //model.ParentID = AppGlobal.ParentIDCustomer;
             model.Active = true;
             if (Request.Form.Files.Count > 0)
             {
@@ -383,7 +430,7 @@ namespace Commsights.MVC.Controllers
                     string fileName = Path.GetFileNameWithoutExtension(file.FileName);
                     fileName = AppGlobal.SetName(fileName);
                     fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
-                    var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.URLImagesCustomer, fileName);
+                    var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.URLImagesMembership, fileName);
                     using (var stream = new FileStream(physicalPath, FileMode.Create))
                     {
                         file.CopyTo(stream);
@@ -395,24 +442,6 @@ namespace Commsights.MVC.Controllers
             {
                 Initialization(model, 1);
                 model.Initialization(InitType.Update, RequestUserID);
-
-                //bool check = false;
-                //int ID = _membershipRepository.IsByAccount(model.Account);
-                //if (ID == 0)
-                //{
-                //    check = true;
-                //}
-                //else
-                //{
-                //    if (model.ID == ID)
-                //    {
-                //        check = true;
-                //    }
-                //}
-                //if (check == true)
-                //{
-                //    _membershipRepository.Update(model.ID, model);
-                //}
                 _membershipRepository.Update(model.ID, model);
             }
             else
@@ -425,6 +454,40 @@ namespace Commsights.MVC.Controllers
                 }
             }
             return RedirectToAction("CustomerDetail", new { ID = model.ID });
+        }
+        [AcceptVerbs("Post")]
+        public IActionResult SaveEmployeeInfo(Membership model)
+        {
+            if (Request.Form.Files.Count > 0)
+            {
+                var file = Request.Form.Files[0];
+                if (file != null)
+                {
+                    string fileExtension = Path.GetExtension(file.FileName);
+                    string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                    fileName = AppGlobal.SetName(fileName);
+                    fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
+                    var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.URLImagesMembership, fileName);
+                    using (var stream = new FileStream(physicalPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                        model.Avatar = fileName;
+                    }
+                }
+            }
+            if (model.ID > 0)
+            {
+                Initialization(model, 1);
+                model.Initialization(InitType.Update, RequestUserID);
+                _membershipRepository.Update(model.ID, model);
+            }
+            else
+            {
+                Initialization(model, 0);
+                model.Initialization(InitType.Insert, RequestUserID);
+                _membershipRepository.Create(model);
+            }
+            return RedirectToAction("EmployeeInfo");
         }
         public IActionResult CreateWithIndustryID(Membership model, int industryID)
         {
@@ -494,7 +557,7 @@ namespace Commsights.MVC.Controllers
             int result = 0;
             if (_membershipRepository.IsExistEmail(model.Email) == false)
             {
-                if (_membershipRepository.IsExistPhone(model.Email) == false)
+                if (_membershipRepository.IsExistPhone(model.Phone) == false)
                 {
                     result = _membershipRepository.Create(model);
                 }
@@ -514,7 +577,7 @@ namespace Commsights.MVC.Controllers
             Initialization(model, 1);
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
-            int result = 0;            
+            int result = 0;
             result = _membershipRepository.Update(model.ID, model);
             if (result > 0)
             {

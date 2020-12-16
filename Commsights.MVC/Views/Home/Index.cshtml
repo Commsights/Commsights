@@ -2,32 +2,30 @@
     ViewData["Title"] = "Home"; }
 
 
+@model Commsights.Data.Models.Membership
 
-<div class="login-box">
-    <div class="login-logo">
-        <a title="@Commsights.Data.Helpers.AppGlobal.Title" href="/Home/Index"><img class="img-thumbnail" style="background-color:transparent; border-width:0px;" src="@Commsights.Data.Helpers.AppGlobal.Logo01URLFull" title="@Commsights.Data.Helpers.AppGlobal.Title" alt="@Commsights.Data.Helpers.AppGlobal.Title" /></a>
-    </div>
-    <div class="login-box-body">
-        <p class="login-box-msg" style="font-size:16px; font-weight:bold; color:red;">Sign in to start your session</p>
-        <div class="form-group has-feedback">
-            <input type="email" class="form-control" placeholder="Email or phone" />
-            <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+<form asp-action="Login" asp-controller="Membership">
+    <div class="login-box">
+        <div class="login-logo">
+            <a title="@Commsights.Data.Helpers.AppGlobal.Title" href="/Home/Index"><img class="img-thumbnail" style="background-color:transparent; border-width:0px;" src="@Commsights.Data.Helpers.AppGlobal.Logo01URLFull" title="@Commsights.Data.Helpers.AppGlobal.Title" alt="@Commsights.Data.Helpers.AppGlobal.Title" /></a>
         </div>
-        <div class="form-group has-feedback">
-            <input type="password" class="form-control" placeholder="Password" />
-            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-        </div>
-        <div class="row">
-            <div class="col-xs-8">
-                <div class="checkbox icheck">
-                    <label>
-                        <input type="checkbox"> Remember Me
-                    </label>
+        <div class="login-box-body">
+            <p class="login-box-msg" style="font-size:16px; font-weight:bold; color:red;">Sign in to start your session</p>
+            <div class="form-group has-feedback">
+                @(Html.TextBoxFor(Model => Model.Phone, new { placeholder = "Phone", @class = "form-control" }))                
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">                
+                @(Html.TextBoxFor(Model => Model.Password, new { placeholder = "Password", @class = "form-control", @type = "password" }))
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div class="row">
+                <div class="col-xs-8">
+                </div>
+                <div class="col-xs-4">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat"><i class="fa fa-sign-in"></i> Sign In</button>
                 </div>
             </div>
-            <div class="col-xs-4">
-                <button type="submit" class="btn btn-primary btn-block btn-flat"><i class="fa fa-sign-in"></i> Sign In</button>
-            </div>
         </div>
     </div>
-</div>
+</form>

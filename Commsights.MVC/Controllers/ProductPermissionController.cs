@@ -48,6 +48,7 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.InitString;
             model.IndustryID = industryID;
             model.EmployeeID = model.Employee.ID;
+            model.MembershipID = RequestUserID;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = _productPermissionRepository.Create(model);
             if (result > 0)
@@ -64,6 +65,7 @@ namespace Commsights.MVC.Controllers
         {
             string note = AppGlobal.InitString;
             model.EmployeeID = model.Employee.ID;
+            model.MembershipID = RequestUserID;
             model.Initialization(InitType.Update, RequestUserID);
             int result = _productPermissionRepository.Update(model.ID, model);
             if (result > 0)

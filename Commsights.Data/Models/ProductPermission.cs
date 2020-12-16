@@ -7,7 +7,7 @@ namespace Commsights.Data.Models
     {
 
         public string Code { get; set; }
-        public bool? MembershipID { get; set; }
+        public int? MembershipID { get; set; }
         public int? EmployeeID { get; set; }
         public int? IndustryID { get; set; }
         public int? RowBegin { get; set; }

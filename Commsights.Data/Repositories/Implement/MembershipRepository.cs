@@ -18,6 +18,23 @@ namespace Commsights.Data.Repositories
         {
             _context = context;
         }
+        public Membership GetByPhoneAndPassword(string phone, string password)
+        {
+            bool check = false;
+            var membership = _context.Membership.FirstOrDefault(user => user.Phone.Equals(phone));
+            if (membership != null)
+            {
+                if (SecurityHelper.Decrypt(membership.GUICode, membership.Password).Equals(password))
+                {
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                membership = null;
+            }
+            return membership;
+        }
         public Membership GetByCodeAndFullName(string code, string fullName)
         {
             Membership model = null;
@@ -224,7 +241,7 @@ namespace Commsights.Data.Repositories
             }
             if (membership != null)
             {
-                if (SecurityHelper.Decrypt(membership.Guicode, membership.Password).Equals(password))
+                if (SecurityHelper.Decrypt(membership.GUICode, membership.Password).Equals(password))
                 {
                     return true;
                 }
@@ -236,7 +253,7 @@ namespace Commsights.Data.Repositories
             var membership = _context.Membership.FirstOrDefault(user => user.ID == ID);
             if (membership != null)
             {
-                if (SecurityHelper.Decrypt(membership.Guicode, membership.Password).Equals(password))
+                if (SecurityHelper.Decrypt(membership.GUICode, membership.Password).Equals(password))
                 {
                     return true;
                 }

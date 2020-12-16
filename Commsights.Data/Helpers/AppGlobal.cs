@@ -216,6 +216,14 @@ namespace Commsights.Data.Helpers
                 return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DateEnd").Value);
             }
         }
+        public static string IndustryKeyWord
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("IndustryKeyWord").Value;
+            }
+        }
         public static string KeyMessage
         {
             get
@@ -1122,6 +1130,22 @@ namespace Commsights.Data.Helpers
             {
                 string result = AppGlobal.Images + "/" + AppGlobal.Customer;
                 return result;
+            }
+        }
+        public static string URLImagesMembership
+        {
+            get
+            {
+                string result = AppGlobal.Images + "/" + AppGlobal.Membership;
+                return result;
+            }
+        }
+        public static string Membership
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Membership").Value;
             }
         }
         public static string Customer

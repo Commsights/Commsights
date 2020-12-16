@@ -158,6 +158,10 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult IndustryKeyWord()
+        {
+            return View();
+        }
         public IActionResult KeyMessage()
         {
             return View();
@@ -422,6 +426,11 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetCategoryMainByIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)
         {
             var data = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategoryMain, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetIndustryKeyWordByIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.IndustryKeyWord, industryID);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetKeyMessageByIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)
@@ -924,6 +933,26 @@ namespace Commsights.MVC.Controllers
             Initialization(model);
             model.GroupName = AppGlobal.CRM;
             model.Code = AppGlobal.CategoryMain;
+            model.IndustryID = industryID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _configResposistory.Create(model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateIndustryKeyWord(Config model, int industryID)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.IndustryKeyWord;
             model.IndustryID = industryID;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);

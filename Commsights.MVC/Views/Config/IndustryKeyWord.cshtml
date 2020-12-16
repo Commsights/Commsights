@@ -1,10 +1,10 @@
-﻿@{ ViewData["Title"] = "Category Sub"; }
+﻿@{ ViewData["Title"] = "Industry Key Word"; }
 
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">System - Category Sub</h3>
+                <h3 class="card-title">System - Industry Key Word</h3>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -18,21 +18,7 @@
                      .DataTextField("CodeName")
                     .HtmlAttributes(new { @class = "form-control" })
                        .Filter(FilterType.StartsWith)
-                       .Events(e => e.DataBound("onIndustryDataBound").Change("onIndustryChange"))
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
-                            )
-                    </div>
-                    <div class='col-md-2'>
-                        Category main
-                    </div>
-                    <div class='col-md-3'>
-                        @(Html.Kendo().DropDownList()
-                        .Name("CategoryMain")
-                     .DataValueField("ID")
-                     .DataTextField("CodeName")
-                    .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)                       
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCategoryMainByIndustryIDToList", "Config").Data("filterCategoryMain")))
                             )
                     </div>
                     <div class='col-md-1'>
@@ -47,8 +33,7 @@
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
     columns.Bound(t => t.CodeName).Title("English").Width(300);
     columns.Bound(t => t.Note).Title("Vietnamese").Width(300);
-    columns.Bound(t => t.SortOrder).Title("Sort").Width(100);
-    columns.Bound(t => t.ID).Title("ID").Width(100);
+    columns.Bound(t => t.SortOrder).Title("Sort").Width(100);    
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
@@ -86,9 +71,9 @@
     model.Field(t => t.ID).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetCategorySubByParentIDAndIndustryIDToList", "Config").Data("filterCategorySub"))
+.Read(t => t.Action("GetIndustryKeyWordByIndustryIDToList", "Config").Data("filterKeyMessage"))
 .Destroy(t => t.Action("Delete", "Config"))
-.Create(t => t.Action("CreateCategorySub", "Config").Data("filterCategorySub"))
+.Create(t => t.Action("CreateIndustryKeyWord", "Config").Data("filterKeyMessage"))
 .Update(t => t.Action("Update", "Config"))
 )
 )
@@ -115,30 +100,14 @@
             $("#Config").data("kendoGrid").dataSource.read();
         }
     }
-    function filterCategorySub(e) {
-        var parentIDValue = $("#CategoryMain").data("kendoDropDownList").value();
-        var industryIDValue = $("#Industry").data("kendoDropDownList").value();       
-        return { parentID: parentIDValue, industryID: industryIDValue };
+    function filterKeyMessage(e) {
+        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
+        return { industryID: industryIDValue };
     }
     function onSearch() {
         $("#Config").data("kendoGrid").dataSource.read();
     }
     $(document).ready(() => {
         onSearch();
-    });   
-    function onIndustryChange() {
-        $("#CategoryMain").data("kendoDropDownList").dataSource.read();
-    }
-    function onIndustryDataBound() {
-        var control = $("#Industry").data("kendoDropDownList");
-        var controlLength = control.dataSource.data().length;
-        if (controlLength > 0) {
-            control.select(0);
-            control.trigger("change");
-        }
-    }
-    function filterCategoryMain(e) {
-        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
-        return { industryID: industryIDValue };
-    }
+    });
 </script>

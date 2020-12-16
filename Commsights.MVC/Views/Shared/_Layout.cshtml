@@ -107,13 +107,7 @@
                 <span class="brand-text font-weight-light">CRM</span>
             </a>
             <div class="sidebar">
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
-                        <img src="/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="Lê Thanh Sơn">
-                    </div>
-                    <div class="info">
-                        <a href="#" class="d-block" title="Lê Thanh Sơn">Lê Thanh Sơn</a>
-                    </div>
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex" id="SideBar">                  
                 </div>
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -220,6 +214,12 @@
                                         <p>Product Permission</p>
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a href="/Config/IndustryKeyWord" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Industry Key</p>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         <li class="nav-item has-treeview">
@@ -250,7 +250,7 @@
                                     </a>
                                 </li>
                             </ul>
-                        </li>                       
+                        </li>
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-paper-plane"></i>
@@ -467,7 +467,7 @@
                                         <p>Sentiment</p>
                                     </a>
                                 </li>
-                                
+
                                 <li class="nav-item">
                                     <a href="/Config/CorpCopy" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
@@ -521,7 +521,7 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                
+
                                 <li class="nav-item">
                                     <a href="/MembershipPermission/Index" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
@@ -544,6 +544,23 @@
                                     <a href="/Product/Index" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Scan article</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-user-tie"></i>
+                                <p>
+                                    User
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/Membership/EmployeeInfo" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Infomation</p>
                                     </a>
                                 </li>
                             </ul>
@@ -585,7 +602,18 @@
         }
         jQuery(function ($) {
             setMenuLeftActive();
+            onLoadData();
         });
+        function onLoadData() {
+            $.ajax({
+                url: '/Membership/Sidebar',
+                type: 'GET',
+                cache: false,
+                data: {}
+            }).done(function (result) {                
+                $('#SideBar').html(result);
+            });
+        }
     </script>
 
 </body>

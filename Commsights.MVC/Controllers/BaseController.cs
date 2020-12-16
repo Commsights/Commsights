@@ -8,6 +8,7 @@ using Commsights.Data.Models;
 using Commsights.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Routing;
 
 namespace Commsights.MVC.Controllers
 {
@@ -17,7 +18,7 @@ namespace Commsights.MVC.Controllers
         public BaseController(IMembershipAccessHistoryRepository membershipAccessHistoryRepository)
         {
             _membershipAccessHistoryRepository = membershipAccessHistoryRepository;
-        }       
+        }
         public int RequestUserID
         {
             get
@@ -35,20 +36,33 @@ namespace Commsights.MVC.Controllers
             membershipAccessHistory.Controller = Controller;
             membershipAccessHistory.Action = Action;
             membershipAccessHistory.QueryString = QueryString;
-            //_membershipAccessHistoryRepository.Create(membershipAccessHistory);
+            _membershipAccessHistoryRepository.Create(membershipAccessHistory);
             return true;
         }
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            string Controller = ((ControllerBase)context.Controller).ControllerContext.ActionDescriptor.ControllerName;
-            string Action = ((ControllerBase)context.Controller).ControllerContext.ActionDescriptor.ActionName;
-            string QueryString = context.HttpContext.Request.QueryString.ToString();
-            if (IsUserAllow(Controller, Action, QueryString) == false)
+            string controller = ((ControllerBase)context.Controller).ControllerContext.ActionDescriptor.ControllerName;
+            string action = ((ControllerBase)context.Controller).ControllerContext.ActionDescriptor.ActionName;
+            string queryString = context.HttpContext.Request.QueryString.ToString();
+            if (this.RequestUserID > 0)
             {
-                context.Result = new RedirectResult("/Home/Index");
+                IsUserAllow(controller, action, queryString);
             }
             else
             {
+                if (((controller.Equals("Membership")) && (action.Equals("Login"))) || ((controller.Equals("Home")) && (action.Equals("Index"))))
+                {
+                }
+                else
+                {
+                    context.Result = new RedirectToRouteResult(
+                       new RouteValueDictionary
+                       {
+                            {"controller", "Home"},
+                            {"action", "Index"}
+                       }
+                    );
+                }
             }
         }
     }

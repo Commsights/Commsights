@@ -94,7 +94,12 @@ namespace Commsights.Data.Repositories
         }
         public List<Config> GetByGroupNameAndCodeAndIndustryIDToList(string groupName, string code, int industryID)
         {
-            return _context.Config.Where(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.IndustryID == industryID).OrderBy(item => item.SortOrder).ToList();
+            List<Config> list = new List<Config>();
+            if (industryID > 0)
+            {
+                list = _context.Config.Where(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.IndustryID == industryID).OrderBy(item => item.SortOrder).ToList();
+            }
+            return list;
         }
         public List<Config> GetMediaByGroupNameAndActiveToList(string groupName, bool active)
         {
