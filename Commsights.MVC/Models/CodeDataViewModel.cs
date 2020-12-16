@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace Commsights.MVC.Models
 {
-    public class CodeDataViewModel: Commsights.Data.DataTransferObject.CodeData
-    {       
-        
+    public class CodeDataViewModel
+    {
+        public int IndustryID { get; set; }
     }
 }

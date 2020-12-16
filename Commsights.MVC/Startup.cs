@@ -42,6 +42,7 @@ namespace Commsights.MVC
             services.AddTransient<IDashbroadRepository, DashbroadRepository>();
             services.AddTransient<IReportRepository, ReportRepository>();
             services.AddTransient<ICodeDataRepository, CodeDataRepository>();
+            services.AddTransient<IProductPermissionRepository, ProductPermissionRepository>();
             services.AddTransient<IEmailStorageRepository, EmailStorageRepository>();
             services.AddTransient<IEmailStoragePropertyRepository, EmailStoragePropertyRepository>();
             services.AddTransient<IReportMonthlyRepository, ReportMonthlyRepository>();

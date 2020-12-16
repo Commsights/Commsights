@@ -138,6 +138,10 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult CategoryMainByIndustryID()
+        {
+            return View();
+        }
         public IActionResult CategoryMain()
         {
             return View();
@@ -348,7 +352,7 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetCategoryMainToList([DataSourceRequest] DataSourceRequest request)
         {
-            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategoryMain).Where(item => item.ParentID == 0).OrderByDescending(item => item.Active);
+            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategoryMain).Where(item => item.IndustryID == 0 || item.IndustryID == null).OrderByDescending(item => item.Active);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetCodeDataCategoryMainActiveToList([DataSourceRequest] DataSourceRequest request)
@@ -413,6 +417,11 @@ namespace Commsights.MVC.Controllers
             {
             }
             var data = _configResposistory.GetSQLByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.KeyMessage, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCategoryMainByIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategoryMain, industryID);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetKeyMessageByIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)
@@ -900,6 +909,26 @@ namespace Commsights.MVC.Controllers
             {
                 result = _configResposistory.Create(model);
             }
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateCategoryMainByIndustryID(Config model, int industryID)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.CategoryMain;
+            model.IndustryID = industryID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _configResposistory.Create(model);
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;

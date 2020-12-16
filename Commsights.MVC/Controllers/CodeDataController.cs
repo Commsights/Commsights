@@ -52,6 +52,7 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+       
         public IActionResult Detail(int rowIndex)
         {
             CodeData model = GetCodeData(rowIndex);
@@ -79,12 +80,14 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult SaveCoding(CodeData model)
         {
+            model.IsCoding = true;
             _productRepository.UpdateSingleItemByCodeData(model);
             _productPropertyRepository.UpdateSingleItemByCodeData(model);
             return RedirectToAction("Detail", "CodeData", new { RowIndex = model.RowIndex });
         }
         public IActionResult SaveCodingDetailBasic(CodeData model)
         {
+            model.IsCoding = true;
             _productRepository.UpdateSingleItemByCodeData(model);
             _productPropertyRepository.UpdateSingleItemByCodeData(model);
             return RedirectToAction("DetailBasic", "CodeData", new { RowIndex = model.RowIndex });

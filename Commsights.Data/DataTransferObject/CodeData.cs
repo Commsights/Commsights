@@ -128,5 +128,9 @@ namespace Commsights.Data.DataTransferObject
                 return resut;
             }
         }
+        public bool? IsCoding { get; set; }
+        public bool? IsAnalysis { get; set; }
+        public bool? IsDownload { get; set; }
+        public bool? IsSend { get; set; }
     }
 }

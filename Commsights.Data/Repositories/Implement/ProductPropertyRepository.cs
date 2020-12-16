@@ -243,6 +243,7 @@ new SqlParameter("@ROME_Corp_VND",model.ROME_Corp_VND),
 new SqlParameter("@ROME_Product_VND",model.ROME_Product_VND),
 new SqlParameter("@FeatureCorp",model.FeatureCorp),
 new SqlParameter("@FeatureProduct",model.FeatureProduct),
+new SqlParameter("@IsCoding",model.IsCoding),
 };
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyUpdateSingleItemByCodeData", parameters);
             return result;

@@ -38,6 +38,10 @@ namespace Commsights.MVC.Controllers
         }
         private void Initialization(Membership model, int action)
         {
+            if (string.IsNullOrEmpty(model.Account))
+            {
+                model.Account = model.Phone.Trim();
+            }
             if (!string.IsNullOrEmpty(model.ShortName))
             {
                 model.ShortName = model.ShortName.Trim();
@@ -510,23 +514,7 @@ namespace Commsights.MVC.Controllers
             Initialization(model, 1);
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
-            int result = 0;
-            //Membership membership = _membershipRepository.GetByAccount(model.Account);
-            //if (membership == null)
-            //{
-            //    check = true;
-            //}
-            //else
-            //{
-            //    if (membership.ID == model.ID)
-            //    {
-            //        check = true;
-            //    }
-            //}
-            //if (check == true)
-            //{
-            //    result = _membershipRepository.Update(model.ID, model);
-            //}
+            int result = 0;            
             result = _membershipRepository.Update(model.ID, model);
             if (result > 0)
             {
