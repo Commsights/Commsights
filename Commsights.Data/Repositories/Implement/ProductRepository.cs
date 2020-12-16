@@ -1295,6 +1295,11 @@ new SqlParameter("@IsError",product.IsError),
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductUpdateSingleItem", parameters);
             return result;
         }
+        public string Initialization()
+        {            
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductInitialization");
+            return result;
+        }
         public string UpdateSingleItemByCodeData(CodeData model)
         {
             SqlParameter[] parameters =

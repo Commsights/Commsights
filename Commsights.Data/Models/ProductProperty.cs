@@ -77,7 +77,7 @@ namespace Commsights.Data.Models
         public string MediaTitle { get; set; }
         public string MediaType { get; set; }
         public string Duration { get; set; }
-        public int? Advalue { get; set; }
+        public decimal? Advalue { get; set; }
         public DateTime? DatePublish { get; set; }
         public string FileName { get; set; }
         public decimal? SentimentValue { get; set; }

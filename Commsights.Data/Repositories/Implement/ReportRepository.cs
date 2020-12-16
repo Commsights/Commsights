@@ -415,7 +415,7 @@ namespace Commsights.Data.Repositories
             return list;
         }
         public List<ProductDataTransfer> GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsDailyAndIsUploadToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isDaily, bool isUpload)
-        {
+        {            
             List<ProductDataTransfer> list = new List<ProductDataTransfer>();
             if (industryID > 0)
             {

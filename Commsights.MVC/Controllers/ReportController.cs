@@ -2835,6 +2835,7 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsDailyAndIsUploadToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isUpload)
         {
+            _productRepository.Initialization();
             var data = _reportRepository.GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsDailyAndIsUploadToList(datePublishBegin, datePublishEnd, industryID, true, isUpload);
             return Json(data.ToDataSourceResult(request));
         }
