@@ -52,7 +52,7 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
-       
+
         public IActionResult Detail(int rowIndex)
         {
             CodeData model = GetCodeData(rowIndex);
@@ -78,6 +78,22 @@ namespace Commsights.MVC.Controllers
             var data = _codeDataRepository.GetCategorySubByCategoryMainToList(categoryMain);
             return Json(data.ToDataSourceResult(request));
         }
+        public string GetCompanyNameByTitle(string title)
+        {
+            return _codeDataRepository.GetCompanyNameByTitle(title);
+        }
+        public string GetCompanyNameByURLCode(string uRLCode)
+        {
+            return _codeDataRepository.GetCompanyNameByURLCode(uRLCode);
+        }
+        public string GetProductNameByTitle(string title)
+        {
+            return _codeDataRepository.GetProductNameByTitle(title);
+        }
+        public string GetProductNameByURLCode(string uRLCode)
+        {
+            return _codeDataRepository.GetProductNameByURLCode(uRLCode);
+        }
         public IActionResult SaveCoding(CodeData model)
         {
             model.IsCoding = true;
@@ -92,7 +108,7 @@ namespace Commsights.MVC.Controllers
             _productPropertyRepository.UpdateSingleItemByCodeData(model);
             return RedirectToAction("DetailBasic", "CodeData", new { RowIndex = model.RowIndex });
         }
-        public IActionResult Copy(int rowIndex)
+        public int Copy(int rowIndex)
         {
             CodeData model = GetCodeData(rowIndex);
             ProductProperty productProperty = _productPropertyRepository.GetByID001(model.ProductPropertyID.Value);
@@ -101,11 +117,11 @@ namespace Commsights.MVC.Controllers
                 productProperty.ID = 0;
                 productProperty.Initialization(InitType.Insert, RequestUserID);
                 _productPropertyRepository.Create(productProperty);
-                rowIndex = rowIndex + 2;
+                rowIndex = rowIndex + 1;
             }
-            return RedirectToAction("Detail", "CodeData", new { RowIndex = rowIndex });
+            return rowIndex;
         }
-        public IActionResult CopyDetailBasic(int rowIndex)
+        public int CopyDetailBasic(int rowIndex)
         {
             CodeData model = GetCodeData(rowIndex);
             ProductProperty productProperty = _productPropertyRepository.GetByID001(model.ProductPropertyID.Value);
@@ -114,9 +130,9 @@ namespace Commsights.MVC.Controllers
                 productProperty.ID = 0;
                 productProperty.Initialization(InitType.Insert, RequestUserID);
                 _productPropertyRepository.Create(productProperty);
-                rowIndex = rowIndex + 2;
+                rowIndex = rowIndex + 1;
             }
-            return RedirectToAction("DetailBasic", "CodeData", new { RowIndex = rowIndex });
+            return rowIndex;
         }
         public IActionResult ExportExcelEnglish()
         {
@@ -144,6 +160,8 @@ namespace Commsights.MVC.Controllers
                 if ((list.Count > 0) && (rowIndex < list.Count) && (rowIndex > -1))
                 {
                     model = list[rowIndex];
+                    model.CompanyNameHiden = _codeDataRepository.GetCompanyNameByTitle(model.Title);
+                    model.ProductNameHiden = _codeDataRepository.GetProductNameByTitle(model.Title);
                     model.RowCount = list.Count;
                     model.RowLast = model.RowCount - 1;
                     model.RowBack = rowIndex - 1;

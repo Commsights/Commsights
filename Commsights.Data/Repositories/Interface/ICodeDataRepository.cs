@@ -11,5 +11,9 @@ namespace Commsights.Data.Repositories
     {
         public List<CodeData> GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID);
         public List<Config> GetCategorySubByCategoryMainToList(string categoryMain);
+        public string GetCompanyNameByTitle(string title);
+        public string GetCompanyNameByURLCode(string uRLCode);
+        public string GetProductNameByTitle(string title);
+        public string GetProductNameByURLCode(string uRLCode);
     }
 }

@@ -53,5 +53,89 @@ namespace Commsights.Data.Repositories
             list = SQLHelper.ToList<Config>(dt);
             return list;
         }
+        public string GetCompanyNameByTitle(string title)
+        {
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@Title",title),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataSelectCompanyNameByTitle", parameters);
+            string result = "";
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                if (i == 0)
+                {
+                    result = result + dt.Rows[i][0].ToString();
+                }
+                else
+                {
+                    result = result + " , " + dt.Rows[i][0].ToString();
+                }
+            }
+            return result;
+        }
+        public string GetCompanyNameByURLCode(string uRLCode)
+        {
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@URLCode",uRLCode),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataSelectCompanyNameByURLCode", parameters);
+            string result = "";
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                if (i == 0)
+                {
+                    result = result + dt.Rows[i][0].ToString();
+                }
+                else
+                {
+                    result = result + " , " + dt.Rows[i][0].ToString();
+                }
+            }
+            return result;
+        }
+        public string GetProductNameByTitle(string title)
+        {
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@Title",title),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataSelectProductNameByTitle", parameters);
+            string result = "";
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                if (i == 0)
+                {
+                    result = result + dt.Rows[i][0].ToString();
+                }
+                else
+                {
+                    result = result + " , " + dt.Rows[i][0].ToString();
+                }
+            }
+            return result;
+        }
+        public string GetProductNameByURLCode(string uRLCode)
+        {
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@URLCode",uRLCode),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataSelectProductNameByURLCode", parameters);
+            string result = "";
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                if (i == 0)
+                {
+                    result = result + dt.Rows[i][0].ToString();
+                }
+                else
+                {
+                    result = result + " , " + dt.Rows[i][0].ToString();
+                }
+            }
+            return result;
+        }
     }
 }

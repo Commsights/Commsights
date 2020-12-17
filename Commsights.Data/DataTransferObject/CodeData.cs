@@ -115,7 +115,9 @@ namespace Commsights.Data.DataTransferObject
         public string Duration { get; set; }
         public bool? IsSummary { get; set; }
         public DateTime DatePublish { get; set; }        
+        public DateTime DateUpload { get; set; }
         public DateTime DateUpdated { get; set; }
+        public DateTime DateCoding { get; set; }
         public string AdvalueString
         {
             get
@@ -132,5 +134,7 @@ namespace Commsights.Data.DataTransferObject
         public bool? IsAnalysis { get; set; }
         public bool? IsDownload { get; set; }
         public bool? IsSend { get; set; }
+        public string CompanyNameHiden { get; set; }
+        public string ProductNameHiden { get; set; }
     }
 }
