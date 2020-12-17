@@ -8,6 +8,7 @@ namespace Commsights.Data.DataTransferObject
 {
     public class CodeData
     {
+        public int? UserUpdated { get; set; }
         public int? RowIndexCount { get; set; }
         public decimal? RowBegin { get; set; }
         public decimal? RowEnd { get; set; }
@@ -138,8 +139,10 @@ namespace Commsights.Data.DataTransferObject
         public bool? IsAnalysis { get; set; }
         public bool? IsDownload { get; set; }
         public bool? IsSend { get; set; }
+        public bool? IsCopy { get; set; }
         public string CompanyNameHiden { get; set; }
         public string ProductNameHiden { get; set; }
         public string URLCoding { get; set; }
+        public int? CopyVersion { get; set; }
     }
 }

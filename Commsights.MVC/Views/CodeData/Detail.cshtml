@@ -62,7 +62,7 @@
                      .DataTextField("CodeName")
                     .HtmlAttributes(new { @class = "form-control" })
                     .Events(e => e.Change("onCategoryMainChange"))
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCategoryMainByIndustryID001ToList", "Config")))
                             )
                             </div>
@@ -72,7 +72,7 @@
                      .DataValueField("CodeName")
                      .DataTextField("CodeName")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCategorySubByCategoryMainAndIndustryIDToList", "Config").Data("filterCategorySub")))
                             )
                             </div>
@@ -82,7 +82,7 @@
                      .DataValueField("CodeName")
                      .DataTextField("CodeName")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetSentimentToList", "Config")))
                             )
                             </div>
@@ -92,7 +92,7 @@
                      .DataValueField("CodeName")
                      .DataTextField("CodeName")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCorpCopyToList", "Config")))
                             )
                             </div>
@@ -113,7 +113,7 @@
                      .DataValueField("ProductName")
                      .DataTextField("ProductName")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetProductByAccountAndCodeAndIndustryIDToList", "MembershipPermission").Data("filterMembershipPermission")))
                             )
 
@@ -128,7 +128,7 @@
                      .DataValueField("Display")
                      .DataTextField("Display")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetSEOToList", "AppGlobal")))
                             )
                             </div>
@@ -138,7 +138,7 @@
                      .DataValueField("Display")
                      .DataTextField("Display")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetSEOToList", "AppGlobal")))
                             )
                             </div>
@@ -176,7 +176,7 @@
                      .DataValueField("CodeName")
                      .DataTextField("CodeName")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetMediaTierToList", "Config")))
                             )
                             </div>
@@ -186,7 +186,7 @@
                                  .DataValueField("CodeName")
                                  .DataTextField("CodeName")
                                 .HtmlAttributes(new { @class = "form-control" })
-                                   .Filter(FilterType.StartsWith)
+                                   .Filter(FilterType.Contains)
                                    .Events(e => e.Change("onCampaignNameChange"))
                                  .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCampaignNameByIndustryID001ToList", "Config")))
                             )
@@ -197,7 +197,7 @@
                                  .DataValueField("CodeName")
                                  .DataTextField("CodeName")
                                 .HtmlAttributes(new { @class = "form-control" })
-                                   .Filter(FilterType.StartsWith)
+                                   .Filter(FilterType.Contains)
                                  .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCampaignKeyMessageByCampaignNameAndIndustryIDToList", "Config").Data("filterCampaignKeyMessage")))
                             )
                             </div>
@@ -207,7 +207,7 @@
                      .DataValueField("Account")
                      .DataTextField("Account")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByIndustryID001ToList", "Membership")))
                             )
                             </div>
@@ -217,7 +217,7 @@
                      .DataValueField("ID")
                      .DataTextField("Display")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
                             )
                             </div>
@@ -227,7 +227,7 @@
                      .DataValueField("ID")
                      .DataTextField("Display")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
                             )
                             </div>
@@ -237,7 +237,7 @@
                      .DataValueField("ID")
                      .DataTextField("Display")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
                             )
                             </div>
@@ -249,7 +249,7 @@
                      .DataValueField("ID")
                      .DataTextField("Display")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
                             )
                             </div>
@@ -259,7 +259,7 @@
                      .DataValueField("ID")
                      .DataTextField("Display")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
                             )
                             </div>
@@ -269,7 +269,7 @@
                      .DataValueField("ID")
                      .DataTextField("Display")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
                             )
                             </div>
@@ -289,7 +289,7 @@
                      .DataValueField("ID")
                      .DataTextField("Display")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
                             )
                             </div>
@@ -299,7 +299,7 @@
                      .DataValueField("ID")
                      .DataTextField("Display")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
                             )
                             </div>
@@ -309,7 +309,7 @@
                      .DataValueField("ID")
                      .DataTextField("Display")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
                             )
                             </div>
@@ -319,7 +319,7 @@
                      .DataValueField("ID")
                      .DataTextField("Display")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
                             )
                             </div>
@@ -331,7 +331,7 @@
                      .DataValueField("ID")
                      .DataTextField("Display")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
                             )
                             </div>

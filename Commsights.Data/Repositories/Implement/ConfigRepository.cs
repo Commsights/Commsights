@@ -199,6 +199,20 @@ namespace Commsights.Data.Repositories
             list = SQLHelper.ToList<Config>(dt);
             return list;
         }
+        public List<Config> GetSQLByGroupNameAndCodeAndIndustryIDAndParentIDToList(string groupName, string code, int industryID, int parentID)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@IndustryID",industryID),
+                new SqlParameter("@ParentID",parentID),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectByGroupNameAndCodeAndIndustryIDAndParentID", parameters);
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
         public List<ConfigDataTransfer> GetDataTransferWebsiteByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active)
         {
             List<ConfigDataTransfer> list = new List<ConfigDataTransfer>();

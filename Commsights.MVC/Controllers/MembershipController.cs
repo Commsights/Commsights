@@ -326,7 +326,7 @@ namespace Commsights.MVC.Controllers
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetByIndustryIDByActiveToList([DataSourceRequest] DataSourceRequest request, int industryID)
-        {            
+        {
             var data = _membershipRepository.GetByIndustryID002ByActiveToList(industryID);
             return Json(data.ToDataSourceResult(request));
         }
@@ -646,10 +646,7 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult Logout()
         {
-            Response.Cookies.Append("IsLogin", "false");
-            Response.Cookies.Append("IsLogout", "true");
-            Response.Cookies.Append("SaveLogin", "false");
-            Response.Cookies.Delete("Password");
+            Response.Cookies.Append("UserID", "0");
             HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }

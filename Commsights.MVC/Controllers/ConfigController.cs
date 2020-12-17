@@ -266,6 +266,7 @@ namespace Commsights.MVC.Controllers
             var data = _configResposistory.GetMediaByGroupNameToList(AppGlobal.CRM);
             return Json(data.ToDataSourceResult(request));
         }
+
         public ActionResult GetByParentIDToList([DataSourceRequest] DataSourceRequest request, int parentID)
         {
             List<Config> data = new List<Config>();
@@ -364,6 +365,23 @@ namespace Commsights.MVC.Controllers
             var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategoryMain).Where(item => item.Active == true).OrderBy(item => item.SortOrder);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetSegmentByParentIDToList([DataSourceRequest] DataSourceRequest request)
+        {
+            List<Config> data = new List<Config>();
+            int parentID = 0;
+            try
+            {
+                parentID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
+                if (parentID > 0)
+                {
+                    data = _configResposistory.GetByParentIDToList(parentID);
+                }
+            }
+            catch
+            {
+            }
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetCampaignKeyMessageByCampaignNameAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, string campaignName)
         {
             int industryID = 0;
@@ -403,7 +421,7 @@ namespace Commsights.MVC.Controllers
             {
                 parentID = categoryMain001.ID;
             }
-            var data = _configResposistory.GetByGroupNameAndCodeAndParentIDAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategorySub, parentID, industryID);
+            var data = _configResposistory.GetSQLByGroupNameAndCodeAndIndustryIDAndParentIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategorySub, industryID, parentID);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetCategorySubByParentIDAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, int parentID, int industryID)
@@ -1480,6 +1498,7 @@ namespace Commsights.MVC.Controllers
             model.IndustryID = industryID;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = _configResposistory.Create(model);
+
             model = new Config();
             model.CodeName = "Corporate";
             model.Note = "Tin công ty";
@@ -1493,9 +1512,202 @@ namespace Commsights.MVC.Controllers
             if (result > 0)
             {
                 Config modelSub = new Config();
-                modelSub.CodeName = "Corporate";
-                modelSub.Note = "Tin công ty";
+                modelSub.CodeName = "Retail & Distribution News";
+                modelSub.Note = "Tin tức Bán lẻ & Phân phối";
                 modelSub.SortOrder = 1;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "CSR News";
+                modelSub.Note = "Tin cộng đồng";
+                modelSub.SortOrder = 2;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "Financial news";
+                modelSub.Note = "Bản tin tài chính";
+                modelSub.SortOrder = 3;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "HR News";
+                modelSub.Note = "Tin nhân sự";
+                modelSub.SortOrder = 4;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "Investment/M&A News";
+                modelSub.Note = "Tin đầu tư, mua bán, sát nhập";
+                modelSub.SortOrder = 5;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "Brand & Sponsorship";
+                modelSub.Note = "Thương hiệu & Tài trợ";
+                modelSub.SortOrder = 6;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "Lawsuit News";
+                modelSub.Note = "Tin kiện";
+                modelSub.SortOrder = 7;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "Customer Service";
+                modelSub.Note = "Dịch vụ khách hàng";
+                modelSub.SortOrder = 8;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "General News";
+                modelSub.Note = "Tin chung";
+                modelSub.SortOrder = 9;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "Rewarding, Recognization";
+                modelSub.Note = "Khen thưởng, công nhận";
+                modelSub.SortOrder = 10;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "Other";
+                modelSub.Note = "Tin khác";
+                modelSub.SortOrder = 11;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+            }
+
+            model = new Config();
+            model.CodeName = "Product & Service";
+            model.Note = "Sản phẩm - Dịch vụ";
+            model.SortOrder = 3;
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.CategoryMain;
+            model.IndustryID = industryID;
+            model.Initialization(InitType.Insert, RequestUserID);
+            result = _configResposistory.Create(model);
+            if (result > 0)
+            {
+                Config modelSub = new Config();
+                modelSub.CodeName = "Product & Service";
+                modelSub.Note = "Sản phẩm - Dịch vụ";
+                modelSub.SortOrder = 1;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "Launching new product";
+                modelSub.Note = "Ra mắt sản phẩm mới";
+                modelSub.SortOrder = 2;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "Promotion News/Marketing News";
+                modelSub.Note = "Tin khuyến mãi / Tin tiếp thị";
+                modelSub.SortOrder = 3;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "Brand & Sponsorship";
+                modelSub.Note = "Thương hiệu & Tài trợ";
+                modelSub.SortOrder = 4;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "General News";
+                modelSub.Note = "Tin chung";
+                modelSub.SortOrder = 5;
                 Initialization(modelSub);
                 modelSub.GroupName = AppGlobal.CRM;
                 modelSub.Code = AppGlobal.CategorySub;

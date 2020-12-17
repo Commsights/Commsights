@@ -248,7 +248,15 @@ new SqlParameter("@ROME_Corp_VND",model.ROME_Corp_VND),
 new SqlParameter("@ROME_Product_VND",model.ROME_Product_VND),
 new SqlParameter("@FeatureCorp",model.FeatureCorp),
 new SqlParameter("@FeatureProduct",model.FeatureProduct),
+new SqlParameter("@Advalue",model.Advalue),
 new SqlParameter("@IsCoding",model.IsCoding),
+new SqlParameter("@UserUpdated",model.UserUpdated),
+new SqlParameter("@DatePublish",model.DatePublish),
+new SqlParameter("@MediaType",model.MediaType),
+new SqlParameter("@MediaTitle",model.MediaTitle),
+new SqlParameter("@Page",model.Page),
+new SqlParameter("@RowIndex",model.RowIndex),
+new SqlParameter("@Title",model.Title),
 };
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyUpdateSingleItemByCodeData", parameters);
             return result;

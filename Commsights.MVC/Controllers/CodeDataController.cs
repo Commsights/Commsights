@@ -115,6 +115,7 @@ namespace Commsights.MVC.Controllers
         public IActionResult SaveCoding(CodeData model)
         {
             model.IsCoding = true;
+            model.UserUpdated = RequestUserID;
             _productRepository.UpdateSingleItemByCodeData(model);
             _productPropertyRepository.UpdateSingleItemByCodeData(model);
             return RedirectToAction("Detail", "CodeData", new { RowIndex = model.RowIndex });
@@ -122,6 +123,7 @@ namespace Commsights.MVC.Controllers
         public IActionResult SaveCodingDetailBasic(CodeData model)
         {
             model.IsCoding = true;
+            model.UserUpdated = RequestUserID;
             _productRepository.UpdateSingleItemByCodeData(model);
             _productPropertyRepository.UpdateSingleItemByCodeData(model);
             return RedirectToAction("DetailBasic", "CodeData", new { RowIndex = model.RowIndex });
@@ -146,6 +148,7 @@ namespace Commsights.MVC.Controllers
             if (productProperty != null)
             {
                 productProperty.ID = 0;
+                productProperty.IsCopy = true;
                 productProperty.Initialization(InitType.Insert, RequestUserID);
                 _productPropertyRepository.Create(productProperty);
                 rowIndex = rowIndex + 1;
