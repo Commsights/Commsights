@@ -411,7 +411,7 @@ namespace Commsights.MVC.Controllers
             var data = _configResposistory.GetByGroupNameAndCodeAndParentIDAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategorySub, parentID, industryID);
             return Json(data.ToDataSourceResult(request));
         }
-        
+
         public ActionResult GetCampaignNameByIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)
         {
             var data = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Campaign, industryID);
@@ -1467,6 +1467,43 @@ namespace Commsights.MVC.Controllers
             List<Config> list = _configResposistory.GetByParentIDAndGroupNameAndCodeToList(parentID, AppGlobal.CRM, AppGlobal.Website);
             _configResposistory.DeleteRange(list);
             return Json(note);
+        }
+        public void InitializationCategoryMainAndSubByIndustryID(int industryID)
+        {
+            Config model = new Config();
+            model.CodeName = "Industry News";
+            model.Note = "Tin ngành";
+            model.SortOrder = 1;
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.CategoryMain;
+            model.IndustryID = industryID;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = _configResposistory.Create(model);
+            model = new Config();
+            model.CodeName = "Corporate";
+            model.Note = "Tin công ty";
+            model.SortOrder = 2;
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.CategoryMain;
+            model.IndustryID = industryID;
+            model.Initialization(InitType.Insert, RequestUserID);
+            result = _configResposistory.Create(model);
+            if (result > 0)
+            {
+                Config modelSub = new Config();
+                modelSub.CodeName = "Corporate";
+                modelSub.Note = "Tin công ty";
+                modelSub.SortOrder = 1;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+            }
         }
         public IActionResult SaveWebsiteScanItems(int parentID, string listValue)
         {

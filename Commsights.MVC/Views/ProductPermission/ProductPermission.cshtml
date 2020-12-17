@@ -31,6 +31,8 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
+    columns.Bound(t => t.IndustryID).Title("IndustryID").Width(100);
+    columns.Bound(t => t.EmployeeID).Title("EmployeeID").Width(100);
     columns.Bound(t => t.Employee.TextName).Title("Employee").EditorTemplateName("Membership_Employee").Width(300);
     columns.Bound(t => t.RowPercent).Title("Percent (%)").Width(200);
     columns.Bound(t => t.SortOrder).Title("Sort").Width(100);
@@ -67,9 +69,11 @@
 .Model(model =>
 {
     model.Id(t => t.ID);
+    model.Field(t => t.IndustryID).Editable(false);
+    model.Field(t => t.EmployeeID).Editable(false);
     model.Field(t => t.Employee).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
     model.Field(t => t.RowPercent).DefaultValue(100);
-    model.Field(t => t.SortOrder).DefaultValue(0);
+    model.Field(t => t.SortOrder).DefaultValue(1);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetProductPermissionDataTransferByIndustryIDToList", "ProductPermission").Data("filterProductPermission"))

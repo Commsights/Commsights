@@ -24,6 +24,9 @@
                     <div class='col-md-1'>
                         <a id="Search" onclick="onSearch()" title='Search' class='btn btn-success' style='color:white; cursor: pointer;'><span class="fas fa-search"></span></a>
                     </div>
+                    <div class='col-md-1'>
+                        <a onclick="onInitializationCategoryMainAndSubByIndustryID()" title='Initialization' class='btn btn-primary' style='color:white; cursor: pointer;'><span class="fas fa-sync-alt"></span></a>
+                    </div>
                 </div>
                 <br />
                 @(Html.Kendo().Grid<Commsights.Data.Models.Config>()
@@ -106,7 +109,26 @@
     function onSearch() {
         $("#Config").data("kendoGrid").dataSource.read();
     }
+    function onInitializationCategoryMainAndSubByIndustryID() {
+        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
+         BeginRequestHandler();
+        $.ajax(
+            {
+                type: "POST",
+                datatype: "JSON",
+                url: '@Url.Action("InitializationCategoryMainAndSubByIndustryID", "Config")',
+                data: {
+                    industryID: industryIDValue
+                },
+                success: function (result) {
+                    EndRequestHandler();        
+                    onSearch();
+                },
+                error: function (jqXHR, exception) { },
+                complete: function () { },
+            });
+    }
     $(document).ready(() => {
         onSearch();
-    });   
+    });
 </script>

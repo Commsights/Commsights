@@ -9,6 +9,7 @@ namespace Commsights.Data.Repositories
 {
     public interface ICodeDataRepository
     {
+        public List<CodeData> GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int employeeID);
         public List<CodeData> GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID);
         public List<Config> GetCategorySubByCategoryMainToList(string categoryMain);
         public string GetCompanyNameByTitle(string title);

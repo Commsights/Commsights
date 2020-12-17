@@ -15,7 +15,7 @@
                     @Html.HiddenFor(Model => Model.ProductPropertyID)
                     @Html.HiddenFor(Model => Model.KeyMessage)
                     <div class="row">
-                        <div class='col-md-2'>
+                        <div class='col-md-1'>
                         </div>
                         <div class='col-md-1'>
                             @(Html.CheckBoxFor(Model => Model.IsCoding.Value, new { @disabled = "disabled" }))
@@ -26,11 +26,11 @@
                                 <span class="fas fa-angle-left"></span> (1)
                             </a>
                         </div>
-                        <div class='col-md-1 text-center'>
-                            <span style="font-weight:bold; font-size:18px;">@Model.RowCurrent / @Model.RowCount</span>
+                        <div class='col-md-2 text-center'>
+                            <span style="font-weight:bold; font-size:18px;">@Model.RowBegin.Value.ToString("N0") < <span style="color: blue;">@Model.RowCurrent</span> > @Model.RowEnd.Value.ToString("N0") / @Model.RowIndexCount</span>
                         </div>
                         <div class='col-md-1'>
-                            <a id="RowNext" onclick="onRowMove(@Model.RowCurrent)" style="color:#ffffff;" title="First" class="btn btn-info">
+                            <a id="RowNext" onclick="onRowMove(@Model.RowNext)" style="color:#ffffff;" title="First" class="btn btn-info">
                                 <span class="fas fa-angle-right"></span> (2)
                             </a>
                         </div>
@@ -123,7 +123,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class='form-group'>
-                                <label for='SOECompany'>SOE Corp (%)</label>
+                                <label for='SOECompany'>SOE Corp (%) (@Model.FeatureCorp)</label>
                                 @(Html.Kendo().DropDownListFor(Model => Model.SOECompany)
                      .DataValueField("Display")
                      .DataTextField("Display")
@@ -133,7 +133,7 @@
                             )
                             </div>
                             <div class='form-group'>
-                                <label for='SOEProduct'>SOE Product (%)</label>
+                                <label for='SOEProduct'>SOE Product (%) (@Model.FeatureProduct)</label>
                                 @(Html.Kendo().DropDownListFor(Model => Model.SOEProduct)
                      .DataValueField("Display")
                      .DataTextField("Display")
@@ -186,11 +186,7 @@
                             <div class='form-group'>
                                 <label for='FileName'>File name</label>
                                 @(Html.TextBoxFor(Model => Model.FileName, new { @class = "form-control",  @readonly = "readonly", @title = Model.FileName }))
-                            </div>
-                            <div class='form-group'>
-                                <label for='Advalue'>Advalue</label>
-                                @(Html.TextBoxFor(Model => Model.AdvalueString, new { @class = "form-control text-right", @readonly = "readonly" }))
-                            </div>
+                            </div>                            
                             <div class='form-group'>
                                 <label for='MediaTitle'>Media Title</label>
                                 @(Html.TextBoxFor(Model => Model.MediaTitle, new { @class = "form-control", @readonly = "readonly" }))
@@ -206,20 +202,16 @@
                         </div>
                         <div class="col-md-3">
                             <div class='form-group'>
+                                <label for='Advalue'>Advalue</label>
+                                @(Html.TextBoxFor(Model => Model.AdvalueString, new { @class = "form-control text-right", @readonly = "readonly" }))
+                            </div>
+                            <div class='form-group'>
                                 <label for='ROME_Corp_VND'>Media Value Corp</label>
                                 @(Html.TextBoxFor(Model => Model.ROME_Corp_VND, "{0:N0}", new { @class = "form-control text-right", @readonly = "readonly" }))
                             </div>
                             <div class='form-group'>
                                 <label for='ROME_Product_VND'>Media Value Product</label>
                                 @(Html.TextBoxFor(Model => Model.ROME_Product_VND, "{0:N0}", new { @class = "form-control text-right", @readonly = "readonly" }))
-                            </div>
-                            <div class='form-group'>
-                                <label for='FeatureCorp'>Feature Corp</label>
-                                @(Html.TextBoxFor(Model => Model.FeatureCorp, new { @class = "form-control", @readonly = "readonly" }))
-                            </div>
-                            <div class='form-group'>
-                                <label for='FeatureProduct'>Feature Product</label>
-                                @(Html.TextBoxFor(Model => Model.FeatureProduct, new { @class = "form-control", @readonly = "readonly" }))
                             </div>
                             <div class='form-group'>
                                 <label for='ProductSource'>Source Upload</label>

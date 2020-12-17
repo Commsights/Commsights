@@ -48,6 +48,14 @@ namespace Commsights.MVC.Controllers
             model.IndustryID = AppGlobal.IndustryID;
             return View(model);
         }
+        public IActionResult DataByEmployeeID()
+        {
+            BaseViewModel model = new BaseViewModel();
+            model.DatePublishBegin = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            model.DatePublishEnd = DateTime.Now;
+            model.IndustryID = AppGlobal.IndustryID;
+            return View(model);
+        }
         public IActionResult Company()
         {
             return View();
@@ -71,6 +79,16 @@ namespace Commsights.MVC.Controllers
             Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), CookieExpires);
             Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), CookieExpires);
             List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
+            return Json(list.ToDataSourceResult(request));
+        }
+        public ActionResult GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
+        {
+            var CookieExpires = new CookieOptions();
+            CookieExpires.Expires = DateTime.Now.AddDays(1);
+            Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), CookieExpires);
+            Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), CookieExpires);
+            Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), CookieExpires);
+            List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDToList(datePublishBegin, datePublishEnd, industryID, RequestUserID);
             return Json(list.ToDataSourceResult(request));
         }
         public ActionResult GetCategorySubByCategoryMainToList([DataSourceRequest] DataSourceRequest request, string categoryMain)
@@ -141,7 +159,6 @@ namespace Commsights.MVC.Controllers
         private CodeData GetCodeData(int rowIndex)
         {
             CodeData model = new CodeData();
-            rowIndex = rowIndex - 1;
             if (rowIndex > -1)
             {
                 DateTime datePublishBegin = DateTime.Now;
@@ -152,20 +169,31 @@ namespace Commsights.MVC.Controllers
                     industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
                     datePublishBegin = DateTime.Parse(Request.Cookies["CodeDataDatePublishBegin"]);
                     datePublishEnd = DateTime.Parse(Request.Cookies["CodeDataDatePublishEnd"]);
+                    List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDToList(datePublishBegin, datePublishEnd, industryID, RequestUserID);
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        if (rowIndex == list[i].RowIndex)
+                        {
+                            model = list[i];
+                            model.CompanyNameHiden = _codeDataRepository.GetCompanyNameByTitle(model.Title);
+                            model.ProductNameHiden = _codeDataRepository.GetProductNameByTitle(model.Title);
+                            model.RowBack = rowIndex - 1;
+                            model.RowCurrent = rowIndex;
+                            model.RowNext = rowIndex + 1;
+                            if (model.RowBack < list[0].RowIndex)
+                            {
+                                model.RowBack = list[0].RowIndex;
+                            }
+                            if (model.RowNext > list[list.Count - 1].RowIndex)
+                            {
+                                model.RowNext = list[list.Count - 1].RowIndex;
+                            }
+                            i = list.Count;
+                        }
+                    }
                 }
                 catch
                 {
-                }
-                List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
-                if ((list.Count > 0) && (rowIndex < list.Count) && (rowIndex > -1))
-                {
-                    model = list[rowIndex];
-                    model.CompanyNameHiden = _codeDataRepository.GetCompanyNameByTitle(model.Title);
-                    model.ProductNameHiden = _codeDataRepository.GetProductNameByTitle(model.Title);
-                    model.RowCount = list.Count;
-                    model.RowLast = model.RowCount - 1;
-                    model.RowBack = rowIndex - 1;
-                    model.RowCurrent = rowIndex + 1;
                 }
             }
             return model;

@@ -2233,6 +2233,7 @@ namespace Commsights.Data.Helpers
         public static List<string> SetContentByDauChamPhay(string content)
         {
             List<string> list = new List<string>();
+            content = content.Replace(@",", @";");            
             foreach (string item in content.Split(';'))
             {
                 if (!string.IsNullOrEmpty(item))
