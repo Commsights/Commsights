@@ -79,8 +79,21 @@ namespace Commsights.MVC.Controllers
             CodeData model = GetCodeData(rowIndex);
             return View(model);
         }
+        public IActionResult EmployeeProductPermission(int rowIndex)
+        {
+            BaseViewModel model = new BaseViewModel();
+            model.DatePublishBegin = DateTime.Now;
+            model.DatePublishEnd = DateTime.Now;
+            model.IndustryID = AppGlobal.IndustryID;
+            return View(model);
+        }
+        public ActionResult GetReportSelectByDatePublishBeginAndDatePublishEnd001ToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd)
+        {
+            List<Membership> list = _codeDataRepository.GetReportSelectByDatePublishBeginAndDatePublishEnd001ToList(datePublishBegin, datePublishEnd);
+            return Json(list.ToDataSourceResult(request));
+        }
         public ActionResult GetReportByDatePublishBeginAndDatePublishEndToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd)
-        {           
+        {
             List<CodeDataReport> list = _codeDataRepository.GetReportByDatePublishBeginAndDatePublishEndToList(datePublishBegin, datePublishEnd);
             return Json(list.ToDataSourceResult(request));
         }
@@ -199,5 +212,21 @@ namespace Commsights.MVC.Controllers
             }
             return model;
         }
+        public IActionResult DeleteProductProperty(int rowIndex)
+        {
+            CodeData model = GetCodeData(rowIndex);
+            string note = AppGlobal.InitString;
+            int result = _productPropertyRepository.Delete(model.ProductPropertyID.Value);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.DeleteFail;
+            }
+            return Json(note);
+        }
+
     }
 }

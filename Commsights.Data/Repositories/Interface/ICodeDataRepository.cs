@@ -18,5 +18,6 @@ namespace Commsights.Data.Repositories
         public string GetProductNameByURLCode(string uRLCode);
         public string InsertItemsByCopyCodeData(int ID, int RequestUserID);
         public List<CodeDataReport> GetReportByDatePublishBeginAndDatePublishEndToList(DateTime datePublishBegin, DateTime datePublishEnd);
+        public List<Membership> GetReportSelectByDatePublishBeginAndDatePublishEnd001ToList(DateTime datePublishBegin, DateTime datePublishEnd);
     }
 }
