@@ -322,6 +322,21 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<Config> GetMenuSelectByMembershipIDAndCodeToList(int membershipID, string code)
+        {
+            List<Config> list = new List<Config>();
+            if (membershipID > 0)
+            {
+                SqlParameter[] parameters =
+                           {
+                new SqlParameter("@MembershipID",membershipID),
+                new SqlParameter("@Code",code)
+                 };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigMenuSelectByMembershipIDAndCode", parameters);
+                list = SQLHelper.ToList<Config>(dt);
+            }
+            return list;
+        }
         public List<Config> GetAll001ToList()
         {
             List<Config> list = new List<Config>();

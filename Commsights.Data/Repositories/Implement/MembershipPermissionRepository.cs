@@ -586,6 +586,26 @@ namespace Commsights.Data.Repositories
             }
             _context.SaveChanges();
         }
+        public string InitializationMenu(int membershipID, int requestUserID, string code)
+        {
+            SqlParameter[] parameters =
+                    {
+                new SqlParameter("@MembershipID",membershipID),
+                new SqlParameter("@RequestUserID",requestUserID),
+                new SqlParameter("@Code",code),
+            };
+            return SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_MembershipPermissionInitializationMenu", parameters);
+        }
+        public string UpdateItemsByIDAndIsViewAndCode(int ID, bool isView, string code)
+        {
+            SqlParameter[] parameters =
+                    {
+                new SqlParameter("@ID",ID),
+                new SqlParameter("@IsView",isView),
+                new SqlParameter("@Code",code),
+            };
+            return SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_MembershipPermissionMenuUpdateItemsByIDAndIsViewAndCode", parameters);
+        }
         public void SaveAllMenuPermission(int membershipID, bool isAll, int requestUserID)
         {
             List<MembershipPermission> list = _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.MenuID > 0).ToList();
@@ -801,6 +821,23 @@ namespace Commsights.Data.Repositories
                 }
                 _context.SaveChangesAsync();
             }
+        }
+
+
+        public List<MembershipPermission> GetMenuByMembershipIDAndCodeToList(int membershipID, string code)
+        {
+            List<MembershipPermission> list = new List<MembershipPermission>();
+            if (membershipID > 0)
+            {
+                SqlParameter[] parameters =
+                      {
+                new SqlParameter("@MembershipID",membershipID),
+                new SqlParameter("@Code",code),
+                    };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectMenuByMembershipIDAndCode", parameters);
+                list = SQLHelper.ToList<MembershipPermission>(dt);
+            }
+            return list;
         }
     }
 }

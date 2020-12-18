@@ -257,6 +257,40 @@ namespace Commsights.MVC.Controllers
             result = txt.ToString();
             return result;
         }
+        public string MenuLeft()
+        {
+            string result = "";
+            List<Config> list = _configResposistory.GetMenuSelectByMembershipIDAndCodeToList(RequestUserID, AppGlobal.Menu);
+            StringBuilder menu = new StringBuilder();
+            foreach (Config item in list)
+            {
+                if (item.ParentID == 0)
+                {
+                    menu.AppendLine(@"<li class='nav-item has-treeview'>");
+                    menu.AppendLine(@"<a href='#' title='" + item.Title + "' class='nav-link'>");
+                    menu.AppendLine(@"<i class='nav-icon fas " + item.Icon + "'></i>");
+                    menu.AppendLine(@"<p>");
+                    menu.AppendLine(@"" + item.CodeName);
+                    menu.AppendLine(@"</p>");
+                    menu.AppendLine(@"</a>");
+                    menu.AppendLine(@"<ul class='nav nav-treeview'>");
+                    menu.AppendLine(@"</ul>");
+                    menu.AppendLine(@"</li>");
+                }
+                else
+                {
+                    string url = "/" + item.Controller + "/" + item.Action;
+                    menu.AppendLine(@"<li class='nav-item'>");
+                    menu.AppendLine(@"<a title='" + item.Title + "' href='" + url + "' class='nav-link'>");
+                    menu.AppendLine(@"<i class='far " + item.Icon + " nav-icon'></i>");
+                    menu.AppendLine(@"<p>" + item.CodeName + "</p>");
+                    menu.AppendLine(@"</a>");
+                    menu.AppendLine(@"</li>");
+                }
+            }
+            result = menu.ToString();
+            return result;
+        }
         public IActionResult Login(Membership model)
         {
             string controller = "Home";

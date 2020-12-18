@@ -95,7 +95,7 @@ namespace Commsights.MVC.Controllers
             int industryID = 0;
             try
             {
-                industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);               
+                industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
             }
             catch
             {
@@ -106,6 +106,11 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetProductByAccountAndCodeToList([DataSourceRequest] DataSourceRequest request, string account)
         {
             var data = _membershipPermissionRepository.GetProductByAccountAndCodeToList(account, AppGlobal.Product);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetMenuByMembershipIDAndCodeToList([DataSourceRequest] DataSourceRequest request, int membershipID)
+        {
+            var data = _membershipPermissionRepository.GetMenuByMembershipIDAndCodeToList(membershipID, AppGlobal.Menu);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetDataTransferSegmentByMembershipIDAndProductToList([DataSourceRequest] DataSourceRequest request, int membershipID)
@@ -225,7 +230,7 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult InitializationMenuPermission(int membershipID)
         {
-            _membershipPermissionRepository.InitializationMenuPermission(membershipID, RequestUserID);
+            _membershipPermissionRepository.InitializationMenu(membershipID, RequestUserID, AppGlobal.Menu);
             string note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
             return Json(note);
         }
@@ -501,6 +506,23 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
             int result = _membershipPermissionRepository.Update(model.ID, model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
+        public IActionResult UpdateItemsByIDAndIsViewAndCode(MembershipPermission model)
+        {
+            Initialization();
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Update, RequestUserID);
+            _membershipPermissionRepository.UpdateItemsByIDAndIsViewAndCode(model.ID, model.IsView.Value, AppGlobal.Menu);
+            int result = 1;
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;

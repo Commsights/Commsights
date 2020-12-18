@@ -110,8 +110,9 @@
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex" id="SideBar">                  
                 </div>
                 <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <li class="nav-item has-treeview">
+                    <ul id="MenuLeft" class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+                        @*<li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-chart-line"></i>
                                 <p>
@@ -151,7 +152,6 @@
                                 </li>
                             </ul>
                         </li>
-
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-flag-checkered"></i>
@@ -399,7 +399,6 @@
 
                             </ul>
                         </li>
-
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-cog"></i>
@@ -560,7 +559,8 @@
                                     </a>
                                 </li>
                             </ul>
-                        </li>
+                        </li>*@
+
                         <li class="nav-item">
                             <a href="@Url.Action("Logout", "Membership", new {area = ""})" title="Sign out" class="nav-link">
                                 <i class="nav-icon fas fa-power-off"></i>
@@ -588,17 +588,10 @@
     <script src="/AdminLTE_3_0_5/dist/js/demo.js"></script>
     <script src="/js/site.js"></script>
     <script>
-        function setMenuLeftActive() {
-            var tag = $('a[href="' + this.location.pathname + '"]');
-            tag.addClass('active');
-            var tag01 = tag.parent('li').parent('ul').parent('li');
-            tag01.addClass('menu-open');
-            var tag02 = tag01.children('a');
-            tag02.addClass('active');
-        }
-        jQuery(function ($) {
-            setMenuLeftActive();
+       
+        jQuery(function ($) {            
             onLoadData();
+            setMenuLeftActive();
         });
         function onLoadData() {
             $.ajax({
@@ -609,6 +602,24 @@
             }).done(function (result) {                
                 $('#SideBar').html(result);
             });
+
+            $.ajax({
+                url: '/Membership/MenuLeft',
+                type: 'GET',
+                cache: false,
+                data: {}
+            }).done(function (result) {
+                console.log(result);
+                $('#MenuLeft').html(result);
+            });
+        }
+        function setMenuLeftActive() {
+            var tag = $('a[href="' + this.location.pathname + '"]');
+            tag.addClass('active');
+            var tag01 = tag.parent('li').parent('ul').parent('li');
+            tag01.addClass('menu-open');
+            var tag02 = tag01.children('a');
+            tag02.addClass('active');
         }
     </script>
 

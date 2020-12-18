@@ -29,6 +29,14 @@ namespace Commsights.MVC.Controllers
         }
         private void Initialization(Config model)
         {
+            if (string.IsNullOrEmpty(model.Controller))
+            {
+                model.Controller = "Config";
+            }
+            if (string.IsNullOrEmpty(model.Title))
+            {
+                model.Title = model.CodeName.Trim();
+            }
             if (string.IsNullOrEmpty(model.Note))
             {
                 model.Note = "";
@@ -51,11 +59,15 @@ namespace Commsights.MVC.Controllers
             }
             if (string.IsNullOrEmpty(model.Icon))
             {
-                model.Icon = "fa fa-circle-o";
+                model.Icon = "fa fa-circle";
             }
             if (string.IsNullOrEmpty(model.Action))
             {
                 model.Action = "Index";
+            }
+            if (model.ParentID == null)
+            {
+                model.ParentID = 0;
             }
         }
         private void Initialization(ConfigDataTransfer model)

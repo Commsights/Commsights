@@ -50,7 +50,7 @@ namespace Commsights.MVC.Controllers
             }
             else
             {
-                if (((controller.Equals("Membership")) && (action.Equals("Login"))) || ((controller.Equals("Home")) && (action.Equals("Index"))) || ((controller.Equals("Product")) && (action.Equals("ViewContent"))))
+                if (((controller.Equals("Membership")) && (action.Equals("Logout"))) || ((controller.Equals("Membership")) && (action.Equals("Login"))) || ((controller.Equals("Home")) && (action.Equals("Index"))) || ((controller.Equals("Product")) && (action.Equals("ViewContent"))))
                 {
                 }
                 else
