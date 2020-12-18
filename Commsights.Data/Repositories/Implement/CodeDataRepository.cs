@@ -68,6 +68,27 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<CodeDataReport> GetReportByDatePublishBeginAndDatePublishEndToList(DateTime datePublishBegin, DateTime datePublishEnd)
+        {
+            List<CodeDataReport> list = new List<CodeDataReport>();
+            try
+            {
+                datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+                datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@DatePublishBegin",datePublishBegin),
+                new SqlParameter("@DatePublishEnd",datePublishEnd),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataReportSelectByDatePublishBeginAndDatePublishEnd", parameters);
+                list = SQLHelper.ToList<CodeDataReport>(dt);
+            }
+            catch (Exception e)
+            {
+                string mes = e.Message;
+            }
+            return list;
+        }
         public List<Config> GetCategorySubByCategoryMainToList(string categoryMain)
         {
             List<Config> list = new List<Config>();

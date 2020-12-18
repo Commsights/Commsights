@@ -56,6 +56,14 @@ namespace Commsights.MVC.Controllers
             model.IndustryID = AppGlobal.IndustryID;
             return View(model);
         }
+        public IActionResult Industry()
+        {
+            BaseViewModel model = new BaseViewModel();
+            model.DatePublishBegin = DateTime.Now;
+            model.DatePublishEnd = DateTime.Now;
+            model.IndustryID = AppGlobal.IndustryID;
+            return View(model);
+        }
         public IActionResult Company()
         {
             return View();
@@ -70,6 +78,11 @@ namespace Commsights.MVC.Controllers
         {
             CodeData model = GetCodeData(rowIndex);
             return View(model);
+        }
+        public ActionResult GetReportByDatePublishBeginAndDatePublishEndToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd)
+        {           
+            List<CodeDataReport> list = _codeDataRepository.GetReportByDatePublishBeginAndDatePublishEndToList(datePublishBegin, datePublishEnd);
+            return Json(list.ToDataSourceResult(request));
         }
         public ActionResult GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
         {

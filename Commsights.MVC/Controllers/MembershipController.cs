@@ -222,6 +222,10 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult EmployeeProductPermission()
+        {
+            return View();
+        }
         public ActionResult CustomerCancel()
         {
             return RedirectToAction("Customer");
@@ -323,6 +327,11 @@ namespace Commsights.MVC.Controllers
 
             }
             var data = _membershipRepository.GetByIndustryID001ByActiveToList(industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetAllEmployeeProductPermissionToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _membershipRepository.GetAllEmployeeProductPermissionToList();
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetByIndustryIDByActiveToList([DataSourceRequest] DataSourceRequest request, int industryID)

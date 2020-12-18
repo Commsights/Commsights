@@ -198,6 +198,13 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<Membership> GetAllEmployeeProductPermissionToList()
+        {
+            List<Membership> list = new List<Membership>();
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectAllEmployeeProductPermission");
+            list = SQLHelper.ToList<Membership>(dt);
+            return list;
+        }
         public List<Membership> GetByCompanyToList()
         {
             return _context.Membership.Where(item => (item.ParentID == AppGlobal.ParentIDCustomer || item.ParentID == AppGlobal.ParentIDCompetitor) && (item.Active == true)).OrderBy(item => item.Account).ToList();

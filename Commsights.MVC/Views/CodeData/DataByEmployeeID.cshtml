@@ -136,7 +136,7 @@
 .Search(search => { search.Field(f => f.URLCode); search.Field(f => f.Title); search.Field(f => f.TitleEnglish); search.Field(f => f.CompanyName); search.Field(f => f.MediaTitle); search.Field(f => f.TierCommsights); search.Field(f => f.MediaType); search.Field(f => f.ProductName_ProjectName); })
 .DataSource(dataSource => dataSource
 .Ajax()
-.PageSize(10)
+.PageSize(10000)
 .Model(model =>
 {
     model.Id(t => t.RowIndex);
