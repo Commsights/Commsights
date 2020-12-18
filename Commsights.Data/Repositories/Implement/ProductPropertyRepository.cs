@@ -261,5 +261,69 @@ new SqlParameter("@Title",model.Title),
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyUpdateSingleItemByCodeData", parameters);
             return result;
         }
+        public string UpdateItemsByCodeDataCopyVersion(CodeData model)
+        {
+            SqlParameter[] parameters =
+            {
+new SqlParameter("@ID",model.ProductPropertyID),
+new SqlParameter("@CategoryMain",model.CategoryMain),
+new SqlParameter("@CategorySub",model.CategorySub),
+new SqlParameter("@CompanyName",model.CompanyName),
+new SqlParameter("@CorpCopy",model.CorpCopy),
+new SqlParameter("@SOECompany",model.SOECompany),
+new SqlParameter("@ProductName_ProjectName",model.ProductName_ProjectName),
+new SqlParameter("@SOEProduct",model.SOEProduct),
+new SqlParameter("@SentimentCorp",model.SentimentCorp),
+new SqlParameter("@TierCommsights",model.TierCommsights),
+new SqlParameter("@CampaignName",model.CampaignName),
+new SqlParameter("@CampaignKeyMessage",model.CampaignKeyMessage),
+new SqlParameter("@KeyMessage",model.KeyMessage),
+new SqlParameter("@CompetitiveWhat",model.CompetitiveWhat),
+new SqlParameter("@CompetitiveNewsValue",model.CompetitiveNewsValue),
+new SqlParameter("@TasteValue",model.TasteValue),
+new SqlParameter("@PriceValue",model.PriceValue),
+new SqlParameter("@NutritionFactValue",model.NutritionFactValue),
+new SqlParameter("@VitaminValue",model.VitaminValue),
+new SqlParameter("@GoodForHealthValue",model.GoodForHealthValue),
+new SqlParameter("@Bottle_CanDesignValue",model.Bottle_CanDesignValue),
+new SqlParameter("@TierValue",model.TierValue),
+new SqlParameter("@HeadlineValue",model.HeadlineValue),
+new SqlParameter("@PictureValue",model.PictureValue),
+new SqlParameter("@KOLValue",model.KOLValue),
+new SqlParameter("@OtherValue",model.OtherValue),
+new SqlParameter("@SpokePersonName",model.SpokePersonName),
+new SqlParameter("@SpokePersonTitle",model.SpokePersonTitle),
+new SqlParameter("@Segment",model.Segment),
+new SqlParameter("@FeatureValue",model.FeatureValue),
+new SqlParameter("@SpokePersonValue",model.SpokePersonValue),
+new SqlParameter("@ToneValue",model.ToneValue),
+new SqlParameter("@MPS",model.MPS),
+new SqlParameter("@ROME_Corp_VND",model.ROME_Corp_VND),
+new SqlParameter("@ROME_Product_VND",model.ROME_Product_VND),
+new SqlParameter("@FeatureCorp",model.FeatureCorp),
+new SqlParameter("@FeatureProduct",model.FeatureProduct),
+new SqlParameter("@Advalue",model.Advalue),
+new SqlParameter("@IsCoding",model.IsCoding),
+new SqlParameter("@UserUpdated",model.UserUpdated),
+new SqlParameter("@DatePublish",model.DatePublish),
+new SqlParameter("@MediaType",model.MediaType),
+new SqlParameter("@MediaTitle",model.MediaTitle),
+new SqlParameter("@Page",model.Page),
+new SqlParameter("@RowIndex",model.RowIndex),
+new SqlParameter("@Title",model.Title),
+};
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyUpdateItemsByCodeDataCopyVersion", parameters);
+            return result;
+        }
+        public string InsertItemsByCopyCodeData(int ID, int RequestUserID)
+        {
+            SqlParameter[] parameters =
+            {
+                new SqlParameter("@ID",ID),
+                new SqlParameter("@RequestUserID",RequestUserID),
+            };
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertItemsByCopyCodeData", parameters);
+            return result;
+        }
     }
 }

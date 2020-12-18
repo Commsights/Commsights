@@ -92,10 +92,11 @@
     columns.Bound(t => t.FeatureCorp).Title("Feature Corp").Width(150);
     columns.Bound(t => t.FeatureProduct).Title("Feature Product").Width(150);
     columns.Bound(t => t.Segment).Title("Segment").Width(300);
-    columns.Bound(t => t.DatePublish).Title("Publish").Format("{0:dd/MM/yyyy}").Width(200).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.DatePublish).Title("Publish").Format("{0:dd/MM/yyyy HH:mm:ss}").Width(200).HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.DateUpload).Title("Upload").Width(200).Format("{0:dd/MM/yyyy HH:mm:ss}").HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.DateUpdated).Title("Updated").Width(200).Format("{0:dd/MM/yyyy HH:mm:ss}").HtmlAttributes(new { @class = "text-right" });    
     columns.Bound(t => t.DateCoding).Title("Coding").Width(200).Format("{0:dd/MM/yyyy HH:mm:ss}").HtmlAttributes(new { @class = "text-right" });
-    columns.Bound(t => t.Advalue).Title("Advalue").Width(150);
+    columns.Bound(t => t.Advalue).Title("Advalue").Width(200);
     columns.Bound(t => t.FileName).Title("FileName").Width(1000);
     columns.Bound(t => t.ProductID).Title("ProductID").Width(200);
     columns.Bound(t => t.ProductPropertyID).Title("PropertyID").Width(200);

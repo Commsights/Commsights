@@ -16,5 +16,6 @@ namespace Commsights.Data.Repositories
         public string GetCompanyNameByURLCode(string uRLCode);
         public string GetProductNameByTitle(string title);
         public string GetProductNameByURLCode(string uRLCode);
+        public string InsertItemsByCopyCodeData(int ID, int RequestUserID);
     }
 }

@@ -117,7 +117,7 @@ namespace Commsights.MVC.Controllers
             model.IsCoding = true;
             model.UserUpdated = RequestUserID;
             _productRepository.UpdateSingleItemByCodeData(model);
-            _productPropertyRepository.UpdateSingleItemByCodeData(model);
+            _productPropertyRepository.UpdateItemsByCodeDataCopyVersion(model);
             return RedirectToAction("Detail", "CodeData", new { RowIndex = model.RowIndex });
         }
         public IActionResult SaveCodingDetailBasic(CodeData model)
@@ -125,34 +125,19 @@ namespace Commsights.MVC.Controllers
             model.IsCoding = true;
             model.UserUpdated = RequestUserID;
             _productRepository.UpdateSingleItemByCodeData(model);
-            _productPropertyRepository.UpdateSingleItemByCodeData(model);
+            _productPropertyRepository.UpdateItemsByCodeDataCopyVersion(model);
             return RedirectToAction("DetailBasic", "CodeData", new { RowIndex = model.RowIndex });
         }
         public int Copy(int rowIndex)
         {
             CodeData model = GetCodeData(rowIndex);
-            ProductProperty productProperty = _productPropertyRepository.GetByID001(model.ProductPropertyID.Value);
-            if (productProperty != null)
-            {
-                productProperty.ID = 0;
-                productProperty.Initialization(InitType.Insert, RequestUserID);
-                _productPropertyRepository.Create(productProperty);
-                rowIndex = rowIndex + 1;
-            }
+            _productPropertyRepository.InsertItemsByCopyCodeData(model.ProductPropertyID.Value, RequestUserID);
             return rowIndex;
         }
         public int CopyDetailBasic(int rowIndex)
         {
             CodeData model = GetCodeData(rowIndex);
-            ProductProperty productProperty = _productPropertyRepository.GetByID001(model.ProductPropertyID.Value);
-            if (productProperty != null)
-            {
-                productProperty.ID = 0;
-                productProperty.IsCopy = true;
-                productProperty.Initialization(InitType.Insert, RequestUserID);
-                _productPropertyRepository.Create(productProperty);
-                rowIndex = rowIndex + 1;
-            }
+            _productPropertyRepository.InsertItemsByCopyCodeData(model.ProductPropertyID.Value, RequestUserID);
             return rowIndex;
         }
         public IActionResult ExportExcelEnglish()

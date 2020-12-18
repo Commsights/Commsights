@@ -163,5 +163,15 @@ namespace Commsights.Data.Repositories
             }
             return result;
         }
+        public string InsertItemsByCopyCodeData(int ID, int RequestUserID)
+        {
+            SqlParameter[] parameters =
+            {
+                new SqlParameter("@ID",ID),
+                new SqlParameter("@RequestUserID",RequestUserID),
+            };
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertItemsByCopyCodeData", parameters);
+            return result;
+        }
     }
 }

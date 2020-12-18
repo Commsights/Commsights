@@ -278,7 +278,7 @@ namespace Commsights.MVC.Controllers
                 string avatarURL = Commsights.Data.Helpers.AppGlobal.Domain + Commsights.Data.Helpers.AppGlobal.URLImagesMembership + "/" + avatar;
                 Response.Cookies.Append("AvatarURL", avatarURL, CookieExpires);
                 controller = "CodeData";
-                action = "Data";
+                action = "DataByEmployeeID";
             }
             return RedirectToAction(action, controller);
         }
