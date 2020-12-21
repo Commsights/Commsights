@@ -14,7 +14,7 @@
                     @Html.HiddenFor(Model => Model.ProductPropertyID)
                     @Html.HiddenFor(Model => Model.Advalue)
                     <div class="row">
-                        <div class='col-md-1'>
+                        <div class='col-md-2'>
                         </div>
                         <div class='col-md-1'>
                             @(Html.CheckBoxFor(Model => Model.IsCoding.Value, new { @disabled = "disabled" }))
@@ -47,10 +47,7 @@
                             <button id="SaveCoding" style="width:100%;" type="submit" title="Save" class="btn btn-primary" autofocus="autofocus">
                                 <span class="fas fa-save"></span> (6)
                             </button>
-                        </div>
-                        <div class='col-md-1'>
-                            <a id="ExcelEnglish" onclick="onExcelEnglish()" title='Excel English' class='btn btn-success' style='color:white; cursor: pointer;'>Excel (7)</a>
-                        </div>
+                        </div>                       
                     </div>
                     <div class="row">
                         <div class="col-md-3">
@@ -275,20 +272,7 @@
             }
             }).done(() => {
         });
-    }
-     function onExcelEnglish() {
-        BeginRequestHandler();
-        $.ajax({
-            type: 'GET',
-            url: "@Url.Action("ExportExcelEnglish", "CodeData")",
-            data: {
-            },
-            success: function () {
-                    EndRequestHandler();
-            }
-            }).done(() => {
-        });
-    }
+    }    
     function filterCampaignKeyMessage(e) {
         var campaignNameValue = $("#CampaignName").data("kendoDropDownList").value();
         return { campaignName: campaignNameValue };
@@ -352,10 +336,7 @@
                     break;
                 case 56:
                     document.getElementById('SaveCoding').click();
-                    break;
-                case 57:
-                    document.getElementById('ExcelEnglish').click();
-                    break;
+                    break;                
             }
         }
     });

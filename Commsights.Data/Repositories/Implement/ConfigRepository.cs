@@ -337,6 +337,39 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<Config> GetMenuSelectByMembershipIDAndCodeAndIsMenuLeftToList(int membershipID, string code, bool isMenuLeft)
+        {
+            List<Config> list = new List<Config>();
+            if (membershipID > 0)
+            {
+                SqlParameter[] parameters =
+                           {
+                new SqlParameter("@MembershipID",membershipID),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@IsMenuLeft",isMenuLeft),
+                 };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigMenuSelectByMembershipIDAndCodeAndIsMenuLeft", parameters);
+                list = SQLHelper.ToList<Config>(dt);
+            }
+            return list;
+        }
+        public List<Config> GetMenuSelectByMembershipIDAndCodeAndIsMenuLeftAndIsViewToList(int membershipID, string code, bool isMenuLeft, bool isView)
+        {
+            List<Config> list = new List<Config>();
+            if (membershipID > 0)
+            {
+                SqlParameter[] parameters =
+                           {
+                new SqlParameter("@MembershipID",membershipID),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@IsMenuLeft",isMenuLeft),
+                new SqlParameter("@IsView",isView),
+                 };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigMenuSelectByMembershipIDAndCodeAndIsMenuLeftAndIsView", parameters);
+                list = SQLHelper.ToList<Config>(dt);
+            }
+            return list;
+        }
         public List<Config> GetAll001ToList()
         {
             List<Config> list = new List<Config>();
@@ -460,6 +493,8 @@ new SqlParameter("@ID",config.ID),
 new SqlParameter("@URLFull",config.URLFull),
 new SqlParameter("@Title",config.Title),
 new SqlParameter("@IsMenuLeft",config.IsMenuLeft),
+new SqlParameter("@Color",config.Color),
+new SqlParameter("@BlackWhite",config.BlackWhite),
 };
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ConfigUpdateSingleItem001", parameters);
             return result;

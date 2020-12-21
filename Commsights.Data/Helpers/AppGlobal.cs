@@ -56,6 +56,24 @@ namespace Commsights.Data.Helpers
             return list;
         }
     }
+    public class HourFinance
+    {
+        public int Display { get; set; }
+        public HourFinance()
+        {
+        }
+        public static List<HourFinance> GetAllToList()
+        {
+            List<HourFinance> list = new List<HourFinance>();
+            for (int i = 1; i <= 24; i++)
+            {
+                HourFinance model = new HourFinance();
+                model.Display = i;
+                list.Add(model);
+            }
+            return list;
+        }
+    }
     public class SOE
     {
         public int Display { get; set; }

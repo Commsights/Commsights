@@ -67,7 +67,7 @@
     model.Field(t => t.ID).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetByParentIDToList", "Config").Data("filterConfig"))
+.Read(t => t.Action("GetSegmentByParentID001ToList", "Config").Data("filterConfig"))
 .Destroy(t => t.Action("Delete", "Config"))
 .Create(t => t.Action("CreateSegment", "Config").Data("filterConfigCreateSegment"))
 .Update(t => t.Action("Update", "Config"))

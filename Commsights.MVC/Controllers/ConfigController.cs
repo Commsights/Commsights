@@ -59,7 +59,7 @@ namespace Commsights.MVC.Controllers
             }
             if (string.IsNullOrEmpty(model.Icon))
             {
-                model.Icon = "fa fa-circle";
+                model.Icon = "fa-circle";
             }
             if (string.IsNullOrEmpty(model.Action))
             {
@@ -285,6 +285,15 @@ namespace Commsights.MVC.Controllers
             if (parentID > 0)
             {
                 data = _configResposistory.GetByParentIDToList(parentID);
+            }
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetSegmentByParentID001ToList([DataSourceRequest] DataSourceRequest request, int parentID)
+        {
+            List<Config> data = new List<Config>();
+            if (parentID > 0)
+            {
+                data = _configResposistory.GetByParentIDToList(parentID).OrderBy(item => item.CodeName).ToList();
             }
             return Json(data.ToDataSourceResult(request));
         }

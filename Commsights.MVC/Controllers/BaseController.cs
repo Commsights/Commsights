@@ -15,6 +15,7 @@ namespace Commsights.MVC.Controllers
     public class BaseController : Controller, IActionFilter
     {
         private readonly IMembershipAccessHistoryRepository _membershipAccessHistoryRepository;
+        private readonly IConfigRepository _configResposistory;
         public BaseController(IMembershipAccessHistoryRepository membershipAccessHistoryRepository)
         {
             _membershipAccessHistoryRepository = membershipAccessHistoryRepository;
@@ -27,41 +28,54 @@ namespace Commsights.MVC.Controllers
                 return result;
             }
         }
-        public bool IsUserAllow(string Controller = "", string Action = "", string QueryString = "")
+        public bool IsUserAllow(string controller = "", string action = "", string QueryString = "")
         {
             MembershipAccessHistory membershipAccessHistory = new MembershipAccessHistory();
             membershipAccessHistory.Initialization(InitType.Insert, RequestUserID);
             membershipAccessHistory.DateTrack = DateTime.Now;
             membershipAccessHistory.MembershipId = RequestUserID;
-            membershipAccessHistory.Controller = Controller;
-            membershipAccessHistory.Action = Action;
+            membershipAccessHistory.Controller = controller;
+            membershipAccessHistory.Action = action;
             membershipAccessHistory.QueryString = QueryString;
             _membershipAccessHistoryRepository.Create(membershipAccessHistory);
-            return true;
+
+            bool result = true;
+            Config item = _membershipAccessHistoryRepository.GetMenuSelectByMembershipIDAndCodeAndControllerAndActionToList(RequestUserID, AppGlobal.Menu, controller, action);
+            if (item != null)
+            {
+                if (item.ID > 0)
+                {
+                    result = item.IsMenuLeft.Value;
+                }
+            }
+            return result;
         }
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             string controller = ((ControllerBase)context.Controller).ControllerContext.ActionDescriptor.ControllerName;
             string action = ((ControllerBase)context.Controller).ControllerContext.ActionDescriptor.ActionName;
             string queryString = context.HttpContext.Request.QueryString.ToString();
-            if (this.RequestUserID > 0)
+            if ((controller.Equals("Home")) && (action.Equals("Index")))
             {
-                IsUserAllow(controller, action, queryString);
             }
             else
             {
-                if (((controller.Equals("Membership")) && (action.Equals("Logout"))) || ((controller.Equals("Membership")) && (action.Equals("Login"))) || ((controller.Equals("Home")) && (action.Equals("Index"))) || ((controller.Equals("Product")) && (action.Equals("ViewContent"))))
+                if (this.RequestUserID > 0)
                 {
+                    if (IsUserAllow(controller, action, queryString) == false)
+                    {
+                        context.Result = new RedirectResult("/Home/Index");
+                    }
                 }
                 else
                 {
-                    context.Result = new RedirectToRouteResult(
-                       new RouteValueDictionary
-                       {
-                            {"controller", "Home"},
-                            {"action", "Index"}
-                       }
-                    );
+                    if (((controller.Equals("Membership")) && (action.Equals("Login"))) || ((controller.Equals("Product")) && (action.Equals("ViewContent"))))
+                    {
+                    }
+                    else
+                    {
+                        context.Result = new RedirectResult("/Home/Index");
+                    }
                 }
             }
         }

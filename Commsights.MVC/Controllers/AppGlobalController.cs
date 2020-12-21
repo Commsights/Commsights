@@ -24,10 +24,15 @@ namespace Commsights.MVC.Controllers
         {
             var data = YearFinance.GetAllToList();
             return Json(data.ToDataSourceResult(request));
-        }
+        }        
         public ActionResult GetMonthFinanceToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = MonthFinance.GetAllToList();
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetHourFinanceToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = HourFinance.GetAllToList();
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetSEOToList([DataSourceRequest] DataSourceRequest request)

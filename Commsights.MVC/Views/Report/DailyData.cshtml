@@ -8,6 +8,11 @@
         <div class="card card-primary">
             <div class="card-body">
                 <div class="row">
+                    <div class='col-sm-1'>
+                        <button style="width:100%;" type="button" class="btn btn-danger" title="Delete" onclick="onDelete()">
+                            <span class="fas fa-trash-alt"></span>
+                        </button>
+                    </div>
                     <div class='col-sm-2'>
                         @(Html.Kendo().DatePickerFor(Model => Model.DatePublishBegin)
                                      .Format("dd/MM/yyyy")
@@ -31,24 +36,19 @@
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
                             )
                     </div>
-                    <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
+                    <div class='col-sm-4' style="display:flex; justify-content:start; align-items:center;">
                         <input id="IsUpload" type="checkbox">
-                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Upload/Publish</p>
-                    </div>
-                    <div class='col-sm-4'>
-                        <button style="width:50px;" type="button" class="btn btn-success" title="Search" onclick="onSearch()">
+                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px; margin-right:10px;">Upload</p>
+                        <button style="width:50px; margin-right:10px;" type="button" class="btn btn-success" title="Search" onclick="onSearch()">
                             <span class="fas fa-search"></span>
                         </button>
-                        <button style="width:50px;" type="button" class="btn btn-danger" title="Delete" onclick="onDelete()">
-                            <span class="fas fa-trash-alt"></span>
-                        </button>
-                        <button style="width:50px;" type="button" class="btn btn-success" title="Preview" onclick="onPreview()">
+                        <button style="width:50px; margin-right:10px;" type="button" class="btn btn-success" title="Preview" onclick="onPreview()">
                             <span class="fas fa-print"></span>
                         </button>
-                        <button style="width:50px;" type="button" class="btn btn-success" title="Excel Vietnamese" onclick="onExcelVietnamese()">
+                        <button style="width:50px; margin-right:10px;" type="button" class="btn btn-success" title="Excel Vietnamese" onclick="onExcelVietnamese()">
                             <span class="fas fa-file-download"></span>
                         </button>
-                        <button style="width:50px;" type="button" class="btn btn-success" title="Excel English" onclick="onExcelEnglish()">
+                        <button style="width:50px; margin-right:10px;" type="button" class="btn btn-success" title="Excel English" onclick="onExcelEnglish()">
                             <span class="fas fa-file-excel"></span>
                         </button>
                         <button style="width:50px;" type="button" class="btn btn-info" title="Next" onclick="onNext()">
@@ -188,7 +188,7 @@
 
         //BeginRequestHandler();
         //var IDListValue = $("#ID").val();
-        //$.post("/Report/DeleteByDatePublishBeginAndDatePublishEndAndIndustryIDAndIDList", { industryID: industryIDValue, datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, IDList: IDListValue }, function (result) {            
+        //$.post("/Report/DeleteByDatePublishBeginAndDatePublishEndAndIndustryIDAndIDList", { industryID: industryIDValue, datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, IDList: IDListValue }, function (result) {
         //    EndRequestHandler();
         //});
     }

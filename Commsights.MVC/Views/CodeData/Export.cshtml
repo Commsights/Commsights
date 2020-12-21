@@ -1,0 +1,141 @@
+﻿@{ ViewData["Title"] = "Export Code data"; }
+
+@model Commsights.MVC.Models.CodeDataViewModel
+
+@Html.HiddenFor(Model => Model.ID)
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-body">
+                <div class="row">
+                    <div class='col-sm-2'>
+                        @(Html.Kendo().DatePickerFor(Model => Model.DatePublishBegin)
+                                     .Format("dd/MM/yyyy")
+                                     .HtmlAttributes(new { @class = "form-control text-right", title = "Date begin" })
+                                     .DateInput()
+                                )
+                    </div>
+                    <div class='col-sm-1'>
+                        @(Html.Kendo().DropDownListFor(Model=>Model.Hour)
+                     .DataValueField("Display")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.StartsWith)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetHourFinanceToList", "AppGlobal")))
+                            )
+                    </div>                    
+                    <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
+                        <input id="IsCoding" type="checkbox">
+                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Code</p>
+                    </div>
+                    <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
+                        <input id="IsAnalysis" type="checkbox">
+                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Analysis</p>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-success" title="Search" onclick="onSearch()">
+                            <span class="fas fa-search"></span>
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-success" title="Export" onclick="onExport()">
+                            <span class="fas fa-file-excel"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class='col-sm-3'>
+                        @(Html.Kendo().DropDownListFor(Model=>Model.IndustryID)
+                     .DataValueField("ID")
+                     .DataTextField("CodeName")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.Contains)
+                       .Events(e => e.Change("onIndustryChange"))
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
+                            )
+                    </div>
+                    <div class='col-sm-3'>
+                        @(Html.Kendo().DropDownListFor(Model => Model.CompanyName)
+                     .DataValueField("Account")
+                     .DataTextField("Account")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByIndustryID004ByActiveToList", "Membership").Data("filterMembership")))
+                            )
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div id="DataMain" class='col-sm-12'></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+<script>
+    $(document).ready(() => {
+    });
+    function onIndustryChange() {
+        $("#CompanyName").data("kendoDropDownList").dataSource.read();
+    }
+    function filterMembership(e) {
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        return { industryID: industryIDValue };
+    }
+    function filterCodeData(e) {
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
+        return { datePublishBegin: datePublishBeginValue, industryID: industryIDValue };
+    }
+    function GetByIndustryIDAndParrentIDToList() {
+        $("#DataMain").html('');
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetByIndustryIDAndParrentIDToListToJSON", "Membership")",
+            data: {
+                industryID: industryIDValue,
+            },
+             success: function (listMembership) {
+                var html = '<table class="border01" id="Data" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                html = html + '<thead>';
+                html = html + '<tr>';
+                html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Customer</a></th>";
+                html = html + "<th class='text-center' style='width: 80%;'><a style='cursor:pointer;'>Competitor</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in listMembership) {
+                     $(listMembership[index]).each(function (iRec, item) {
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                        }
+                        html = html + '<td class="text-left"><b>' + item.Account + '</b></td>';
+                        html = html + '<td class="text-left">' + item.FirstName + '</td>';
+                        html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                $("#DataMain").append(html);
+            }
+        }).done(() => {
+        });
+    }
+    function onSearch() {
+    }
+    function onExport() {
+    }
+
+</script>

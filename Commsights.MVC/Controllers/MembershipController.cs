@@ -36,7 +36,6 @@ namespace Commsights.MVC.Controllers
             _membershipRepository = membershipRepository;
             _membershipPermissionRepository = membershipPermissionRepository;
             _configResposistory = configResposistory;
-
         }
         private void Initialization(Membership model, int action)
         {
@@ -260,32 +259,39 @@ namespace Commsights.MVC.Controllers
         public string MenuLeft()
         {
             string result = "";
-            List<Config> list = _configResposistory.GetMenuSelectByMembershipIDAndCodeToList(RequestUserID, AppGlobal.Menu);
+            List<Config> list = _configResposistory.GetMenuSelectByMembershipIDAndCodeAndIsMenuLeftAndIsViewToList(RequestUserID, AppGlobal.Menu, true, true);
             StringBuilder menu = new StringBuilder();
             foreach (Config item in list)
             {
-                if (item.ParentID == 0)
+                if (item.IsMenuLeft == true)
                 {
-                    menu.AppendLine(@"<li class='nav-item has-treeview'>");
-                    menu.AppendLine(@"<a href='#' title='" + item.Title + "' class='nav-link'>");
-                    menu.AppendLine(@"<i class='nav-icon fas " + item.Icon + "'></i>");
-                    menu.AppendLine(@"<p>");
-                    menu.AppendLine(@"" + item.CodeName);
-                    menu.AppendLine(@"</p>");
-                    menu.AppendLine(@"</a>");
-                    menu.AppendLine(@"<ul class='nav nav-treeview'>");
-                    menu.AppendLine(@"</ul>");
-                    menu.AppendLine(@"</li>");
-                }
-                else
-                {
-                    string url = "/" + item.Controller + "/" + item.Action;
-                    menu.AppendLine(@"<li class='nav-item'>");
-                    menu.AppendLine(@"<a title='" + item.Title + "' href='" + url + "' class='nav-link'>");
-                    menu.AppendLine(@"<i class='far " + item.Icon + " nav-icon'></i>");
-                    menu.AppendLine(@"<p>" + item.CodeName + "</p>");
-                    menu.AppendLine(@"</a>");
-                    menu.AppendLine(@"</li>");
+                    if (item.ParentID == 0)
+                    {
+                        menu.AppendLine(@"<li class='nav-item has-treeview'>");
+                        menu.AppendLine(@"<a href='#' title='" + item.Title + "' class='nav-link'>");
+                        menu.AppendLine(@"<i class='nav-icon fas " + item.Icon + "'></i>");
+                        menu.AppendLine(@"<p>");
+                        menu.AppendLine(@"" + item.CodeName);
+                        menu.AppendLine(@"<i class='right fas fa-angle-left'></i>");
+                        menu.AppendLine(@"</p>");
+                        menu.AppendLine(@"</a>");
+                        menu.AppendLine(@"<ul class='nav nav-treeview'>");
+                        foreach (Config itemSub in list)
+                        {
+                            if (itemSub.ParentID == item.ID)
+                            {
+                                string url = "/" + itemSub.Controller + "/" + itemSub.Action;
+                                menu.AppendLine(@"<li class='nav-item'>");
+                                menu.AppendLine(@"<a title='" + itemSub.Title + "' href='" + url + "' class='nav-link'>");
+                                menu.AppendLine(@"<i class='far " + itemSub.Icon + " nav-icon'></i>");
+                                menu.AppendLine(@"<p>" + itemSub.CodeName + "</p>");
+                                menu.AppendLine(@"</a>");
+                                menu.AppendLine(@"</li>");
+                            }
+                        }
+                        menu.AppendLine(@"</ul>");
+                        menu.AppendLine(@"</li>");
+                    }
                 }
             }
             result = menu.ToString();
@@ -347,6 +353,16 @@ namespace Commsights.MVC.Controllers
 
             }
             var data = _membershipRepository.GetByIndustryID001ToList(industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetByIndustryID003ByActiveToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {            
+            var data = _membershipRepository.GetByIndustryID003ByActiveToList(industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetByIndustryID004ByActiveToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {            
+            var data = _membershipRepository.GetByIndustryID001ByActiveToList(industryID);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetByIndustryID001ByActiveToList([DataSourceRequest] DataSourceRequest request)

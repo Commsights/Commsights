@@ -42,7 +42,7 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult Data()
         {
-            BaseViewModel model = new BaseViewModel();
+            CodeDataViewModel model = new CodeDataViewModel();
             model.DatePublishBegin = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             model.DatePublishEnd = DateTime.Now;
             model.IndustryID = AppGlobal.IndustryID;
@@ -50,15 +50,23 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult DataByEmployeeID()
         {
-            BaseViewModel model = new BaseViewModel();
-            model.DatePublishBegin = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            CodeDataViewModel model = new CodeDataViewModel();
+            model.DatePublishBegin = DateTime.Now;
             model.DatePublishEnd = DateTime.Now;
+            model.IndustryID = AppGlobal.IndustryID;
+            return View(model);
+        }
+        public IActionResult Export()
+        {
+            CodeDataViewModel model = new CodeDataViewModel();
+            model.DatePublishBegin = DateTime.Now;
+            model.Hour = DateTime.Now.Hour;
             model.IndustryID = AppGlobal.IndustryID;
             return View(model);
         }
         public IActionResult Industry()
         {
-            BaseViewModel model = new BaseViewModel();
+            CodeDataViewModel model = new CodeDataViewModel();
             model.DatePublishBegin = DateTime.Now;
             model.DatePublishEnd = DateTime.Now;
             model.IndustryID = AppGlobal.IndustryID;
@@ -81,7 +89,7 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult EmployeeProductPermission(int rowIndex)
         {
-            BaseViewModel model = new BaseViewModel();
+            CodeDataViewModel model = new CodeDataViewModel();
             model.DatePublishBegin = DateTime.Now;
             model.DatePublishEnd = DateTime.Now;
             model.IndustryID = AppGlobal.IndustryID;

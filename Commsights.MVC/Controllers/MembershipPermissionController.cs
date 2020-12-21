@@ -12,6 +12,9 @@ using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Commsights.MVC.Controllers
 {
@@ -19,6 +22,7 @@ namespace Commsights.MVC.Controllers
     {
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IMembershipPermissionRepository _membershipPermissionRepository;
+
         public MembershipPermissionController(IWebHostEnvironment hostingEnvironment, IMembershipPermissionRepository membershipPermissionRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
             _hostingEnvironment = hostingEnvironment;
@@ -50,6 +54,8 @@ namespace Commsights.MVC.Controllers
             }
             return View(model);
         }
+
+
         public ActionResult GetByMembershipIDToList([DataSourceRequest] DataSourceRequest request, int membershipID)
         {
             var data = _membershipPermissionRepository.GetByMembershipIDToList(membershipID);
@@ -453,7 +459,20 @@ namespace Commsights.MVC.Controllers
             int result = 0;
             if (membershipID > 0)
             {
-                result = _membershipPermissionRepository.Create(model);
+                List<string> listKeyword = AppGlobal.SetContentByDauChamPhay(model.FullName);
+                if (listKeyword.Count == 0)
+                {
+                    listKeyword.Add(model.FullName);
+                }
+                foreach (string keyword in listKeyword)
+                {
+                    MembershipPermission membershipPermission = new MembershipPermission();
+                    membershipPermission.Code = AppGlobal.CompanyName;
+                    membershipPermission.MembershipID = membershipID;                    
+                    membershipPermission.FullName = keyword.Trim();
+                    membershipPermission.Initialization(InitType.Insert, RequestUserID);
+                    result = result + _membershipPermissionRepository.Create(membershipPermission);
+                }                
             }
             if (result > 0)
             {
@@ -517,8 +536,7 @@ namespace Commsights.MVC.Controllers
             return Json(note);
         }
         public IActionResult UpdateItemsByIDAndIsViewAndCode(MembershipPermission model)
-        {
-            Initialization();
+        {            
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
             _membershipPermissionRepository.UpdateItemsByIDAndIsViewAndCode(model.ID, model.IsView.Value, AppGlobal.Menu);

@@ -131,7 +131,7 @@ namespace Commsights.MVC.Controllers
         public IActionResult DailyData(int industryID, string datePublishBeginString, string datePublishEndString)
         {
             BaseViewModel model = new BaseViewModel();
-            model.DatePublishBegin = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            model.DatePublishBegin = DateTime.Now;
             model.DatePublishEnd = DateTime.Now;
             model.IndustryID = AppGlobal.IndustryID;
             int day = 0;

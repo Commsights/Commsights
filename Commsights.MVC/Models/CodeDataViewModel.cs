@@ -7,6 +7,12 @@ namespace Commsights.MVC.Models
 {
     public class CodeDataViewModel
     {
+        public int ID { get; set; }
+        public DateTime DatePublishBegin { get; set; }
+        public DateTime DatePublishEnd { get; set; }
         public int IndustryID { get; set; }
+        public int CompanyID { get; set; }
+        public string CompanyName { get; set; }
+        public int Hour { get; set; }
     }
 }
