@@ -54,8 +54,6 @@ namespace Commsights.MVC.Controllers
             }
             return View(model);
         }
-
-
         public ActionResult GetByMembershipIDToList([DataSourceRequest] DataSourceRequest request, int membershipID)
         {
             var data = _membershipPermissionRepository.GetByMembershipIDToList(membershipID);
@@ -63,7 +61,7 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetByMembershipIDAndCompanyNameToList([DataSourceRequest] DataSourceRequest request, int membershipID)
         {
-            var data = _membershipPermissionRepository.GetByMembershipIDAndCodeToList(membershipID, AppGlobal.CompanyName);
+            var data = _membershipPermissionRepository.GetByMembershipIDAndCodeToList(membershipID, AppGlobal.CompanyName).OrderBy(item => item.FullName).ToList();
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetDataTransferMembershipByIndustryIDAndCodeToList([DataSourceRequest] DataSourceRequest request, int industryID)
@@ -468,11 +466,11 @@ namespace Commsights.MVC.Controllers
                 {
                     MembershipPermission membershipPermission = new MembershipPermission();
                     membershipPermission.Code = AppGlobal.CompanyName;
-                    membershipPermission.MembershipID = membershipID;                    
+                    membershipPermission.MembershipID = membershipID;
                     membershipPermission.FullName = keyword.Trim();
                     membershipPermission.Initialization(InitType.Insert, RequestUserID);
                     result = result + _membershipPermissionRepository.Create(membershipPermission);
-                }                
+                }
             }
             if (result > 0)
             {
@@ -536,7 +534,7 @@ namespace Commsights.MVC.Controllers
             return Json(note);
         }
         public IActionResult UpdateItemsByIDAndIsViewAndCode(MembershipPermission model)
-        {            
+        {
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
             _membershipPermissionRepository.UpdateItemsByIDAndIsViewAndCode(model.ID, model.IsView.Value, AppGlobal.Menu);

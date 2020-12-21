@@ -110,15 +110,7 @@
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex" id="SideBar">
                 </div>
                 <nav class="mt-2">
-                    <ul id="MenuLeft" class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <li class="nav-item">
-                            <a href="@Url.Action("Logout", "Membership", new {area = ""})" title="Sign out" class="nav-link">
-                                <i class="nav-icon fas fa-power-off"></i>
-                                <p>
-                                    Sign out
-                                </p>
-                            </a>
-                        </li>
+                    <ul id="MenuLeft" class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">                        
                     </ul>
                 </nav>
             </div>
@@ -139,8 +131,7 @@
     <script src="/js/site.js"></script>
     <script>
         jQuery(function ($) {
-            onLoadData();
-            setMenuLeftActive();
+            onLoadData();            
         });
         function onLoadData() {
             $.ajax({
@@ -158,16 +149,16 @@
                 cache: false,
                 data: {}
             }).done(function (result) {                
-                $('#MenuLeft').html(result);
+                $('#MenuLeft').html(result);                                
             });
         }
-        function setMenuLeftActive() {
-            var tag = $('a[href="' + this.location.pathname + '"]');
+        function setMenuLeftActive() {            
+            var tag = $("a[href='" + this.location.pathname + "']");
             tag.addClass('active');
             var tag01 = tag.parent('li').parent('ul').parent('li');
             tag01.addClass('menu-open');
             var tag02 = tag01.children('a');
-            tag02.addClass('active');
+            tag02.addClass('active');            
         }
     </script>
 

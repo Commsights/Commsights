@@ -294,6 +294,14 @@ namespace Commsights.MVC.Controllers
                     }
                 }
             }
+            menu.AppendLine(@"<li class='nav-item'>");
+            menu.AppendLine(@"<a href='/Membership/Logout' title='Sign out' class='nav-link'>");
+            menu.AppendLine(@"<i class='nav-icon fas fa-power-off'></i>");
+            menu.AppendLine(@"<p>");
+            menu.AppendLine(@"Sign out");            
+            menu.AppendLine(@"</p>");
+            menu.AppendLine(@"</a>");           
+            menu.AppendLine(@"</li>");
             result = menu.ToString();
             return result;
         }
