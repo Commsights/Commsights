@@ -298,9 +298,9 @@ namespace Commsights.MVC.Controllers
             menu.AppendLine(@"<a href='/Membership/Logout' title='Sign out' class='nav-link'>");
             menu.AppendLine(@"<i class='nav-icon fas fa-power-off'></i>");
             menu.AppendLine(@"<p>");
-            menu.AppendLine(@"Sign out");            
+            menu.AppendLine(@"Sign out");
             menu.AppendLine(@"</p>");
-            menu.AppendLine(@"</a>");           
+            menu.AppendLine(@"</a>");
             menu.AppendLine(@"</li>");
             result = menu.ToString();
             return result;
@@ -312,25 +312,28 @@ namespace Commsights.MVC.Controllers
             Membership membership = _membershipRepository.GetByPhoneAndPassword(model.Phone, model.Password);
             if (membership != null)
             {
-                string fullName = "";
-                string avatar = "";
-                if (!string.IsNullOrEmpty(membership.FullName))
+                if (membership.ID > 0)
                 {
-                    fullName = membership.FullName;
+                    string fullName = "";
+                    string avatar = "";
+                    if (!string.IsNullOrEmpty(membership.FullName))
+                    {
+                        fullName = membership.FullName;
+                    }
+                    if (!string.IsNullOrEmpty(membership.Avatar))
+                    {
+                        avatar = membership.Avatar;
+                    }
+                    var CookieExpires = new CookieOptions();
+                    CookieExpires.Expires = DateTime.Now.AddMonths(3);
+                    Response.Cookies.Append("UserID", membership.ID.ToString(), CookieExpires);
+                    Response.Cookies.Append("FullName", fullName, CookieExpires);
+                    Response.Cookies.Append("Avatar", avatar, CookieExpires);
+                    string avatarURL = Commsights.Data.Helpers.AppGlobal.Domain + Commsights.Data.Helpers.AppGlobal.URLImagesMembership + "/" + avatar;
+                    Response.Cookies.Append("AvatarURL", avatarURL, CookieExpires);
+                    controller = "Membership";
+                    action = "EmployeeInfo";
                 }
-                if (!string.IsNullOrEmpty(membership.Avatar))
-                {
-                    avatar = membership.Avatar;
-                }
-                var CookieExpires = new CookieOptions();
-                CookieExpires.Expires = DateTime.Now.AddMonths(3);
-                Response.Cookies.Append("UserID", membership.ID.ToString(), CookieExpires);
-                Response.Cookies.Append("FullName", fullName, CookieExpires);
-                Response.Cookies.Append("Avatar", avatar, CookieExpires);
-                string avatarURL = Commsights.Data.Helpers.AppGlobal.Domain + Commsights.Data.Helpers.AppGlobal.URLImagesMembership + "/" + avatar;
-                Response.Cookies.Append("AvatarURL", avatarURL, CookieExpires);
-                controller = "CodeData";
-                action = "DataByEmployeeID";
             }
             return RedirectToAction(action, controller);
         }
@@ -364,12 +367,12 @@ namespace Commsights.MVC.Controllers
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetByIndustryID003ByActiveToList([DataSourceRequest] DataSourceRequest request, int industryID)
-        {            
+        {
             var data = _membershipRepository.GetByIndustryID003ByActiveToList(industryID);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetByIndustryID004ByActiveToList([DataSourceRequest] DataSourceRequest request, int industryID)
-        {            
+        {
             var data = _membershipRepository.GetByIndustryID001ByActiveToList(industryID);
             return Json(data.ToDataSourceResult(request));
         }

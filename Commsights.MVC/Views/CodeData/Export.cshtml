@@ -20,7 +20,7 @@
                      .DataValueField("Display")
                      .DataTextField("Display")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetHourFinanceToList", "AppGlobal")))
                             )
                     </div>
@@ -135,6 +135,7 @@
         });
     }
     function onSearch() {
+        GetByIndustryIDAndParrentIDToList();
     }
     function onExport() {
     }

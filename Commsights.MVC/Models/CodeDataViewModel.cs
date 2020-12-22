@@ -13,6 +13,7 @@ namespace Commsights.MVC.Models
         public int IndustryID { get; set; }
         public int CompanyID { get; set; }
         public string CompanyName { get; set; }
+        public string Industry { get; set; }
         public int Hour { get; set; }
     }
 }
