@@ -330,6 +330,10 @@ namespace Commsights.MVC.Controllers
                     Response.Cookies.Append("FullName", fullName, CookieExpires);
                     Response.Cookies.Append("Avatar", avatar, CookieExpires);
                     string avatarURL = Commsights.Data.Helpers.AppGlobal.Domain + Commsights.Data.Helpers.AppGlobal.URLImagesMembership + "/" + avatar;
+                    if (string.IsNullOrEmpty(avatar))
+                    {
+                        avatarURL = AppGlobal.Domain + "images/logo.png";
+                    }
                     Response.Cookies.Append("AvatarURL", avatarURL, CookieExpires);
                     controller = "Membership";
                     action = "EmployeeInfo";
