@@ -186,7 +186,7 @@ namespace Commsights.MVC.Controllers
                         workSheet.Cells[rowExcel, 1].Value = item.Source;
                         workSheet.Cells[rowExcel, 2].Value = item.FileName;
                         workSheet.Cells[rowExcel, 3].Value = item.DatePublish.ToString("MM/dd/yyyy");
-                        workSheet.Cells[rowExcel, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;                        
+                        workSheet.Cells[rowExcel, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         workSheet.Cells[rowExcel, 4].Value = item.CategoryMain;
                         workSheet.Cells[rowExcel, 5].Value = item.CategorySub;
                         workSheet.Cells[rowExcel, 6].Value = item.CompanyName;
@@ -234,7 +234,7 @@ namespace Commsights.MVC.Controllers
                         workSheet.Cells[rowExcel, 20].Value = item.MediaType;
                         workSheet.Cells[rowExcel, 21].Value = item.Journalist;
                         workSheet.Cells[rowExcel, 22].Value = item.Advalue.Value.ToString("N0");
-                        workSheet.Cells[rowExcel, 22].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;                        
+                        workSheet.Cells[rowExcel, 22].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         workSheet.Cells[rowExcel, 23].Value = item.ROME_Corp_VND;
                         workSheet.Cells[rowExcel, 23].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         workSheet.Cells[rowExcel, 24].Value = item.ROME_Product_VND;
@@ -337,33 +337,68 @@ namespace Commsights.MVC.Controllers
         {
             return _codeDataRepository.GetProductNameByURLCode(uRLCode);
         }
-        public IActionResult SaveCoding(CodeData model)
+        public string CheckCodeData(CodeData model)
         {
-            model.IsCoding = true;
-            model.UserUpdated = RequestUserID;
-            _productRepository.UpdateSingleItemByCodeData(model);
-            _productPropertyRepository.UpdateItemsByCodeDataCopyVersion(model);
-            return RedirectToAction("Detail", "CodeData", new { RowIndex = model.RowIndex });
+            bool check = true;
+            string actionMessage = "";
+            if (model.SOECompany > 0)
+            {
+                if (model.SOEProduct > model.SOECompany)
+                {
+                    check = false;
+                    actionMessage = AppGlobal.Error + " - SOE Product > SOE Company";
+                }
+            }
+            if (!string.IsNullOrEmpty(model.ProductName_ProjectName))
+            {
+                if (model.SOEProduct == 0)
+                {
+                    check = false;
+                    actionMessage = AppGlobal.Error + " - ProductName exist but SOE is null or 0";
+                }
+            }
+            if (model.SOEProduct > 0)
+            {
+                if (string.IsNullOrEmpty(model.ProductName_ProjectName))
+                {
+                    check = false;
+                    actionMessage = AppGlobal.Error + " - SOE > 0 but ProductName not exist";
+                }
+            }
+            if (check == true)
+            {
+                model.IsCoding = true;
+                model.UserUpdated = RequestUserID;
+                _productRepository.UpdateSingleItemByCodeData(model);
+                _productPropertyRepository.UpdateItemsByCodeDataCopyVersion(model);
+            }
+            return actionMessage;
         }
-        public IActionResult SaveCodingDetailBasic(CodeData model)
-        {
-            model.IsCoding = true;
-            model.UserUpdated = RequestUserID;
-            _productRepository.UpdateSingleItemByCodeData(model);
-            _productPropertyRepository.UpdateItemsByCodeDataCopyVersion(model);
-            return RedirectToAction("DetailBasic", "CodeData", new { RowIndex = model.RowIndex });
-        }
-        public int CopyURLSame(int rowIndex)
+        public int Copy(int rowIndex)
         {
             CodeData model = GetCodeData(rowIndex);
             _productPropertyRepository.InsertSingleItemByCopyCodeData(model.ProductPropertyID.Value, RequestUserID);
             rowIndex = rowIndex + 1;
             return rowIndex;
         }
+        public IActionResult SaveCoding(CodeData model)
+        {
+            string actionMessage = CheckCodeData(model);
+            return RedirectToAction("Detail", "CodeData", new { RowIndex = model.RowIndex, ActionMessage = actionMessage });
+        }
+        public IActionResult SaveCodingDetailBasic(CodeData model)
+        {
+            string actionMessage = CheckCodeData(model);
+            return RedirectToAction("DetailBasic", "CodeData", new { RowIndex = model.RowIndex, ActionMessage = actionMessage });
+        }
+        public int CopyURLSame(int rowIndex)
+        {
+            rowIndex = Copy(rowIndex);
+            return rowIndex;
+        }
         public int CopyURLAnother(int rowIndex)
         {
-            CodeData model = GetCodeData(rowIndex);
-            rowIndex = _productPropertyRepository.InsertItemsByCopyCodeData(model.ProductPropertyID.Value, RequestUserID, rowIndex);
+            rowIndex = Copy(rowIndex);
             return rowIndex;
         }
         public int BasicCopyURLSame(int rowIndex)

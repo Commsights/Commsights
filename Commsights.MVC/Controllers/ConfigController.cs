@@ -426,6 +426,19 @@ namespace Commsights.MVC.Controllers
             var data = _configResposistory.GetByGroupNameAndCodeAndParentIDAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CampaignKeyMessage, parentID, industryID);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetCategorySubByIndustryIDToList([DataSourceRequest] DataSourceRequest request)
+        {            
+            int industryID = 0;
+            try
+            {
+                industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
+            }
+            catch
+            {
+            }            
+            var data = _configResposistory.GetSQLByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategorySub, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetCategorySubByCategoryMainAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, string categoryMain)
         {
             int parentID = 0;
