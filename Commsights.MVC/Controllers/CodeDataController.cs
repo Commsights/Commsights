@@ -100,7 +100,7 @@ namespace Commsights.MVC.Controllers
         public IActionResult ExportExcelByCookiesOfDateUpdatedAndHourAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysis(CancellationToken cancellationToken)
         {
             List<CodeData> list = new List<CodeData>();
-            string excelName = @"Code" + AppGlobal.DateTimeCode + ".xlsx";
+            string excelName = @"Code_" + AppGlobal.DateTimeCode + ".xlsx";
             string sheetName = AppGlobal.DateTimeCode;
             try
             {
@@ -118,10 +118,10 @@ namespace Commsights.MVC.Controllers
                 {
                     industryName = industry.CodeName;
                 }
+                sheetName = industryName;
                 industryName = AppGlobal.SetName(industryName);
                 companyName = AppGlobal.SetName(companyName);
-                excelName = @"Code_" + industryName + "_" + companyName + "_" + dateUpdated.ToString("yyyyMMdd") + "_" + hour + "_" + isCoding.ToString() + "_" + isAnalysis.ToString() + ".xlsx";
-                sheetName = industryName;
+                excelName = @"Code_" + industryName + "_" + companyName + "_" + dateUpdated.ToString("yyyyMMdd") + "_" + hour + "_" + isCoding.ToString() + "_" + isAnalysis.ToString() + "_" + AppGlobal.DateTimeCode + ".xlsx";
             }
             catch
             {
@@ -180,7 +180,84 @@ namespace Commsights.MVC.Controllers
                         workSheet.Cells[rowExcel, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                         workSheet.Cells[rowExcel, i].Style.Border.Bottom.Color.SetColor(Color.Black);
                     }
+                    rowExcel = rowExcel + 1;
+                    foreach (CodeData item in list)
+                    {
+                        workSheet.Cells[rowExcel, 1].Value = item.Source;
+                        workSheet.Cells[rowExcel, 2].Value = item.FileName;
+                        workSheet.Cells[rowExcel, 3].Value = item.DatePublish.ToString("MM/dd/yyyy");
+                        workSheet.Cells[rowExcel, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;                        
+                        workSheet.Cells[rowExcel, 4].Value = item.CategoryMain;
+                        workSheet.Cells[rowExcel, 5].Value = item.CategorySub;
+                        workSheet.Cells[rowExcel, 6].Value = item.CompanyName;
+                        workSheet.Cells[rowExcel, 7].Value = item.CorpCopy;
+                        workSheet.Cells[rowExcel, 8].Value = item.SOECompany;
+                        workSheet.Cells[rowExcel, 8].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        workSheet.Cells[rowExcel, 9].Value = item.FeatureCorp;
+                        workSheet.Cells[rowExcel, 10].Value = item.Segment;
+                        workSheet.Cells[rowExcel, 11].Value = item.ProductName_ProjectName;
+                        workSheet.Cells[rowExcel, 12].Value = item.SOEProduct;
+                        workSheet.Cells[rowExcel, 12].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        workSheet.Cells[rowExcel, 13].Value = item.FeatureProduct;
+                        workSheet.Cells[rowExcel, 14].Value = item.SentimentCorp;
+                        if (item.SentimentCorp.Equals("Negative"))
+                        {
+                            workSheet.Cells[rowExcel, 14].Style.Font.Color.SetColor(System.Drawing.Color.Red);
+                        }
+                        workSheet.Cells[rowExcel, 15].Value = item.Title;
+                        if ((!string.IsNullOrEmpty(item.Title)) && (!string.IsNullOrEmpty(item.URLCode)))
+                        {
+                            try
+                            {
+                                workSheet.Cells[rowExcel, 15].Hyperlink = new Uri(item.URLCode);
+                            }
+                            catch
+                            {
+                            }
+                            workSheet.Cells[rowExcel, 15].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                        }
+                        workSheet.Cells[rowExcel, 16].Value = item.TitleEnglish;
+                        if ((!string.IsNullOrEmpty(item.TitleEnglish)) && (!string.IsNullOrEmpty(item.URLCode)))
+                        {
+                            try
+                            {
+                                workSheet.Cells[rowExcel, 16].Hyperlink = new Uri(item.URLCode);
+                            }
+                            catch
+                            {
+                            }
+                            workSheet.Cells[rowExcel, 16].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                        }
+                        workSheet.Cells[rowExcel, 17].Value = item.Description;
+                        workSheet.Cells[rowExcel, 18].Value = item.MediaTitle;
+                        workSheet.Cells[rowExcel, 19].Value = item.TierCommsights;
+                        workSheet.Cells[rowExcel, 20].Value = item.MediaType;
+                        workSheet.Cells[rowExcel, 21].Value = item.Journalist;
+                        workSheet.Cells[rowExcel, 22].Value = item.Advalue.Value.ToString("N0");
+                        workSheet.Cells[rowExcel, 22].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;                        
+                        workSheet.Cells[rowExcel, 23].Value = item.ROME_Corp_VND;
+                        workSheet.Cells[rowExcel, 23].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        workSheet.Cells[rowExcel, 24].Value = item.ROME_Product_VND;
+                        workSheet.Cells[rowExcel, 24].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        workSheet.Cells[rowExcel, 25].Value = item.KeyMessage;
+                        workSheet.Cells[rowExcel, 26].Value = item.CampaignName;
+                        workSheet.Cells[rowExcel, 27].Value = item.CampaignKeyMessage;
 
+                        for (int i = 1; i < 28; i++)
+                        {
+                            workSheet.Cells[rowExcel, i].Style.Font.Name = "Times New Roman";
+                            workSheet.Cells[rowExcel, i].Style.Font.Size = 11;
+                            workSheet.Cells[rowExcel, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                            workSheet.Cells[rowExcel, i].Style.Border.Top.Color.SetColor(Color.Black);
+                            workSheet.Cells[rowExcel, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                            workSheet.Cells[rowExcel, i].Style.Border.Left.Color.SetColor(Color.Black);
+                            workSheet.Cells[rowExcel, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                            workSheet.Cells[rowExcel, i].Style.Border.Right.Color.SetColor(Color.Black);
+                            workSheet.Cells[rowExcel, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                            workSheet.Cells[rowExcel, i].Style.Border.Bottom.Color.SetColor(Color.Black);
+                        }
+                        rowExcel = rowExcel + 1;
+                    }
                     for (int i = 1; i < 28; i++)
                     {
                         workSheet.Column(i).AutoFit();
