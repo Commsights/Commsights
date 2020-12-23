@@ -339,7 +339,7 @@ new SqlParameter("@Title",model.Title),
                         itemCopy.Advalue = 0;
                         itemCopy.FileName = "";
                         itemCopy.MediaTitle = "";
-                        itemCopy.MediaType = "";                        
+                        itemCopy.MediaType = "";
                         itemCopy.Initialization(InitType.Insert, RequestUserID);
                         _context.Set<ProductProperty>().Add(itemCopy);
                         _context.SaveChanges();
@@ -347,7 +347,17 @@ new SqlParameter("@Title",model.Title),
                     }
                 }
             }
+            InitializationCodeDataByID(ID);
             return rowIndex;
+        }
+        public string InitializationCodeDataByID(int ID)
+        {
+            SqlParameter[] parameters =
+            {
+                new SqlParameter("@ID",ID),
+            };
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInitializationCodeDataByID", parameters);
+            return result;
         }
         public string InsertSingleItemByCopyCodeData(int ID, int RequestUserID)
         {
