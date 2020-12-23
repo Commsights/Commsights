@@ -89,6 +89,32 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<CodeData> GetReportByDateUpdatedAndHourAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList(DateTime dateUpdated, int hour, int industryID, string companyName, bool isCoding, bool isAnalysis)
+        {
+            List<CodeData> list = new List<CodeData>();
+            if (dateUpdated != null)
+            {
+                if (dateUpdated.Year > 2019)
+                {
+                    if (string.IsNullOrEmpty(companyName))
+                    {
+                        companyName = "";
+                    }
+                    SqlParameter[] parameters =
+                    {
+                    new SqlParameter("@DateUpdated",dateUpdated),
+                    new SqlParameter("@Hour",hour),
+                    new SqlParameter("@IndustryID",industryID),
+                    new SqlParameter("@CompanyName",companyName),
+                    new SqlParameter("@IsCoding",isCoding),
+                    new SqlParameter("@IsAnalysis",isAnalysis),
+                    };
+                    DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataSelectByDateUpdatedAndHourAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysis", parameters);
+                    list = SQLHelper.ToList<CodeData>(dt);
+                }
+            }
+            return list;
+        }
         public List<Membership> GetReportSelectByDatePublishBeginAndDatePublishEnd001ToList(DateTime datePublishBegin, DateTime datePublishEnd)
         {
             List<Membership> list = new List<Membership>();
@@ -203,16 +229,6 @@ namespace Commsights.Data.Repositories
                     result = result + " , " + dt.Rows[i][0].ToString();
                 }
             }
-            return result;
-        }
-        public string InsertItemsByCopyCodeData(int ID, int RequestUserID)
-        {
-            SqlParameter[] parameters =
-            {
-                new SqlParameter("@ID",ID),
-                new SqlParameter("@RequestUserID",RequestUserID),
-            };
-            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertItemsByCopyCodeData", parameters);
             return result;
         }
     }

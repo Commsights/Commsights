@@ -324,17 +324,17 @@ namespace Commsights.MVC.Controllers
                     {
                         avatar = membership.Avatar;
                     }
-                    var CookieExpires = new CookieOptions();
-                    CookieExpires.Expires = DateTime.Now.AddMonths(3);
-                    Response.Cookies.Append("UserID", membership.ID.ToString(), CookieExpires);
-                    Response.Cookies.Append("FullName", fullName, CookieExpires);
-                    Response.Cookies.Append("Avatar", avatar, CookieExpires);
+                    var cookieExpires = new CookieOptions();
+                    cookieExpires.Expires = DateTime.Now.AddMonths(3);
+                    Response.Cookies.Append("UserID", membership.ID.ToString(), cookieExpires);
+                    Response.Cookies.Append("FullName", fullName, cookieExpires);
+                    Response.Cookies.Append("Avatar", avatar, cookieExpires);
                     string avatarURL = Commsights.Data.Helpers.AppGlobal.Domain + Commsights.Data.Helpers.AppGlobal.URLImagesMembership + "/" + avatar;
                     if (string.IsNullOrEmpty(avatar))
                     {
                         avatarURL = AppGlobal.Domain + "images/logo.png";
                     }
-                    Response.Cookies.Append("AvatarURL", avatarURL, CookieExpires);
+                    Response.Cookies.Append("AvatarURL", avatarURL, cookieExpires);
                     controller = "Membership";
                     action = "EmployeeInfo";
                 }
@@ -565,14 +565,14 @@ namespace Commsights.MVC.Controllers
                     {
                         file.CopyTo(stream);
                         model.Avatar = fileName;
-                        var CookieExpires = new CookieOptions();
+                        var cookieExpires = new CookieOptions();
                         string avatar = "";
                         if (!string.IsNullOrEmpty(model.Avatar))
                         {
                             avatar = model.Avatar;
                         }
-                        CookieExpires.Expires = DateTime.Now.AddMonths(3);
-                        Response.Cookies.Append("Avatar", avatar, CookieExpires);
+                        cookieExpires.Expires = DateTime.Now.AddMonths(3);
+                        Response.Cookies.Append("Avatar", avatar, cookieExpires);
                     }
                 }
             }

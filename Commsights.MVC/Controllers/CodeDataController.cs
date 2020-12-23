@@ -31,12 +31,14 @@ namespace Commsights.MVC.Controllers
     {
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly ICodeDataRepository _codeDataRepository;
+        private readonly IConfigRepository _configResposistory;
         private readonly IProductRepository _productRepository;
         private readonly IProductPropertyRepository _productPropertyRepository;
-        public CodeDataController(IWebHostEnvironment hostingEnvironment, ICodeDataRepository codeDataRepository, IProductRepository productRepository, IProductPropertyRepository productPropertyRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
+        public CodeDataController(IWebHostEnvironment hostingEnvironment, ICodeDataRepository codeDataRepository, IConfigRepository configResposistory, IProductRepository productRepository, IProductPropertyRepository productPropertyRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
             _hostingEnvironment = hostingEnvironment;
             _codeDataRepository = codeDataRepository;
+            _configResposistory = configResposistory;
             _productRepository = productRepository;
             _productPropertyRepository = productPropertyRepository;
         }
@@ -95,6 +97,118 @@ namespace Commsights.MVC.Controllers
             model.IndustryID = AppGlobal.IndustryID;
             return View(model);
         }
+        public IActionResult ExportExcelByCookiesOfDateUpdatedAndHourAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysis(CancellationToken cancellationToken)
+        {
+            List<CodeData> list = new List<CodeData>();
+            string excelName = @"Code" + AppGlobal.DateTimeCode + ".xlsx";
+            string sheetName = AppGlobal.DateTimeCode;
+            try
+            {
+                string industryName = "";
+                DateTime dateUpdated = DateTime.Parse(Request.Cookies["CodeDataDateUpdated"]);
+                int hour = int.Parse(Request.Cookies["CodeDataHour"]);
+                int industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
+                string companyName = Request.Cookies["CodeDataCompanyName"];
+                bool isCoding = bool.Parse(Request.Cookies["CodeDataIsCoding"]);
+                bool isAnalysis = bool.Parse(Request.Cookies["CodeDataIsAnalysis"]);
+                list = _codeDataRepository.GetReportByDateUpdatedAndHourAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList(dateUpdated, hour, industryID, companyName, isCoding, isAnalysis);
+
+                Config industry = _configResposistory.GetByID(industryID);
+                if (industry != null)
+                {
+                    industryName = industry.CodeName;
+                }
+                industryName = AppGlobal.SetName(industryName);
+                companyName = AppGlobal.SetName(companyName);
+                excelName = @"Code_" + industryName + "_" + companyName + "_" + dateUpdated.ToString("yyyyMMdd") + "_" + hour + "_" + isCoding.ToString() + "_" + isAnalysis.ToString() + ".xlsx";
+                sheetName = industryName;
+            }
+            catch
+            {
+            }
+            var stream = new MemoryStream();
+            Color color = Color.FromArgb(int.Parse("#c00000".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));
+            Color colorTitle = Color.FromArgb(int.Parse("#ed7d31".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));
+            using (var package = new ExcelPackage(stream))
+            {
+                var workSheet = package.Workbook.Worksheets.Add(sheetName);
+                if (list.Count > 0)
+                {
+                    int rowExcel = 1;
+                    workSheet.Cells[rowExcel, 1].Value = "Source";
+                    workSheet.Cells[rowExcel, 2].Value = "File name";
+                    workSheet.Cells[rowExcel, 3].Value = "Date";
+                    workSheet.Cells[rowExcel, 4].Value = "Main Cat";
+                    workSheet.Cells[rowExcel, 5].Value = "Sub Cat";
+                    workSheet.Cells[rowExcel, 6].Value = "Company Name";
+                    workSheet.Cells[rowExcel, 7].Value = "Corp Copy";
+                    workSheet.Cells[rowExcel, 8].Value = "SOE (%)";
+                    workSheet.Cells[rowExcel, 9].Value = "Feature Corp";
+                    workSheet.Cells[rowExcel, 10].Value = "Product Segment";
+                    workSheet.Cells[rowExcel, 11].Value = "Product Name/Project Name";
+                    workSheet.Cells[rowExcel, 12].Value = "SOE (%)";
+                    workSheet.Cells[rowExcel, 13].Value = "Feature Product";
+                    workSheet.Cells[rowExcel, 14].Value = "Sentiment";
+                    workSheet.Cells[rowExcel, 15].Value = "Headline";
+                    workSheet.Cells[rowExcel, 16].Value = "Headline (Eng)";
+                    workSheet.Cells[rowExcel, 17].Value = "Summary";
+                    workSheet.Cells[rowExcel, 18].Value = "Media Title";
+                    workSheet.Cells[rowExcel, 19].Value = "Media tier";
+                    workSheet.Cells[rowExcel, 20].Value = "Media Type";
+                    workSheet.Cells[rowExcel, 21].Value = "Journalist";
+                    workSheet.Cells[rowExcel, 22].Value = "Ad Value";
+                    workSheet.Cells[rowExcel, 23].Value = "Media Value Corp";
+                    workSheet.Cells[rowExcel, 24].Value = "Media Value Pro";
+                    workSheet.Cells[rowExcel, 25].Value = "Key message";
+                    workSheet.Cells[rowExcel, 26].Value = "Campaign name";
+                    workSheet.Cells[rowExcel, 27].Value = "Campaign's key messages";
+                    for (int i = 1; i < 28; i++)
+                    {
+                        workSheet.Cells[rowExcel, i].Style.Font.Bold = true;
+                        workSheet.Cells[rowExcel, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        workSheet.Cells[rowExcel, i].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                        workSheet.Cells[rowExcel, i].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        workSheet.Cells[rowExcel, i].Style.Fill.BackgroundColor.SetColor(color);
+                        workSheet.Cells[rowExcel, i].Style.Font.Name = "Times New Roman";
+                        workSheet.Cells[rowExcel, i].Style.Font.Size = 11;
+                        workSheet.Cells[rowExcel, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[rowExcel, i].Style.Border.Top.Color.SetColor(Color.Black);
+                        workSheet.Cells[rowExcel, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[rowExcel, i].Style.Border.Left.Color.SetColor(Color.Black);
+                        workSheet.Cells[rowExcel, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[rowExcel, i].Style.Border.Right.Color.SetColor(Color.Black);
+                        workSheet.Cells[rowExcel, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[rowExcel, i].Style.Border.Bottom.Color.SetColor(Color.Black);
+                    }
+
+                    for (int i = 1; i < 28; i++)
+                    {
+                        workSheet.Column(i).AutoFit();
+                    }
+                }
+                package.Save();
+            }
+            stream.Position = 0;
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+        }
+        public ActionResult GetReportByDateUpdatedAndHourAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList([DataSourceRequest] DataSourceRequest request, DateTime dateUpdated, int hour, int industryID, string companyName, bool isCoding, bool isAnalysis)
+        {
+            string isCodingString = isCoding.ToString();
+            if (string.IsNullOrEmpty(companyName))
+            {
+                companyName = "";
+            }
+            var cookieExpires = new CookieOptions();
+            cookieExpires.Expires = DateTime.Now.AddDays(1);
+            Response.Cookies.Append("CodeDataDateUpdated", dateUpdated.ToString("MM/dd/yyyy"), cookieExpires);
+            Response.Cookies.Append("CodeDataHour", hour.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataCompanyName", companyName, cookieExpires);
+            Response.Cookies.Append("CodeDataIsCoding", isCoding.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataIsAnalysis", isAnalysis.ToString(), cookieExpires);
+            List<CodeData> list = _codeDataRepository.GetReportByDateUpdatedAndHourAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList(dateUpdated, hour, industryID, companyName, isCoding, isAnalysis);
+            return Json(list.ToDataSourceResult(request));
+        }
         public ActionResult GetReportSelectByDatePublishBeginAndDatePublishEnd001ToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd)
         {
             List<Membership> list = _codeDataRepository.GetReportSelectByDatePublishBeginAndDatePublishEnd001ToList(datePublishBegin, datePublishEnd);
@@ -107,21 +221,21 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
         {
-            var CookieExpires = new CookieOptions();
-            CookieExpires.Expires = DateTime.Now.AddDays(1);
-            Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), CookieExpires);
-            Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), CookieExpires);
-            Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), CookieExpires);
+            var cookieExpires = new CookieOptions();
+            cookieExpires.Expires = DateTime.Now.AddDays(1);
+            Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), cookieExpires);
+            Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);
             List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
             return Json(list.ToDataSourceResult(request));
         }
         public ActionResult GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
         {
-            var CookieExpires = new CookieOptions();
-            CookieExpires.Expires = DateTime.Now.AddDays(1);
-            Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), CookieExpires);
-            Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), CookieExpires);
-            Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), CookieExpires);
+            var cookieExpires = new CookieOptions();
+            cookieExpires.Expires = DateTime.Now.AddDays(1);
+            Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), cookieExpires);
+            Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);
             List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDToList(datePublishBegin, datePublishEnd, industryID, RequestUserID);
             return Json(list.ToDataSourceResult(request));
         }
@@ -162,16 +276,30 @@ namespace Commsights.MVC.Controllers
             _productPropertyRepository.UpdateItemsByCodeDataCopyVersion(model);
             return RedirectToAction("DetailBasic", "CodeData", new { RowIndex = model.RowIndex });
         }
-        public int Copy(int rowIndex)
+        public int CopyURLSame(int rowIndex)
         {
             CodeData model = GetCodeData(rowIndex);
-            _productPropertyRepository.InsertItemsByCopyCodeData(model.ProductPropertyID.Value, RequestUserID);
+            _productPropertyRepository.InsertSingleItemByCopyCodeData(model.ProductPropertyID.Value, RequestUserID);
+            rowIndex = rowIndex + 1;
             return rowIndex;
         }
-        public int CopyDetailBasic(int rowIndex)
+        public int CopyURLAnother(int rowIndex)
         {
             CodeData model = GetCodeData(rowIndex);
-            _productPropertyRepository.InsertItemsByCopyCodeData(model.ProductPropertyID.Value, RequestUserID);
+            rowIndex = _productPropertyRepository.InsertItemsByCopyCodeData(model.ProductPropertyID.Value, RequestUserID, rowIndex);
+            return rowIndex;
+        }
+        public int BasicCopyURLSame(int rowIndex)
+        {
+            CodeData model = GetCodeData(rowIndex);
+            _productPropertyRepository.InsertSingleItemByCopyCodeData(model.ProductPropertyID.Value, RequestUserID);
+            rowIndex = rowIndex + 1;
+            return rowIndex;
+        }
+        public int BasicCopyURLAnother(int rowIndex)
+        {
+            CodeData model = GetCodeData(rowIndex);
+            rowIndex = _productPropertyRepository.InsertItemsByCopyCodeData(model.ProductPropertyID.Value, RequestUserID, rowIndex);
             return rowIndex;
         }
         public IActionResult ExportExcelEnglish()

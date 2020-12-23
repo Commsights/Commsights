@@ -1,4 +1,5 @@
 ﻿using Commsights.Data.DataTransferObject;
+using Commsights.Data.Enum;
 using Commsights.Data.Helpers;
 using Commsights.Data.Models;
 using System;
@@ -96,7 +97,7 @@ namespace Commsights.Data.Repositories
             List<ProductProperty> list = new List<ProductProperty>();
             if (parentID > 0)
             {
-                list= _context.ProductProperty.Where(item => item.ParentID == parentID && item.Code.Equals(code)).OrderBy(item => item.DateUpdated).ToList();
+                list = _context.ProductProperty.Where(item => item.ParentID == parentID && item.Code.Equals(code)).OrderBy(item => item.DateUpdated).ToList();
             }
             return list;
         }
@@ -315,15 +316,71 @@ new SqlParameter("@Title",model.Title),
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyUpdateItemsByCodeDataCopyVersion", parameters);
             return result;
         }
-        public string InsertItemsByCopyCodeData(int ID, int RequestUserID)
+        public int InsertItemsByCopyCodeData(int ID, int RequestUserID, int rowIndex)
+        {
+            List<ProductProperty> listSame = GetProductPropertySelectItemsSameTitleAndURLCodeByIDToList(ID);
+            List<ProductProperty> listDifferent = GetProductPropertySelectItemsSameTitleAndDifferentURLCodeToList(ID);
+            List<ProductProperty> listCopy = new List<ProductProperty>();
+            int rowAdd = 0;
+            int rowSame = listSame.Count;
+            foreach (ProductProperty itemSame in listSame)
+            {
+                int copyVersion = itemSame.CopyVersion.Value;
+                foreach (ProductProperty itemDifferent in listDifferent)
+                {
+                    if (itemDifferent.CopyVersion != copyVersion)
+                    {
+                        ProductProperty itemCopy = itemSame;
+                        itemCopy.ParentID = itemDifferent.ParentID;
+                        itemCopy.Source = itemDifferent.Source;
+                        itemCopy.CopyVersion = copyVersion;
+                        itemCopy.GUICode = itemDifferent.GUICode;
+                        itemCopy.ID = 0;
+                        itemCopy.Advalue = 0;
+                        itemCopy.FileName = "";
+                        itemCopy.MediaTitle = "";
+                        itemCopy.MediaType = "";                        
+                        itemCopy.Initialization(InitType.Insert, RequestUserID);
+                        _context.Set<ProductProperty>().Add(itemCopy);
+                        _context.SaveChanges();
+                        rowAdd = rowAdd + 1;
+                    }
+                }
+            }
+            return rowIndex;
+        }
+        public string InsertSingleItemByCopyCodeData(int ID, int RequestUserID)
         {
             SqlParameter[] parameters =
             {
                 new SqlParameter("@ID",ID),
                 new SqlParameter("@RequestUserID",RequestUserID),
             };
-            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertItemsByCopyCodeData", parameters);
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertSingleItemByCopyCodeData", parameters);
             return result;
         }
+        public List<ProductProperty> GetProductPropertySelectItemsSameTitleAndDifferentURLCodeToList(int ID)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ID",ID),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectItemsSameTitleAndDifferentURLCodeByID", parameters);
+            list = SQLHelper.ToList<ProductProperty>(dt);
+            return list;
+        }
+        public List<ProductProperty> GetProductPropertySelectItemsSameTitleAndURLCodeByIDToList(int ID)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ID",ID),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectItemsSameTitleAndURLCodeByID", parameters);
+            list = SQLHelper.ToList<ProductProperty>(dt);
+            return list;
+        }
+
     }
 }

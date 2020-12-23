@@ -69,6 +69,108 @@
                 <div class="row">
                     <div id="DataMain" class='col-sm-12'></div>
                 </div>
+                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.CodeData>()
+.Name("CodeData")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70).Locked(true);
+    columns.Template(@"<a target='_blank' href='#=URLCoding#' title='#=Title#' class='btn btn-primary' style='color:white; cursor: pointer;'><i class='fas fa-edit'></i></a>").Title("Edit").Width(70).Locked(true);
+    columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70).Locked(true);
+    columns.Bound(t => t.RowIndex).Title("No").Width(100).HtmlAttributes(new { @class = "text-center" });
+    columns.Bound(t => t.Source).Title("Source").Width(100).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.CategoryMain).Title("Category Main").Width(300);
+    columns.Bound(t => t.CategorySub).Title("Category Sub").Width(300);
+    columns.Bound(t => t.CompanyName).Title("Company").Width(300);
+    columns.Bound(t => t.CorpCopy).Title("Corp Copy").Width(100);
+    columns.Bound(t => t.SOECompany).Title("SOE (%)").Width(100);
+    columns.Bound(t => t.ProductName_ProjectName).Title("Product").Width(300);
+    columns.Bound(t => t.SentimentCorp).Title("Sentiment").Width(100);
+    columns.Bound(t => t.Title).Title("Headline (Vie)").Width(500).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.MediaTitle).Title("Media").Width(200).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.MediaType).Title("Type").Width(150).HtmlAttributes(new { @class = "text-center" });
+    columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(500).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Description).Title("Summary").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.TierCommsights).Title("Tier Commsights").Width(200);
+    columns.Bound(t => t.SpokePersonName).Title("Spoke Person Name").Width(150);
+    columns.Bound(t => t.SpokePersonTitle).Title("Spoke Person Title").Width(150);
+    columns.Bound(t => t.CampaignName).Title("Campaign Name").Width(150);
+    columns.Bound(t => t.KeyMessage).Title("Key Message").Width(150);
+    columns.Bound(t => t.CompetitiveWhat).Title("Competitive What").Width(150);
+    columns.Bound(t => t.ToneValue).Title("Tone Value").Width(150);
+    columns.Bound(t => t.HeadlineValue).Title("Headline Value").Width(150);
+    columns.Bound(t => t.FeatureValue).Title("Feature Value").Width(150);
+    columns.Bound(t => t.SpokePersonValue).Title("Spoke Person Value").Width(200);
+    columns.Bound(t => t.TierValue).Title("Tier Value").Width(150);
+    columns.Bound(t => t.PictureValue).Title("Picture Value").Width(150);
+    columns.Bound(t => t.KOLValue).Title("KOL Value").Width(150);
+    columns.Bound(t => t.OtherValue).Title("Other Value").Width(150);
+    columns.Bound(t => t.TasteValue).Title("Taste Value").Width(150);
+    columns.Bound(t => t.PriceValue).Title("Price Value").Width(150);
+    columns.Bound(t => t.NutritionFactValue).Title("Nutrition Fact Value").Width(200);
+    columns.Bound(t => t.VitaminValue).Title("Vitamin Value").Width(150);
+    columns.Bound(t => t.GoodForHealthValue).Title("Good For Health Value").Width(200);
+    columns.Bound(t => t.Bottle_CanDesignValue).Title("Bottle/Can Design Value").Width(200);
+    columns.Bound(t => t.CompetitiveNewsValue).Title("Competitive News Value").Width(200);
+    columns.Bound(t => t.MPS).Title("MPS").Width(150);
+    columns.Bound(t => t.ROME_Corp_VND).Title("Media Value Corp").Width(200);
+    columns.Bound(t => t.ROME_Product_VND).Title("Media Value Product").Width(200);
+    columns.Bound(t => t.ProductSource).Title("Upload").Width(100).HtmlAttributes(new { @class = "text-center" });
+    columns.Bound(t => t.Author).Title("Journalist").Width(200);
+    columns.Bound(t => t.FeatureCorp).Title("Feature Corp").Width(150);
+    columns.Bound(t => t.FeatureProduct).Title("Feature Product").Width(150);
+    columns.Bound(t => t.Segment).Title("Segment").Width(300);
+    columns.Bound(t => t.DatePublish).Title("Publish").Format("{0:dd/MM/yyyy HH:mm:ss}").Width(200).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.DateUpload).Title("Upload").Width(200).Format("{0:dd/MM/yyyy HH:mm:ss}").HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.DateUpdated).Title("Updated").Width(200).Format("{0:dd/MM/yyyy HH:mm:ss}").HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.DateCoding).Title("Coding").Width(200).Format("{0:dd/MM/yyyy HH:mm:ss}").HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.Advalue).Title("Advalue").Width(200);
+    columns.Bound(t => t.FileName).Title("FileName").Width(1000);
+    columns.Bound(t => t.ProductID).Title("ProductID").Width(200);
+    columns.Bound(t => t.ProductPropertyID).Title("PropertyID").Width(200);
+    columns.Bound(t => t.RowBegin).Title("Begin").Width(100);
+    columns.Bound(t => t.RowEnd).Title("End").Width(100);
+    columns.Bound(t => t.RowIndexCount).Title("Count").Width(100);
+    columns.Bound(t => t.IsCoding).Title("Coding").Width(100).HtmlAttributes(new { @class = "text-center" });
+    columns.Bound(t => t.IsAnalysis).Title("Analysis").Width(100).HtmlAttributes(new { @class = "text-center" });
+    columns.Bound(t => t.CopyVersion).Title("Copy").Width(100).HtmlAttributes(new { @class = "text-center" });
+    columns.Bound(t => t.UserUpdated).Title("UserUpdated").Width(200).HtmlAttributes(new { @class = "text-center" });
+})
+.ToolBar(toolBar => toolBar.Search())
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Article.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Article"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Article.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid" })
+.Search(search => { search.Field(f => f.URLCode); search.Field(f => f.Title); search.Field(f => f.TitleEnglish); search.Field(f => f.CompanyName); search.Field(f => f.MediaTitle); search.Field(f => f.TierCommsights); search.Field(f => f.MediaType); search.Field(f => f.ProductName_ProjectName); })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(10)
+.Model(model =>
+{
+    model.Id(t => t.RowIndex);
+})
+.Read(t => t.Action("GetReportByDateUpdatedAndHourAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList", "CodeData").Data("filterCodeData"))
+))
             </div>
         </div>
     </div>
@@ -89,9 +191,13 @@
         return { industryID: industryIDValue };
     }
     function filterCodeData(e) {
+        var dateUpdatedValue = toDate02($("#DatePublishBegin").val());
+        var hourValue = $("#Hour").data("kendoDropDownList").value();
         var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
-        var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
-        return { datePublishBegin: datePublishBeginValue, industryID: industryIDValue };
+        var companyNameValue = $("#CompanyName").data("kendoDropDownList").value();
+        var isCodingValue = document.getElementById('IsCoding').checked;
+        var isAnalysisValue = document.getElementById('IsAnalysis').checked;
+        return { dateUpdated: dateUpdatedValue, hour: hourValue, industryID: industryIDValue, companyName: companyNameValue, isCoding: isCodingValue, isAnalysis: isAnalysisValue };
     }
     function GetByIndustryIDAndParrentIDToList() {
         $("#DataMain").html('');
@@ -136,8 +242,12 @@
     }
     function onSearch() {
         GetByIndustryIDAndParrentIDToList();
+        $("#CodeData").data("kendoGrid").dataSource.read();
     }
     function onExport() {
+        BeginRequestHandler();        
+        var url = "/CodeData/ExportExcelByCookiesOfDateUpdatedAndHourAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysis";
+        window.location.replace(url);
+        EndRequestHandler();
     }
-
 </script>
