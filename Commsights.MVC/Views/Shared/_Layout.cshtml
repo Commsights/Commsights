@@ -142,14 +142,14 @@
             }).done(function (result) {
                 $('#SideBar').html(result);
             });
-
             $.ajax({
                 url: '/Membership/MenuLeft',
                 type: 'GET',
                 cache: false,
                 data: {}
             }).done(function (result) {                
-                $('#MenuLeft').html(result);                                
+                $('#MenuLeft').html(result);  
+                setMenuLeftActive();
             });
         }
         function setMenuLeftActive() {            

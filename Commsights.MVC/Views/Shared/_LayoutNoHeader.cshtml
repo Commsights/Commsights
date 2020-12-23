@@ -129,8 +129,7 @@
     <script src="/js/site.js"></script>
     <script>
         jQuery(function ($) {
-            onLoadData();
-            setMenuLeftActive();
+            onLoadData();            
         });
         function onLoadData() {
             $.ajax({
@@ -141,7 +140,6 @@
             }).done(function (result) {
                 $('#SideBar').html(result);
             });
-
             $.ajax({
                 url: '/Membership/MenuLeft',
                 type: 'GET',
@@ -149,6 +147,7 @@
                 data: {}
             }).done(function (result) {
                 $('#MenuLeft').html(result);
+                setMenuLeftActive();
             });
         }
         function setMenuLeftActive() {
