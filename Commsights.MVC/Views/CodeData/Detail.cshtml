@@ -401,6 +401,18 @@
                                 <label for='DateCoding'>Date Coding</label>
                                 @(Html.TextBoxFor(Model => Model.DateCoding, "{0:MM/dd/yyyy HH:mm:ss}", new { @class = "form-control text-right", @readonly = "readonly" }))
                             </div>
+                            <div class='form-group'>
+                                <label for='CopyVersion'>Copy Version</label>
+                                @(Html.TextBoxFor(Model => Model.CopyVersion, new { @class = "form-control text-right", @readonly = "readonly" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='ProductID'>ProductID</label>
+                                @(Html.TextBoxFor(Model => Model.ProductID, new { @class = "form-control text-right", @readonly = "readonly" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='ProductPropertyID'>PropertyID</label>
+                                @(Html.TextBoxFor(Model => Model.ProductPropertyID, new { @class = "form-control text-right", @readonly = "readonly" }))
+                            </div>
                         </div>
                     </div>
                 </form>

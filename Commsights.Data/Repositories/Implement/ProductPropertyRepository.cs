@@ -320,11 +320,13 @@ new SqlParameter("@Title",model.Title),
         {
             List<ProductProperty> listSame = GetProductPropertySelectItemsSameTitleAndURLCodeByIDToList(ID);
             List<ProductProperty> listDifferent = GetProductPropertySelectItemsSameTitleAndDifferentURLCodeToList(ID);
-            List<ProductProperty> listCopy = new List<ProductProperty>();
-            int rowAdd = 0;
-            int rowSame = listSame.Count;
-            foreach (ProductProperty itemSame in listSame)
+            for (int i = 0; i < listSame.Count; i++)
             {
+                if (listSame[i].ID == ID)
+                {
+                    rowIndex = rowIndex + listSame.Count - i;
+                }
+                ProductProperty itemSame = listSame[i];
                 int copyVersion = itemSame.CopyVersion.Value;
                 foreach (ProductProperty itemDifferent in listDifferent)
                 {
@@ -343,11 +345,10 @@ new SqlParameter("@Title",model.Title),
                         itemCopy.Initialization(InitType.Insert, RequestUserID);
                         _context.Set<ProductProperty>().Add(itemCopy);
                         _context.SaveChanges();
-                        rowAdd = rowAdd + 1;
+                        InitializationCodeDataByID(itemCopy.ID);
                     }
                 }
             }
-            InitializationCodeDataByID(ID);
             return rowIndex;
         }
         public string InitializationCodeDataByID(int ID)
