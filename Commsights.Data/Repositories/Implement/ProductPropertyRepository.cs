@@ -343,9 +343,9 @@ new SqlParameter("@Title",model.Title),
                         itemCopy.MediaTitle = "";
                         itemCopy.MediaType = "";
                         itemCopy.Initialization(InitType.Insert, RequestUserID);
-                        _context.Set<ProductProperty>().Add(itemCopy);
-                        _context.SaveChanges();
-                        InitializationCodeDataByID(itemCopy.ID);
+                        //_context.Set<ProductProperty>().Add(itemCopy);
+                        //_context.SaveChanges();
+                        //InitializationCodeDataByID(itemCopy.ID);
                     }
                 }
             }

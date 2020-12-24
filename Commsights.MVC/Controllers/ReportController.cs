@@ -352,7 +352,7 @@ namespace Commsights.MVC.Controllers
             {
                 txt.AppendLine(@"<th style='color: #ffffff; background-color: #c00000;'>" + item.CodeName + "</th>");
                 column = column + 1;
-            }
+            }           
             txt.AppendLine(@"<thead>");
             txt.AppendLine(@"<tbody>");
             int index = 0;
@@ -452,6 +452,14 @@ namespace Commsights.MVC.Controllers
                         txt.AppendLine(@"<br/>");
                         txt.AppendLine(@"(" + descriptionEnglish + ")");
                         txt.AppendLine(@"</div></td>");
+                    }
+                    if (i == 15)
+                    {
+                        txt.AppendLine(@"<td style='text-align: right;'>" + listData[index].Duration + "</td>");
+                    }
+                    if (i == 16)
+                    {
+                        txt.AppendLine(@"<td style='text-align: right;'>" + listData[index].Frequency + "</td>");
                     }
                 }
                 txt.AppendLine(@"</tr>");
@@ -2400,11 +2408,21 @@ namespace Commsights.MVC.Controllers
                         }
                         if (i == 15)
                         {
+                            workSheet.Cells[row, i].Value = listData[index].Duration;
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        }
+                        if (i == 16)
+                        {
+                            workSheet.Cells[row, i].Value = listData[index].Frequency;
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        }
+                        if (i == 17)
+                        {
                             workSheet.Cells[row, i].Value = listData[index].DateUpdated;
                             workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy HH:mm:ss";
                             workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         }
-                        if (i == 16)
+                        if (i == 18)
                         {
                             if (!string.IsNullOrEmpty(listData[index].URLCode))
                             {
@@ -2721,11 +2739,21 @@ namespace Commsights.MVC.Controllers
                         }
                         if (i == 15)
                         {
+                            workSheet.Cells[row, i].Value = listData[index].Duration;
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        }
+                        if (i == 16)
+                        {
+                            workSheet.Cells[row, i].Value = listData[index].Frequency;
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        }
+                        if (i == 17)
+                        {
                             workSheet.Cells[row, i].Value = listData[index].DateUpdated;
                             workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy HH:mm:ss";
                             workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         }
-                        if (i == 16)
+                        if (i == 18)
                         {
                             if (!string.IsNullOrEmpty(listData[index].URLCode))
                             {

@@ -15,7 +15,7 @@
                                      .DateInput()
                                 )
                     </div>
-                    <div class='col-sm-2'>
+                    <div class='col-sm-1'>
                         @(Html.Kendo().DropDownListFor(Model=>Model.Hour)
                      .DataValueField("Display")
                      .DataTextField("Display")
@@ -23,6 +23,8 @@
                        .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetHourFinanceToList", "AppGlobal")))
                             )
+                    </div>
+                    <div class='col-sm-1'>                       
                     </div>
                     <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
                         <input id="IsCoding" type="checkbox">
@@ -38,8 +40,13 @@
                         </button>
                     </div>
                     <div class='col-sm-1'>
-                        <button type="button" class="btn btn-success" title="Export" onclick="onExport()">
-                            <span class="fas fa-file-excel"></span>
+                        <button type="button" class="btn btn-success" title="Export Code" onclick="onExportCode()">
+                            <span class="fas fa-file-excel"></span> Code
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-success" title="Export Daily" onclick="onExportDaily()">
+                            <span class="fas fa-file-excel"></span> Daily
                         </button>
                     </div>
                 </div>

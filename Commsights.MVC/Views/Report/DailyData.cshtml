@@ -1,4 +1,4 @@
-﻿@{ Layout = "~/Views/Shared/_LayoutNoHeader.cshtml"; ViewData["Title"] = "Report - Daily - Data"; }
+﻿@{ Layout = "~/Views/Shared/_LayoutNoHeader.cshtml"; ViewData["Title"] = "Daily - Data"; }
 
 @model Commsights.MVC.Models.BaseViewModel
 
@@ -79,6 +79,8 @@
     columns.Bound(t => t.AdvertisementValue).Title("Ad Value").Width(200).Format("{0:N0}").HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.Product.TextName).EditorTemplateName("MembershipPermission_Product").Title("Product").Width(300);
     columns.Bound(t => t.Page).Title("Page").Width(100);
+    columns.Bound(t => t.Duration).Title("Duration").Width(100);
+    columns.Bound(t => t.Frequency).Title("Frequency").Width(100);
     columns.Bound(t => t.SourceID).Title("Source").Width(200);
     columns.Bound(t => t.TargetID).Title("Target").Width(200);
     columns.Bound(t => t.IsSummary).Title("Brief").Width(100);
