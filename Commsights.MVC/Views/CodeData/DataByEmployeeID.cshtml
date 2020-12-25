@@ -108,6 +108,7 @@
     columns.Bound(t => t.IsCoding).Title("Coding").Width(100).HtmlAttributes(new { @class = "text-center" });
     columns.Bound(t => t.IsAnalysis).Title("Analysis").Width(100).HtmlAttributes(new { @class = "text-center" });    
     columns.Bound(t => t.UserUpdated).Title("UserUpdated").Width(150).HtmlAttributes(new { @class = "text-center" });
+    columns.Bound(t => t.TitleProperty).Title("Headline (Property)").Width(1000).HtmlAttributes(new { @style = "white-space: nowrap;" });
 })
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
