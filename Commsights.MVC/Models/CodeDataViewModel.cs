@@ -14,6 +14,7 @@ namespace Commsights.MVC.Models
         public int CompanyID { get; set; }
         public string CompanyName { get; set; }
         public string Industry { get; set; }
-        public int Hour { get; set; }
+        public int HourBegin { get; set; }
+        public int HourEnd { get; set; }
     }
 }

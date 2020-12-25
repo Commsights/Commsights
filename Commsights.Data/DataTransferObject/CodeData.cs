@@ -143,6 +143,7 @@ namespace Commsights.Data.DataTransferObject
         public string CompanyNameHiden { get; set; }
         public string ProductNameHiden { get; set; }
         public string URLCoding { get; set; }
+        public string Frequency { get; set; }
         public int? CopyVersion { get; set; }
     }
 }

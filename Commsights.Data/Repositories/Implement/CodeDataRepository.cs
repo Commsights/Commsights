@@ -115,6 +115,33 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<CodeData> GetReportByByDateUpdatedAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList(DateTime dateUpdated, int hourBegin, int hourEnd, int industryID, string companyName, bool isCoding, bool isAnalysis)
+        {
+            List<CodeData> list = new List<CodeData>();
+            if (dateUpdated != null)
+            {
+                if (dateUpdated.Year > 2019)
+                {
+                    if (string.IsNullOrEmpty(companyName))
+                    {
+                        companyName = "";
+                    }
+                    SqlParameter[] parameters =
+                    {
+                    new SqlParameter("@DateUpdated",dateUpdated),
+                    new SqlParameter("@HourBegin",hourBegin),
+                    new SqlParameter("@HourEnd",hourEnd),
+                    new SqlParameter("@IndustryID",industryID),
+                    new SqlParameter("@CompanyName",companyName),
+                    new SqlParameter("@IsCoding",isCoding),
+                    new SqlParameter("@IsAnalysis",isAnalysis),
+                    };
+                    DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataSelectByDateUpdatedAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysis", parameters);
+                    list = SQLHelper.ToList<CodeData>(dt);
+                }
+            }
+            return list;
+        }
         public List<Membership> GetReportSelectByDatePublishBeginAndDatePublishEnd001ToList(DateTime datePublishBegin, DateTime datePublishEnd)
         {
             List<Membership> list = new List<Membership>();

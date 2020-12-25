@@ -16,7 +16,7 @@
                                 )
                     </div>
                     <div class='col-sm-1'>
-                        @(Html.Kendo().DropDownListFor(Model=>Model.Hour)
+                        @(Html.Kendo().DropDownListFor(Model=>Model.HourBegin)
                      .DataValueField("Display")
                      .DataTextField("Display")
                     .HtmlAttributes(new { @class = "form-control" })
@@ -24,7 +24,14 @@
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetHourFinanceToList", "AppGlobal")))
                             )
                     </div>
-                    <div class='col-sm-1'>                       
+                    <div class='col-sm-1'>
+                        @(Html.Kendo().DropDownListFor(Model=>Model.HourEnd)
+                     .DataValueField("Display")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetHourFinanceToList", "AppGlobal")))
+                            )
                     </div>
                     <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
                         <input id="IsCoding" type="checkbox">
@@ -173,7 +180,7 @@
 {
     model.Id(t => t.RowIndex);
 })
-.Read(t => t.Action("GetReportByDateUpdatedAndHourAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList", "CodeData").Data("filterCodeData"))
+.Read(t => t.Action("GetReportByByDateUpdatedAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList", "CodeData").Data("filterCodeData"))
 ))
             </div>
         </div>
@@ -196,12 +203,13 @@
     }
     function filterCodeData(e) {
         var dateUpdatedValue = toDate02($("#DatePublishBegin").val());
-        var hourValue = $("#Hour").data("kendoDropDownList").value();
+        var hourBeginValue = $("#HourBegin").data("kendoDropDownList").value();
+        var hourEndValue = $("#HourEnd").data("kendoDropDownList").value();
         var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
         var companyNameValue = $("#CompanyName").data("kendoDropDownList").value();
         var isCodingValue = document.getElementById('IsCoding').checked;
         var isAnalysisValue = document.getElementById('IsAnalysis').checked;
-        return { dateUpdated: dateUpdatedValue, hour: hourValue, industryID: industryIDValue, companyName: companyNameValue, isCoding: isCodingValue, isAnalysis: isAnalysisValue };
+        return { dateUpdated: dateUpdatedValue, hourBegin: hourBeginValue, hourEnd: hourEndValue, industryID: industryIDValue, companyName: companyNameValue, isCoding: isCodingValue, isAnalysis: isAnalysisValue };
     }
     function GetByIndustryIDAndParrentIDToList() {
         $("#DataMain").html('');
@@ -248,9 +256,15 @@
         GetByIndustryIDAndParrentIDToList();
         $("#CodeData").data("kendoGrid").dataSource.read();
     }
-    function onExport() {
+    function onExportCode() {
         BeginRequestHandler();        
-        var url = "/CodeData/ExportExcelByCookiesOfDateUpdatedAndHourAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysis";
+        var url = "/CodeData/ExportExcelByCookiesOfDateUpdatedAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysis";
+        window.location.replace(url);
+        EndRequestHandler();
+    }
+    function onExportDaily() {
+        BeginRequestHandler();
+        var url = "/CodeData/ExportExcelByCookiesOfDateUpdatedAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisForDaily";
         window.location.replace(url);
         EndRequestHandler();
     }
