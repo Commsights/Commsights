@@ -17,9 +17,9 @@ using System.Windows.Forms;
 namespace SearchTool
 {
     public partial class frmMain : Form
-    {       
+    {
         public frmMain()
-        {          
+        {
             InitializeComponent();
         }
 
@@ -37,6 +37,7 @@ namespace SearchTool
                 }
                 AsyncCreateProductScanWebsiteNoFilterProduct0001(listConfig[i]);
             }
+            MessageBox.Show("Finish");
         }
 
         private void btnWebsitePriority5_Click(object sender, EventArgs e)
@@ -100,7 +101,7 @@ namespace SearchTool
                 if (config != null)
                 {
                     List<LinkItem> list = new List<LinkItem>();
-                    AppGlobal.LinkFinder001(config.URLFull, config.URLFull, true, list);                    
+                    AppGlobal.LinkFinder001(config.URLFull, config.URLFull, true, list);
                     foreach (LinkItem linkItem in list)
                     {
                         try
@@ -173,13 +174,13 @@ namespace SearchTool
                                 product.Title = title;
                                 product.ParentID = config.ID;
                                 product.CategoryID = config.ID;
-                                product.Source = AppGlobal.SourceAuto;                                
+                                product.Source = AppGlobal.SourceAuto;
                                 if (string.IsNullOrEmpty(product.Title))
                                 {
                                     product.Title = linkItem.Text;
                                 }
                                 product.URLCode = linkItem.Href;
-                                product.DatePublish = DateTime.Now;                                
+                                product.DatePublish = DateTime.Now;
                                 AppGlobal.FinderContentAndDatePublish001(html, product);
                                 if ((product.DatePublish.Year > 2019) && (product.Active == true))
                                 {
