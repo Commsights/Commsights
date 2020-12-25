@@ -264,6 +264,16 @@ new SqlParameter("@Title",model.Title),
         }
         public string UpdateItemsByCodeDataCopyVersion(CodeData model)
         {
+            if (!string.IsNullOrEmpty(model.CategorySub))
+            {
+                if (model.CategorySub.Split('-').Length > 1)
+                {
+                    model.CategoryMain = model.CategorySub.Split('-')[0];
+                    model.CategorySub = model.CategorySub.Split('-')[1];
+                    model.CategoryMain = model.CategoryMain.Trim();
+                    model.CategorySub = model.CategorySub.Trim();
+                }
+            }
             SqlParameter[] parameters =
             {
 new SqlParameter("@ID",model.ProductPropertyID),

@@ -45,6 +45,7 @@ namespace Commsights.Data.Repositories
         public List<Config> GetByGroupNameAndCodeAndParentIDAndIndustryIDToList(string groupName, string code, int parentID, int industryID);
         public List<Config> GetByGroupNameAndCodeAndIndustryIDToList(string groupName, string code, int industryID);
         public List<Config> GetSQLByGroupNameAndCodeAndIndustryIDToList(string groupName, string code, int industryID);
+        public List<Config> GetSQLCategorySubByGroupNameAndCodeAndIndustryIDToList(string groupName, string code, int industryID);
         public Config GetByGroupNameAndCodeAndIndustryIDAndCodeName(string groupName, string code, int industryID, string codeName);
         public List<Config> GetSQLByGroupNameAndCodeAndIndustryIDAndParentIDToList(string groupName, string code, int industryID, int parentID);
         public List<Config> GetMenuSelectByMembershipIDAndCodeToList(int membershipID, string code);

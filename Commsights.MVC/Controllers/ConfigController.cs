@@ -436,7 +436,7 @@ namespace Commsights.MVC.Controllers
             catch
             {
             }            
-            var data = _configResposistory.GetSQLByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategorySub, industryID);
+            var data = _configResposistory.GetSQLCategorySubByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategorySub, industryID);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetCategorySubByCategoryMainAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, string categoryMain)
