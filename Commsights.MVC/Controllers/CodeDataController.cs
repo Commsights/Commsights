@@ -815,6 +815,14 @@ namespace Commsights.MVC.Controllers
                     actionMessage = AppGlobal.Error + " - SOE > 0 but ProductName not exist";
                 }
             }
+            if (!string.IsNullOrEmpty(model.ProductName_ProjectName))
+            {
+                if (model.CategorySub.Contains("industry") || model.CategorySub.Contains("corporate") || model.CategorySub.Contains("company")|| model.CategorySub.Contains("competitor"))
+                {
+                    check = false;
+                    actionMessage = AppGlobal.Error + " - ProductName exist but Category Sub not relate to Product";
+                }    
+            }
             if (check == true)
             {
                 model.IsCoding = true;
