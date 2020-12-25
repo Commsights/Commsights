@@ -50,5 +50,6 @@ namespace Commsights.Data.Models
         public DateTime DatePublish { get; set; }
         public bool? IsError { get; set; }
         public int? Advalue { get; set; }
+        public string TitleProperty { get; set; }
     }
 }

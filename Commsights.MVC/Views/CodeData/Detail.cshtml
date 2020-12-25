@@ -118,8 +118,7 @@
                             )
                             </div>
                         </div>
-                        <div class="col-md-2">
-                           
+                        <div class="col-md-2">                           
                             <div class='form-group'>
                                 <label for='TierCommsights'>Tier Commsights</label>
                                 @(Html.Kendo().DropDownListFor(Model => Model.TierCommsights)
@@ -165,6 +164,10 @@
                                 @(Html.TextBoxFor(Model => Model.SpokePersonTitle, new { @class = "form-control" }))
                             </div>
                             <div class='form-group'>
+                                <label for='TitleProperty'>Title property</label>
+                                @(Html.TextBoxFor(Model => Model.TitleProperty, new { @class = "form-control", @title = Model.TitleProperty }))
+                            </div>
+                            <div class='form-group'>
                                 <label for='CampaignName'>Campaign name</label>
                                 @(Html.Kendo().DropDownListFor(Model => Model.CampaignName)
                                  .DataValueField("CodeName")
@@ -205,6 +208,9 @@
                                  .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
                                 )
                             </div>
+                            
+                        </div>
+                        <div class="col-md-2">
                             <div class='form-group'>
                                 <label for='TasteValue'>Taste value</label>
                                 @(Html.Kendo().DropDownListFor(Model => Model.TasteValue)
@@ -214,9 +220,7 @@
                                    .Filter(FilterType.Contains)
                                  .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
                                 )
-                            </div>                  
-                        </div>
-                        <div class="col-md-2">
+                            </div>
                             <div class='form-group'>
                                 <label for='PriceValue'>Price value</label>
                                 @(Html.Kendo().DropDownListFor(Model => Model.PriceValue)
@@ -277,6 +281,9 @@
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
                             )
                             </div>
+                            
+                        </div>
+                        <div class="col-md-2">
                             <div class='form-group'>
                                 <label for='HeadlineValue' title="Brand mention in Headline">Headline value</label>
                                 @(Html.Kendo().DropDownListFor(Model => Model.HeadlineValue)
@@ -287,8 +294,6 @@
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
                             )
                             </div>
-                        </div>
-                        <div class="col-md-2">
                             <div class='form-group'>
                                 <label for='PictureValue' title="Image (related to brand/company)">Picture value</label>
                                 @(Html.Kendo().DropDownListFor(Model => Model.PictureValue)
@@ -320,6 +325,10 @@
                             )
                             </div>
                             <div class='form-group'>
+                                <label for='CopyVersion'>Copy Version</label>
+                                @(Html.TextBoxFor(Model => Model.CopyVersion, new { @class = "form-control text-right" }))
+                            </div>
+                            <div class='form-group'>
                                 <label for='FeatureValue'>News type value</label>
                                 @(Html.TextBoxFor(Model => Model.FeatureValue,"{0:N0}", new { @class = "form-control text-right", @readonly = "readonly" }))
                             </div>
@@ -347,7 +356,6 @@
                                 <label for='FileName'>File name</label>
                                 @(Html.TextBoxFor(Model => Model.FileName, new { @class = "form-control",  @readonly = "readonly", @title = Model.FileName }))
                             </div>
-
 
                         </div>
                         <div class="col-md-2">
@@ -395,10 +403,7 @@
                                 <label for='DateCoding'>Date Coding</label>
                                 @(Html.TextBoxFor(Model => Model.DateCoding, "{0:MM/dd/yyyy HH:mm:ss}", new { @class = "form-control text-right", @readonly = "readonly" }))
                             </div>
-                            <div class='form-group'>
-                                <label for='CopyVersion'>Copy Version</label>
-                                @(Html.TextBoxFor(Model => Model.CopyVersion, new { @class = "form-control text-right" }))
-                            </div>
+                           
                             <div class='form-group'>
                                 <label for='ProductID'>ProductID</label>
                                 @(Html.TextBoxFor(Model => Model.ProductID, new { @class = "form-control text-right", @readonly = "readonly" }))

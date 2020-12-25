@@ -820,7 +820,7 @@ namespace Commsights.MVC.Controllers
                 model.IsCoding = true;
                 model.UserUpdated = RequestUserID;
                 _productRepository.UpdateSingleItemByCodeData(model);
-                _productPropertyRepository.UpdateItemsByCodeDataCopyVersion(model);
+                _productPropertyRepository.UpdateItemsByCodeDataCopyVersion(model);                
             }
             return actionMessage;
         }

@@ -153,7 +153,7 @@
                                 <div id="DescriptionEnglishHiden" style="display:none;">@Model.DescriptionEnglish</div>
                             </div>
                         </div>
-                        <div class="col-md-3">                            
+                        <div class="col-md-3">
                             <div class='form-group'>
                                 <label for='KeyMessage'>Key Message</label>
                                 @(Html.Kendo().DropDownListFor(Model => Model.KeyMessage)
@@ -184,7 +184,15 @@
                                    .Filter(FilterType.Contains)
                                  .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCampaignKeyMessageByCampaignNameAndIndustryIDToList", "Config").Data("filterCampaignKeyMessage")))
                             )
-                            </div>                           
+                            </div>
+                            <div class='form-group'>
+                                <label for='TitleProperty'>Title property</label>
+                                @(Html.TextBoxFor(Model => Model.TitleProperty, new { @class = "form-control", @title = Model.TitleProperty }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='CopyVersion'>Copy Version</label>
+                                @(Html.TextBoxFor(Model => Model.CopyVersion, new { @class = "form-control text-right" }))
+                            </div>
                             <div class='form-group'>
                                 <label for='CategoryMain'>Category Main</label>
                                 @(Html.TextBoxFor(Model => Model.CategoryMain, new { @class = "form-control", @readonly = "readonly" }))
@@ -232,10 +240,7 @@
                                 <label for='MediaType'>Media Type</label>
                                 @(Html.TextBoxFor(Model => Model.MediaType, new { @class = "form-control", @readonly = "readonly" }))
                             </div>
-                            <div class='form-group'>
-                                <label for='CopyVersion'>Copy Version</label>
-                                @(Html.TextBoxFor(Model => Model.CopyVersion, new { @class = "form-control text-right" }))
-                            </div>
+                            
                             <div class='form-group'>
                                 <label for='ProductID'>ProductID</label>
                                 @(Html.TextBoxFor(Model => Model.ProductID, new { @class = "form-control text-right", @readonly = "readonly" }))
