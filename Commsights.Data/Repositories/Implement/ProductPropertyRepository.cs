@@ -318,60 +318,38 @@ new SqlParameter("@Title",model.Title),
         }
         public int InsertItemsByCopyCodeData(int ID, int RequestUserID, int rowIndex)
         {
-            List<ProductProperty> listSame = GetProductPropertySelectItemsSameTitleAndURLCodeByIDToList(ID);
+            List<ProductProperty> listSame = GetProductPropertySelectItemsSameParentIDByIDToList(ID);
             List<ProductProperty> listParentID = GetProductPropertySelectItemsDistinctParentIDSameTitleAndDifferentURLCodeByIDToList(ID);
-            for (int i = 0; i < listSame.Count; i++)
+            for (int j = 0; j < listParentID.Count; j++)
             {
-                if (listSame[i].ID == ID)
+                int parentID = listParentID[j].ParentID.Value;
+                List<ProductProperty> listDifferent = GetSQLByParentIDToList(parentID);
+                if (listDifferent.Count > 0)
                 {
-                    rowIndex = rowIndex + listSame.Count - i;
-                }
-                int copyVersion = listSame[i].CopyVersion.Value;
-                if (copyVersion > 0)
-                {
-                    for (int j = 0; j < listParentID.Count; j++)
+                    if (listSame.Count > listDifferent.Count)
                     {
-                        int parentID = listParentID[j].ParentID.Value;
-                        List<ProductProperty> listDifferent = GetSQLByParentIDToList(parentID);
-                        if (listDifferent.Count > 0)
+                        int rowBegin = listDifferent.Count;
+                        int rowEnd = listSame.Count;
+                        for (int i = rowBegin; i < rowEnd; i++)
                         {
-                            bool check = true;
-                            for (int m = 0; m < listDifferent.Count; m++)
-                            {
-                                for (int n = 0; n < listSame.Count; n++)
-                                {
-                                    if (listSame[n].CopyVersion > 0)
-                                    {
-                                        if (listSame[n].CopyVersion == listDifferent[m].CopyVersion)
-                                        {
-                                            check = false;
-                                            n = listSame.Count;
-                                        }
-                                    }
-                                }
-                            }
-                            if (check == true)
-                            {
-                                ProductProperty itemCopy = listSame[i];
-                                itemCopy.ParentID = parentID;
-                                itemCopy.Source = listDifferent[0].Source;
-                                itemCopy.CopyVersion = copyVersion;
-                                itemCopy.GUICode = listDifferent[0].GUICode;
-                                itemCopy.ID = 0;
-                                itemCopy.Advalue = 0;
-                                itemCopy.FileName = "";
-                                itemCopy.MediaTitle = "";
-                                itemCopy.MediaType = "";
-                                itemCopy.Initialization(InitType.Insert, RequestUserID);
-                                _context.Set<ProductProperty>().Add(itemCopy);
-                                _context.SaveChanges();
-                                InitializationCodeDataByID(itemCopy.ID);
-                            }
+                            ProductProperty itemCopy = listSame[i];
+                            itemCopy.ParentID = parentID;
+                            itemCopy.Source = listDifferent[0].Source;
+                            itemCopy.CopyVersion = listSame[i].CopyVersion;
+                            itemCopy.GUICode = listDifferent[0].GUICode;
+                            itemCopy.ID = 0;
+                            itemCopy.Advalue = 0;
+                            itemCopy.FileName = "";
+                            itemCopy.MediaTitle = "";
+                            itemCopy.MediaType = "";
+                            itemCopy.Initialization(InitType.Insert, RequestUserID);
+                            _context.Set<ProductProperty>().Add(itemCopy);
+                            _context.SaveChanges();
+                            InitializationCodeDataByID(itemCopy.ID);
                         }
                     }
                 }
             }
-
             return rowIndex;
         }
         public string InitializationCodeDataByID(int ID)
@@ -446,6 +424,16 @@ new SqlParameter("@Title",model.Title),
             list = SQLHelper.ToList<ProductProperty>(dt);
             return list;
         }
-
+        public List<ProductProperty> GetProductPropertySelectItemsSameParentIDByIDToList(int ID)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ID",ID),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectItemsSameParentIDByID", parameters);
+            list = SQLHelper.ToList<ProductProperty>(dt);
+            return list;
+        }
     }
 }
