@@ -707,7 +707,8 @@ namespace Commsights.MVC.Controllers
             model.Active = false;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
-            int result = _membershipRepository.Delete(model.ID);
+            int result = 0;
+            //int result = _membershipRepository.Delete(model.ID);
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
