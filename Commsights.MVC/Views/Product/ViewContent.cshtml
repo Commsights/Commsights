@@ -1,14 +1,14 @@
-﻿@{ Layout = "~/Views/Shared/_LayoutWindow.cshtml"; ViewData["Title"] = @Model.Product.Title; }
+@{ Layout = "~/Views/Shared/_LayoutWindow.cshtml"; ViewData["Title"] = @Model.Product.Title + " (" + @Model.Product.DatePublish.ToString("MM/dd/yyyy") + ")"; }
 
 @model Commsights.MVC.Models.ProductViewContentViewModel
 
-<div class="card card-primary card-outline">  
+<div class="card card-primary card-outline">
     <div class="card-body">
         <div class="text-center" style="margin:auto; margin:0px;">
             @if (Model.Product.IsVideo == true)
             {
                 @*<img src="/images/logo01.png" class="img-thumbnail" />*@
-                <h3>@Model.Product.Title</h3>
+                <h4>@Model.Product.Title (@Model.Product.DatePublish.ToString("MM/dd/yyyy"))</h4>
                 <video width="1000" height="600" controls>
                     <source src="@Model.Product.Image" type="video/mp4">
                 </video>

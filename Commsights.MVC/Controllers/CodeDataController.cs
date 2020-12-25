@@ -464,7 +464,8 @@ namespace Commsights.MVC.Controllers
         {
             CodeData model = GetCodeData(rowIndex);
             string note = AppGlobal.InitString;
-            int result = _productPropertyRepository.Delete(model.ProductPropertyID.Value);
+            _productPropertyRepository.DeleteItemsByIDCodeData(model.ProductPropertyID.Value);
+            int result = 1;            
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
