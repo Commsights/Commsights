@@ -2,6 +2,6 @@
                    .DataValueField("ID")
                    .DataTextField("CodeName")
                    .HtmlAttributes(new {data_bind= "value: Language", @class = "form-control" })
-                    .Filter(FilterType.StartsWith)
+                    .Filter(FilterType.Contains)
                    .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetLanguageToList", "Config")))
 )

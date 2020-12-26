@@ -711,19 +711,39 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<ProductCompact001> GetProductCompact001BySourceWithIDAndTitleToList(string source)
+        {
+            List<ProductCompact001> list = new List<ProductCompact001>();
+            SqlParameter[] parameters =
+                   {
+                new SqlParameter("@Source",source),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectBySourceWithIDAndTitle", parameters);
+            list = SQLHelper.ToList<ProductCompact001>(dt);
+            return list;
+        }
+        public List<ProductCompact001> GetProductCompact001BySourceAndRowBeginAndRowEndWithIDAndDescriptionToList(string source, int rowBegin, int rowEnd)
+        {
+            List<ProductCompact001> list = new List<ProductCompact001>();
+            SqlParameter[] parameters =
+                   {
+                new SqlParameter("@Source",source),
+                new SqlParameter("@RowBegin",rowBegin),
+                new SqlParameter("@RowEnd",rowEnd),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectBySourceAndRowBeginAndRowEndWithIDAndDescription", parameters);
+            list = SQLHelper.ToList<ProductCompact001>(dt);
+            return list;
+        }
         public Product GetByID001(int ID)
         {
             Product model = new Product();
-            if (ID > 0)
-            {
-                SqlParameter[] parameters =
-                       {
+            SqlParameter[] parameters =
+                   {
                 new SqlParameter("@ID",ID),
             };
-                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectByID", parameters);
-                model = SQLHelper.ToList<Product>(dt).FirstOrDefault();
-            }
-
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectByID", parameters);
+            model = SQLHelper.ToList<Product>(dt).FirstOrDefault();
             return model;
         }
         public void FilterProduct(Product product, List<ProductProperty> listProductProperty, int RequestUserID)
@@ -1242,6 +1262,26 @@ new SqlParameter("@TitleEnglish",product.TitleEnglish),
             string result = await SQLHelper.ExecuteNonQueryAsync(AppGlobal.ConectionString, "sp_ProductUpdateSingleItem", parameters);
             return result;
         }
+        public async Task<string> AsyncUpdateProductCompact001SingleItem(ProductCompact001 product)
+        {
+            SqlParameter[] parameters =
+            {
+new SqlParameter("@ID",product.ID),
+new SqlParameter("@Title",product.Title),
+};
+            string result = await SQLHelper.ExecuteNonQueryAsync(AppGlobal.ConectionString, "sp_ProductUpdateSingleItemWithIDAndTitle", parameters);
+            return result;
+        }
+        public async Task<string> AsyncUpdateProductCompact001SingleItemWithIDAndDescription(ProductCompact001 product)
+        {
+            SqlParameter[] parameters =
+            {
+new SqlParameter("@ID",product.ID),
+new SqlParameter("@Description",product.Description),
+};
+            string result = await SQLHelper.ExecuteNonQueryAsync(AppGlobal.ConectionString, "sp_ProductUpdateSingleItemWithIDAndDescription", parameters);
+            return result;
+        }
         public string UpdateProductCompactSingleItem(ProductCompact product)
         {
             SqlParameter[] parameters =
@@ -1253,6 +1293,26 @@ new SqlParameter("@TitleEnglish",product.TitleEnglish),
 new SqlParameter("@IsError",product.IsError),
 };
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductUpdateSingleItem", parameters);
+            return result;
+        }
+        public string Initialization()
+        {            
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductInitialization");
+            return result;
+        }
+        public string UpdateSingleItemByCodeData(CodeData model)
+        {
+            SqlParameter[] parameters =
+            {
+new SqlParameter("@ID",model.ProductID),
+new SqlParameter("@Title",model.Title),
+new SqlParameter("@TitleEnglish",model.TitleEnglish),
+new SqlParameter("@Description",model.Description),
+new SqlParameter("@DescriptionEnglish",model.DescriptionEnglish),
+new SqlParameter("@Author",model.Author),
+new SqlParameter("@UserUpdated",model.UserUpdated),
+};
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductUpdateSingleItemByCodeData", parameters);
             return result;
         }
     }

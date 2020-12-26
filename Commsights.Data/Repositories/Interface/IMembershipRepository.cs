@@ -18,7 +18,7 @@ namespace Commsights.Data.Repositories
         public bool IsExistAccount(string account);
         public bool IsExistFullName(string fullName);
         public List<Membership> GetByCompanyToList();
-        public List<Membership> GetByCompanyFullToList();        
+        public List<Membership> GetByCompanyFullToList();
         public List<Membership> GetByIndustryIDToList(int industryID);
         public List<Membership> GetCustomerToList();
         public List<Membership> GetCustomerFullToList();
@@ -31,5 +31,15 @@ namespace Commsights.Data.Repositories
         public List<Membership> GetByIndustryIDWithIDAndAccountToList(int industryID);
         public List<MembershipDataTransfer> GetAllCompanyToList();
         public List<MembershipDataTransfer> GetDataTransferByParentIDToList(int parentID);
+        public List<MembershipCompanyDataTransfer> GetAllCompany001ToList();
+        public List<MembershipCompanyDataTransfer> GetAllCompany001ByActiveToList();
+        public List<MembershipCompanyDataTransfer> GetByIndustryID001ToList(int industryID);
+        public List<MembershipCompanyDataTransfer> GetByIndustryID001ByActiveToList(int industryID);
+        public string UpdateSingleItem001(int ID, bool active, string account);
+        public Membership GetByPhoneAndPassword(string phone, string password);
+        public List<MembershipCompanyDataTransfer> GetByIndustryID002ByActiveToList(int industryID);
+        public Membership GetByAccountAndIndustryIDAndActive(string account, int industryID, bool active);
+        public List<Membership> GetAllEmployeeProductPermissionToList();
+        public List<MembershipCompanyDataTransfer> GetByIndustryID003ByActiveToList(int industryID);
     }
 }

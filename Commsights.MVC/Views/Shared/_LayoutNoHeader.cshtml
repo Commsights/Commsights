@@ -1,0 +1,173 @@
+﻿
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>@ViewData["Title"] - @Commsights.Data.Helpers.AppGlobal.CMSTitle</title>
+    <meta http-equiv="Content-Language" content="vi">
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="description" content="@Commsights.Data.Helpers.AppGlobal.CMSTitle">
+    <meta name="keywords" content="@Commsights.Data.Helpers.AppGlobal.CMSTitle">
+    <meta name="author" content="@Commsights.Data.Helpers.AppGlobal.Title">
+    <link rel="apple-touch-icon" href="@Commsights.Data.Helpers.AppGlobal.LogoURLFull">
+    <link rel="shortcut icon" type="image/x-icon" href="@Commsights.Data.Helpers.AppGlobal.LogoURLFull">
+
+    <link rel="stylesheet" href="/AdminLTE_3_0_5/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/AdminLTE_3_0_5/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="/css/site001.css">
+    <link href="https://kendo.cdn.telerik.com/2020.2.617/styles/kendo.bootstrap-v4.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://kendo.cdn.telerik.com/2020.2.617/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2020.2.617/js/jszip.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2020.2.617/js/kendo.all.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2020.2.617/js/kendo.aspnetmvc.min.js"></script>
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+
+    <script>
+        function BeginRequestHandler() {
+            Slider();
+        }
+        function EndRequestHandler() {
+            $('#Dim').css("display", "none");
+            $('#BackGround').fadeTo("fast", 2);
+        }
+        function Slider() {
+            $('#Dim').css("display", "");
+            $('#Dim').css("z-index", "10");
+            $('#Dim').css("position", "absolute");
+            $('#Dim').css("top", ($(window).height() - $('#Dim').height()) / 2 + $(window).scrollTop() + "px");
+            $('#Dim').css("left", ($(window).width() - $('#Dim').width()) / 2 + $(window).scrollLeft() + "px");
+            $('#BackGround').fadeTo("fast", 0.5);
+            $('#Dim').focus();
+        }
+        function OpenWindowByURL(URLParamater, w = 100, h = 200) {
+            var width = screen.width;
+            var height = screen.height;
+            var width01 = width - w;
+            var height01 = height - h;
+            var left = (width - width01) / 2;
+            var top = (height - height01) / 3;
+            var url = URLParamater;
+            window.open(url, '_blank', 'location=yes,height=' + height01 + ',width=' + width01 + ',scrollbars=yes,status=yes,toolbar=yes,top=' + top + ',left=' + left + '');
+        }
+        function OpenWindowLeftByURL(URLParamater, w = 100, h = 200) {
+            var width = screen.width;
+            var height = screen.height;
+            var width01 = width / 2;
+            var height01 = height / 2;
+            var left = width01 - 20;
+            var top = height01 - 120;
+            var url = URLParamater;
+            window.open(url, '_blank', 'location=yes,height=' + height01 + ',width=' + width01 + ',scrollbars=yes,status=yes,toolbar=yes,top=' + top + ',left=' + left + '');
+        }
+        function OpenWindowRightByURL(URLParamater, w = 100, h = 200) {
+            var width = screen.width;
+            var height = screen.height;
+            var width01 = width / 2;
+            var height01 = height / 2;
+            var left = 0;
+            var top = height01 - 120;
+            var url = URLParamater;
+            window.open(url, '_blank', 'location=yes,height=' + height01 + ',width=' + width01 + ',scrollbars=yes,status=yes,toolbar=yes,top=' + top + ',left=' + left + '');
+        }
+        function getParameterByName(name, url = window.location.href) {
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+    </script>
+    <style type="text/css">
+        .k-grid-header a.k-link {
+            text-align: center;
+            color: blue;
+        }
+    </style>
+</head>
+<body id="BackGround" class="hold-transition sidebar-mini sidebar-collapse">
+    <div id="Dim" style="display: none;">
+        <div class="msgbox">
+            <img src="@Commsights.Data.Helpers.AppGlobal.LoadingURLFull" alt="Processing, please wait!"
+                 title="Processing, please wait!" width="200px" height="200px" />
+        </div>
+    </div>
+
+    <div class="wrapper">
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <a href="@Commsights.Data.Helpers.AppGlobal.Domain" class="brand-link" title="CRM">
+                <img src="@Commsights.Data.Helpers.AppGlobal.LogoURLFull"
+                     alt="CRM" title="CRM"
+                     class="brand-image img-circle elevation-3"
+                     style="opacity: .8">
+                <span class="brand-text font-weight-light">CRM</span>
+            </a>
+            <div class="sidebar">
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex" id="SideBar">
+                </div>
+                <nav class="mt-2">
+                    <ul id="MenuLeft" class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <li class="nav-item">
+                            <a href="@Url.Action("Logout", "Membership", new {area = ""})" title="Sign out" class="nav-link">
+                                <i class="nav-icon fas fa-power-off"></i>
+                                <p>
+                                    Sign out
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+        <div class="content-wrapper">
+            <section class="content" style="padding-top:10px;">
+                <div class="container-fluid">
+                    @RenderBody()
+                </div>
+            </section>
+        </div>
+    </div>
+    <script src="/AdminLTE_3_0_5/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/AdminLTE_3_0_5/dist/js/adminlte.min.js"></script>
+
+    <script src="/AdminLTE_3_0_5/dist/js/demo.js"></script>
+    <script src="/js/site.js"></script>
+    <script>
+        jQuery(function ($) {
+            onLoadData();
+        });
+        function onLoadData() {
+            $.ajax({
+                url: '/Membership/Sidebar',
+                type: 'GET',
+                cache: false,
+                data: {}
+            }).done(function (result) {
+                $('#SideBar').html(result);
+            });
+            $.ajax({
+                url: '/Membership/MenuLeft',
+                type: 'GET',
+                cache: false,
+                data: {}
+            }).done(function (result) {
+                $('#MenuLeft').html(result);
+                setMenuLeftActive();
+            });
+        }
+        function setMenuLeftActive() {
+            var tag = $('a[href="' + this.location.pathname + '"]');
+            tag.addClass('active');
+            var tag01 = tag.parent('li').parent('ul').parent('li');
+            tag01.addClass('menu-open');
+            var tag02 = tag01.children('a');
+            tag02.addClass('active');
+        }
+    </script>
+
+</body>
+</html>

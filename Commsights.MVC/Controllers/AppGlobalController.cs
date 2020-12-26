@@ -24,10 +24,35 @@ namespace Commsights.MVC.Controllers
         {
             var data = YearFinance.GetAllToList();
             return Json(data.ToDataSourceResult(request));
-        }
+        }        
         public ActionResult GetMonthFinanceToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = MonthFinance.GetAllToList();
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetHourFinanceToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = HourFinance.GetAllToList();
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetSEOToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = SOE.GetAllToList();
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCorpCopyToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = CorpCopy.GetAllToList();
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCodeDataValueToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = CodeDataValue.GetAllToList();
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCodeDataValueItem0ToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = CodeDataValue.GetItem0ToList();
             return Json(data.ToDataSourceResult(request));
         }
     }

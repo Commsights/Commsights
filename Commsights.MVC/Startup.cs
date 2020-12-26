@@ -41,6 +41,8 @@ namespace Commsights.MVC
             services.AddTransient<IConfigRepository, ConfigRepository>();
             services.AddTransient<IDashbroadRepository, DashbroadRepository>();
             services.AddTransient<IReportRepository, ReportRepository>();
+            services.AddTransient<ICodeDataRepository, CodeDataRepository>();
+            services.AddTransient<IProductPermissionRepository, ProductPermissionRepository>();
             services.AddTransient<IEmailStorageRepository, EmailStorageRepository>();
             services.AddTransient<IEmailStoragePropertyRepository, EmailStoragePropertyRepository>();
             services.AddTransient<IReportMonthlyRepository, ReportMonthlyRepository>();
@@ -76,7 +78,7 @@ namespace Commsights.MVC
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Membership}/{action=EmployeeInfo}/{id?}");
             });
         }
     }

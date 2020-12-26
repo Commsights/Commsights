@@ -1,4 +1,5 @@
 ﻿using Commsights.Data.DataTransferObject;
+using Commsights.Data.Enum;
 using Commsights.Data.Helpers;
 using Commsights.Data.Models;
 using System;
@@ -21,6 +22,26 @@ namespace Commsights.Data.Repositories
         public string UpdateItemsWithParentIDIsZero()
         {
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyUpdateItemsWithParentIDIsZero");
+            return result;
+        }
+        public string UpdateSingleItemByIDAndFileName(int ID, string fileName)
+        {
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ID",ID),
+                new SqlParameter("@FileName",fileName),
+            };
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyUpdateSingleItemByIDAndFileName", parameters);
+            return result;
+        }
+        public async Task<string> AsyncUpdateSingleItemByIDAndFileName(int ID, string fileName)
+        {
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ID",ID),
+                new SqlParameter("@FileName",fileName),
+            };
+            string result = await SQLHelper.ExecuteNonQueryAsync(AppGlobal.ConectionString, "sp_ProductPropertyUpdateSingleItemByIDAndFileName", parameters);
             return result;
         }
         public bool IsExist(ProductProperty model)
@@ -73,7 +94,12 @@ namespace Commsights.Data.Repositories
         }
         public List<ProductProperty> GetByParentIDAndCodeToList(int parentID, string code)
         {
-            return _context.ProductProperty.Where(item => item.ParentID == parentID && item.Code.Equals(code)).OrderBy(item => item.DateUpdated).ToList();
+            List<ProductProperty> list = new List<ProductProperty>();
+            if (parentID > 0)
+            {
+                list = _context.ProductProperty.Where(item => item.ParentID == parentID && item.Code.Equals(code)).OrderBy(item => item.DateUpdated).ToList();
+            }
+            return list;
         }
         public List<ProductProperty> GetByReportMonthlyIDToList(int reportMonthlyID)
         {
@@ -181,6 +207,243 @@ namespace Commsights.Data.Repositories
             };
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertItemByID", parameters);
             return result;
+        }
+        public string UpdateSingleItemByCodeData(CodeData model)
+        {
+            SqlParameter[] parameters =
+            {
+new SqlParameter("@ID",model.ProductPropertyID),
+new SqlParameter("@CategoryMain",model.CategoryMain),
+new SqlParameter("@CategorySub",model.CategorySub),
+new SqlParameter("@CompanyName",model.CompanyName),
+new SqlParameter("@CorpCopy",model.CorpCopy),
+new SqlParameter("@SOECompany",model.SOECompany),
+new SqlParameter("@ProductName_ProjectName",model.ProductName_ProjectName),
+new SqlParameter("@SOEProduct",model.SOEProduct),
+new SqlParameter("@SentimentCorp",model.SentimentCorp),
+new SqlParameter("@TierCommsights",model.TierCommsights),
+new SqlParameter("@CampaignName",model.CampaignName),
+new SqlParameter("@CampaignKeyMessage",model.CampaignKeyMessage),
+new SqlParameter("@KeyMessage",model.KeyMessage),
+new SqlParameter("@CompetitiveWhat",model.CompetitiveWhat),
+new SqlParameter("@CompetitiveNewsValue",model.CompetitiveNewsValue),
+new SqlParameter("@TasteValue",model.TasteValue),
+new SqlParameter("@PriceValue",model.PriceValue),
+new SqlParameter("@NutritionFactValue",model.NutritionFactValue),
+new SqlParameter("@VitaminValue",model.VitaminValue),
+new SqlParameter("@GoodForHealthValue",model.GoodForHealthValue),
+new SqlParameter("@Bottle_CanDesignValue",model.Bottle_CanDesignValue),
+new SqlParameter("@TierValue",model.TierValue),
+new SqlParameter("@HeadlineValue",model.HeadlineValue),
+new SqlParameter("@PictureValue",model.PictureValue),
+new SqlParameter("@KOLValue",model.KOLValue),
+new SqlParameter("@OtherValue",model.OtherValue),
+new SqlParameter("@SpokePersonName",model.SpokePersonName),
+new SqlParameter("@SpokePersonTitle",model.SpokePersonTitle),
+new SqlParameter("@Segment",model.Segment),
+new SqlParameter("@FeatureValue",model.FeatureValue),
+new SqlParameter("@SpokePersonValue",model.SpokePersonValue),
+new SqlParameter("@ToneValue",model.ToneValue),
+new SqlParameter("@MPS",model.MPS),
+new SqlParameter("@ROME_Corp_VND",model.ROME_Corp_VND),
+new SqlParameter("@ROME_Product_VND",model.ROME_Product_VND),
+new SqlParameter("@FeatureCorp",model.FeatureCorp),
+new SqlParameter("@FeatureProduct",model.FeatureProduct),
+new SqlParameter("@Advalue",model.Advalue),
+new SqlParameter("@IsCoding",model.IsCoding),
+new SqlParameter("@UserUpdated",model.UserUpdated),
+new SqlParameter("@DatePublish",model.DatePublish),
+new SqlParameter("@MediaType",model.MediaType),
+new SqlParameter("@MediaTitle",model.MediaTitle),
+new SqlParameter("@Page",model.Page),
+new SqlParameter("@RowIndex",model.RowIndex),
+new SqlParameter("@Title",model.Title),
+};
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyUpdateSingleItemByCodeData", parameters);
+            return result;
+        }
+        public string UpdateItemsByCodeDataCopyVersion(CodeData model)
+        {
+            if (!string.IsNullOrEmpty(model.CategorySub))
+            {
+                if (model.CategorySub.Split(':').Length > 1)
+                {
+                    model.CategoryMain = model.CategorySub.Split(':')[0];
+                    model.CategorySub = model.CategorySub.Split(':')[1];
+                    model.CategoryMain = model.CategoryMain.Trim();
+                    model.CategorySub = model.CategorySub.Trim();
+                }
+            }
+            SqlParameter[] parameters =
+            {
+new SqlParameter("@ID",model.ProductPropertyID),
+new SqlParameter("@CategoryMain",model.CategoryMain),
+new SqlParameter("@CategorySub",model.CategorySub),
+new SqlParameter("@CompanyName",model.CompanyName),
+new SqlParameter("@CorpCopy",model.CorpCopy),
+new SqlParameter("@SOECompany",model.SOECompany),
+new SqlParameter("@ProductName_ProjectName",model.ProductName_ProjectName),
+new SqlParameter("@SOEProduct",model.SOEProduct),
+new SqlParameter("@SentimentCorp",model.SentimentCorp),
+new SqlParameter("@TierCommsights",model.TierCommsights),
+new SqlParameter("@CampaignName",model.CampaignName),
+new SqlParameter("@CampaignKeyMessage",model.CampaignKeyMessage),
+new SqlParameter("@KeyMessage",model.KeyMessage),
+new SqlParameter("@CompetitiveWhat",model.CompetitiveWhat),
+new SqlParameter("@CompetitiveNewsValue",model.CompetitiveNewsValue),
+new SqlParameter("@TasteValue",model.TasteValue),
+new SqlParameter("@PriceValue",model.PriceValue),
+new SqlParameter("@NutritionFactValue",model.NutritionFactValue),
+new SqlParameter("@VitaminValue",model.VitaminValue),
+new SqlParameter("@GoodForHealthValue",model.GoodForHealthValue),
+new SqlParameter("@Bottle_CanDesignValue",model.Bottle_CanDesignValue),
+new SqlParameter("@TierValue",model.TierValue),
+new SqlParameter("@HeadlineValue",model.HeadlineValue),
+new SqlParameter("@PictureValue",model.PictureValue),
+new SqlParameter("@KOLValue",model.KOLValue),
+new SqlParameter("@OtherValue",model.OtherValue),
+new SqlParameter("@SpokePersonName",model.SpokePersonName),
+new SqlParameter("@SpokePersonTitle",model.SpokePersonTitle),
+new SqlParameter("@Segment",model.Segment),
+new SqlParameter("@FeatureValue",model.FeatureValue),
+new SqlParameter("@SpokePersonValue",model.SpokePersonValue),
+new SqlParameter("@ToneValue",model.ToneValue),
+new SqlParameter("@MPS",model.MPS),
+new SqlParameter("@ROME_Corp_VND",model.ROME_Corp_VND),
+new SqlParameter("@ROME_Product_VND",model.ROME_Product_VND),
+new SqlParameter("@FeatureCorp",model.FeatureCorp),
+new SqlParameter("@FeatureProduct",model.FeatureProduct),
+new SqlParameter("@Advalue",model.Advalue),
+new SqlParameter("@IsCoding",model.IsCoding),
+new SqlParameter("@UserUpdated",model.UserUpdated),
+new SqlParameter("@DatePublish",model.DatePublish),
+new SqlParameter("@MediaType",model.MediaType),
+new SqlParameter("@MediaTitle",model.MediaTitle),
+new SqlParameter("@Page",model.Page),
+new SqlParameter("@RowIndex",model.RowIndex),
+new SqlParameter("@Title",model.Title),
+};
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyUpdateItemsByCodeDataCopyVersion", parameters);
+            return result;
+        }
+        public int InsertItemsByCopyCodeData(int ID, int RequestUserID, int rowIndex)
+        {
+            List<ProductProperty> listSame = GetProductPropertySelectItemsSameParentIDByIDToList(ID);
+            List<ProductProperty> listParentID = GetProductPropertySelectItemsDistinctParentIDSameTitleAndDifferentURLCodeByIDToList(ID);
+            for (int j = 0; j < listParentID.Count; j++)
+            {
+                int parentID = listParentID[j].ParentID.Value;
+                List<ProductProperty> listDifferent = GetSQLByParentIDToList(parentID);
+                if (listDifferent.Count > 0)
+                {
+                    if (listSame.Count > listDifferent.Count)
+                    {
+                        int rowBegin = listDifferent.Count;
+                        int rowEnd = listSame.Count;
+                        for (int i = rowBegin; i < rowEnd; i++)
+                        {
+                            ProductProperty itemCopy = listSame[i];
+                            itemCopy.ParentID = parentID;
+                            itemCopy.Source = listDifferent[0].Source;
+                            itemCopy.CopyVersion = listSame[i].CopyVersion;
+                            itemCopy.GUICode = listDifferent[0].GUICode;
+                            itemCopy.ID = 0;
+                            itemCopy.Advalue = 0;
+                            itemCopy.FileName = "";
+                            itemCopy.MediaTitle = "";
+                            itemCopy.MediaType = "";
+                            itemCopy.Initialization(InitType.Insert, RequestUserID);
+                            _context.Set<ProductProperty>().Add(itemCopy);
+                            _context.SaveChanges();
+                            InitializationCodeDataByID(itemCopy.ID);
+                        }
+                    }
+                }
+            }
+            return rowIndex;
+        }
+        public string InitializationCodeDataByID(int ID)
+        {
+            SqlParameter[] parameters =
+            {
+                new SqlParameter("@ID",ID),
+            };
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInitializationCodeDataByID", parameters);
+            return result;
+        }
+        public string InsertSingleItemByCopyCodeData(int ID, int RequestUserID)
+        {
+            SqlParameter[] parameters =
+            {
+                new SqlParameter("@ID",ID),
+                new SqlParameter("@RequestUserID",RequestUserID),
+            };
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertSingleItemByCopyCodeData", parameters);
+            return result;
+        }
+        public string DeleteItemsByIDCodeData(int ID)
+        {
+            SqlParameter[] parameters =
+            {
+                new SqlParameter("@ID",ID),
+            };
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyDeleteItemsByIDCodeData", parameters);
+            return result;
+        }
+        public List<ProductProperty> GetSQLByParentIDToList(int parentID)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            SqlParameter[] parameters =
+            {
+                new SqlParameter("@ParentID",parentID),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectByParentID", parameters);
+            list = SQLHelper.ToList<ProductProperty>(dt);
+            return list;
+        }
+        public List<ProductProperty> GetProductPropertySelectItemsDistinctParentIDSameTitleAndDifferentURLCodeByIDToList(int ID)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ID",ID),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectItemsDistinctParentIDSameTitleAndDifferentURLCodeByID", parameters);
+            list = SQLHelper.ToList<ProductProperty>(dt);
+            return list;
+        }
+        public List<ProductProperty> GetProductPropertySelectItemsSameTitleAndDifferentURLCodeByIDToList(int ID)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ID",ID),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectItemsSameTitleAndDifferentURLCodeByID", parameters);
+            list = SQLHelper.ToList<ProductProperty>(dt);
+            return list;
+        }
+        public List<ProductProperty> GetProductPropertySelectItemsSameTitleAndURLCodeByIDToList(int ID)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ID",ID),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectItemsSameTitleAndURLCodeByID", parameters);
+            list = SQLHelper.ToList<ProductProperty>(dt);
+            return list;
+        }
+        public List<ProductProperty> GetProductPropertySelectItemsSameParentIDByIDToList(int ID)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ID",ID),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectItemsSameParentIDByID", parameters);
+            list = SQLHelper.ToList<ProductProperty>(dt);
+            return list;
         }
     }
 }

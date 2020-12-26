@@ -723,6 +723,104 @@ namespace Commsights.MVC.Controllers
             }
             return "";
         }
+        public async Task<string> AsyncScanWebsitePriorityNoFilterProductByIndexBeginVoid001(int indexBegin)
+        {
+            List<Config> listConfig = _configResposistory.GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftToList(AppGlobal.CRM, AppGlobal.Website, true, true);
+            int listConfigCount = listConfig.Count;
+            int indexEnd = indexBegin + 5;
+            for (int i = indexBegin; i < indexEnd; i++)
+            {
+                if (i == listConfigCount)
+                {
+                    i = indexEnd;
+                }
+                await this.AsyncCreateProductScanWebsiteNoFilterProduct0001(listConfig[i]);
+            }
+            return "";
+        }
+        public async Task<string> AsyncDecode()
+        {
+            List<ProductCompact001> list = _productRepository.GetProductCompact001BySourceWithIDAndTitleToList(AppGlobal.SourceAuto);
+            foreach (ProductCompact001 item in list)
+            {
+                item.Title = AppGlobal.ConvertStringToUnicode(item.Title);
+                await _productRepository.AsyncUpdateProductCompact001SingleItem(item);
+            }
+            return "";
+        }
+        public async Task<string> AsyncDescription()
+        {
+            //string result = "B&#7843;n&#32;tin&#32;GolfNews&#32;360:&#32;K&#7923;&#32;156";
+            //result = AppGlobal.Decode(result);
+            //result = AppGlobal.ConvertASCIIToUnicode(result);
+            //result = AppGlobal.ConvertLatin1ToUnicode(result);
+            //result = AppGlobal.ConvertWind1252ToUnicode(result);
+            //result = AppGlobal.TCVN3ToUnicode(result);
+            List<ProductCompact001> list = _productRepository.GetProductCompact001BySourceWithIDAndTitleToList(AppGlobal.SourceAuto);
+            foreach (ProductCompact001 item in list)
+            {
+                if ((item.URLCode.Contains(@"zing.vn") == false) && (item.URLCode.Contains(@"zingnews.vn") == false))
+                {
+                    string html = "";
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(item.URLCode);
+                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        Stream receiveStream = response.GetResponseStream();
+                        StreamReader readStream = null;
+                        readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                        html = readStream.ReadToEnd();
+                    }
+                    if (!string.IsNullOrEmpty(html))
+                    {
+                        item.Description = AppGlobal.GetDescription(html);
+                        if (!string.IsNullOrEmpty(item.Description))
+                        {
+                            item.Description = AppGlobal.ConvertStringToUnicode(item.Description);
+                            await _productRepository.AsyncUpdateProductCompact001SingleItemWithIDAndDescription(item);
+                        }
+                    }
+                }
+            }
+            //List<ProductCompact001> list = _productRepository.GetProductCompact001BySourceWithIDAndTitleToList(AppGlobal.SourceAuto);
+            //foreach (ProductCompact001 item in list)
+            //{
+            //    item.Title = AppGlobal.Decode(item.Title);
+            //    await _productRepository.AsyncUpdateProductCompact001SingleItem(item);
+            //}
+            return "";
+        }
+        public async Task<string> AsyncDescriptionBySourceAndRowBeginAndRowEnd(int rowBegin, int rowEnd)
+        {
+            List<ProductCompact001> list = _productRepository.GetProductCompact001BySourceAndRowBeginAndRowEndWithIDAndDescriptionToList(AppGlobal.SourceAuto, rowBegin, rowEnd);
+            foreach (ProductCompact001 item in list)
+            {
+                string description = "";
+                if ((item.URLCode.Contains(@"zing.vn") == false) && (item.URLCode.Contains(@"zingnews.vn") == false))
+                {
+                    string html = "";
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(item.URLCode);
+                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        Stream receiveStream = response.GetResponseStream();
+                        StreamReader readStream = null;
+                        readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                        html = readStream.ReadToEnd();
+                    }
+                    if (!string.IsNullOrEmpty(html))
+                    {
+                        description = AppGlobal.GetDescription(html);
+                    }
+                }
+                if (!string.IsNullOrEmpty(description))
+                {
+                    item.Description = AppGlobal.Decode(description);
+                    await _productRepository.AsyncUpdateProductCompact001SingleItemWithIDAndDescription(item);
+                }
+            }
+            return "";
+        }
         public void CreateProductScanWebsiteNoFilterProduct(Config config)
         {
             if (config != null)
@@ -1011,15 +1109,7 @@ namespace Commsights.MVC.Controllers
                                     if (response.StatusCode == HttpStatusCode.OK)
                                     {
                                         Stream receiveStream = response.GetResponseStream();
-                                        StreamReader readStream = null;
-                                        if (response.CharacterSet == null)
-                                        {
-                                            readStream = new StreamReader(receiveStream, Encoding.UTF8);
-                                        }
-                                        else
-                                        {
-                                            readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
-                                        }
+                                        StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8);
                                         string html001 = readStream.ReadToEnd();
                                         string htmlspan001 = html001;
                                         htmlspan001 = AppGlobal.HTMLReplaceAndSplit(htmlspan001);
@@ -1085,11 +1175,11 @@ namespace Commsights.MVC.Controllers
                 if (config != null)
                 {
                     List<LinkItem> list = new List<LinkItem>();
-                    //LinkItem link = new LinkItem();
-                    //link.Href = "https://vnexpress.net/khoi-to-vu-an-tuong-do-lam-chet-nu-sinh-lop-6-4200013.html";
-                    //link.Text = "Đất quanh sân bay Long Thành sang nhượng giấy viết tay sẽ không được bồi thường";
-                    //list.Add(link);
                     AppGlobal.LinkFinder001(config.URLFull, config.URLFull, true, list);
+                    //LinkItem item = new LinkItem();
+                    //item.Href = "https://thanhnien.vn/thoi-su/sai-pham-o-saigon-coop-kiem-diem-nhieu-ca-nhan-to-chuc-1314984.html";
+                    //item.Text = "Sai phạm ở Saigon Co.op: Kiểm điểm nhiều cá nhân, tổ chức";
+                    //list.Add(item);
                     foreach (LinkItem linkItem in list)
                     {
                         try
@@ -1101,14 +1191,6 @@ namespace Commsights.MVC.Controllers
                                 Stream receiveStream = response.GetResponseStream();
                                 StreamReader readStream = null;
                                 readStream = new StreamReader(receiveStream, Encoding.UTF8);
-                                //if (response.CharacterSet == null)
-                                //{
-                                //    readStream = new StreamReader(receiveStream, Encoding.UTF8);
-                                //}
-                                //else
-                                //{
-                                //    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
-                                //}
                                 string html = readStream.ReadToEnd();
                                 html = html.Replace(@"~", @"");
                                 html = AppGlobal.HTMLReplaceAndSplit(html);
@@ -1165,29 +1247,8 @@ namespace Commsights.MVC.Controllers
                                     title = title.Split('|')[0];
                                 }
                                 title = title.Trim();
-                                title = title.Replace(@"&#32;", @" ");
-                                title = title.Replace(@"&quot;", @"""");
-                                title = title.Replace(@"&#249;", @"ù");
-                                title = title.Replace(@"&#224;", @"à");
-                                title = title.Replace(@"&#225;", @"á");                                
-                                title = title.Replace(@"&#7899;", @"ớ");
-                                title = title.Replace(@"&#7873;", @"ề");
-                                title = title.Replace(@"&#7879;", @"ệ");
-                                title = title.Replace(@"&ocirc;", @"ô");
-                                title = title.Replace(@"&atilde;", @"ã");
-                                title = title.Replace(@"&oacute;", @"ó");
-                                title = title.Replace(@"&aacute;", @"á");
-                                title = title.Replace(@"&agrave;", @"à");
-                                title = title.Replace(@"&igrave;", @"ì");
-                                title = title.Replace(@"&#226;", @"â");
-                                title = title.Replace(@"&#236;", @"ì");
-                                title = title.Replace(@"&uacute;", @"ú");
-                                title = title.Replace(@"&oacute;", @"ầ");
-                                title = title.Replace(@"&uacute;", @"ú");
-                                title = title.Replace(@"&uacute;", @"ú");
-                                title = title.Replace(@"&uacute;", @"ú");
-                                title = title.Replace(@"&ecirc;", @"ê");
                                 Product product = new Product();
+                                product.Description = "";
                                 product.Title = title;
                                 product.ParentID = config.ID;
                                 product.CategoryID = config.ID;
@@ -1196,7 +1257,6 @@ namespace Commsights.MVC.Controllers
                                 {
                                     product.Title = linkItem.Text;
                                 }
-                                product.MetaTitle = AppGlobal.SetName(product.Title);
                                 product.URLCode = linkItem.Href;
                                 product.DatePublish = DateTime.Now;
                                 product.Initialization(InitType.Insert, RequestUserID);
@@ -1204,6 +1264,15 @@ namespace Commsights.MVC.Controllers
                                 AppGlobal.FinderContentAndDatePublish001(html, product);
                                 if ((product.DatePublish.Year > 2019) && (product.Active == true))
                                 {
+                                    if (!string.IsNullOrEmpty(product.Title))
+                                    {
+                                        product.Title = AppGlobal.Decode(product.Title);
+                                        product.MetaTitle = AppGlobal.SetName(product.Title);
+                                    }
+                                    if (!string.IsNullOrEmpty(product.Description))
+                                    {
+                                        product.Description = AppGlobal.Decode(product.Description);
+                                    }
                                     await _productRepository.AsyncInsertSingleItem(product);
                                 }
                                 response.Close();

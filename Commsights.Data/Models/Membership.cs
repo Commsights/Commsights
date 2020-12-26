@@ -21,7 +21,7 @@ namespace Commsights.Data.Models
         public decimal? Points { get; set; }
         public string Account { get; set; }
         public string Password { get; set; }
-        public string Guicode { get; set; }
+        public string GUICode { get; set; }
         public string TaxCode { get; set; }
         public string ShortName { get; set; }
         public string EnglishName { get; set; }
@@ -29,18 +29,18 @@ namespace Commsights.Data.Models
         public string Website { get; set; }
         public void InitDefaultValue()
         {
-            if (string.IsNullOrEmpty(this.Guicode))
+            if (string.IsNullOrEmpty(this.GUICode))
             {
-                this.Guicode = AppGlobal.InitGuiCode;
+                this.GUICode = AppGlobal.InitGuiCode;
             }
         }
         public void EncryptPassword()
         {
-            this.Password = SecurityHelper.Encrypt(this.Guicode, this.Password);
+            this.Password = SecurityHelper.Encrypt(this.GUICode, this.Password);
         }
         public void DecryptPassword()
         {
-            this.Password = SecurityHelper.Decrypt(this.Guicode, this.Password);
+            this.Password = SecurityHelper.Decrypt(this.GUICode, this.Password);
         }
     }
 }

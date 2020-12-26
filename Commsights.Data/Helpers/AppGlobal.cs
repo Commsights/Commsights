@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Xml;
 
 namespace Commsights.Data.Helpers
@@ -35,7 +36,7 @@ namespace Commsights.Data.Helpers
                 list.Add(model);
             }
             return list;
-        }
+        }      
     }
     public class MonthFinance
     {
@@ -55,6 +56,90 @@ namespace Commsights.Data.Helpers
             return list;
         }
     }
+    public class HourFinance
+    {
+        public int Display { get; set; }
+        public HourFinance()
+        {
+        }
+        public static List<HourFinance> GetAllToList()
+        {
+            List<HourFinance> list = new List<HourFinance>();
+            for (int i = 1; i <= 24; i++)
+            {
+                HourFinance model = new HourFinance();
+                model.Display = i;
+                list.Add(model);
+            }
+            return list;
+        }
+    }
+    public class SOE
+    {
+        public int Display { get; set; }
+        public SOE()
+        {
+        }
+        public static List<SOE> GetAllToList()
+        {
+            List<SOE> list = new List<SOE>();
+            for (int i = 0; i <= 100; i = i + 5)
+            {
+                SOE model = new SOE();
+                model.Display = i;
+                list.Add(model);
+            }
+            return list;
+        }
+    }
+    public class CorpCopy
+    {
+        public string Display { get; set; }
+        public CorpCopy()
+        {
+        }
+        public static List<CorpCopy> GetAllToList()
+        {
+            List<CorpCopy> list = new List<CorpCopy>();
+            CorpCopy model = new CorpCopy();
+            model.Display = "";
+            list.Add(model);
+            model = new CorpCopy();
+            model.Display = "Origin";
+            list.Add(model);
+            return list;
+        }
+    }
+    public class CodeDataValue
+    {
+        public int ID { get; set; }
+        public string Display { get; set; }
+        public CodeDataValue()
+        {
+        }
+        public static List<CodeDataValue> GetAllToList()
+        {
+            List<CodeDataValue> list = new List<CodeDataValue>();
+            CodeDataValue model = new CodeDataValue();
+            model.ID = 0;
+            model.Display = "";
+            list.Add(model);
+            model = new CodeDataValue();
+            model.ID = 1;
+            model.Display = "1";
+            list.Add(model);
+            return list;
+        }
+        public static List<CodeDataValue> GetItem0ToList()
+        {
+            List<CodeDataValue> list = new List<CodeDataValue>();
+            CodeDataValue model = new CodeDataValue();
+            model.ID = 0;
+            model.Display = "";
+            list.Add(model);
+            return list;
+        }
+    }
     public class AppGlobal
     {
         #region Init
@@ -64,7 +149,7 @@ namespace Commsights.Data.Helpers
 
         public static string DateTimeCode => DateTime.Now.ToString("yyyyMMddHHmmss");
         public static string HourCode => DateTime.Now.ToString("yyyyMMddHH");
-
+        public static string DateTimeCodeYearMonthDay => DateTime.Now.ToString("yyyyMMdd");
         public static string InitGuiCode => Guid.NewGuid().ToString();
         #endregion
 
@@ -147,6 +232,38 @@ namespace Commsights.Data.Helpers
             {
                 var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                 return int.Parse(builder.Build().GetSection("AppSettings").GetSection("DateEnd").Value);
+            }
+        }
+        public static string IndustryKeyWord
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("IndustryKeyWord").Value;
+            }
+        }
+        public static string KeyMessage
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("KeyMessage").Value;
+            }
+        }
+        public static string CampaignKeyMessage
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("CampaignKeyMessage").Value;
+            }
+        }
+        public static string Campaign
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Campaign").Value;
             }
         }
         public static string CorpCopy
@@ -1031,6 +1148,22 @@ namespace Commsights.Data.Helpers
             {
                 string result = AppGlobal.Images + "/" + AppGlobal.Customer;
                 return result;
+            }
+        }
+        public static string URLImagesMembership
+        {
+            get
+            {
+                string result = AppGlobal.Images + "/" + AppGlobal.Membership;
+                return result;
+            }
+        }
+        public static string Membership
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Membership").Value;
             }
         }
         public static string Customer
@@ -2118,6 +2251,7 @@ namespace Commsights.Data.Helpers
         public static List<string> SetContentByDauChamPhay(string content)
         {
             List<string> list = new List<string>();
+            content = content.Replace(@",", @";");            
             foreach (string item in content.Split(';'))
             {
                 if (!string.IsNullOrEmpty(item))
@@ -2427,9 +2561,6 @@ namespace Commsights.Data.Helpers
         {
             try
             {
-                if (repeat == false)
-                {
-                }
                 int index = -1;
                 Uri root = new Uri(urlRoot);
                 Uri myUri = new Uri(urlRoot);
@@ -2530,7 +2661,6 @@ namespace Commsights.Data.Helpers
                                                 }
                                                 if (!string.IsNullOrEmpty(i.Text))
                                                 {
-                                                    i.Text = DecodeFromUTF8(i.Text);
                                                     if (i.Text.Split(' ').Length > 4)
                                                     {
                                                         checkHref = false;
@@ -2596,13 +2726,8 @@ namespace Commsights.Data.Helpers
                 }
                 if (repeat == true)
                 {
-                    index = -1;
                     foreach (LinkItem item in listCategory)
                     {
-                        index = index + 1;
-                        if (index > 20)
-                        {
-                        }
                         LinkFinder001(item.Href, urlRoot, false, list);
                     }
                 }
@@ -3358,7 +3483,17 @@ namespace Commsights.Data.Helpers
             int second = DateTime.Now.Second;
             string htmlspan = html;
             htmlspan = htmlspan.Replace(@"~", @"");
-            htmlspan = htmlspan.Replace(@"</header>", @"~");
+            htmlspan = htmlspan.Replace(@"<body", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            htmlspan = htmlspan.Replace(@"<main", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            htmlspan = htmlspan.Replace(@"<header", @"~");
             if (htmlspan.Split('~').Length > 1)
             {
                 htmlspan = htmlspan.Split('~')[1];
@@ -3447,7 +3582,17 @@ namespace Commsights.Data.Helpers
             int second = DateTime.Now.Second;
             string htmlspan = html;
             htmlspan = htmlspan.Replace(@"~", @"");
-            htmlspan = htmlspan.Replace(@"</header>", @"~");
+            htmlspan = htmlspan.Replace(@"<body", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            htmlspan = htmlspan.Replace(@"<main", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            htmlspan = htmlspan.Replace(@"<header", @"~");
             if (htmlspan.Split('~').Length > 1)
             {
                 htmlspan = htmlspan.Split('~')[1];
@@ -3514,6 +3659,75 @@ namespace Commsights.Data.Helpers
                     }
                 }
             }
+        }
+        public static void FinderContent002(string html, string tagName, Product product)
+        {
+            string htmlspan = html;
+            htmlspan = HTMLReplaceAndSplit(htmlspan);
+            htmlspan = htmlspan.Replace(@"~", @"");
+            htmlspan = htmlspan.Replace(@"<body", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            htmlspan = htmlspan.Replace(@"<main", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            MatchCollection m1 = Regex.Matches(htmlspan, @"(<" + tagName + ".*?>.*?</" + tagName + ">)", RegexOptions.Singleline);
+            for (int i = 0; i < m1.Count; i++)
+            {
+                string value = m1[i].Groups[1].Value;
+                if ((value.Contains(@"<img") == true) || (value.Contains(@"</a>") == true) || (value.Contains(@"</script>") == true) || (value.Contains(@"</noscript>") == true) || (value.Contains(@"</style>") == true))
+                {
+
+                }
+                else
+                {
+                    string t1 = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                    if (!string.IsNullOrEmpty(t1))
+                    {
+                        product.Description = product.Description + " " + t1;
+                        product.ContentMain = product.ContentMain + "<br/>" + t1;
+                    }
+                }
+            }
+        }
+        public static string FinderContent003(string html, string tagName)
+        {
+            string description = "";
+            string htmlspan = html;
+            htmlspan = HTMLReplaceAndSplit(htmlspan);
+            htmlspan = htmlspan.Replace(@"~", @"");
+            htmlspan = htmlspan.Replace(@"<body", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            htmlspan = htmlspan.Replace(@"<main", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            MatchCollection m1 = Regex.Matches(htmlspan, @"(<" + tagName + ".*?>.*?</" + tagName + ">)", RegexOptions.Singleline);
+            for (int i = 0; i < m1.Count; i++)
+            {
+                string value = m1[i].Groups[1].Value;
+                if ((value.Contains(@"<img") == true) || (value.Contains(@"</a>") == true) || (value.Contains(@"</script>") == true) || (value.Contains(@"</noscript>") == true))
+                {
+
+                }
+                else
+                {
+                    string t1 = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
+                    if (!string.IsNullOrEmpty(t1))
+                    {
+                        description = description + " " + t1;
+                    }
+                }
+            }
+            return description;
         }
         public static void FinderContentAndDatePublish001(string html, Product product)
         {
@@ -3583,139 +3797,154 @@ namespace Commsights.Data.Helpers
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "dd", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "dd", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "dd", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "dd", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "time", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "time", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "time", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "time", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "span", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "span", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "span", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "span", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "div", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "div", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "div", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "div", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "h1", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "h1", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "h1", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h1", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "h2", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "h2", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "h2", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h2", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "h3", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "h3", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "h3", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h3", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "h4", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "h4", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "h4", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h4", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "h5", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "h5", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "h5", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h5", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "h6", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "h6", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "h6", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h6", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "li", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "li", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "li", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "li", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "em", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "em", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "em", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "em", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "i", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "i", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "i", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "i", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish001(html, "p", product);
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "p", product);
                 }
                 if (product.Active == false)
                 {
-                    DatePublish002(html, "p", product);
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "p", product);
                 }
-                htmlspan = html;
-                Uri myUri = new Uri(product.URLCode);
-                htmlspan = HTMLReplaceAndSplit(htmlspan);
-                htmlspan = htmlspan.Replace(@"~", @"");
-                htmlspan = htmlspan.Replace(@"</header>", @"~");
-                if (htmlspan.Split('~').Length > 1)
+                if (string.IsNullOrEmpty(product.Description) || product.Description.Length < 1000)
                 {
-                    htmlspan = htmlspan.Split('~')[1];
+                    htmlspan = html;
+                    FinderContent002(htmlspan, "p", product);
                 }
-                m1 = Regex.Matches(htmlspan, @"(<p.*?>.*?</p>)", RegexOptions.Singleline);
-                for (int i = 0; i < m1.Count; i++)
+                if (string.IsNullOrEmpty(product.Description) || product.Description.Length < 500)
                 {
-                    string value = m1[i].Groups[1].Value;
-                    if ((value.Contains(@"<img") == true) || (value.Contains(@"</a>") == true) || (value.Contains(@"<a") == true) || (value.Contains(@"href") == true) || (value.Contains(@"function()") == true) || (value.Contains(@"$(") == true))
-                    {
-
-                    }
-                    else
-                    {
-                        string t1 = Regex.Replace(value, @"\s*<.*?>\s*", "", RegexOptions.Singleline);
-                        product.Description = product.Description + " " + t1;
-                        product.ContentMain = product.ContentMain + "<br/>" + t1;
-                    }
+                    htmlspan = html;
+                    product.Description = "";
+                    FinderContent002(htmlspan, "div", product);
                 }
             }
         }
@@ -3747,42 +3976,297 @@ namespace Commsights.Data.Helpers
             const int MaxAnsiCode = 255;
             return input.Any(c => c > MaxAnsiCode);
         }
+        public static string Decode(string input)
+        {
+            string html = System.Text.RegularExpressions.Regex.Replace(input, @"\\u[0-9A-F]{4}", match => ((char)int.Parse(match.Value.Substring(2), System.Globalization.NumberStyles.HexNumber)).ToString(), RegexOptions.IgnoreCase);
+            string result = System.Net.WebUtility.HtmlDecode(html);
+            return result;
+        }
+        private static char[] tcvnchars = {
+        'µ', '¸', '¶', '·', '¹',
+        '¨', '»', '¾', '¼', '½', 'Æ',
+        '©', 'Ç', 'Ê', 'È', 'É', 'Ë',
+        '®', 'Ì', 'Ð', 'Î', 'Ï', 'Ñ',
+        'ª', 'Ò', 'Õ', 'Ó', 'Ô', 'Ö',
+        '×', 'Ý', 'Ø', 'Ü', 'Þ',
+        'ß', 'ã', 'á', 'â', 'ä',
+        '«', 'å', 'è', 'æ', 'ç', 'é',
+        '¬', 'ê', 'í', 'ë', 'ì', 'î',
+        'ï', 'ó', 'ñ', 'ò', 'ô',
+        '­', 'õ', 'ø', 'ö', '÷', 'ù',
+        'ú', 'ý', 'û', 'ü', 'þ',
+        '¡', '¢', '§', '£', '¤', '¥', '¦'
+        };
+        private static char[] unichars = {
+        'à', 'á', 'ả', 'ã', 'ạ',
+        'ă', 'ằ', 'ắ', 'ẳ', 'ẵ', 'ặ',
+        'â', 'ầ', 'ấ', 'ẩ', 'ẫ', 'ậ',
+        'đ', 'è', 'é', 'ẻ', 'ẽ', 'ẹ',
+        'ê', 'ề', 'ế', 'ể', 'ễ', 'ệ',
+        'ì', 'í', 'ỉ', 'ĩ', 'ị',
+        'ò', 'ó', 'ỏ', 'õ', 'ọ',
+        'ô', 'ồ', 'ố', 'ổ', 'ỗ', 'ộ',
+        'ơ', 'ờ', 'ớ', 'ở', 'ỡ', 'ợ',
+        'ù', 'ú', 'ủ', 'ũ', 'ụ',
+        'ư', 'ừ', 'ứ', 'ử', 'ữ', 'ự',
+        'ỳ', 'ý', 'ỷ', 'ỹ', 'ỵ',
+        'Ă', 'Â', 'Đ', 'Ê', 'Ô', 'Ơ', 'Ư'
+         };
+        public static string TCVN3ToUnicode(string value)
+        {
+            char[] convertTable = new char[256];
+            for (int i = 0; i < 256; i++)
+            {
+                convertTable[i] = (char)i;
+            }
+            for (int i = 0; i < tcvnchars.Length; i++)
+            {
+                convertTable[tcvnchars[i]] = unichars[i];
+            }
+            char[] chars = value.ToCharArray();
+            for (int i = 0; i < chars.Length; i++)
+            {
+                if (chars[i] < (char)256)
+                {
+                    chars[i] = convertTable[chars[i]];
+                }
+            }
+            return new string(chars);
+        }
+        public static string ConvertASCIIToUnicode(string input)
+        {
+            string result = Encoding.UTF8.GetString(Encoding.ASCII.GetBytes(input));
+            return result;
+        }
+        public static string ConvertWind1252ToUnicode(string input)
+        {
+            string result = Encoding.UTF8.GetString(Encoding.GetEncoding(1252).GetBytes(input));
+            return result;
+        }
+        public static string ConvertLatin1ToUnicode(string input)
+        {
+            string result = Encoding.UTF8.GetString(Encoding.GetEncoding("iso-8859-1").GetBytes(input));
+            return result;
+        }
+        public static string GetDescription(string html)
+        {
+            string result = "";
+            string htmlspan = html;
+            result = FinderContent003(htmlspan, "p");
+            if (string.IsNullOrEmpty(result) || (result.Length < 500))
+            {
+                htmlspan = html;
+                result = FinderContent003(htmlspan, "div");
+            }
+            result = result.Replace(@"ä", @"a");
+            result = result.Replace(@"�", @"á");
+            return result;
+        }
+        public static string ConvertStringToUnicode(string input)
+        {
+            string result = "";
+            if (input.Contains(@"&#") == true)
+            {
+                result = Decode(input);
+            }
+            else
+            {
+                Encoding encoding = Encoding.GetEncoding("us-ascii", new EncoderReplacementFallback("(unknown)"), new DecoderReplacementFallback("(error)"));
+                byte[] encodedBytes = new byte[encoding.GetByteCount(input)];
+                int numberOfEncodedBytes = encoding.GetBytes(input, 0, input.Length, encodedBytes, 0);
+                string decodedString = encoding.GetString(encodedBytes);
+                if (decodedString.Contains(@"unknown") == false)
+                {
+                    result = ConvertASCIIToUnicode(input);
+                }
+                else
+                {
+                    encoding = Encoding.GetEncoding("iso-8859-1", new EncoderReplacementFallback("(unknown)"), new DecoderReplacementFallback("(error)"));
+                    encodedBytes = new byte[encoding.GetByteCount(input)];
+                    numberOfEncodedBytes = encoding.GetBytes(input, 0, input.Length, encodedBytes, 0);
+                    decodedString = encoding.GetString(encodedBytes);
+                    if (decodedString.Contains(@"unknown") == false)
+                    {
+                        result = ConvertLatin1ToUnicode(input);
+                    }
+                    else
+                    {
+                        encoding = Encoding.GetEncoding(1252, new EncoderReplacementFallback("(unknown)"), new DecoderReplacementFallback("(error)"));
+                        encodedBytes = new byte[encoding.GetByteCount(input)];
+                        numberOfEncodedBytes = encoding.GetBytes(input, 0, input.Length, encodedBytes, 0);
+                        decodedString = encoding.GetString(encodedBytes);
+                        if (decodedString.Contains(@"unknown") == false)
+                        {
+                            result = ConvertWind1252ToUnicode(input);
+                        }
+                        else
+                        {
+                            result = Decode(input);
+                        }
+                    }
+                }
+            }
+            result = TCVN3ToUnicode(result);
+            return result;
+        }
         public static string HTMLReplaceAndSplit(string htmlspan001)
         {
-            htmlspan001 = htmlspan001.Replace(@"<footer>", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"class=""footer", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"class='footer", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"footer"">", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"footer'>", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"class=""comments", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"class='comments", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"comments"">", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"comments'>", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"class=""fb-comments", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"class='fb-comments", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"fb-comments"">", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"fb-comments'>", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"related-list"">", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"related-list'>", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"related"">", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
-            htmlspan001 = htmlspan001.Replace(@"related'>", @"~");
-            htmlspan001 = htmlspan001.Split('~')[0];
+            bool check = false;
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"Tin khác") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"Tin khác", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"Tin liên quan") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"Tin liên quan", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"Bài viết liên quan") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"Bài viết liên quan", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"Đọc thêm") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"Đọc thêm", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"Cùng chuyên mục") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"Cùng chuyên mục", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"tag"">") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"tag"">", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"tag'>") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"tag'>", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"class=""tag") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"class=""tag", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"class='tag") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"class='tag", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"-tags") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"-tags", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"</main>") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"</main>", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"related-post") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"related-post", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"<footer>") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"<footer>", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"class=""footer") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"class=""footer", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"class='footer") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"class='footer", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"footer"">") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"footer"">", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                if (htmlspan001.Contains(@"footer'>") == true)
+                {
+                    htmlspan001 = htmlspan001.Replace(@"footer'>", @"~");
+                    htmlspan001 = htmlspan001.Split('~')[0];
+                    check = true;
+                }
+            }
+
             return htmlspan001;
         }
         public void GetAuthorFromURL(Product product)
@@ -3934,12 +4418,6 @@ namespace Commsights.Data.Helpers
                     product.URLCode = url;
                     break;
             }
-        }
-        private static string DecodeFromUTF8(string uTF8String)
-        {
-            byte[] bytes = Encoding.Default.GetBytes(uTF8String);
-            uTF8String = Encoding.UTF8.GetString(bytes);
-            return uTF8String;
         }
         #endregion
     }

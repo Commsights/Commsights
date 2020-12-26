@@ -29,6 +29,14 @@ namespace Commsights.MVC.Controllers
         }
         private void Initialization(Config model)
         {
+            if (string.IsNullOrEmpty(model.Controller))
+            {
+                model.Controller = "Config";
+            }
+            if (string.IsNullOrEmpty(model.Title))
+            {
+                model.Title = model.CodeName.Trim();
+            }
             if (string.IsNullOrEmpty(model.Note))
             {
                 model.Note = "";
@@ -51,11 +59,15 @@ namespace Commsights.MVC.Controllers
             }
             if (string.IsNullOrEmpty(model.Icon))
             {
-                model.Icon = "fa fa-circle-o";
+                model.Icon = "fa-circle";
             }
             if (string.IsNullOrEmpty(model.Action))
             {
                 model.Action = "Index";
+            }
+            if (model.ParentID == null)
+            {
+                model.ParentID = 0;
             }
         }
         private void Initialization(ConfigDataTransfer model)
@@ -114,6 +126,10 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult WebsiteSite()
+        {
+            return View();
+        }
         public IActionResult WebsiteCategory()
         {
             return View();
@@ -134,7 +150,31 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult CategoryMainByIndustryID()
+        {
+            return View();
+        }
         public IActionResult CategoryMain()
+        {
+            return View();
+        }
+        public IActionResult CategorySub()
+        {
+            return View();
+        }
+        public IActionResult CampaignName()
+        {
+            return View();
+        }
+        public IActionResult CampaignKeyMessage()
+        {
+            return View();
+        }
+        public IActionResult IndustryKeyWord()
+        {
+            return View();
+        }
+        public IActionResult KeyMessage()
         {
             return View();
         }
@@ -238,12 +278,22 @@ namespace Commsights.MVC.Controllers
             var data = _configResposistory.GetMediaByGroupNameToList(AppGlobal.CRM);
             return Json(data.ToDataSourceResult(request));
         }
+
         public ActionResult GetByParentIDToList([DataSourceRequest] DataSourceRequest request, int parentID)
         {
             List<Config> data = new List<Config>();
             if (parentID > 0)
             {
                 data = _configResposistory.GetByParentIDToList(parentID);
+            }
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetSegmentByParentID001ToList([DataSourceRequest] DataSourceRequest request, int parentID)
+        {
+            List<Config> data = new List<Config>();
+            if (parentID > 0)
+            {
+                data = _configResposistory.GetByParentIDToList(parentID).OrderBy(item => item.CodeName).ToList();
             }
             return Json(data.ToDataSourceResult(request));
         }
@@ -328,7 +378,154 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetCategoryMainToList([DataSourceRequest] DataSourceRequest request)
         {
-            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategoryMain).Where(item => item.ParentID == 0);
+            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategoryMain).Where(item => item.IndustryID == 0 || item.IndustryID == null).OrderByDescending(item => item.Active);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCodeDataCategoryMainActiveToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategoryMain).Where(item => item.Active == true).OrderBy(item => item.SortOrder);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetSegmentByParentIDToList([DataSourceRequest] DataSourceRequest request)
+        {
+            List<Config> data = new List<Config>();
+            int parentID = 0;
+            try
+            {
+                parentID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
+                if (parentID > 0)
+                {
+                    data = _configResposistory.GetByParentIDToList(parentID);
+                }
+            }
+            catch
+            {
+            }
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCampaignKeyMessageByCampaignNameAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, string campaignName)
+        {
+            int industryID = 0;
+            try
+            {
+                industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
+            }
+            catch
+            {
+            }
+            Config parent = new Config();
+            if (!string.IsNullOrEmpty(campaignName))
+            {
+                parent = _configResposistory.GetByGroupNameAndCodeAndCodeName(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Campaign, campaignName);
+            }
+            var data = _configResposistory.GetByGroupNameAndCodeAndParentIDAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CampaignKeyMessage, parent.ID, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCampaignKeyMessageByParentIDAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, int parentID, int industryID)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeAndParentIDAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CampaignKeyMessage, parentID, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCategorySubByIndustryIDToList([DataSourceRequest] DataSourceRequest request)
+        {            
+            int industryID = 0;
+            try
+            {
+                industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
+            }
+            catch
+            {
+            }            
+            var data = _configResposistory.GetSQLCategorySubByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategorySub, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCategorySubByCategoryMainAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, string categoryMain)
+        {
+            int parentID = 0;
+            int industryID = 0;
+            try
+            {
+                industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
+            }
+            catch
+            {
+            }
+            Config categoryMain001 = _configResposistory.GetByGroupNameAndCodeAndIndustryIDAndCodeName(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategoryMain, industryID, categoryMain);
+            if (categoryMain001 != null)
+            {
+                parentID = categoryMain001.ID;
+            }
+            var data = _configResposistory.GetSQLByGroupNameAndCodeAndIndustryIDAndParentIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategorySub, industryID, parentID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCategorySubByParentIDAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, int parentID, int industryID)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeAndParentIDAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategorySub, parentID, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+
+        public ActionResult GetCampaignNameByIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Campaign, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetKeyMessageByIndustryID001ToList([DataSourceRequest] DataSourceRequest request)
+        {
+            int industryID = 0;
+            try
+            {
+                industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
+            }
+            catch
+            {
+            }
+            var data = _configResposistory.GetSQLByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.KeyMessage, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCampaignNameByIndustryID001ToList([DataSourceRequest] DataSourceRequest request)
+        {
+            int industryID = 0;
+            try
+            {
+                industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
+            }
+            catch
+            {
+            }
+            var data = _configResposistory.GetSQLByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Campaign, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCategoryMainByIndustryID001ToList([DataSourceRequest] DataSourceRequest request)
+        {
+            int industryID = 0;
+            try
+            {
+                industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
+            }
+            catch
+            {
+            }
+            var data = _configResposistory.GetSQLByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategoryMain, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCategoryMainByIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategoryMain, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetIndustryKeyWordByIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.IndustryKeyWord, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetKeyMessageByIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.KeyMessage, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetCategorySubToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetSQLByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategorySub);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetMediaTierToList([DataSourceRequest] DataSourceRequest request)
@@ -404,6 +601,11 @@ namespace Commsights.MVC.Controllers
         public List<Config> GetWebsiteByGroupNameAndCodeAndActiveToList()
         {
             return _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
+        }
+        public ActionResult GetSQLWebsiteByGroupNameAndCodeAndActiveToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetSQLWebsiteByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
+            return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetWebsiteByGroupNameAndCodeAndActiveToList001([DataSourceRequest] DataSourceRequest request)
         {
@@ -811,6 +1013,128 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
+        public IActionResult CreateCategoryMainByIndustryID(Config model, int industryID)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.CategoryMain;
+            model.IndustryID = industryID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _configResposistory.Create(model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateIndustryKeyWord(Config model, int industryID)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.IndustryKeyWord;
+            model.IndustryID = industryID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _configResposistory.Create(model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateKeyMessage(Config model, int industryID)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.KeyMessage;
+            model.IndustryID = industryID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _configResposistory.Create(model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateCampaignName(Config model, int industryID)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.Campaign;
+            model.IndustryID = industryID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _configResposistory.Create(model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateCampaignKeyMessage(Config model, int parentID, int industryID)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.CampaignKeyMessage;
+            model.ParentID = parentID;
+            model.IndustryID = industryID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _configResposistory.Create(model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateCategorySub(Config model, int parentID, int industryID)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.CategorySub;
+            model.ParentID = parentID;
+            model.IndustryID = industryID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _configResposistory.Create(model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
         public IActionResult CreateDailyReportSection(Config model)
         {
             Initialization(model);
@@ -1000,11 +1324,6 @@ namespace Commsights.MVC.Controllers
             int result = 0;
             if (_configResposistory.IsValidByGroupNameAndCodeAndURL(model.GroupName, model.Code, model.URLFull) == true)
             {
-                //Config parent = _configResposistory.GetByID(parentID);
-                //if (parent != null)
-                //{
-                //    model.IsMenuLeft = parent.IsMenuLeft;
-                //}
                 model.ID = 0;
                 result = _configResposistory.Create(model);
             }
@@ -1068,6 +1387,21 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
             int result = _configResposistory.Update(model.ID, model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
+        public IActionResult UpdateSingleItem001(Config model)
+        {
+            string note = AppGlobal.InitString;
+            _configResposistory.UpdateSingleItem001(model);
+            int result = 1;
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
@@ -1185,6 +1519,237 @@ namespace Commsights.MVC.Controllers
             List<Config> list = _configResposistory.GetByParentIDAndGroupNameAndCodeToList(parentID, AppGlobal.CRM, AppGlobal.Website);
             _configResposistory.DeleteRange(list);
             return Json(note);
+        }
+        public void InitializationCategoryMainAndSubByIndustryID(int industryID)
+        {
+            Config model = new Config();
+            model.CodeName = "Industry News";
+            model.Note = "Tin ngành";
+            model.SortOrder = 1;
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.CategoryMain;
+            model.IndustryID = industryID;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = _configResposistory.Create(model);
+
+            model = new Config();
+            model.CodeName = "Corporate";
+            model.Note = "Tin công ty";
+            model.SortOrder = 2;
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.CategoryMain;
+            model.IndustryID = industryID;
+            model.Initialization(InitType.Insert, RequestUserID);
+            result = _configResposistory.Create(model);
+            if (result > 0)
+            {
+                Config modelSub = new Config();
+                modelSub.CodeName = "Retail & Distribution News";
+                modelSub.Note = "Tin tức Bán lẻ & Phân phối";
+                modelSub.SortOrder = 1;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "CSR News";
+                modelSub.Note = "Tin cộng đồng";
+                modelSub.SortOrder = 2;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "Financial news";
+                modelSub.Note = "Bản tin tài chính";
+                modelSub.SortOrder = 3;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "HR News";
+                modelSub.Note = "Tin nhân sự";
+                modelSub.SortOrder = 4;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "Investment/M&A News";
+                modelSub.Note = "Tin đầu tư, mua bán, sát nhập";
+                modelSub.SortOrder = 5;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "Brand & Sponsorship";
+                modelSub.Note = "Thương hiệu & Tài trợ";
+                modelSub.SortOrder = 6;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "Lawsuit News";
+                modelSub.Note = "Tin kiện";
+                modelSub.SortOrder = 7;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "Customer Service";
+                modelSub.Note = "Dịch vụ khách hàng";
+                modelSub.SortOrder = 8;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "General News";
+                modelSub.Note = "Tin chung";
+                modelSub.SortOrder = 9;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "Rewarding, Recognization";
+                modelSub.Note = "Khen thưởng, công nhận";
+                modelSub.SortOrder = 10;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "Other";
+                modelSub.Note = "Tin khác";
+                modelSub.SortOrder = 11;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+            }
+
+            model = new Config();
+            model.CodeName = "Product & Service";
+            model.Note = "Sản phẩm - Dịch vụ";
+            model.SortOrder = 3;
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.CategoryMain;
+            model.IndustryID = industryID;
+            model.Initialization(InitType.Insert, RequestUserID);
+            result = _configResposistory.Create(model);
+            if (result > 0)
+            {
+                Config modelSub = new Config();
+                modelSub.CodeName = "Product & Service";
+                modelSub.Note = "Sản phẩm - Dịch vụ";
+                modelSub.SortOrder = 1;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "Launching new product";
+                modelSub.Note = "Ra mắt sản phẩm mới";
+                modelSub.SortOrder = 2;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "Promotion News/Marketing News";
+                modelSub.Note = "Tin khuyến mãi / Tin tiếp thị";
+                modelSub.SortOrder = 3;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "Brand & Sponsorship";
+                modelSub.Note = "Thương hiệu & Tài trợ";
+                modelSub.SortOrder = 4;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+
+                modelSub = new Config();
+                modelSub.CodeName = "General News";
+                modelSub.Note = "Tin chung";
+                modelSub.SortOrder = 5;
+                Initialization(modelSub);
+                modelSub.GroupName = AppGlobal.CRM;
+                modelSub.Code = AppGlobal.CategorySub;
+                modelSub.IndustryID = industryID;
+                modelSub.ParentID = model.ID;
+                modelSub.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(modelSub);
+            }
         }
         public IActionResult SaveWebsiteScanItems(int parentID, string listValue)
         {

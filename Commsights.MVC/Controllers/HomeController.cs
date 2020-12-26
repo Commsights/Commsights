@@ -16,7 +16,8 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            Membership model = new Membership();
+            return View(model);
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Commsights.Data.DataTransferObject;
 using Commsights.Data.Enum;
 using Commsights.Data.Helpers;
 using Commsights.Data.Models;
@@ -12,6 +14,7 @@ using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
@@ -33,10 +36,13 @@ namespace Commsights.MVC.Controllers
             _membershipRepository = membershipRepository;
             _membershipPermissionRepository = membershipPermissionRepository;
             _configResposistory = configResposistory;
-
         }
         private void Initialization(Membership model, int action)
         {
+            if (string.IsNullOrEmpty(model.Account))
+            {
+                model.Account = model.Phone.Trim();
+            }
             if (!string.IsNullOrEmpty(model.ShortName))
             {
                 model.ShortName = model.ShortName.Trim();
@@ -73,6 +79,10 @@ namespace Commsights.MVC.Controllers
             {
                 model.Password = "0";
             }
+            if (string.IsNullOrEmpty(model.GUICode))
+            {
+                model.InitDefaultValue();
+            }
             switch (action)
             {
                 case 0:
@@ -92,6 +102,10 @@ namespace Commsights.MVC.Controllers
                     break;
             }
         }
+        public IActionResult CompanyName()
+        {
+            return View();
+        }
         public IActionResult Index()
         {
             return View();
@@ -107,6 +121,15 @@ namespace Commsights.MVC.Controllers
         public IActionResult Customer()
         {
             return View();
+        }
+        public IActionResult EmployeeInfo()
+        {
+            Membership model = new Membership();
+            if (RequestUserID > 0)
+            {
+                model = _membershipRepository.GetByID(RequestUserID);
+            }
+            return View(model);
         }
         public IActionResult CustomerFiles(int ID)
         {
@@ -198,6 +221,10 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult EmployeeProductPermission()
+        {
+            return View();
+        }
         public ActionResult CustomerCancel()
         {
             return RedirectToAction("Customer");
@@ -214,6 +241,106 @@ namespace Commsights.MVC.Controllers
         {
             return RedirectToAction("CustomerDetail", new { ID = 0 });
         }
+        public string Sidebar()
+        {
+            string result = "";
+            StringBuilder txt = new StringBuilder();
+            string fullName = Request.Cookies["FullName"];
+            string avatarURL = Request.Cookies["AvatarURL"];
+            txt.AppendLine(@"<div class='image'>");
+            txt.AppendLine(@"<img src='" + avatarURL + "' class='img-circle elevation-2' alt='" + fullName + "' title='" + fullName + "'>");
+            txt.AppendLine(@"</div>");
+            txt.AppendLine(@"<div class='info'>");
+            txt.AppendLine(@"<a href='#' class='d-block' title='" + fullName + "'>" + fullName + "</a>");
+            txt.AppendLine(@"</div>");
+            result = txt.ToString();
+            return result;
+        }
+        public string MenuLeft()
+        {
+            string result = "";
+            List<Config> list = _configResposistory.GetMenuSelectByMembershipIDAndCodeAndIsMenuLeftAndIsViewToList(RequestUserID, AppGlobal.Menu, true, true);
+            StringBuilder menu = new StringBuilder();
+            foreach (Config item in list)
+            {
+                if (item.IsMenuLeft == true)
+                {
+                    if (item.ParentID == 0)
+                    {
+                        menu.AppendLine(@"<li class='nav-item has-treeview'>");
+                        menu.AppendLine(@"<a href='#' title='" + item.Title + "' class='nav-link'>");
+                        menu.AppendLine(@"<i class='nav-icon fas " + item.Icon + "'></i>");
+                        menu.AppendLine(@"<p>");
+                        menu.AppendLine(@"" + item.CodeName);
+                        menu.AppendLine(@"<i class='right fas fa-angle-left'></i>");
+                        menu.AppendLine(@"</p>");
+                        menu.AppendLine(@"</a>");
+                        menu.AppendLine(@"<ul class='nav nav-treeview'>");
+                        foreach (Config itemSub in list)
+                        {
+                            if (itemSub.ParentID == item.ID)
+                            {
+                                string url = "/" + itemSub.Controller + "/" + itemSub.Action;
+                                menu.AppendLine(@"<li class='nav-item'>");
+                                menu.AppendLine(@"<a title='" + itemSub.Title + "' href='" + url + "' class='nav-link'>");
+                                menu.AppendLine(@"<i class='far " + itemSub.Icon + " nav-icon'></i>");
+                                menu.AppendLine(@"<p>" + itemSub.CodeName + "</p>");
+                                menu.AppendLine(@"</a>");
+                                menu.AppendLine(@"</li>");
+                            }
+                        }
+                        menu.AppendLine(@"</ul>");
+                        menu.AppendLine(@"</li>");
+                    }
+                }
+            }
+            menu.AppendLine(@"<li class='nav-item'>");
+            menu.AppendLine(@"<a href='/Membership/Logout' title='Sign out' class='nav-link'>");
+            menu.AppendLine(@"<i class='nav-icon fas fa-power-off'></i>");
+            menu.AppendLine(@"<p>");
+            menu.AppendLine(@"Sign out");
+            menu.AppendLine(@"</p>");
+            menu.AppendLine(@"</a>");
+            menu.AppendLine(@"</li>");
+            result = menu.ToString();
+            return result;
+        }
+        public IActionResult Login(Membership model)
+        {
+            string controller = "Home";
+            string action = "Index";
+            Membership membership = _membershipRepository.GetByPhoneAndPassword(model.Phone, model.Password);
+            if (membership != null)
+            {
+                if (membership.ID > 0)
+                {
+                    string fullName = "";
+                    string avatar = "";
+                    if (!string.IsNullOrEmpty(membership.FullName))
+                    {
+                        fullName = membership.FullName;
+                    }
+                    if (!string.IsNullOrEmpty(membership.Avatar))
+                    {
+                        avatar = membership.Avatar;
+                    }
+                    var cookieExpires = new CookieOptions();
+                    cookieExpires.Expires = DateTime.Now.AddMonths(3);
+                    Response.Cookies.Append("UserID", membership.ID.ToString(), cookieExpires);
+                    Response.Cookies.Append("FullName", fullName, cookieExpires);
+                    Response.Cookies.Append("Avatar", avatar, cookieExpires);
+                    string avatarURL = Commsights.Data.Helpers.AppGlobal.Domain + Commsights.Data.Helpers.AppGlobal.URLImagesMembership + "/" + avatar;
+                    if (string.IsNullOrEmpty(avatar))
+                    {
+                        avatarURL = AppGlobal.Domain + "images/logo.png";
+                    }
+                    Response.Cookies.Append("AvatarURL", avatarURL, cookieExpires);
+                    controller = "Membership";
+                    action = "EmployeeInfo";
+                }
+            }
+            return RedirectToAction(action, controller);
+        }
         public IActionResult GetByID(int ID)
         {
             Membership model = _membershipRepository.GetByID(ID);
@@ -223,6 +350,69 @@ namespace Commsights.MVC.Controllers
                 model.Note = "/Membership/CustomerDetail/" + ID;
             }
             return Json(model);
+        }
+        public ActionResult GetByIndustryID002ToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {
+            var data = _membershipRepository.GetByIndustryID001ToList(industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetByIndustryID001ToList([DataSourceRequest] DataSourceRequest request)
+        {
+            int industryID = 0;
+            try
+            {
+                industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
+            }
+            catch
+            {
+
+            }
+            var data = _membershipRepository.GetByIndustryID001ToList(industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetByIndustryID003ByActiveToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {
+            var data = _membershipRepository.GetByIndustryID003ByActiveToList(industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetByIndustryID004ByActiveToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {
+            var data = _membershipRepository.GetByIndustryID001ByActiveToList(industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetByIndustryID001ByActiveToList([DataSourceRequest] DataSourceRequest request)
+        {
+            int industryID = 0;
+            try
+            {
+                industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
+            }
+            catch
+            {
+
+            }
+            var data = _membershipRepository.GetByIndustryID001ByActiveToList(industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetAllEmployeeProductPermissionToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _membershipRepository.GetAllEmployeeProductPermissionToList();
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetByIndustryIDByActiveToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {
+            var data = _membershipRepository.GetByIndustryID002ByActiveToList(industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetAllCompany001ToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _membershipRepository.GetAllCompany001ToList();
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetAllCompany001ByActiveToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _membershipRepository.GetAllCompany001ByActiveToList();
+            return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetAllToList([DataSourceRequest] DataSourceRequest request)
         {
@@ -251,7 +441,7 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetEmployeeToList([DataSourceRequest] DataSourceRequest request)
         {
-            var data = _membershipRepository.GetByParentIDToList(AppGlobal.ParentIDEmployee);
+            var data = _membershipRepository.GetByParentIDToList(AppGlobal.ParentIDEmployee).OrderBy(item => item.FullName);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetCustomerToList([DataSourceRequest] DataSourceRequest request)
@@ -302,7 +492,6 @@ namespace Commsights.MVC.Controllers
         [AcceptVerbs("Post")]
         public IActionResult SaveCompany(Membership model)
         {
-            //model.ParentID = AppGlobal.ParentIDCompetitor;
             model.Active = true;
             if (model.ID > 0)
             {
@@ -324,7 +513,6 @@ namespace Commsights.MVC.Controllers
         [AcceptVerbs("Post")]
         public IActionResult SaveCustomer(Membership model)
         {
-            //model.ParentID = AppGlobal.ParentIDCustomer;
             model.Active = true;
             if (Request.Form.Files.Count > 0)
             {
@@ -335,7 +523,7 @@ namespace Commsights.MVC.Controllers
                     string fileName = Path.GetFileNameWithoutExtension(file.FileName);
                     fileName = AppGlobal.SetName(fileName);
                     fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
-                    var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.URLImagesCustomer, fileName);
+                    var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.URLImagesMembership, fileName);
                     using (var stream = new FileStream(physicalPath, FileMode.Create))
                     {
                         file.CopyTo(stream);
@@ -347,24 +535,6 @@ namespace Commsights.MVC.Controllers
             {
                 Initialization(model, 1);
                 model.Initialization(InitType.Update, RequestUserID);
-
-                //bool check = false;
-                //int ID = _membershipRepository.IsByAccount(model.Account);
-                //if (ID == 0)
-                //{
-                //    check = true;
-                //}
-                //else
-                //{
-                //    if (model.ID == ID)
-                //    {
-                //        check = true;
-                //    }
-                //}
-                //if (check == true)
-                //{
-                //    _membershipRepository.Update(model.ID, model);
-                //}
                 _membershipRepository.Update(model.ID, model);
             }
             else
@@ -377,6 +547,48 @@ namespace Commsights.MVC.Controllers
                 }
             }
             return RedirectToAction("CustomerDetail", new { ID = model.ID });
+        }
+        [AcceptVerbs("Post")]
+        public IActionResult SaveEmployeeInfo(Membership model)
+        {
+            if (Request.Form.Files.Count > 0)
+            {
+                var file = Request.Form.Files[0];
+                if (file != null)
+                {
+                    string fileExtension = Path.GetExtension(file.FileName);
+                    string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                    fileName = AppGlobal.SetName(fileName);
+                    fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
+                    var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.URLImagesMembership, fileName);
+                    using (var stream = new FileStream(physicalPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                        model.Avatar = fileName;
+                        var cookieExpires = new CookieOptions();
+                        string avatar = "";
+                        if (!string.IsNullOrEmpty(model.Avatar))
+                        {
+                            avatar = model.Avatar;
+                        }
+                        cookieExpires.Expires = DateTime.Now.AddMonths(3);
+                        Response.Cookies.Append("Avatar", avatar, cookieExpires);
+                    }
+                }
+            }
+            if (model.ID > 0)
+            {
+                Initialization(model, 1);
+                model.Initialization(InitType.Update, RequestUserID);
+                _membershipRepository.Update(model.ID, model);
+            }
+            else
+            {
+                Initialization(model, 0);
+                model.Initialization(InitType.Insert, RequestUserID);
+                _membershipRepository.Create(model);
+            }
+            return RedirectToAction("EmployeeInfo");
         }
         public IActionResult CreateWithIndustryID(Membership model, int industryID)
         {
@@ -444,12 +656,9 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
             int result = 0;
-            if (_membershipRepository.IsExistEmail(model.Email) == false)
+            if (_membershipRepository.IsExistPhone(model.Phone) == false)
             {
-                if (_membershipRepository.IsExistPhone(model.Email) == false)
-                {
-                    result = _membershipRepository.Create(model);
-                }
+                result = _membershipRepository.Create(model);
             }
             if (result > 0)
             {
@@ -467,22 +676,6 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
             int result = 0;
-            //Membership membership = _membershipRepository.GetByAccount(model.Account);
-            //if (membership == null)
-            //{
-            //    check = true;
-            //}
-            //else
-            //{
-            //    if (membership.ID == model.ID)
-            //    {
-            //        check = true;
-            //    }
-            //}
-            //if (check == true)
-            //{
-            //    result = _membershipRepository.Update(model.ID, model);
-            //}
             result = _membershipRepository.Update(model.ID, model);
             if (result > 0)
             {
@@ -494,13 +687,28 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
-
+        public IActionResult Update001(MembershipCompanyDataTransfer model)
+        {
+            string note = AppGlobal.InitString;
+            int result = 0;
+            _membershipRepository.UpdateSingleItem001(model.ID, model.Active.Value, model.Account);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
         public IActionResult Delete(Membership model)
         {
             model.Active = false;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Update, RequestUserID);
-            int result = _membershipRepository.Delete(model.ID);
+            int result = 0;
+            //int result = _membershipRepository.Delete(model.ID);
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
@@ -513,10 +721,7 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult Logout()
         {
-            Response.Cookies.Append("IsLogin", "false");
-            Response.Cookies.Append("IsLogout", "true");
-            Response.Cookies.Append("SaveLogin", "false");
-            Response.Cookies.Delete("Password");
+            Response.Cookies.Append("UserID", "0");
             HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }

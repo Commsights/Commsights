@@ -38,6 +38,14 @@ namespace Commsights.Data.Repositories
         {
             return _context.MembershipPermission.FirstOrDefault(item => item.Code.Equals(code) && item.FullName.Equals(fullName));
         }
+        public MembershipPermission GetByCodeAndMembershipIDAndIndustryIDAndSegmentIDAndProductName(string code, int membershipID, int industryID, int segmentID, string productName)
+        {
+            return _context.MembershipPermission.FirstOrDefault(item => item.Code.Equals(code) && item.MembershipID == membershipID && item.IndustryID == industryID && item.SegmentID == segmentID && item.ProductName.Equals(productName));
+        }
+        public MembershipPermission GetByCodeAndMembershipIDAndSegmentIDAndProductName(string code, int membershipID, int segmentID, string productName)
+        {
+            return _context.MembershipPermission.FirstOrDefault(item => item.Code.Equals(code) && item.MembershipID == membershipID && item.SegmentID == segmentID && item.ProductName.Equals(productName));
+        }
         public MembershipPermission GetByCodeAndFullNameContains(string code, string fullName)
         {
             return _context.MembershipPermission.FirstOrDefault(item => item.Code.Equals(code) && item.FullName.Contains(fullName));
@@ -223,6 +231,83 @@ namespace Commsights.Data.Repositories
                 }
             }
             return list;
+        }
+        public List<MembershipPermissionProductDataTransfer> GetProductByMembershipIDAndCodeToList(int membershipID, string code)
+        {
+            List<MembershipPermissionProductDataTransfer> list = new List<MembershipPermissionProductDataTransfer>();
+            if (membershipID > 0)
+            {
+                SqlParameter[] parameters =
+                      {
+                new SqlParameter("@MembershipID",membershipID),
+                new SqlParameter("@Code",code)
+            };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectProductByMembershipIDAndCode", parameters);
+                list = SQLHelper.ToList<MembershipPermissionProductDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<MembershipPermissionProductDataTransfer> GetProductByAccountAndCodeToList(string account, string code)
+        {
+            List<MembershipPermissionProductDataTransfer> list = new List<MembershipPermissionProductDataTransfer>();
+            if (!string.IsNullOrEmpty(account))
+            {
+                int ID = 0;
+                try
+                {
+                    ID = int.Parse(account.Split('-')[0]);
+                }
+                catch
+                {
+                }
+                if (ID > 0)
+                {
+                    SqlParameter[] parameters =
+                    {
+                    new SqlParameter("@MembershipID",ID),
+                    new SqlParameter("@Code",code)
+                    };
+                    DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectProductByMembershipIDAndCode", parameters);
+                    list = SQLHelper.ToList<MembershipPermissionProductDataTransfer>(dt);
+                }
+            }
+            return list;
+        }
+        public List<MembershipPermissionProductDataTransfer> GetProductByAccountAndCodeAndIndustryIDToList(string account, string code, int industryID)
+        {
+            List<MembershipPermissionProductDataTransfer> list = new List<MembershipPermissionProductDataTransfer>();
+            if ((!string.IsNullOrEmpty(account)) && (industryID > 0))
+            {
+                Membership membership = GetByAccountAndIndustryIDAndActive(account, industryID);
+                if (membership != null)
+                {
+                    SqlParameter[] parameters =
+                    {
+                    new SqlParameter("@MembershipID",membership.ID),
+                    new SqlParameter("@Code",code)
+                    };
+                    DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectProductByMembershipIDAndCode", parameters);
+                    list = SQLHelper.ToList<MembershipPermissionProductDataTransfer>(dt);
+                }
+            }
+            return list;
+        }
+        public Membership GetByAccountAndIndustryIDAndActive(string account, int industryID)
+        {
+            Membership model = new Membership();
+            if ((!string.IsNullOrEmpty(account)) && (industryID > 0))
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@Account",account),
+                    new SqlParameter("@IndustryID",industryID),
+                    new SqlParameter("@Active",true),
+                    };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectByAccountAndIndustryIDAndActive", parameters);
+                model = SQLHelper.ToList<Membership>(dt).FirstOrDefault();
+
+            }
+            return model;
         }
         public List<MembershipPermissionDataTransfer> GetDataTransferSegmentByMembershipIDAndIndustryIDAndCodeToList(int membershipID, int industryID, string code)
         {
@@ -501,6 +586,26 @@ namespace Commsights.Data.Repositories
             }
             _context.SaveChanges();
         }
+        public string InitializationMenu(int membershipID, int requestUserID, string code)
+        {
+            SqlParameter[] parameters =
+                    {
+                new SqlParameter("@MembershipID",membershipID),
+                new SqlParameter("@RequestUserID",requestUserID),
+                new SqlParameter("@Code",code),
+            };
+            return SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_MembershipPermissionInitializationMenu", parameters);
+        }
+        public string UpdateItemsByIDAndIsViewAndCode(int ID, bool isView, string code)
+        {
+            SqlParameter[] parameters =
+                    {
+                new SqlParameter("@ID",ID),
+                new SqlParameter("@IsView",isView),
+                new SqlParameter("@Code",code),
+            };
+            return SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_MembershipPermissionMenuUpdateItemsByIDAndIsViewAndCode", parameters);
+        }
         public void SaveAllMenuPermission(int membershipID, bool isAll, int requestUserID)
         {
             List<MembershipPermission> list = _context.MembershipPermission.Where(item => item.MembershipID == membershipID && item.MenuID > 0).ToList();
@@ -716,6 +821,23 @@ namespace Commsights.Data.Repositories
                 }
                 _context.SaveChangesAsync();
             }
+        }
+
+
+        public List<MembershipPermission> GetMenuByMembershipIDAndCodeToList(int membershipID, string code)
+        {
+            List<MembershipPermission> list = new List<MembershipPermission>();
+            if (membershipID > 0)
+            {
+                SqlParameter[] parameters =
+                      {
+                new SqlParameter("@MembershipID",membershipID),
+                new SqlParameter("@Code",code),
+                    };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectMenuByMembershipIDAndCode", parameters);
+                list = SQLHelper.ToList<MembershipPermission>(dt);
+            }
+            return list;
         }
     }
 }

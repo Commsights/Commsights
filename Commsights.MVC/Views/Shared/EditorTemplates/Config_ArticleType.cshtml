@@ -3,5 +3,5 @@
                    .DataTextField("CodeName")
                    .HtmlAttributes(new {data_bind= "value: ArticleType", @class = "form-control" })
                     .Filter(FilterType.StartsWith)
-                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetArticleTypeToList", "Config")))
+                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCategoryMainToList", "Config")))
 )

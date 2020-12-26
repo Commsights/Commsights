@@ -18,6 +18,23 @@ namespace Commsights.Data.Repositories
         {
             _context = context;
         }
+        public Membership GetByPhoneAndPassword(string phone, string password)
+        {
+            bool check = false;
+            var membership = _context.Membership.FirstOrDefault(user => user.Phone.Equals(phone));
+            if (membership != null)
+            {
+                if (SecurityHelper.Decrypt(membership.GUICode, membership.Password).Equals(password))
+                {
+                    check = true;
+                }
+            }
+            if (check == false)
+            {
+                membership = null;
+            }
+            return membership;
+        }
         public Membership GetByCodeAndFullName(string code, string fullName)
         {
             Membership model = null;
@@ -63,6 +80,22 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public Membership GetByAccountAndIndustryIDAndActive(string account, int industryID, bool active)
+        {
+            Membership model = new Membership();
+            if (industryID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@IndustryID",industryID),
+                    new SqlParameter("@Account",account),
+                    new SqlParameter("@Active",active),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectByAccountAndIndustryIDAndActive", parameters);
+                model = SQLHelper.ToList<Membership>(dt).FirstOrDefault();
+            }
+            return model;
+        }
         public List<Membership> GetByIndustryIDWithIDAndAccountToList(int industryID)
         {
             List<Membership> list = new List<Membership>();
@@ -107,10 +140,84 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+
         public List<MembershipDataTransfer> GetAllCompanyToList()
         {
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectAllCompany");
             return SQLHelper.ToList<MembershipDataTransfer>(dt);
+        }
+        public List<MembershipCompanyDataTransfer> GetAllCompany001ToList()
+        {
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectAllCompany001");
+            return SQLHelper.ToList<MembershipCompanyDataTransfer>(dt);
+        }
+        public List<MembershipCompanyDataTransfer> GetAllCompany001ByActiveToList()
+        {
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectCompany001ByActive");
+            return SQLHelper.ToList<MembershipCompanyDataTransfer>(dt);
+        }
+        public List<MembershipCompanyDataTransfer> GetByIndustryID001ToList(int industryID)
+        {
+            List<MembershipCompanyDataTransfer> list = new List<MembershipCompanyDataTransfer>();
+            if (industryID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@IndustryID",industryID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectByIndustryID001", parameters);
+                list = SQLHelper.ToList<MembershipCompanyDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<MembershipCompanyDataTransfer> GetByIndustryID002ByActiveToList(int industryID)
+        {
+            List<MembershipCompanyDataTransfer> list = new List<MembershipCompanyDataTransfer>();
+            if (industryID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@IndustryID",industryID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectByIndustryID002ByActive", parameters);
+                list = SQLHelper.ToList<MembershipCompanyDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<MembershipCompanyDataTransfer> GetByIndustryID001ByActiveToList(int industryID)
+        {
+            List<MembershipCompanyDataTransfer> list = new List<MembershipCompanyDataTransfer>();
+            if (industryID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@IndustryID",industryID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectByIndustryID001ByActive", parameters);
+                list = SQLHelper.ToList<MembershipCompanyDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<MembershipCompanyDataTransfer> GetByIndustryID003ByActiveToList(int industryID)
+        {
+            List<MembershipCompanyDataTransfer> list = new List<MembershipCompanyDataTransfer>();
+            if (industryID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@IndustryID",industryID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectByIndustryID003ByActive", parameters);
+                list = SQLHelper.ToList<MembershipCompanyDataTransfer>(dt);
+            }
+            return list;
+        }
+        public List<Membership> GetAllEmployeeProductPermissionToList()
+        {
+            List<Membership> list = new List<Membership>();
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipSelectAllEmployeeProductPermission");
+            list = SQLHelper.ToList<Membership>(dt);
+            return list;
         }
         public List<Membership> GetByCompanyToList()
         {
@@ -185,7 +292,7 @@ namespace Commsights.Data.Repositories
             }
             if (membership != null)
             {
-                if (SecurityHelper.Decrypt(membership.Guicode, membership.Password).Equals(password))
+                if (SecurityHelper.Decrypt(membership.GUICode, membership.Password).Equals(password))
                 {
                     return true;
                 }
@@ -197,7 +304,7 @@ namespace Commsights.Data.Repositories
             var membership = _context.Membership.FirstOrDefault(user => user.ID == ID);
             if (membership != null)
             {
-                if (SecurityHelper.Decrypt(membership.Guicode, membership.Password).Equals(password))
+                if (SecurityHelper.Decrypt(membership.GUICode, membership.Password).Equals(password))
                 {
                     return true;
                 }
@@ -249,6 +356,16 @@ namespace Commsights.Data.Repositories
                 ID = _context.Membership.FirstOrDefault(item => item.Account.Equals(account)).ID;
             }
             return ID;
+        }
+        public string UpdateSingleItem001(int ID, bool active, string account)
+        {
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ID",ID),
+                new SqlParameter("@Active",active),
+                new SqlParameter("@Account",account),
+            };
+            return SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_MembershipUpdateSingleItem001", parameters);
         }
     }
 }

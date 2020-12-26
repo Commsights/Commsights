@@ -131,7 +131,7 @@ namespace Commsights.MVC.Controllers
         public IActionResult DailyData(int industryID, string datePublishBeginString, string datePublishEndString)
         {
             BaseViewModel model = new BaseViewModel();
-            model.DatePublishBegin = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            model.DatePublishBegin = DateTime.Now;
             model.DatePublishEnd = DateTime.Now;
             model.IndustryID = AppGlobal.IndustryID;
             int day = 0;
@@ -352,7 +352,7 @@ namespace Commsights.MVC.Controllers
             {
                 txt.AppendLine(@"<th style='color: #ffffff; background-color: #c00000;'>" + item.CodeName + "</th>");
                 column = column + 1;
-            }
+            }           
             txt.AppendLine(@"<thead>");
             txt.AppendLine(@"<tbody>");
             int index = 0;
@@ -452,6 +452,14 @@ namespace Commsights.MVC.Controllers
                         txt.AppendLine(@"<br/>");
                         txt.AppendLine(@"(" + descriptionEnglish + ")");
                         txt.AppendLine(@"</div></td>");
+                    }
+                    if (i == 15)
+                    {
+                        txt.AppendLine(@"<td style='text-align: right;'>" + listData[index].Duration + "</td>");
+                    }
+                    if (i == 16)
+                    {
+                        txt.AppendLine(@"<td style='text-align: right;'>" + listData[index].Frequency + "</td>");
                     }
                 }
                 txt.AppendLine(@"</tr>");
@@ -2400,11 +2408,21 @@ namespace Commsights.MVC.Controllers
                         }
                         if (i == 15)
                         {
+                            workSheet.Cells[row, i].Value = listData[index].Duration;
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        }
+                        if (i == 16)
+                        {
+                            workSheet.Cells[row, i].Value = listData[index].Frequency;
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        }
+                        if (i == 17)
+                        {
                             workSheet.Cells[row, i].Value = listData[index].DateUpdated;
                             workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy HH:mm:ss";
                             workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         }
-                        if (i == 16)
+                        if (i == 18)
                         {
                             if (!string.IsNullOrEmpty(listData[index].URLCode))
                             {
@@ -2721,11 +2739,21 @@ namespace Commsights.MVC.Controllers
                         }
                         if (i == 15)
                         {
+                            workSheet.Cells[row, i].Value = listData[index].Duration;
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        }
+                        if (i == 16)
+                        {
+                            workSheet.Cells[row, i].Value = listData[index].Frequency;
+                            workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        }
+                        if (i == 17)
+                        {
                             workSheet.Cells[row, i].Value = listData[index].DateUpdated;
                             workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy HH:mm:ss";
                             workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         }
-                        if (i == 16)
+                        if (i == 18)
                         {
                             if (!string.IsNullOrEmpty(listData[index].URLCode))
                             {
@@ -2835,6 +2863,7 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsDailyAndIsUploadToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isUpload)
         {
+            _productRepository.Initialization();
             var data = _reportRepository.GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsDailyAndIsUploadToList(datePublishBegin, datePublishEnd, industryID, true, isUpload);
             return Json(data.ToDataSourceResult(request));
         }
@@ -2964,6 +2993,8 @@ namespace Commsights.MVC.Controllers
                 productProperty.ArticleTypeID = model.ArticleType.ID;
                 productProperty.AssessID = model.AssessType.ID;
                 productProperty.ProductID = model.Product.ID;
+
+                productProperty.SentimentCorpID = model.AssessID;
                 if (model.Company.ID == 0)
                 {
                     productProperty.CompanyID = null;
@@ -4137,11 +4168,16 @@ namespace Commsights.MVC.Controllers
                                                 int totalRows = workSheet.Dimension.Rows + 1;
                                                 for (int i = 6; i <= totalRows; i++)
                                                 {
+                                                    string categoryMain = "";
                                                     List<ProductProperty> listProductPropertyURLCode = new List<ProductProperty>();
                                                     Product model = new Product();
                                                     model.Note = fileName;
                                                     model.Initialization(InitType.Insert, RequestUserID);
                                                     model.AssessID = AppGlobal.AssessID;
+                                                    if (workSheet.Cells[i, 2].Value != null)
+                                                    {
+                                                        categoryMain = workSheet.Cells[i, 2].Value.ToString().Trim();
+                                                    }
                                                     if (workSheet.Cells[i, 11].Value != null)
                                                     {
                                                         model.Page = workSheet.Cells[i, 11].Value.ToString().Trim();
@@ -4348,6 +4384,7 @@ namespace Commsights.MVC.Controllers
                                                                         listProductPropertyURLCode[j].ArticleTypeID = product.ArticleTypeID;
                                                                         listProductPropertyURLCode[j].AssessID = product.AssessID;
                                                                         listProductPropertyURLCode[j].IsDaily = true;
+                                                                        listProductPropertyURLCode[j].CategoryMain = categoryMain;
                                                                     }
                                                                     _productPropertyRepository.Range(listProductPropertyURLCode);
                                                                 }
@@ -4423,6 +4460,7 @@ namespace Commsights.MVC.Controllers
                                                                             productProperty.Code = AppGlobal.Company;
                                                                             productProperty.IndustryID = item.IndustryID;
                                                                             productProperty.IsDaily = true;
+                                                                            productProperty.CategoryMain = categoryMain;
                                                                             if (_productPropertyRepository.IsExist(productProperty) == true)
                                                                             {
                                                                                 _productPropertyRepository.Create(productProperty);
@@ -4441,6 +4479,7 @@ namespace Commsights.MVC.Controllers
                                                                         productProperty.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
                                                                         productProperty.Code = AppGlobal.Company;
                                                                         productProperty.IsDaily = true;
+                                                                        productProperty.CategoryMain = categoryMain;
                                                                         if (_productPropertyRepository.IsExist(productProperty) == true)
                                                                         {
                                                                             _productPropertyRepository.Create(productProperty);
@@ -4463,6 +4502,7 @@ namespace Commsights.MVC.Controllers
                                                                 productProperty.GUICode = product.GUICode;
                                                                 productProperty.IndustryID = baseViewModel.IndustryIDUploadAndiSource;
                                                                 productProperty.IsDaily = true;
+                                                                productProperty.CategoryMain = categoryMain;
                                                                 if (_productPropertyRepository.IsExist(productProperty) == true)
                                                                 {
                                                                     _productPropertyRepository.Create(productProperty);

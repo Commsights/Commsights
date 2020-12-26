@@ -1,0 +1,68 @@
+﻿@{ ViewData["Title"] = "Employee - Product Permission"; }
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Employee - Product Permission</h3>
+            </div>
+            <div class="card-body">
+                @(Html.Kendo().Grid<Commsights.Data.Models.Membership>()
+.Name("Membership")
+.Columns(columns =>
+{
+    columns.Bound(t => t.FullName).Title("Full name").Width(300);
+    columns.Bound(t => t.Website).Title("Industry").Width(500);
+})
+.ToolBar(toolBar => toolBar.Search())
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid" })
+.Search(search => { search.Field(f => f.FullName); })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.ID);
+})
+.Read(t => t.Action("GetAllEmployeeProductPermissionToList", "Membership"))
+)
+)
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+
+<script>
+</script>

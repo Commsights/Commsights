@@ -11,16 +11,16 @@
 .Name("Config")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.ID).Title("ID").Width(100);
-    columns.Bound(t => t.ParentID).Title("ParentID").Width(100);
-    columns.Bound(t => t.Title).Title("Title").Width(200);
-    columns.Bound(t => t.Icon).Title("Icon").Width(200);
-    columns.Bound(t => t.Controller).Title("Controller").Width(200);
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(120);
+    columns.Bound(t => t.ID).Title("ID").Width(70).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.ParentID).Title("ParentID").Width(70).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.CodeName).Title("Display").Width(150);
+    columns.Bound(t => t.Title).Title("Title").Width(150);
+    columns.Bound(t => t.Icon).Title("Icon").Width(150);
+    columns.Bound(t => t.Controller).Title("Controller").Width(150);
     columns.Bound(t => t.Action).Title("Action").Width(200);
-    columns.Bound(t => t.SortOrder).Title("SortOrder").Width(100);
-    columns.Bound(t => t.IsMenuLeft).Title("Is Menu left").Width(200);
-    columns.Bound(t => t.SortOrder).Title("Sort order").Width(200);
+    columns.Bound(t => t.SortOrder).Title("Sort").Width(70).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.IsMenuLeft).Title("Menu left").Width(70);
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
@@ -47,7 +47,7 @@
 .RepeatHeaders()
 .FileName("Config.pdf")
 )
-.HtmlAttributes(new { @class = "KendoGrid" })
+.HtmlAttributes(new { @class = "KendoGrid", @style="font-size:12px;" })
 .Search(search => { search.Field(f => f.Title); search.Field(f => f.Icon); search.Field(f => f.Controller); search.Field(f => f.Action); })
 .DataSource(dataSource => dataSource
 .Ajax()
@@ -56,6 +56,7 @@
 {
     model.Id(t => t.ID);
     model.Field(t => t.ID).Editable(false);
+    model.Field(t => t.IsMenuLeft).DefaultValue(true);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetMenuToList", "Config"))
@@ -64,7 +65,7 @@
 .Update(t => t.Action("Update", "Config"))
 )
 )
-            </div>           
+            </div>
         </div>
     </div>
 </div>

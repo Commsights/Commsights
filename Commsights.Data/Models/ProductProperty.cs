@@ -6,7 +6,7 @@ namespace Commsights.Data.Models
 {
     public partial class ProductProperty : BaseModel
     {
-        public string Source { get; set; }
+        public int? Source { get; set; }
         public string Day { get; set; }
         public string Week { get; set; }
         public string Month { get; set; }
@@ -77,7 +77,28 @@ namespace Commsights.Data.Models
         public string MediaTitle { get; set; }
         public string MediaType { get; set; }
         public string Duration { get; set; }
-        public int? Advalue { get; set; }
+        public decimal? Advalue { get; set; }
         public DateTime? DatePublish { get; set; }
+        public string FileName { get; set; }
+        public decimal? SentimentValue { get; set; }
+        public string CampaignName { get; set; }
+        public string KeyMessage { get; set; }
+        public decimal? CompetitiveNewsValue { get; set; }
+        public string CompetitiveWhat { get; set; }
+        public decimal? KOLValue { get; set; }
+        public decimal? OtherValue { get; set; }
+        public decimal? TasteValue { get; set; }
+        public decimal? PriceValue { get; set; }
+        public decimal? NutritionFactValue { get; set; }
+        public decimal? VitaminValue { get; set; }
+        public decimal? GoodForHealthValue { get; set; }
+        public decimal? Bottle_CanDesignValue { get; set; }
+        public bool? IsCoding { get; set; }
+        public bool? IsAnalysis { get; set; }
+        public bool? IsDownload { get; set; }
+        public bool? IsSend { get; set; }
+        public bool? IsCopy { get; set; }
+        public string CampaignKeyMessage { get; set; }
+        public int? CopyVersion { get; set; }
     }
 }

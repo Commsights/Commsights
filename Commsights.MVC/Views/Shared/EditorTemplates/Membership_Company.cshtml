@@ -3,6 +3,6 @@
                    .DataValueField("ID")
                    .DataTextField("Account")
                    .HtmlAttributes(new {data_bind= "value: Company", @class = "form-control" })
-                    .Filter(FilterType.StartsWith)
+                    .Filter(FilterType.Contains)
                    .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByCompanyToList", "Membership")))
 )

@@ -1,0 +1,68 @@
+﻿@{ ViewData["Title"] = "Employee infomation"; }
+
+@model Commsights.Data.Models.Membership
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Employee infomation</h3>
+            </div>
+            <div class="card-body">
+                <form asp-action="SaveEmployeeInfo" asp-controller="Membership">
+                    @Html.HiddenFor(Model => Model.ID)
+                    @Html.HiddenFor(Model => Model.ParentID)
+                    @Html.HiddenFor(Model => Model.GUICode)
+                    <div class="row">
+                        <div class='col-md-11'>
+                        </div>
+                        <div class='col-md-1'>
+                            <button style="width:100%;" type="submit" title="Save" class="btn btn-primary">
+                                <span class="fas fa-save"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class='form-group'>
+                                <label for='FullName'>Full name</label>
+                                @(Html.TextBoxFor(Model => Model.FullName, new { placeholder = "Full name", @class = "form-control" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='Email'>Email</label>
+                                @(Html.TextBoxFor(Model => Model.Email, new { placeholder = "Email", @class = "form-control" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='Phone'>Phone (Account)</label>
+                                @(Html.TextBoxFor(Model => Model.Phone, new { placeholder = "Phone", @class = "form-control" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='Password'>Password</label>
+                                @(Html.TextBoxFor(Model => Model.Password, new { placeholder = "Password", @class = "form-control", @type="password" }))
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class='form-group'>
+                                <label for='Avatar'>Avatar</label>
+                                @(Html.Kendo().Upload()
+                              .Name("Upload")
+                              .HtmlAttributes(new { @class = "form-control" })
+                                )
+                                <br />
+                                <img src="@Url.Content(Commsights.Data.Helpers.AppGlobal.Domain + Commsights.Data.Helpers.AppGlobal.URLImagesMembership + "/" + Model.Avatar)" alt="@Url.Content(Model.Avatar)" class="img-thumbnail" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+
+<script>
+</script>

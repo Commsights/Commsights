@@ -39,6 +39,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\Download\Report\Month\" />
     <Folder Include="wwwroot\images\Customer\" />
+    <Folder Include="wwwroot\images\Membership\" />
   </ItemGroup>
 
 </Project>

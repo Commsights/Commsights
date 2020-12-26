@@ -59,6 +59,7 @@ namespace Commsights.Data.DataTransferObject
         public string IndustryName { get; set; }
         public string ProductName { get; set; }
         public string ParentName { get; set; }
+        public string Frequency { get; set; }        
         public int? MembershipTypeID { get; set; }
         public int? MembershipPermissionProductID { get; set; }
         public bool? IsSource { get; set; }

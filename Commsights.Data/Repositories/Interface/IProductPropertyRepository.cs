@@ -3,6 +3,7 @@ using Commsights.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Commsights.Data.Repositories
 {
@@ -12,6 +13,8 @@ namespace Commsights.Data.Repositories
         public string InsertItemsByID(int ID);
         public string InsertItemByID(int ID);
         public string UpdateItemsWithParentIDIsZero();
+        public string UpdateSingleItemByIDAndFileName(int ID, string fileName);
+        public Task<string> AsyncUpdateSingleItemByIDAndFileName(int ID, string fileName);
         public bool IsExistByProductIDAndCodeAndCompanyID(int productID, string code, int companyID);
         public bool IsExistByGUICodeAndCodeAndCompanyID(string gUICode, string code, int companyID);
         public bool IsExistByGUICodeAndCodeAndIndustryID(string gUICode, string code, int industryID);
@@ -26,5 +29,10 @@ namespace Commsights.Data.Repositories
         public ProductProperty GetByID001(int ID);
         public List<ProductProperty> GetByParentIDAndCompanyIDAndArticleTypeIDToList(int parentID, int companyID, int articleTypeID);
         public List<ProductProperty> GetByReportMonthlyIDToList(int reportMonthlyID);
+        public string UpdateSingleItemByCodeData(CodeData model);
+        public string UpdateItemsByCodeDataCopyVersion(CodeData model);
+        public int InsertItemsByCopyCodeData(int ID, int RequestUserID, int rowIndex);
+        public string InsertSingleItemByCopyCodeData(int ID, int RequestUserID);
+        public string DeleteItemsByIDCodeData(int ID);
     }
 }

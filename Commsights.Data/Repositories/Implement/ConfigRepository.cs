@@ -58,6 +58,7 @@ namespace Commsights.Data.Repositories
             Config item = _context.Set<Config>().FirstOrDefault(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.ParentID == parentID && item.TierID == tierID);
             return item;
         }
+
         public Config GetByGroupNameAndCodeAndTitle(string groupName, string code, string title)
         {
             Config item = _context.Set<Config>().FirstOrDefault(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.Title.Equals(title));
@@ -86,6 +87,28 @@ namespace Commsights.Data.Repositories
         public List<Config> GetByParentIDAndGroupNameAndCodeToList(int parentID, string groupName, string code)
         {
             return _context.Config.Where(item => item.GroupName.Equals(AppGlobal.CRM) && item.Code.Equals(AppGlobal.Website) && item.ParentID == parentID).OrderBy(item => item.ID).ToList();
+        }
+        public List<Config> GetByGroupNameAndCodeAndParentIDAndIndustryIDToList(string groupName, string code, int parentID, int industryID)
+        {
+            return _context.Config.Where(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.ParentID == parentID && item.IndustryID == industryID).OrderBy(item => item.SortOrder).ToList();
+        }
+        public List<Config> GetByGroupNameAndCodeAndIndustryIDToList(string groupName, string code, int industryID)
+        {
+            List<Config> list = new List<Config>();
+            if (industryID > 0)
+            {
+                list = _context.Config.Where(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.IndustryID == industryID).OrderBy(item => item.SortOrder).ToList();
+            }
+            return list;
+        }
+        public Config GetByGroupNameAndCodeAndIndustryIDAndCodeName(string groupName, string code, int industryID, string codeName)
+        {
+            Config model = new Config();
+            if (industryID > 0)
+            {
+                model = _context.Config.Where(item => item.GroupName.Equals(groupName) && item.Code.Equals(code) && item.IndustryID == industryID && item.CodeName.Equals(codeName)).FirstOrDefault();
+            }
+            return model;
         }
         public List<Config> GetMediaByGroupNameAndActiveToList(string groupName, bool active)
         {
@@ -160,6 +183,46 @@ namespace Commsights.Data.Repositories
         {
             List<Config> list = new List<Config>();
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigToUpperFirstLetter");
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
+        public List<Config> GetSQLByGroupNameAndCodeAndIndustryIDToList(string groupName, string code, int industryID)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@IndustryID",industryID),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectByGroupNameAndCodeAndIndustryID", parameters);
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
+        public List<Config> GetSQLCategorySubByGroupNameAndCodeAndIndustryIDToList(string groupName, string code, int industryID)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@IndustryID",industryID),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectCategorySubByGroupNameAndCodeAndIndustryID", parameters);
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
+        public List<Config> GetSQLByGroupNameAndCodeAndIndustryIDAndParentIDToList(string groupName, string code, int industryID, int parentID)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@IndustryID",industryID),
+                new SqlParameter("@ParentID",parentID),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectByGroupNameAndCodeAndIndustryIDAndParentID", parameters);
             list = SQLHelper.ToList<Config>(dt);
             return list;
         }
@@ -272,6 +335,54 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<Config> GetMenuSelectByMembershipIDAndCodeToList(int membershipID, string code)
+        {
+            List<Config> list = new List<Config>();
+            if (membershipID > 0)
+            {
+                SqlParameter[] parameters =
+                           {
+                new SqlParameter("@MembershipID",membershipID),
+                new SqlParameter("@Code",code)
+                 };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigMenuSelectByMembershipIDAndCode", parameters);
+                list = SQLHelper.ToList<Config>(dt);
+            }
+            return list;
+        }
+        public List<Config> GetMenuSelectByMembershipIDAndCodeAndIsMenuLeftToList(int membershipID, string code, bool isMenuLeft)
+        {
+            List<Config> list = new List<Config>();
+            if (membershipID > 0)
+            {
+                SqlParameter[] parameters =
+                           {
+                new SqlParameter("@MembershipID",membershipID),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@IsMenuLeft",isMenuLeft),
+                 };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigMenuSelectByMembershipIDAndCodeAndIsMenuLeft", parameters);
+                list = SQLHelper.ToList<Config>(dt);
+            }
+            return list;
+        }
+        public List<Config> GetMenuSelectByMembershipIDAndCodeAndIsMenuLeftAndIsViewToList(int membershipID, string code, bool isMenuLeft, bool isView)
+        {
+            List<Config> list = new List<Config>();
+            if (membershipID > 0)
+            {
+                SqlParameter[] parameters =
+                           {
+                new SqlParameter("@MembershipID",membershipID),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@IsMenuLeft",isMenuLeft),
+                new SqlParameter("@IsView",isView),
+                 };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigMenuSelectByMembershipIDAndCodeAndIsMenuLeftAndIsView", parameters);
+                list = SQLHelper.ToList<Config>(dt);
+            }
+            return list;
+        }
         public List<Config> GetAll001ToList()
         {
             List<Config> list = new List<Config>();
@@ -300,6 +411,45 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@IDList",IDList),
             };
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectByIDList", parameters);
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
+        public List<Config> GetSQLWebsiteByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@Active",active),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectWebsiteByGroupNameAndCodeAndActive", parameters);
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
+        public List<Config> GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftToList(string groupName, string code, bool active, bool isMenuLeft)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@Active",active),
+                new SqlParameter("@IsMenuLeft",isMenuLeft),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeft", parameters);
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
+        public List<Config> GetSQLByGroupNameAndCodeToList(string groupName, string code)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+            {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectByGroupNameAndCode", parameters);
             list = SQLHelper.ToList<Config>(dt);
             return list;
         }
@@ -345,6 +495,21 @@ new SqlParameter("@IndustryID",config.IndustryID),
 new SqlParameter("@TierID",config.TierID),
 };
             string result = await SQLHelper.ExecuteNonQueryAsync(AppGlobal.ConectionString, "sp_ConfigInsertSingleItem", parameters);
+            return result;
+        }
+        public string UpdateSingleItem001(Config config)
+        {
+
+            SqlParameter[] parameters =
+            {
+new SqlParameter("@ID",config.ID),
+new SqlParameter("@URLFull",config.URLFull),
+new SqlParameter("@Title",config.Title),
+new SqlParameter("@IsMenuLeft",config.IsMenuLeft),
+new SqlParameter("@Color",config.Color),
+new SqlParameter("@BlackWhite",config.BlackWhite),
+};
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ConfigUpdateSingleItem001", parameters);
             return result;
         }
     }

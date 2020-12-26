@@ -37,7 +37,19 @@ namespace Commsights.Data.Repositories
         public List<Config> GetByIDListToList(string IDList);
         public Task<string> AsyncInsertSingleItem(Config config);
         public Config GetByGroupNameAndCodeAndParentIDAndTierID(string groupName, string code, int parentID, int tierID);
-
+        public List<Config> GetSQLWebsiteByGroupNameAndCodeAndActiveToList(string groupName, string code, bool active);
+        public List<Config> GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftToList(string groupName, string code, bool active, bool isMenuLeft);
         public List<Config> GetWebsiteToList();
+        public string UpdateSingleItem001(Config config);
+        public List<Config> GetSQLByGroupNameAndCodeToList(string groupName, string code);
+        public List<Config> GetByGroupNameAndCodeAndParentIDAndIndustryIDToList(string groupName, string code, int parentID, int industryID);
+        public List<Config> GetByGroupNameAndCodeAndIndustryIDToList(string groupName, string code, int industryID);
+        public List<Config> GetSQLByGroupNameAndCodeAndIndustryIDToList(string groupName, string code, int industryID);
+        public List<Config> GetSQLCategorySubByGroupNameAndCodeAndIndustryIDToList(string groupName, string code, int industryID);
+        public Config GetByGroupNameAndCodeAndIndustryIDAndCodeName(string groupName, string code, int industryID, string codeName);
+        public List<Config> GetSQLByGroupNameAndCodeAndIndustryIDAndParentIDToList(string groupName, string code, int industryID, int parentID);
+        public List<Config> GetMenuSelectByMembershipIDAndCodeToList(int membershipID, string code);
+        public List<Config> GetMenuSelectByMembershipIDAndCodeAndIsMenuLeftToList(int membershipID, string code, bool isMenuLeft);
+        public List<Config> GetMenuSelectByMembershipIDAndCodeAndIsMenuLeftAndIsViewToList(int membershipID, string code, bool isMenuLeft, bool isView);
     }
 }

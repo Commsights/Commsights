@@ -27,16 +27,16 @@
                                      .DateInput()
                                 )
                     </div>
-                    <div class='col-sm-2'>
+                    <div class='col-sm-4'>
                         <input id="Search" name="Search" class="form-control" placeholder="Search" type="text" value="" />
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-1">
                         <input type="checkbox" id="IsTitle" value="" checked="checked">
-                        <label for='IsTitle'>Headline</label>
+                        <label for='IsTitle' style="font-size:12px;">Headline</label>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-1">
                         <input type="checkbox" id="IsDescription" value="" checked="checked">
-                        <label for='IsDescription'>Summary</label>
+                        <label for='IsDescription' style="font-size:12px;">Summary</label>
                     </div>
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" onclick="onSearch()">
@@ -55,12 +55,13 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" });}).Width(150);
-    columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70);
+    columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=URLCode#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70);
     columns.Select().Width(50);
     columns.Bound(t => t.IsError).Title("Error").Width(80);
     columns.Bound(t => t.DatePublish).Title("Publish").Format("{0: MM/dd/yyyy}").Width(200).HtmlAttributes(new { @class = "text-right" }).HeaderHtmlAttributes(new { @class = "text-center" });
     columns.Bound(t => t.Title).Title("Headline (Vie)").Width(1000);
     columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.ID).Title("ID").Width(100);
 })
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))

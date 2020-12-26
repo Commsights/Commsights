@@ -830,7 +830,14 @@ namespace Commsights.MVC.Controllers
                                                                 productProperty.ParentID = product001.ID;
                                                                 if (workSheet.Cells[i, 1].Value != null)
                                                                 {
-                                                                    productProperty.Source = workSheet.Cells[i, 1].Value.ToString().Trim();
+                                                                    try
+                                                                    {
+                                                                        productProperty.Source = int.Parse(workSheet.Cells[i, 1].Value.ToString().Trim());
+                                                                    }
+                                                                    catch
+                                                                    {
+
+                                                                    }
                                                                 }
                                                                 productProperty.Year = product001.DatePublish.Year.ToString();
                                                                 productProperty.Month = product001.DatePublish.Month.ToString();
@@ -5377,7 +5384,7 @@ namespace Commsights.MVC.Controllers
             trendline.Cells[row, 2].Style.Border.Right.Style = ExcelBorderStyle.Thin;
             trendline.Cells[row, 2].Style.Border.Right.Color.SetColor(Color.Black);
             trendline.Cells[row, 2].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-            trendline.Cells[row, 2].Style.Border.Bottom.Color.SetColor(Color.Black);          
+            trendline.Cells[row, 2].Style.Border.Bottom.Color.SetColor(Color.Black);
 
             int columnIndex = 3;
             foreach (ReportMonthlyTrendLineDataTransfer item in listCompanyName)
@@ -5595,7 +5602,7 @@ namespace Commsights.MVC.Controllers
                     trendline.Cells[row, 2].Style.Border.Right.Color.SetColor(Color.Black);
                     trendline.Cells[row, 2].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                     trendline.Cells[row, 2].Style.Border.Bottom.Color.SetColor(Color.Black);
-                    
+
                     for (int j = 5; j < tbl.Columns.Count; j++)
                     {
                         int columnsIndex = j - 2;

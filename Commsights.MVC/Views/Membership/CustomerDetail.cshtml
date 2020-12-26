@@ -87,7 +87,7 @@
                                    .DataValueField("ID")
                                    .DataTextField("CodeName")
                                    .HtmlAttributes(new {@class = "form-control" })
-                                    .Filter(FilterType.StartsWith)
+                                    .Filter(FilterType.Contains)
                                    .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetMembershipTypeToList", "Config")))
                                     )
                             </div>
@@ -117,7 +117,7 @@
                                 )
                                         </td>
                                         <td style="width:30%;" valign="top">
-                                            <img src="@Url.Content(Commsights.Data.Helpers.AppGlobal.Domain+Commsights.Data.Helpers.AppGlobal.URLImagesCustomer + "/" + Model.Avatar)" alt="@Url.Content(Model.Avatar)" class="img-thumbnail" />
+                                            <img src="@Url.Content(Commsights.Data.Helpers.AppGlobal.Domain + Commsights.Data.Helpers.AppGlobal.URLImagesMembership + "/" + Model.Avatar)" alt="@Url.Content(Model.Avatar)" class="img-thumbnail" />
                                         </td>
                                     </tr>
                                 </table>
@@ -150,52 +150,52 @@
             </div>
             <div class="card-body">
                 @(Html.Kendo().Grid<Commsights.Data.Models.MembershipPermission>()
-.Name("MembershipPermissionCompanyName")
-.Columns(columns =>
-{
-    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.FullName).Title("Name").Width(400).HtmlAttributes(new { style="width:100%;" });
-})
-.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
-.ToolBar(toolBar => toolBar.Search())
-.Editable(editable => editable.Mode(GridEditMode.InLine))
-.Sortable()
-.Scrollable()
-.Reorderable(r => r.Columns(true))
-.Resizable(r => r.Columns(true))
-.Pageable(pageable => pageable
-.Refresh(true)
-.PageSizes(true)
-.ButtonCount(10))
-.Excel(excel => excel
-.FileName("Config.xlsx")
-.Filterable(true)
-.ProxyURL(Url.Action("ExportExcel", "Config"))
-)
-.Pdf(pdf => pdf
-.AllPages()
-.AvoidLinks()
-.PaperSize("A4")
-.Margin("2cm", "1cm", "1cm", "1cm")
-.Landscape()
-.RepeatHeaders()
-.FileName("Config.pdf")
-)
-.HtmlAttributes(new { @class = "KendoGrid" })
-.DataSource(dataSource => dataSource
-.Ajax()
-.PageSize(1000)
-.Model(model =>
-{
-    model.Id(t => t.ID);
-})
-.Events(t => { t.RequestEnd("onGridRequestEndMembershipPermissionCompanyName"); })
-.Read(t => t.Action("GetByMembershipIDAndCompanyNameToList", "MembershipPermission").Data("filterMembershipPermissionIndustry"))
-.Destroy(t => t.Action("Delete", "MembershipPermission"))
-.Create(t => t.Action("CreateCompanyName", "MembershipPermission").Data("filterMembershipPermissionIndustry"))
-.Update(t => t.Action("Update", "MembershipPermission"))
-)
-)
+                .Name("MembershipPermissionCompanyName")
+                .Columns(columns =>
+                {
+                    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
+                    columns.Bound(t => t.FullName).Title("Name").Width(400).HtmlAttributes(new { style="width:100%;" });
+                })
+                .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
+                .ToolBar(toolBar => toolBar.Search())
+                .Editable(editable => editable.Mode(GridEditMode.InLine))
+                .Sortable()
+                .Scrollable()
+                .Reorderable(r => r.Columns(true))
+                .Resizable(r => r.Columns(true))
+                .Pageable(pageable => pageable
+                .Refresh(true)
+                .PageSizes(true)
+                .ButtonCount(10))
+                .Excel(excel => excel
+                .FileName("Config.xlsx")
+                .Filterable(true)
+                .ProxyURL(Url.Action("ExportExcel", "Config"))
+                )
+                .Pdf(pdf => pdf
+                .AllPages()
+                .AvoidLinks()
+                .PaperSize("A4")
+                .Margin("2cm", "1cm", "1cm", "1cm")
+                .Landscape()
+                .RepeatHeaders()
+                .FileName("Config.pdf")
+                )
+                .HtmlAttributes(new { @class = "KendoGrid" })
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                .PageSize(1000)
+                .Model(model =>
+                {
+                    model.Id(t => t.ID);
+                })
+                .Events(t => { t.RequestEnd("onGridRequestEndMembershipPermissionCompanyName"); })
+                .Read(t => t.Action("GetByMembershipIDAndCompanyNameToList", "MembershipPermission").Data("filterMembershipPermissionIndustry"))
+                .Destroy(t => t.Action("Delete", "MembershipPermission"))
+                .Create(t => t.Action("CreateCompanyName", "MembershipPermission").Data("filterMembershipPermissionIndustry"))
+                .Update(t => t.Action("Update", "MembershipPermission"))
+                )
+                )
             </div>
         </div>
         <div class="card card-primary">
@@ -267,7 +267,7 @@
                      .DataTextField("IndustryName")
                     .HtmlAttributes(new { @class = "form-control" })
                       .Events(e => e.DataBound("onIndustryDataBound"))
-                       .Filter(FilterType.StartsWith)
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferIndustryByMembershipIDAndIndustryToList", "MembershipPermission").Data("filterMembershipPermissionIndustry")))
                             )
             </div>
