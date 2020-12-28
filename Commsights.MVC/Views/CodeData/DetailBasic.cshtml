@@ -190,6 +190,10 @@
                                 @(Html.TextBoxFor(Model => Model.TitleProperty, new { @class = "form-control", @title = Model.TitleProperty }))
                             </div>
                             <div class='form-group'>
+                                <label for='SourceProperty'>Source (Property)</label>
+                                @(Html.TextBoxFor(Model => Model.SourceProperty, new { @class = "form-control text-right", @title = Model.Source }))
+                            </div>
+                            <div class='form-group'>
                                 <label for='CopyVersion'>Copy Version</label>
                                 @(Html.TextBoxFor(Model => Model.CopyVersion, new { @class = "form-control text-right" }))
                             </div>
@@ -200,14 +204,6 @@
                             <div class='form-group'>
                                 <label for='Segment'>Segment</label>
                                 @(Html.TextBoxFor(Model => Model.Segment, new { @class = "form-control", @readonly = "readonly" }))
-                            </div>
-                            <div class='form-group'>
-                                <label for='CorpCopy'>Corp Copy</label>
-                                @(Html.TextBoxFor(Model => Model.CorpCopy, new { @class = "form-control", @readonly = "readonly" }))
-                            </div>
-                            <div class='form-group'>
-                                <label for='DatePublish'>Date Publish</label>
-                                @(Html.TextBoxFor(Model => Model.DatePublish, "{0:MM/dd/yyyy}", new { @class = "form-control text-right", @readonly = "readonly" }))
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -223,7 +219,10 @@
                                 <label for='ROME_Product_VND'>Media Value Product</label>
                                 @(Html.TextBoxFor(Model => Model.ROME_Product_VND, "{0:N0}", new { @class = "form-control text-right", @readonly = "readonly" }))
                             </div>
-
+                            <div class='form-group'>
+                                <label for='CorpCopy'>Corp Copy</label>
+                                @(Html.TextBoxFor(Model => Model.CorpCopy, new { @class = "form-control", @readonly = "readonly" }))
+                            </div>
                             <div class='form-group'>
                                 <label for='Source'>Source</label>
                                 @(Html.TextBoxFor(Model => Model.Source, "{0:N0}", new { @class = "form-control text-right",  @readonly = "readonly" }))
@@ -240,14 +239,9 @@
                                 <label for='MediaType'>Media Type</label>
                                 @(Html.TextBoxFor(Model => Model.MediaType, new { @class = "form-control", @readonly = "readonly" }))
                             </div>
-                            
                             <div class='form-group'>
-                                <label for='ProductID'>ProductID</label>
-                                @(Html.TextBoxFor(Model => Model.ProductID, new { @class = "form-control text-right", @readonly = "readonly" }))
-                            </div>
-                            <div class='form-group'>
-                                <label for='ProductPropertyID'>PropertyID</label>
-                                @(Html.TextBoxFor(Model => Model.ProductPropertyID, new { @class = "form-control text-right", @readonly = "readonly" }))
+                                <label for='DatePublish'>Date Publish</label>
+                                @(Html.TextBoxFor(Model => Model.DatePublish, "{0:MM/dd/yyyy}", new { @class = "form-control text-right", @readonly = "readonly" }))
                             </div>
                         </div>
                     </div>

@@ -789,63 +789,66 @@ namespace Commsights.MVC.Controllers
         }
         public string CheckCodeData(CodeData model)
         {
-            bool check = true;
+            _productRepository.UpdateSingleItemByCodeData(model);
             string actionMessage = "";
-            if (model.SOECompany > 0)
+            if ((!string.IsNullOrEmpty(model.TitleProperty)) && (model.SourceProperty > 0))
             {
-                if (model.SOEProduct > model.SOECompany)
+                List<ProductProperty> list = _productPropertyRepository.GetTitleAndSourceToList(model.TitleProperty, model.SourceProperty.Value);
+                foreach (ProductProperty productProperty in list)
                 {
-                    check = false;
-                    actionMessage = AppGlobal.Error + " - SOE Product > SOE Company";
+                    productProperty.ID = 0;
+                    productProperty.FileName = "";
+                    productProperty.MediaTitle = "";
+                    productProperty.MediaType = "";                    
+                    productProperty.ParentID = model.ProductID;
+                    productProperty.Source = model.Source;
+                    productProperty.IsCoding = true;
+                    productProperty.DateCoding = DateTime.Now;
+                    productProperty.Initialization(InitType.Insert, RequestUserID);
+                    _productPropertyRepository.Create(productProperty);
                 }
+                _productPropertyRepository.Delete(model.ProductPropertyID.Value);
             }
-            if (!string.IsNullOrEmpty(model.ProductName_ProjectName))
+            else
             {
-                if (model.SOEProduct == 0)
+                bool check = true;
+                if (model.SOECompany > 0)
                 {
-                    check = false;
-                    actionMessage = AppGlobal.Error + " - ProductName exist but SOE is null or 0";
-                }
-            }
-            if (model.SOEProduct > 0)
-            {
-                if (string.IsNullOrEmpty(model.ProductName_ProjectName))
-                {
-                    check = false;
-                    actionMessage = AppGlobal.Error + " - SOE > 0 but ProductName not exist";
-                }
-            }
-            if (!string.IsNullOrEmpty(model.ProductName_ProjectName))
-            {
-                if (model.CategorySub.Contains("industry") || model.CategorySub.Contains("corporate") || model.CategorySub.Contains("company") || model.CategorySub.Contains("competitor"))
-                {
-                    check = false;
-                    actionMessage = AppGlobal.Error + " - ProductName exist but Category Sub not relate to Product";
-                }
-            }
-            if (check == true)
-            {
-                model.IsCoding = true;
-                model.UserUpdated = RequestUserID;
-                _productRepository.UpdateSingleItemByCodeData(model);
-                _productPropertyRepository.UpdateItemsByCodeDataCopyVersion(model);
-            }
-            if (!string.IsNullOrEmpty(model.TitleProperty))
-            {
-                if (model.CopyVersion == 0)
-                {
-                    ProductProperty productProperty = _productPropertyRepository.GetTitleAndCopyVersionAndIsCoding(model.TitleProperty, model.CopyVersion.Value, true);
-                    if (productProperty != null)
+                    if (model.SOEProduct > model.SOECompany)
                     {
-                        if (productProperty.ID > 0)
-                        {
-                            productProperty.ID = model.ProductPropertyID.Value;
-                            productProperty.ParentID = model.ProductID;
-                            productProperty.Source = model.Source;
-                            productProperty.Initialization(InitType.Update, RequestUserID);
-                            _productPropertyRepository.Update(productProperty.ID, productProperty);
-                        }
+                        check = false;
+                        actionMessage = AppGlobal.Error + " - SOE Product > SOE Company";
                     }
+                }
+                if (!string.IsNullOrEmpty(model.ProductName_ProjectName))
+                {
+                    if (model.SOEProduct == 0)
+                    {
+                        check = false;
+                        actionMessage = AppGlobal.Error + " - ProductName exist but SOE is null or 0";
+                    }
+                }
+                if (model.SOEProduct > 0)
+                {
+                    if (string.IsNullOrEmpty(model.ProductName_ProjectName))
+                    {
+                        check = false;
+                        actionMessage = AppGlobal.Error + " - SOE > 0 but ProductName not exist";
+                    }
+                }
+                if (!string.IsNullOrEmpty(model.ProductName_ProjectName))
+                {
+                    if (model.CategorySub.Contains("industry") || model.CategorySub.Contains("corporate") || model.CategorySub.Contains("company") || model.CategorySub.Contains("competitor"))
+                    {
+                        check = false;
+                        actionMessage = AppGlobal.Error + " - ProductName exist but Category Sub not relate to Product";
+                    }
+                }
+                if (check == true)
+                {
+                    model.IsCoding = true;
+                    model.UserUpdated = RequestUserID;                    
+                    _productPropertyRepository.UpdateItemsByCodeDataCopyVersion(model);
                 }
             }
             return actionMessage;

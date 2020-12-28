@@ -202,6 +202,18 @@ namespace Commsights.Data.Repositories
 
             return model;
         }
+        public List<ProductProperty> GetTitleAndSourceToList(string title, int source)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            SqlParameter[] parameters =
+                   {
+                new SqlParameter("@Title",title),
+                new SqlParameter("@Source",source),
+             };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectByTitleAndSource", parameters);
+            list = SQLHelper.ToList<ProductProperty>(dt);
+            return list;
+        }
         public string Initialization()
         {
             return SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInitialization");

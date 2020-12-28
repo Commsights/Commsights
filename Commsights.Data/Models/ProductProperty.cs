@@ -101,5 +101,6 @@ namespace Commsights.Data.Models
         public string CampaignKeyMessage { get; set; }
         public int? CopyVersion { get; set; }
         public int? SourceProperty { get; set; }
+        public DateTime? DateCoding { get; set; }
     }
 }
