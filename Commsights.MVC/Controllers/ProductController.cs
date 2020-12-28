@@ -21,6 +21,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace Commsights.MVC.Controllers
 {
@@ -725,16 +726,31 @@ namespace Commsights.MVC.Controllers
         }
         public async Task<string> AsyncScanWebsitePriorityNoFilterProductByIndexBeginVoid001(int indexBegin)
         {
-            List<Config> listConfig = _configResposistory.GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftToList(AppGlobal.CRM, AppGlobal.Website, true, true);
-            int listConfigCount = listConfig.Count;
-            int indexEnd = indexBegin + 5;
-            for (int i = indexBegin; i < indexEnd; i++)
+            indexBegin = indexBegin + 1;
+            int indexEnd = indexBegin + 4;
+            List<Config> listConfig = _configResposistory.GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftAndRowBeginAndRowEndToList(AppGlobal.CRM, AppGlobal.Website, true, true, indexBegin, indexEnd);
+            foreach (Config item in listConfig)
             {
-                if (i == listConfigCount)
+                Thread t = new Thread(() =>
                 {
-                    i = indexEnd;
-                }
-                await this.AsyncCreateProductScanWebsiteNoFilterProduct0001(listConfig[i]);
+                    this.AsyncCreateProductScanWebsiteNoFilterProduct0001(item);
+                });
+                t.Start();
+            }
+            return "";
+        }
+        public string ScanWebsitePriorityNoFilterProductByIndexBeginVoid001(int indexBegin)
+        {
+            indexBegin = indexBegin + 1;
+            int indexEnd = indexBegin + 4;
+            List<Config> listConfig = _configResposistory.GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftAndRowBeginAndRowEndToList(AppGlobal.CRM, AppGlobal.Website, true, true, indexBegin, indexEnd);
+            foreach (Config item in listConfig)
+            {
+                Thread t = new Thread(() =>
+                {
+                    CreateProductScanWebsiteNoFilterProduct00001(item);
+                });
+                t.Start();
             }
             return "";
         }
@@ -1176,10 +1192,6 @@ namespace Commsights.MVC.Controllers
                 {
                     List<LinkItem> list = new List<LinkItem>();
                     AppGlobal.LinkFinder001(config.URLFull, config.URLFull, true, list);
-                    //LinkItem item = new LinkItem();
-                    //item.Href = "https://thanhnien.vn/thoi-su/sai-pham-o-saigon-coop-kiem-diem-nhieu-ca-nhan-to-chuc-1314984.html";
-                    //item.Text = "Sai phạm ở Saigon Co.op: Kiểm điểm nhiều cá nhân, tổ chức";
-                    //list.Add(item);
                     foreach (LinkItem linkItem in list)
                     {
                         try
@@ -1274,6 +1286,126 @@ namespace Commsights.MVC.Controllers
                                         product.Description = AppGlobal.Decode(product.Description);
                                     }
                                     await _productRepository.AsyncInsertSingleItem(product);
+                                }
+                                response.Close();
+                                readStream.Close();
+                            }
+                        }
+                        catch (Exception e1)
+                        {
+                            string mes1 = e1.Message;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                string mes = e.Message;
+            }
+            return "";
+        }
+        public string CreateProductScanWebsiteNoFilterProduct00001(Config config)
+        {
+            try
+            {
+                if (config != null)
+                {
+                    List<LinkItem> list = new List<LinkItem>();
+                    AppGlobal.LinkFinder001(config.URLFull, config.URLFull, true, list);
+                    foreach (LinkItem linkItem in list)
+                    {
+                        try
+                        {
+                            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(linkItem.Href);
+                            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                            if (response.StatusCode == HttpStatusCode.OK)
+                            {
+                                Stream receiveStream = response.GetResponseStream();
+                                StreamReader readStream = null;
+                                readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                                string html = readStream.ReadToEnd();
+                                html = html.Replace(@"~", @"");
+                                html = AppGlobal.HTMLReplaceAndSplit(html);
+                                string title = "";
+                                string htmlTitle = html;
+                                if ((htmlTitle.Contains(@"<meta property=""og:title"" content=""") == true) || (htmlTitle.Contains(@"<meta property='og:title' content='") == true))
+                                {
+                                    htmlTitle = htmlTitle.Replace(@"<meta property=""og:title"" content=""", @"~");
+                                    htmlTitle = htmlTitle.Replace(@"<meta property='og:title' content='", @"~");
+                                    if (htmlTitle.Split('~').Length > 1)
+                                    {
+                                        htmlTitle = htmlTitle.Split('~')[1];
+                                        htmlTitle = htmlTitle.Replace(@"""", @"~");
+                                        htmlTitle = htmlTitle.Replace(@"'", @"~");
+                                        htmlTitle = htmlTitle.Split('~')[0];
+                                        title = htmlTitle.Trim();
+                                    }
+                                }
+                                else
+                                {
+                                    MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
+                                    if (m1.Count > 0)
+                                    {
+                                        string value = m1[m1.Count - 1].Groups[1].Value;
+                                        if (!string.IsNullOrEmpty(value))
+                                        {
+                                            value = value.Replace(@"<title>", @"");
+                                            value = value.Replace(@"</title>", @"");
+                                            title = value.Trim();
+                                        }
+                                    }
+                                }
+                                bool isUnicode = AppGlobal.ContainsUnicodeCharacter(title);
+                                if ((title.Contains(@"&#") == true) || (isUnicode == false))
+                                {
+                                    MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
+                                    if (m1.Count > 0)
+                                    {
+                                        string value = m1[m1.Count - 1].Groups[1].Value;
+                                        if (!string.IsNullOrEmpty(value))
+                                        {
+                                            value = value.Replace(@"<title>", @"");
+                                            value = value.Replace(@"</title>", @"");
+                                            title = value.Trim();
+                                        }
+                                    }
+                                }
+                                if (title.Split('|').Length > 2)
+                                {
+                                    title = title.Split('|')[1];
+                                }
+                                if (title.Split('|').Length > 1)
+                                {
+                                    title = title.Split('|')[0];
+                                }
+                                title = title.Trim();
+                                Product product = new Product();
+                                product.Description = "";
+                                product.Title = title;
+                                product.ParentID = config.ID;
+                                product.CategoryID = config.ID;
+                                product.Source = AppGlobal.SourceAuto;
+                                if (string.IsNullOrEmpty(product.Title))
+                                {
+                                    product.Title = linkItem.Text;
+                                }
+                                product.URLCode = linkItem.Href;
+                                product.DatePublish = DateTime.Now;
+                                product.Initialization(InitType.Insert, RequestUserID);
+                                product.DatePublish = DateTime.Now;
+                                AppGlobal.FinderContentAndDatePublish001(html, product);
+                                if ((product.DatePublish.Year > 2019) && (product.Active == true))
+                                {
+                                    if (!string.IsNullOrEmpty(product.Title))
+                                    {
+                                        product.Title = AppGlobal.Decode(product.Title);
+                                        product.MetaTitle = AppGlobal.SetName(product.Title);
+                                    }
+                                    if (!string.IsNullOrEmpty(product.Description))
+                                    {
+                                        product.Description = AppGlobal.Decode(product.Description);
+                                    }
+                                    _productRepository.InsertSingleItem(product);
                                 }
                                 response.Close();
                                 readStream.Close();

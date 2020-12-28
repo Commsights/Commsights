@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 
@@ -36,7 +37,7 @@ namespace Commsights.Data.Helpers
                 list.Add(model);
             }
             return list;
-        }      
+        }
     }
     public class MonthFinance
     {
@@ -2251,7 +2252,7 @@ namespace Commsights.Data.Helpers
         public static List<string> SetContentByDauChamPhay(string content)
         {
             List<string> list = new List<string>();
-            content = content.Replace(@",", @";");            
+            content = content.Replace(@",", @";");
             foreach (string item in content.Split(';'))
             {
                 if (!string.IsNullOrEmpty(item))
