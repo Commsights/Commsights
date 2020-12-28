@@ -187,6 +187,21 @@ namespace Commsights.Data.Repositories
 
             return list;
         }
+        public ProductProperty GetTitleAndCopyVersionAndIsCoding(string title, int copyVersion, bool isCoding)
+        {
+            ProductProperty model = new ProductProperty();
+
+            SqlParameter[] parameters =
+                   {
+                new SqlParameter("@Title",title),
+                new SqlParameter("@CopyVersion",copyVersion),
+                new SqlParameter("@IsCoding",isCoding),
+             };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectByTitleAndCopyVersionAndIsCoding", parameters);
+            model = SQLHelper.ToList<ProductProperty>(dt).FirstOrDefault();
+
+            return model;
+        }
         public string Initialization()
         {
             return SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInitialization");

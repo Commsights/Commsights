@@ -34,5 +34,6 @@ namespace Commsights.Data.Repositories
         public int InsertItemsByCopyCodeData(int ID, int RequestUserID, int rowIndex);
         public string InsertSingleItemByCopyCodeData(int ID, int RequestUserID);
         public string DeleteItemsByIDCodeData(int ID);
+        public ProductProperty GetTitleAndCopyVersionAndIsCoding(string title, int copyVersion, bool isCoding);
     }
 }

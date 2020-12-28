@@ -146,5 +146,6 @@ namespace Commsights.Data.DataTransferObject
         public string Frequency { get; set; }
         public int? CopyVersion { get; set; }
         public string TitleProperty { get; set; }
+        public int? SourceProperty { get; set; }
     }
 }

@@ -427,6 +427,21 @@ namespace Commsights.Data.Repositories
             list = SQLHelper.ToList<Config>(dt);
             return list;
         }
+        public List<Config> GetSQLWebsiteByGroupNameAndCodeAndActiveAndRowBeginAndRowEndToList(string groupName, string code, bool active, int rowBegin, int rowEnd)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@Active",active),
+                new SqlParameter("@RowBegin",rowBegin),
+                new SqlParameter("@RowEnd",rowEnd),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectWebsiteByGroupNameAndCodeAndActiveAndRowBeginAndRowEnd", parameters);
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
         public List<Config> GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftToList(string groupName, string code, bool active, bool isMenuLeft)
         {
             List<Config> list = new List<Config>();
@@ -438,6 +453,22 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@IsMenuLeft",isMenuLeft),
             };
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeft", parameters);
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
+        public List<Config> GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftAndRowBeginAndRowEndToList(string groupName, string code, bool active, bool isMenuLeft, int rowBegin, int rowEnd)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@Active",active),
+                new SqlParameter("@IsMenuLeft",isMenuLeft),
+                new SqlParameter("@RowBegin",rowBegin),
+                new SqlParameter("@RowEnd",rowEnd),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftAndRowBeginAndRowEnd", parameters);
             list = SQLHelper.ToList<Config>(dt);
             return list;
         }

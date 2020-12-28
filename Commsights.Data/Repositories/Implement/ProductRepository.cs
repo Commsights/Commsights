@@ -1311,6 +1311,7 @@ new SqlParameter("@Description",model.Description),
 new SqlParameter("@DescriptionEnglish",model.DescriptionEnglish),
 new SqlParameter("@Author",model.Author),
 new SqlParameter("@UserUpdated",model.UserUpdated),
+new SqlParameter("@TitleProperty",model.TitleProperty),
 };
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductUpdateSingleItemByCodeData", parameters);
             return result;

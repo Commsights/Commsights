@@ -817,18 +817,36 @@ namespace Commsights.MVC.Controllers
             }
             if (!string.IsNullOrEmpty(model.ProductName_ProjectName))
             {
-                if (model.CategorySub.Contains("industry") || model.CategorySub.Contains("corporate") || model.CategorySub.Contains("company")|| model.CategorySub.Contains("competitor"))
+                if (model.CategorySub.Contains("industry") || model.CategorySub.Contains("corporate") || model.CategorySub.Contains("company") || model.CategorySub.Contains("competitor"))
                 {
                     check = false;
                     actionMessage = AppGlobal.Error + " - ProductName exist but Category Sub not relate to Product";
-                }    
+                }
             }
             if (check == true)
             {
                 model.IsCoding = true;
                 model.UserUpdated = RequestUserID;
                 _productRepository.UpdateSingleItemByCodeData(model);
-                _productPropertyRepository.UpdateItemsByCodeDataCopyVersion(model);                
+                _productPropertyRepository.UpdateItemsByCodeDataCopyVersion(model);
+            }
+            if (!string.IsNullOrEmpty(model.TitleProperty))
+            {
+                if (model.CopyVersion == 0)
+                {
+                    ProductProperty productProperty = _productPropertyRepository.GetTitleAndCopyVersionAndIsCoding(model.TitleProperty, model.CopyVersion.Value, true);
+                    if (productProperty != null)
+                    {
+                        if (productProperty.ID > 0)
+                        {
+                            productProperty.ID = model.ProductPropertyID.Value;
+                            productProperty.ParentID = model.ProductID;
+                            productProperty.Source = model.Source;
+                            productProperty.Initialization(InitType.Update, RequestUserID);
+                            _productPropertyRepository.Update(productProperty.ID, productProperty);
+                        }
+                    }
+                }
             }
             return actionMessage;
         }
