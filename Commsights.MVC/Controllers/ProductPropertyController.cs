@@ -46,12 +46,27 @@ namespace Commsights.MVC.Controllers
             CodeData model = new CodeData();
             return View(model);
         }
-        public IActionResult ViewContent(string fileName, string extension)
+        public IActionResult ViewContent(string fileName, string extension, string url)
         {
             ViewContentViewModel model = new ViewContentViewModel();
+            extension = extension.Replace(@".", @"");
             model.Extension = extension;
             model.FileName = fileName;
-           
+            StringBuilder txt = new StringBuilder();
+            switch (extension)
+            {
+                case "jpg":
+                case "png":
+                case "jpeg":
+                    txt.AppendLine(@"<img src='" + url + "' class='img-thumbnail' />");
+                    break;
+                case "mp4":
+                    txt.AppendLine(@"<video width='1000' height='600' controls>");
+                    txt.AppendLine(@"<source src='" + url + "' type='video/mp4'>");
+                    txt.AppendLine(@"</video>");
+                    break;
+            }
+            model.Extension = txt.ToString();
             return View(model);
         }
         public IActionResult Industry(int ID)
