@@ -543,5 +543,19 @@ new SqlParameter("@BlackWhite",config.BlackWhite),
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ConfigUpdateSingleItem001", parameters);
             return result;
         }
+        public List<Config> GetProductPermissionDistinctIndustryByEmployeeIDToList(int employeeID)
+        {
+            List<Config> list = new List<Config>();
+            if (employeeID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@EmployeeID",employeeID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPermissionSelectDistinctIndustryByEmployeeID", parameters);
+                list = SQLHelper.ToList<Config>(dt);
+            }
+            return list;
+        }
     }
 }

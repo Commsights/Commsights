@@ -622,6 +622,11 @@ namespace Commsights.MVC.Controllers
             var data = _configResposistory.GetDataTransferWebsiteByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetProductPermissionDistinctIndustryByEmployeeIDToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetProductPermissionDistinctIndustryByEmployeeIDToList(RequestUserID);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetWebsiteScanByIDToList([DataSourceRequest] DataSourceRequest request, int parentID)
         {
             List<Config> list = new List<Config>();
