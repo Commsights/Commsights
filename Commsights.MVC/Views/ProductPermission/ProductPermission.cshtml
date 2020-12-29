@@ -1,10 +1,10 @@
-﻿@{ ViewData["Title"] = "Product Permission"; }
+﻿@{ ViewData["Title"] = "Code Permission"; }
 
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Product Permission</h3>
+                <h3 class="card-title">Code Permission</h3>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -72,7 +72,7 @@
     model.Field(t => t.IndustryID).Editable(false);
     model.Field(t => t.EmployeeID).Editable(false);
     model.Field(t => t.Employee).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
-    model.Field(t => t.RowPercent).DefaultValue(100);
+    model.Field(t => t.RowPercent).DefaultValue(0);
     model.Field(t => t.SortOrder).DefaultValue(1);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })

@@ -230,6 +230,16 @@ namespace Commsights.MVC.Controllers
             var data = await _productRepository.AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(datePublishBegin, datePublishEnd, search, AppGlobal.SourceAuto);
             return Json(data.ToDataSourceResult(request));
         }
+        public async Task<ActionResult> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceAndIsPublishToList([DataSourceRequest] DataSourceRequest request, string search, DateTime datePublishBegin, DateTime datePublishEnd, bool isTitle, bool isDescription, bool isPublish)
+        {
+            var data = await _productRepository.AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceAndIsPublishToList(datePublishBegin, datePublishEnd, search, AppGlobal.SourceAuto, isTitle, isDescription, isPublish);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public async Task<ActionResult> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceAndIsUploadToList([DataSourceRequest] DataSourceRequest request, string search, DateTime datePublishBegin, DateTime datePublishEnd, bool isTitle, bool isDescription, bool isUpload)
+        {
+            var data = await _productRepository.AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceAndIsUploadToList(datePublishBegin, datePublishEnd, search, AppGlobal.SourceAuto, isTitle, isDescription, isUpload);
+            return Json(data.ToDataSourceResult(request));
+        }
         public async Task<ActionResult> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceToList([DataSourceRequest] DataSourceRequest request, string search, DateTime datePublishBegin, DateTime datePublishEnd, bool isTitle, bool isDescription)
         {
             var data = await _productRepository.AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceToList(datePublishBegin, datePublishEnd, search, AppGlobal.SourceAuto, isTitle, isDescription);

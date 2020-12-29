@@ -22,7 +22,7 @@
                                      .DateInput()
                                 )
                     </div>
-                    <div class='col-sm-7'>
+                    <div class='col-sm-5'>
                         @(Html.Kendo().DropDownListFor(Model=>Model.IndustryID)
                      .DataValueField("ID")
                      .DataTextField("CodeName")
@@ -30,6 +30,10 @@
                        .Filter(FilterType.StartsWith)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetProductPermissionDistinctIndustryByEmployeeIDToList", "Config")))
                             )
+                    </div>
+                    <div class="col-md-2">
+                        <input type="checkbox" id="IsUpload" value="">
+                        <label for='IsUpload' style="font-size:12px;">Up/Pub</label>
                     </div>
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" title="Search" onclick="onSearch()">
@@ -144,7 +148,7 @@
     model.Id(t => t.RowIndex);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDToList", "CodeData").Data("filterCodeData"))
+.Read(t => t.Action("GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadToList", "CodeData").Data("filterCodeData"))
 .Destroy(t => t.Action("DeleteProductProperty", "CodeData"))
 ))
             </div>
@@ -218,6 +222,7 @@
         var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
         var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
         var datePublishEndValue = toDate02($("#DatePublishEnd").val());
-        return { datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, industryID: industryIDValue};
+        var isUploadValue = document.getElementById("IsUpload").checked;
+        return { datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, industryID: industryIDValue, isUpload: isUploadValue};
     }
 </script>
