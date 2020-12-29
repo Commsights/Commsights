@@ -352,7 +352,7 @@ namespace Commsights.MVC.Controllers
             {
                 txt.AppendLine(@"<th style='color: #ffffff; background-color: #c00000;'>" + item.CodeName + "</th>");
                 column = column + 1;
-            }           
+            }
             txt.AppendLine(@"<thead>");
             txt.AppendLine(@"<tbody>");
             int index = 0;
@@ -3881,29 +3881,29 @@ namespace Commsights.MVC.Controllers
                                                                 }
                                                             }
                                                         }
-                                                        if (workSheet.Cells[i, 8].Value != null)
+                                                        if (workSheet.Cells[i, 9].Value != null)
                                                         {
-                                                            model.Title = workSheet.Cells[i, 8].Value.ToString().Trim();
+                                                            model.Title = workSheet.Cells[i, 9].Value.ToString().Trim();
                                                             if (model.Title.Equals(model.Title.ToUpper()))
                                                             {
                                                                 model.Title = AppGlobal.ToUpperFirstLetter(model.Title);
                                                             }
-                                                            if (workSheet.Cells[i, 8].Hyperlink != null)
+                                                            if (workSheet.Cells[i, 9].Hyperlink != null)
                                                             {
-                                                                model.URLCode = workSheet.Cells[i, 8].Hyperlink.AbsoluteUri.Trim();
+                                                                model.URLCode = workSheet.Cells[i, 9].Hyperlink.AbsoluteUri.Trim();
                                                             }
-                                                        }
-                                                        if (workSheet.Cells[i, 10].Value != null)
-                                                        {
-                                                            model.FileName = workSheet.Cells[i, 10].Value.ToString().Trim();
                                                         }
                                                         if (workSheet.Cells[i, 11].Value != null)
                                                         {
-                                                            mediaTitle = workSheet.Cells[i, 11].Value.ToString().Trim();
+                                                            model.FileName = workSheet.Cells[i, 11].Value.ToString().Trim();
                                                         }
-                                                        if (workSheet.Cells[i, 22].Value != null)
+                                                        if (workSheet.Cells[i, 12].Value != null)
                                                         {
-                                                            model.Page = workSheet.Cells[i, 22].Value.ToString().Trim();
+                                                            mediaTitle = workSheet.Cells[i, 12].Value.ToString().Trim();
+                                                        }
+                                                        if (workSheet.Cells[i, 23].Value != null)
+                                                        {
+                                                            model.Page = workSheet.Cells[i, 23].Value.ToString().Trim();
                                                         }
                                                         model.ParentID = AppGlobal.WebsiteID;
                                                         Config parent = _configResposistory.GetByGroupNameAndCodeAndTitle(AppGlobal.CRM, AppGlobal.PressList, mediaTitle);
@@ -3915,9 +3915,9 @@ namespace Commsights.MVC.Controllers
                                                             parent.Title = mediaTitle;
                                                             parent.CodeName = mediaTitle;
                                                             parent.Color = AppGlobal.AdvertisementValue;
-                                                            if (workSheet.Cells[i, 12].Value != null)
+                                                            if (workSheet.Cells[i, 13].Value != null)
                                                             {
-                                                                string type = workSheet.Cells[i, 12].Value.ToString().Trim();
+                                                                string type = workSheet.Cells[i, 13].Value.ToString().Trim();
                                                                 Config mediaType = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.WebsiteType, type);
                                                                 if (mediaType == null)
                                                                 {
@@ -3930,9 +3930,9 @@ namespace Commsights.MVC.Controllers
                                                                 }
                                                                 parent.ParentID = mediaType.ID;
                                                             }
-                                                            if (workSheet.Cells[i, 13].Value != null)
+                                                            if (workSheet.Cells[i, 14].Value != null)
                                                             {
-                                                                string type = workSheet.Cells[i, 13].Value.ToString().Trim();
+                                                                string type = workSheet.Cells[i, 14].Value.ToString().Trim();
                                                                 Config country = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Country, type);
                                                                 if (country == null)
                                                                 {
@@ -3945,9 +3945,9 @@ namespace Commsights.MVC.Controllers
                                                                 }
                                                                 parent.CountryID = country.ID;
                                                             }
-                                                            if (workSheet.Cells[i, 16].Value != null)
+                                                            if (workSheet.Cells[i, 17].Value != null)
                                                             {
-                                                                string type = workSheet.Cells[i, 16].Value.ToString().Trim();
+                                                                string type = workSheet.Cells[i, 17].Value.ToString().Trim();
                                                                 Config language = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Language, type);
                                                                 if (language == null)
                                                                 {
@@ -3960,9 +3960,9 @@ namespace Commsights.MVC.Controllers
                                                                 }
                                                                 parent.LanguageID = language.ID;
                                                             }
-                                                            if (workSheet.Cells[i, 17].Value != null)
+                                                            if (workSheet.Cells[i, 18].Value != null)
                                                             {
-                                                                string type = workSheet.Cells[i, 17].Value.ToString().Trim();
+                                                                string type = workSheet.Cells[i, 18].Value.ToString().Trim();
                                                                 Config frequency = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Frequency, type);
                                                                 if (frequency == null)
                                                                 {
@@ -3975,9 +3975,9 @@ namespace Commsights.MVC.Controllers
                                                                 }
                                                                 parent.FrequencyID = frequency.ID;
                                                             }
-                                                            if (workSheet.Cells[i, 21].Value != null)
+                                                            if (workSheet.Cells[i, 22].Value != null)
                                                             {
-                                                                string type = workSheet.Cells[i, 21].Value.ToString().Trim();
+                                                                string type = workSheet.Cells[i, 22].Value.ToString().Trim();
                                                                 Config colorType = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Color, type);
                                                                 if (colorType == null)
                                                                 {
@@ -3990,9 +3990,9 @@ namespace Commsights.MVC.Controllers
                                                                 }
                                                                 parent.ColorTypeID = colorType.ID;
                                                             }
-                                                            if (workSheet.Cells[i, 25].Value != null)
+                                                            if (workSheet.Cells[i, 26].Value != null)
                                                             {
-                                                                string type = workSheet.Cells[i, 25].Value.ToString().Trim();
+                                                                string type = workSheet.Cells[i, 26].Value.ToString().Trim();
                                                                 try
                                                                 {
                                                                     parent.BlackWhite = int.Parse(type);
@@ -4022,7 +4022,31 @@ namespace Commsights.MVC.Controllers
                                                             bool isCompany = true;
                                                             if (workSheet.Cells[i, 3].Value != null)
                                                             {
-                                                                string companyName = workSheet.Cells[i, 3].Value.ToString().Trim();
+                                                                string industryName = workSheet.Cells[i, 3].Value.ToString().Trim();
+                                                                Config industry = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Industry, industryName);
+                                                                if (industry != null)
+                                                                {
+                                                                    if (industry.ID > 0)
+                                                                    {
+                                                                        ProductProperty productProperty = new ProductProperty();
+                                                                        productProperty.Initialization(InitType.Insert, RequestUserID);
+                                                                        productProperty.ParentID = product.ID;
+                                                                        productProperty.GUICode = product.GUICode;
+                                                                        productProperty.AssessID = AppGlobal.AssessID;
+                                                                        productProperty.IndustryID = industry.IndustryID;                                                                        
+                                                                        productProperty.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
+                                                                        productProperty.Code = AppGlobal.Industry;
+                                                                        productProperty.IsDaily = true;
+                                                                        if (_productPropertyRepository.IsExist(productProperty) == true)
+                                                                        {
+                                                                            _productPropertyRepository.Create(productProperty);
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                            if (workSheet.Cells[i, 4].Value != null)
+                                                            {
+                                                                string companyName = workSheet.Cells[i, 4].Value.ToString().Trim();
                                                                 if ((companyName.Contains("ngành")) || (companyName.Contains("industry")))
                                                                 {
                                                                     isCompany = false;

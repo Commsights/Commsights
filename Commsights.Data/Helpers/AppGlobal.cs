@@ -154,7 +154,23 @@ namespace Commsights.Data.Helpers
         public static string InitGuiCode => Guid.NewGuid().ToString();
         #endregion
 
-        #region AppSettings 
+        #region AppSettings        
+        public static string FTPScanFiles
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("FTPScanFiles").Value;
+            }
+        }
+        public static string URLScanFiles
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("URLScanFiles").Value;
+            }
+        }
         public static int AdValue
         {
             get

@@ -145,6 +145,41 @@ namespace Commsights.Data.Repositories
 
             return list;
         }
+        public List<ProductProperty> GetRequestUserIDAndParentIDAndCodeAndDateUpdatedToList(int requestUserID, int parentID, string code, DateTime dateUpdated)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            if (requestUserID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@RequestUserID",requestUserID),
+                new SqlParameter("@ParentID",parentID),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@DateUpdated",dateUpdated),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectByRequestUserIDAndParentIDAndCodeAndDateUpdated", parameters);
+                list = SQLHelper.ToList<ProductProperty>(dt);
+            }
+            return list;
+        }
+        public List<ProductProperty> GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActiveToList(int requestUserID, int parentID, string code, DateTime dateUpdated, bool active)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            if (requestUserID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@RequestUserID",requestUserID),
+                new SqlParameter("@ParentID",parentID),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@DateUpdated",dateUpdated),
+                new SqlParameter("@Active",active),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectByRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActive", parameters);
+                list = SQLHelper.ToList<ProductProperty>(dt);
+            }
+            return list;
+        }
         public List<ProductPropertyDataTransfer> GetDataTransferIndustryByParentIDToList(int parentID)
         {
             List<ProductPropertyDataTransfer> list = new List<ProductPropertyDataTransfer>();

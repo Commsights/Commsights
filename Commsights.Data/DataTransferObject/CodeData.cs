@@ -106,6 +106,7 @@ namespace Commsights.Data.DataTransferObject
         [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? ROME_Product_VND { get; set; }
         public int? ProductID { get; set; }
+        public int? ProductParentID { get; set; }
         public string Title { get; set; }
         public string TitleEnglish { get; set; }
         public string Description { get; set; }
@@ -147,5 +148,7 @@ namespace Commsights.Data.DataTransferObject
         public int? CopyVersion { get; set; }
         public string TitleProperty { get; set; }
         public int? SourceProperty { get; set; }
+        public string TimeLine { get; set; }
+        public string TotalSize { get; set; }
     }
 }

@@ -102,5 +102,7 @@ namespace Commsights.Data.Models
         public int? CopyVersion { get; set; }
         public int? SourceProperty { get; set; }
         public DateTime? DateCoding { get; set; }
+        public bool? IsDailyDownload { get; set; }
+        public DateTime? DateDailyDownload { get; set; }
     }
 }

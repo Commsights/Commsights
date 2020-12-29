@@ -1,0 +1,199 @@
+﻿@{ ViewData["Title"] = "Scan files handling"; }
+
+@model Commsights.Data.DataTransferObject.CodeData
+
+<div class="row">
+    <div class="col-md-7">
+        <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadScanFiles", "ProductProperty")'>
+            <label for='UploadScanFiles'>Select the scan files: </label>
+            <div class="row">
+                <div class='col-md-6'>
+                    @(Html.Kendo().Upload()
+                                  .Name("UploadScanFiles")
+                            )
+                </div>
+                <div class='col-md-6'>
+                    <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload</button>
+                </div>
+            </div>
+        </form>
+        <br />
+        <div class='row'>
+            <div class="col-md-6">
+                @(Html.Kendo().Grid<Commsights.Data.Models.ProductProperty>()
+.Name("ProductPropertyFalse")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-arrow-right").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:green; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
+    columns.Template(@"<a target='_blank' href='#=Note#' title='#=Note#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70);
+    columns.Template(@"<a onclick='javascript:OpenWindowLeftByURL(""#=Note#"");' title='#=Note#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-arrows-alt'></i></a>").Title("Open").Width(70);
+    columns.Bound(t => t.FileName).Title("File");
+})
+
+.Editable(editable => editable.Mode(GridEditMode.InLine).DisplayDeleteConfirmation(false))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid", @style="height:500px;" })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.ID);
+})
+.Events(t => { t.RequestEnd("onProductPropertyFalseGridRequestEnd"); })
+.Read(t => t.Action("GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndFalseToList", "ProductProperty"))
+.Destroy(t => t.Action("ScanFilesUpdateTrue", "ProductProperty"))
+)
+)
+            </div>
+            <div class="col-md-6">
+                @(Html.Kendo().Grid<Commsights.Data.Models.ProductProperty>()
+.Name("ProductPropertyTrue")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-arrow-left").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:green; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
+    columns.Template(@"<a target='_blank' href='#=Note#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70);
+    columns.Template(@"<a onclick='javascript:OpenWindowLeftByURL(""#=Note#"");' title='#=Note#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-arrows-alt'></i></a>").Title("Open").Width(70);
+    columns.Bound(t => t.FileName).Title("File");
+})
+.Editable(editable => editable.Mode(GridEditMode.InLine).DisplayDeleteConfirmation(false))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid", @style= "height:500px;" })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.ID);
+})
+.Events(t => { t.RequestEnd("onProductPropertyTrueGridRequestEnd"); })
+.Read(t => t.Action("GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndTrueToList", "ProductProperty"))
+.Destroy(t => t.Action("ScanFilesUpdateFalse", "ProductProperty"))
+)
+)
+            </div>
+        </div>
+        <div class='col-sm-12'>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("CreateProductAndProductProperty", "ProductProperty")'>
+            <div class='form-group'>
+                <label for='Industry'>Industry</label>
+                @(Html.Kendo().DropDownListFor(Model=>Model.IndustryID)
+                     .DataValueField("ID")
+                     .DataTextField("CodeName")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
+                            )
+            </div>
+            <div class='form-group'>
+                <label for='Title'>Headline (Vie)</label>
+                @(Html.TextBoxFor(Model => Model.Title, new { @class = "form-control", @title = Model.Title }))
+                <div id="TitleHiden" style="display:none;">@Model.Title</div>
+            </div>
+            <div class='form-group'>
+                <label for='CategorySub'>Media</label>
+                @(Html.Kendo().DropDownListFor(Model=>Model.ProductParentID)
+                     .DataValueField("ID")
+                     .DataTextField("Title")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferPressListByGroupNameAndCodeToList", "Config")))
+                            )
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class='form-group'>
+                        <label for='Page'>Page (Newspage)</label>
+                        @(Html.TextBoxFor(Model => Model.Page, new { @class = "form-control", @title = Model.Page }))
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class='form-group'>
+                        <label for='TotalSize'>Total size</label>
+                        @(Html.TextBoxFor(Model => Model.TotalSize, new { @class = "form-control", @title = Model.TotalSize }))
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class='form-group'>
+                        <label for='TimeLine'>TimeLine (Video)</label>
+                        @(Html.TextBoxFor(Model => Model.TimeLine, new { @class = "form-control", @title = Model.TimeLine }))
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class='form-group'>
+                        <label for='Duration'>Duration (s)</label>
+                        @(Html.TextBoxFor(Model => Model.Duration, new { @class = "form-control", @title = Model.Duration }))
+                    </div>
+                </div>
+            </div>
+            <div class='form-group'>
+                <label for='Advalue'>Ad value</label>
+                @(Html.TextBoxFor(Model => Model.Advalue, new { @class = "form-control text-right", @title = Model.Advalue }))
+            </div>
+            <div class='form-group'>
+                <button class="btn btn-primary"><span class="fas fa-save"></span> Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    function onProductPropertyFalseGridRequestEnd(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            $("#ProductPropertyFalse").data("kendoGrid").dataSource.read();
+            $("#ProductPropertyTrue").data("kendoGrid").dataSource.read();
+        }
+    }
+    function onProductPropertyTrueGridRequestEnd(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            $("#ProductPropertyFalse").data("kendoGrid").dataSource.read();
+            $("#ProductPropertyTrue").data("kendoGrid").dataSource.read();
+        }
+    }
+</script>

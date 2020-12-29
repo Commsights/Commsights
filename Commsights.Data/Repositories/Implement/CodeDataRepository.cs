@@ -167,7 +167,7 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
-        public List<CodeData> GetReportByByDateUpdatedAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList(DateTime dateUpdated, int hourBegin, int hourEnd, int industryID, string companyName, bool isCoding, bool isAnalysis)
+        public List<CodeData> GetReportByDateUpdatedAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList(DateTime dateUpdated, int hourBegin, int hourEnd, int industryID, string companyName, bool isCoding, bool isAnalysis)
         {
             List<CodeData> list = new List<CodeData>();
             if (dateUpdated != null)
@@ -189,6 +189,26 @@ namespace Commsights.Data.Repositories
                     new SqlParameter("@IsAnalysis",isAnalysis),
                     };
                     DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataSelectByDateUpdatedAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysis", parameters);
+                    list = SQLHelper.ToList<CodeData>(dt);
+                }
+            }
+            return list;
+        }
+        public List<CodeData> GetReportByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndIsCodingToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int industryID, bool isCoding)
+        {
+            List<CodeData> list = new List<CodeData>();
+            if (industryID > 0)
+            {
+                if ((dateUpdatedBegin.Year > 2019) && (dateUpdatedEnd.Year > 2019))
+                {
+                    SqlParameter[] parameters =
+                    {
+                        new SqlParameter("@DateUpdatedBegin",dateUpdatedBegin),
+                        new SqlParameter("@DateUpdatedEnd",dateUpdatedEnd),
+                        new SqlParameter("@IndustryID",industryID),
+                        new SqlParameter("@IsCoding",isCoding),
+                    };
+                    DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataSelectByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndIsCoding", parameters);
                     list = SQLHelper.ToList<CodeData>(dt);
                 }
             }
