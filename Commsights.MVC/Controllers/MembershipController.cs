@@ -329,10 +329,10 @@ namespace Commsights.MVC.Controllers
                     Response.Cookies.Append("UserID", membership.ID.ToString(), cookieExpires);
                     Response.Cookies.Append("FullName", fullName, cookieExpires);
                     Response.Cookies.Append("Avatar", avatar, cookieExpires);
-                    string avatarURL = Commsights.Data.Helpers.AppGlobal.Domain + Commsights.Data.Helpers.AppGlobal.URLImagesMembership + "/" + avatar;
+                    string avatarURL = "http://crm.commsightsvn.com/" + Commsights.Data.Helpers.AppGlobal.URLImagesMembership + "/" + avatar;
                     if (string.IsNullOrEmpty(avatar))
                     {
-                        avatarURL = AppGlobal.Domain + "images/logo.png";
+                        avatarURL = "http://crm.commsightsvn.com/images/logo.png";
                     }
                     Response.Cookies.Append("AvatarURL", avatarURL, cookieExpires);
                     controller = "Membership";
