@@ -26,11 +26,13 @@ namespace Commsights.MVC.Controllers
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IProductRepository _productRepository;
         private readonly IProductPropertyRepository _productPropertyRepository;
-        public ProductPropertyController(IWebHostEnvironment hostingEnvironment, IProductRepository productRepository, IProductPropertyRepository productPropertyRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
+        private readonly IConfigRepository _configResposistory;
+        public ProductPropertyController(IWebHostEnvironment hostingEnvironment, IConfigRepository configResposistory, IProductRepository productRepository, IProductPropertyRepository productPropertyRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
             _hostingEnvironment = hostingEnvironment;
             _productRepository = productRepository;
             _productPropertyRepository = productPropertyRepository;
+            _configResposistory = configResposistory;
         }
         public IActionResult Company(int ID)
         {
@@ -186,12 +188,25 @@ namespace Commsights.MVC.Controllers
                     _productRepository.Create(model);
                     if (model.ID > 0)
                     {
+                        Config parent = _configResposistory.GetByID(productParentID);
+                        if (parent != null)
+                        {
+                            if (parent.ID > 0)
+                            {
+                                ProductProperty productProperty = new ProductProperty();
+                                productProperty.ParentID = model.ID;
+                                productProperty.Code = AppGlobal.URLCode;
+                                productProperty.Note = parent.Note;
+                                productProperty.Initialization(InitType.Insert, RequestUserID);
+                                _productPropertyRepository.Create(productProperty);
+                            }
+                        }
                         foreach (ProductProperty item in listProductProperty)
                         {
                             ProductProperty productProperty = item;
                             productProperty.ID = 0;
                             productProperty.ParentID = model.ID;
-                            _productPropertyRepository.Create(item);
+                            _productPropertyRepository.Create(productProperty);
                         }
                     }
                 }
@@ -236,6 +251,19 @@ namespace Commsights.MVC.Controllers
                     _productRepository.Create(model);
                     if (model.ID > 0)
                     {
+                        Config parent = _configResposistory.GetByID(productParentID);
+                        if (parent != null)
+                        {
+                            if (parent.ID > 0)
+                            {
+                                ProductProperty productProperty = new ProductProperty();
+                                productProperty.ParentID = model.ID;
+                                productProperty.Code = AppGlobal.URLCode;
+                                productProperty.Note = parent.Note;
+                                productProperty.Initialization(InitType.Insert, RequestUserID);
+                                _productPropertyRepository.Create(productProperty);
+                            }
+                        }
                         foreach (ProductProperty item in listProductProperty)
                         {
                             ProductProperty productProperty = item;
