@@ -220,26 +220,8 @@ namespace Commsights.MVC.Controllers
                                     {
                                         advalue = parent.Color.Value;
                                     }
-                                    double durationValue = 1;
-                                    switch (totalSize)
-                                    {
-                                        case "1/2":
-                                            durationValue = 0.5;
-                                            break;
-                                        case "1/4":
-                                            durationValue = 0.25;
-                                            break;
-                                        case "1/8":
-                                            durationValue = 0.125;
-                                            break;
-                                        case "1/16":
-                                            durationValue = 0.0625;
-                                            break;
-                                        case "1/32":
-                                            durationValue = 0.03125;
-                                            break;
-                                    }
-                                    advalue = (int)(advalue * durationValue);
+                                    int durationValue = int.Parse(totalSize);
+                                    advalue = advalue * durationValue / 100;
                                     model.Advalue = advalue;
                                     ProductProperty productProperty = new ProductProperty();
                                     productProperty.ParentID = model.ID;
@@ -335,26 +317,8 @@ namespace Commsights.MVC.Controllers
                                     {
                                         advalue = parent.Color.Value;
                                     }
-                                    double durationValue = 1;
-                                    switch (totalSize)
-                                    {
-                                        case "1/2":
-                                            durationValue = 0.5;
-                                            break;
-                                        case "1/4":
-                                            durationValue = 0.25;
-                                            break;
-                                        case "1/8":
-                                            durationValue = 0.125;
-                                            break;
-                                        case "1/16":
-                                            durationValue = 0.0625;
-                                            break;
-                                        case "1/32":
-                                            durationValue = 0.03125;
-                                            break;
-                                    }
-                                    advalue = (int)(advalue * durationValue);
+                                    int durationValue = int.Parse(totalSize);
+                                    advalue = advalue * durationValue / 100;
                                     model.Advalue = advalue;
                                     ProductProperty productProperty = new ProductProperty();
                                     productProperty.ParentID = model.ID;
