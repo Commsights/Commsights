@@ -150,5 +150,7 @@ namespace Commsights.Data.DataTransferObject
         public int? SourceProperty { get; set; }
         public string TimeLine { get; set; }
         public string TotalSize { get; set; }
+        public int? EmployeeID { get; set; }
+        public string FullName { get; set; }
     }
 }

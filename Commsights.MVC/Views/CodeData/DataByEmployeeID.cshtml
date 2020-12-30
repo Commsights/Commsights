@@ -34,7 +34,7 @@
                     <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
                         <input id="IsUpload" type="checkbox">
                         <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px; margin-right:10px;">Up/Pub</p>
-                    </div>                   
+                    </div>
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" title="Search" onclick="onSearch()">
                             <span class="fas fa-search"></span>
@@ -52,6 +52,7 @@
     columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70).Locked(true);
     columns.Template(@"<a target='_blank' href='#=URLCoding#' title='#=Title#' class='btn btn-primary' style='color:white; cursor: pointer;'><i class='fas fa-edit'></i></a>").Title("Edit").Width(70).Locked(true);
     columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70).Locked(true);
+    columns.Bound(t => t.FullName).Title("Permission").Width(200).HtmlAttributes(new { @class = "text-center", @style = "white-space: nowrap;" });
     columns.Bound(t => t.IsCoding).Title("Coding").Width(100).HtmlAttributes(new { @class = "text-center", @style = "white-space: nowrap;" });
     columns.Bound(t => t.RowIndex).Title("No").Width(100).HtmlAttributes(new { @class = "text-center", @style = "white-space: nowrap;" });
     columns.Bound(t => t.CopyVersion).Title("Copy").Width(80).HtmlAttributes(new { @class = "text-center", @style = "white-space: nowrap;" });
@@ -142,7 +143,7 @@
 .Search(search => { search.Field(f => f.URLCode); search.Field(f => f.Title); search.Field(f => f.TitleEnglish); search.Field(f => f.CompanyName); search.Field(f => f.MediaTitle); search.Field(f => f.TierCommsights); search.Field(f => f.MediaType); search.Field(f => f.ProductName_ProjectName); })
 .DataSource(dataSource => dataSource
 .Ajax()
-.PageSize(100)
+.PageSize(10000)
 .Model(model =>
 {
     model.Id(t => t.RowIndex);
@@ -161,7 +162,7 @@
     .Width(400)
 )
 <script>
-    $(document).ready(() => {        
+    $(document).ready(() => {
     });
     function GetByIndustryIDAndParrentIDToList() {
         $("#DataMain").html('');

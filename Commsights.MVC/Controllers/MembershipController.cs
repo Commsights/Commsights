@@ -710,9 +710,8 @@ namespace Commsights.MVC.Controllers
         {
             model.Active = false;
             string note = AppGlobal.InitString;
-            model.Initialization(InitType.Update, RequestUserID);
-            int result = 0;
-            //int result = _membershipRepository.Delete(model.ID);
+            model.Initialization(InitType.Update, RequestUserID);            
+            int result = _membershipRepository.Delete(model.ID);
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
@@ -722,7 +721,7 @@ namespace Commsights.MVC.Controllers
                 note = AppGlobal.Error + " - " + AppGlobal.DeleteFail;
             }
             return Json(note);
-        }
+        }       
         public IActionResult Logout()
         {
             Response.Cookies.Append("UserID", "0");

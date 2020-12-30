@@ -1128,7 +1128,7 @@ namespace Commsights.MVC.Controllers
             stream.Position = 0;
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
         }
-        
+
         public ActionResult GetReportByDateUpdatedAndHourAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList([DataSourceRequest] DataSourceRequest request, DateTime dateUpdated, int hour, int industryID, string companyName, bool isCoding, bool isAnalysis)
         {
             string isCodingString = isCoding.ToString();
@@ -1354,7 +1354,7 @@ namespace Commsights.MVC.Controllers
         {
             CodeData model = GetCodeData(rowIndex);
             rowIndex = _productPropertyRepository.InsertItemsByCopyCodeData(model.ProductPropertyID.Value, RequestUserID, rowIndex);
-            return rowIndex;
+            return 1;
         }
         public IActionResult ExportExcelEnglish()
         {
@@ -1363,7 +1363,7 @@ namespace Commsights.MVC.Controllers
         private CodeData GetCodeData(int rowIndex)
         {
             CodeData model = new CodeData();
-            if (rowIndex > -1)
+            if (rowIndex > 0)
             {
                 DateTime datePublishBegin = DateTime.Now;
                 DateTime datePublishEnd = DateTime.Now;
@@ -1375,7 +1375,7 @@ namespace Commsights.MVC.Controllers
                     datePublishBegin = DateTime.Parse(Request.Cookies["CodeDataDatePublishBegin"]);
                     datePublishEnd = DateTime.Parse(Request.Cookies["CodeDataDatePublishEnd"]);
                     isUpload = bool.Parse(Request.Cookies["CodeDataIsUpload"]);
-                    List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload);
+                    List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload).Where(item => item.IsCoding == false || item.IsCoding == null).ToList();
                     for (int i = 0; i < list.Count; i++)
                     {
                         if (rowIndex == list[i].RowIndex)

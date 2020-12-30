@@ -405,6 +405,7 @@ new SqlParameter("@Title",model.Title),
                         for (int i = rowBegin; i < rowEnd; i++)
                         {
                             ProductProperty itemCopy = listSame[i];
+                            itemCopy.IsCoding = true;
                             itemCopy.ParentID = parentID;
                             itemCopy.Source = listDifferent[0].Source;
                             itemCopy.CopyVersion = listSame[i].CopyVersion;
