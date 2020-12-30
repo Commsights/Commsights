@@ -8,12 +8,30 @@
         <div class="card card-primary">
             <div class="card-body">
                 <div class="row">
+                    <div class='col-sm-1'>
+                        @(Html.Kendo().DropDownListFor(Model=>Model.HourBegin)
+                     .DataValueField("Display")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetHourFinanceToList", "AppGlobal")))
+                            )
+                    </div>
                     <div class='col-sm-2'>
                         @(Html.Kendo().DatePickerFor(Model => Model.DatePublishBegin)
                                      .Format("dd/MM/yyyy")
                                      .HtmlAttributes(new { @class = "form-control text-right", title = "Date begin" })
                                      .DateInput()
                                 )
+                    </div>
+                    <div class='col-sm-1'>
+                        @(Html.Kendo().DropDownListFor(Model=>Model.HourEnd)
+                     .DataValueField("Display")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetHourFinanceToList", "AppGlobal")))
+                            )
                     </div>
                     <div class='col-sm-2'>
                         @(Html.Kendo().DatePickerFor(Model => Model.DatePublishEnd)
@@ -22,7 +40,23 @@
                                      .DateInput()
                                 )
                     </div>
-                    <div class='col-sm-3'>
+                    <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
+                        <input id="IsCoding" type="checkbox">
+                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Code</p>
+                    </div>
+                    <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
+                        <input id="IsAnalysis" type="checkbox">
+                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Analysis</p>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-success" title="Search" onclick="onSearch()">
+                            <span class="fas fa-search"></span>
+                        </button>
+                    </div>                    
+                </div>
+                <br />
+                <div class="row">
+                    <div class='col-sm-4'>
                         @(Html.Kendo().DropDownListFor(Model=>Model.IndustryID)
                      .DataValueField("ID")
                      .DataTextField("CodeName")
@@ -30,15 +64,6 @@
                        .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
                             )
-                    </div>
-                    <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
-                        <input id="IsCoding" type="checkbox">
-                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Code</p>
-                    </div>
-                    <div class='col-sm-1'>
-                        <button type="button" class="btn btn-success" title="Search" onclick="onSearch()">
-                            <span class="fas fa-search"></span>
-                        </button>
                     </div>
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" title="Export Code" onclick="onExportCode()">
@@ -214,8 +239,8 @@
     function filterCodeData(e) {
         var dateUpdatedBeginValue = toDate02($("#DatePublishBegin").val());
         var dateUpdatedEndValue = toDate02($("#DatePublishEnd").val());
-        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();        
-        var isCodingValue = document.getElementById('IsCoding').checked;        
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        var isCodingValue = document.getElementById('IsCoding').checked;
         return { dateUpdatedBegin: dateUpdatedBeginValue, dateUpdatedEnd: dateUpdatedEndValue, industryID: industryIDValue, isCoding: isCodingValue };
     }
     function onExportCode() {

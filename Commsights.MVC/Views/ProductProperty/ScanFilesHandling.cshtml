@@ -1,23 +1,9 @@
-﻿@{ ViewData["Title"] = "Scan files handling"; }
+﻿@{ Layout = "~/Views/Shared/_LayoutNoHeader.cshtml"; ViewData["Title"] = "Scan files handling"; }
 
 @model Commsights.Data.DataTransferObject.CodeData
 
 <div class="row">
-    <div class="col-md-7">
-        <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadScanFiles", "ProductProperty")'>
-            <label for='UploadScanFiles'>Select the scan files: </label>
-            <div class="row">
-                <div class='col-md-6'>
-                    @(Html.Kendo().Upload()
-                                  .Name("UploadScanFiles")
-                            )
-                </div>
-                <div class='col-md-6'>
-                    <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload</button>
-                </div>
-            </div>
-        </form>
-        <br />
+    <div class="col-md-8">
         <div class='row'>
             <div class="col-md-6">
                 @(Html.Kendo().Grid<Commsights.Data.Models.ProductProperty>()
@@ -25,7 +11,8 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-arrow-right").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:green; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
-    columns.Template(@"<a onclick='javascript:OpenWindowLeftByURL001(""/ProductProperty/ViewContentFull?fileName=#=FileName#&extension=#=Page#&url=#=Note#"");' title='#=Note#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-arrows-alt'></i></a>").Title("Open").Width(70);
+    columns.Command(command => { command.Custom("View").Click("onViewScanFile").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:green; color:#ffffff; padding-left:10px;" }); }).Width(80);
+    //columns.Template(@"<a onclick='javascript:OpenWindowLeftByURL001(""/ProductProperty/ViewContentFull?fileName=#=FileName#&extension=#=Page#&url=#=Note#"");' title='#=Note#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-arrows-alt'></i></a>").Title("Open").Width(70);
     columns.Template(@"<a target='_blank' href='/ProductProperty/ViewContent?fileName=#=FileName#&extension=#=Page#&url=#=Note#' title='#=Note#' style='cursor: pointer; color: blue;'>#=FileName#</a>").Title("File");
 })
 
@@ -52,7 +39,7 @@
 .RepeatHeaders()
 .FileName("Config.pdf")
 )
-.HtmlAttributes(new { @class = "KendoGrid", @style="height:500px;" })
+.HtmlAttributes(new { @class = "KendoGrid", @style="height:400px;" })
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
@@ -72,7 +59,8 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-arrow-left").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:green; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
-    columns.Template(@"<a onclick='javascript:OpenWindowLeftByURL001(""/ProductProperty/ViewContentFull?fileName=#=FileName#&extension=#=Page#&url=#=Note#"");' title='#=Note#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-arrows-alt'></i></a>").Title("Open").Width(70);
+    columns.Command(command => { command.Custom("View").Click("onViewScanFile").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:green; color:#ffffff; padding-left:10px;" }); }).Width(70);
+    //columns.Template(@"<a onclick='javascript:OpenWindowLeftByURL001(""/ProductProperty/ViewContentFull?fileName=#=FileName#&extension=#=Page#&url=#=Note#"");' title='#=Note#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-arrows-alt'></i></a>").Title("Open").Width(70);
     columns.Template(@"<a target='_blank' href='/ProductProperty/ViewContent?fileName=#=FileName#&extension=#=Page#&url=#=Note#' title='#=Note#' style='cursor: pointer; color: blue;'>#=FileName#</a>").Title("File");
 })
 .Editable(editable => editable.Mode(GridEditMode.InLine).DisplayDeleteConfirmation(false))
@@ -98,7 +86,7 @@
 .RepeatHeaders()
 .FileName("Config.pdf")
 )
-.HtmlAttributes(new { @class = "KendoGrid", @style= "height:500px;" })
+.HtmlAttributes(new { @class = "KendoGrid", @style= "height:400px;" })
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
@@ -113,12 +101,25 @@
 )
             </div>
         </div>
-        <div class='col-sm-12'>
+        <div class="row">
+            <div id="DataMain" class='col-sm-12'></div>
         </div>
     </div>
-    <div class="col-md-5">
-        <div class='form-group'>
-            <label for='Industry'>Industry</label>
+    <div class="col-md-4">
+        <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadScanFilesNoUploadFiles", "ProductProperty")'>            
+            <div class="row">
+                <div class='col-md-6'>
+                    @(Html.Kendo().Upload()
+                                  .Name("UploadScanFiles")
+                            )
+                </div>
+                <div class='col-md-6'>
+                    <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload</button>
+                </div>
+            </div>
+        </form>
+        <br />
+        <div class='form-group'>            
             @(Html.Kendo().DropDownListFor(Model=>Model.IndustryID)
                      .DataValueField("ID")
                      .DataTextField("CodeName")
@@ -127,8 +128,7 @@
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
                             )
         </div>
-        <div class='form-group'>
-            <label for='CategorySub'>Media</label>
+        <div class='form-group'>            
             @(Html.Kendo().DropDownListFor(Model=>Model.ProductParentID)
                      .DataValueField("ID")
                      .DataTextField("Title")
@@ -137,18 +137,15 @@
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferPressListByGroupNameAndCodeToList", "Config")))
                             )
         </div>
-        <div class='form-group'>
-            <label for='DatePublish'>Date publish</label>
+        <div class='form-group'>            
             @(Html.Kendo().DatePickerFor(Model => Model.DatePublish)
                                      .Format("dd/MM/yyyy")
                                      .HtmlAttributes(new { @class = "form-control text-right", title = "Date begin" })
                                      .DateInput()
              )
         </div>
-        <div class='form-group'>
-            <label for='Title'>Headline (Vie)</label>
-            @(Html.TextBoxFor(Model => Model.Title, new { @class = "form-control", @title = Model.Title }))
-            <div id="TitleHiden" style="display:none;">@Model.Title</div>
+        <div class='form-group'>            
+            @(Html.TextBoxFor(Model => Model.Title, new { placeholder = "Headline (Vie)", @class = "form-control", @title = Model.Title }))            
         </div>
         <div class="row">
             <div class="col-md-6">
@@ -200,6 +197,25 @@
     .Width(400)
 )
 <script>
+    function onViewScanFile(e) {
+        var productProperty = this.dataItem($(e.currentTarget).closest("tr"));
+        var extension = productProperty.Page.replace(".", "");
+        var html = "";
+        switch (extension) {
+            case "jpg":               
+            case "png":               
+            case "jpeg":   
+                html = "<img src='" + productProperty.Note + "' class='img-thumbnail' />";
+                break;            
+            case "mp4":
+            case "wmv":
+                html = "<video width='100%' height='50%' controls><source src='" + productProperty.Note + "' type='video/mp4'></video>";
+                break;  
+        }
+        $("#DataMain").html('');
+        html = $.parseHTML(html);
+        $("#DataMain").append(html);
+    }
     function onProductPropertyFalseGridRequestEnd(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
             $("#ProductPropertyFalse").data("kendoGrid").dataSource.read();

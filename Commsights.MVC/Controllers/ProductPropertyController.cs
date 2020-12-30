@@ -219,7 +219,7 @@ namespace Commsights.MVC.Controllers
                                 }
                                 int durationValue = int.Parse(totalSize);
                                 advalue = advalue * durationValue / 100;
-                                model.Advalue = advalue;                               
+                                model.Advalue = advalue;
                             }
                         }
                     }
@@ -234,7 +234,7 @@ namespace Commsights.MVC.Controllers
                             if (parent != null)
                             {
                                 if (parent.ID > 0)
-                                {                                   
+                                {
                                     ProductProperty productProperty = new ProductProperty();
                                     productProperty.ParentID = model.ID;
                                     productProperty.Code = AppGlobal.URLCode;
@@ -488,6 +488,60 @@ namespace Commsights.MVC.Controllers
                                 productProperty.Initialization(InitType.Insert, RequestUserID);
                                 _productPropertyRepository.Create(productProperty);
                             }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+            if (string.IsNullOrEmpty(baseViewModel.ActionView))
+            {
+                baseViewModel.ActionView = "ScanFilesHandling";
+            }
+            return RedirectToAction(baseViewModel.ActionView);
+        }
+        public ActionResult UploadScanFilesNoUploadFiles(Commsights.MVC.Models.BaseViewModel baseViewModel)
+        {
+            try
+            {
+                if (Request.Form.Files.Count > 0)
+                {
+                    for (int i = 0; i < Request.Form.Files.Count; i++)
+                    {
+                        var file = Request.Form.Files[i];
+                        if (file == null || file.Length == 0)
+                        {
+                        }
+                        if (file != null)
+                        {
+                            string fileExtension = Path.GetExtension(file.FileName);
+                            string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                            fileName = file.FileName;
+                            string directoryDay = AppGlobal.DateTimeCodeYearMonthDay;
+                            string mainPath = AppGlobal.FTPScanFiles;
+                            string url = AppGlobal.URLScanFiles;
+                            if (Directory.Exists(mainPath) == false)
+                            {
+                                mainPath = _hostingEnvironment.WebRootPath;
+                                url = AppGlobal.Domain;
+                            }
+                            url = url + AppGlobal.SourceScan + "/" + directoryDay + "/" + fileName;
+                            string subPath = AppGlobal.SourceScan + @"\" + directoryDay;
+                            string fullPath = mainPath + @"\" + subPath;
+                            if (!Directory.Exists(fullPath))
+                            {
+                                Directory.CreateDirectory(fullPath);
+                            }
+                            ProductProperty productProperty = new ProductProperty();
+                            productProperty.Active = false;
+                            productProperty.FileName = fileName;
+                            productProperty.Page = fileExtension;
+                            productProperty.Note = url;
+                            productProperty.ParentID = -1;
+                            productProperty.Code = AppGlobal.URLCode;
+                            productProperty.Initialization(InitType.Insert, RequestUserID);
+                            _productPropertyRepository.Create(productProperty);
                         }
                     }
                 }
