@@ -256,9 +256,9 @@
     model.Field(t => t.Segment).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEndProduct"); })
-.Read(t => t.Action("GetDataTransferSegmentByMembershipIDAndProductToList", "MembershipPermission").Data("filterProduct"))
+.Read(t => t.Action("GetDataTransferSegmentByMembershipIDAndIndustryIDAndCodeToList", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
 .Destroy(t => t.Action("Delete", "MembershipPermission"))
-.Create(t => t.Action("CreateDataTransferSegmentProduct", "MembershipPermission").Data("filterCreateProduct"))
+.Create(t => t.Action("CreateDataTransferSegmentProduct", "MembershipPermission").Data("filterMembershipPermissionByMembershipIDAndIndustryID"))
 .Update(t => t.Action("UpdateDataTransferSegmentProduct", "MembershipPermission"))
 )
 )
@@ -276,6 +276,11 @@
 )
 
 <script>
+    function onSearchIndustry() {
+        BeginRequestHandler();
+        $("#MembershipPermissionDataTransferProduct").data("kendoGrid").dataSource.read();        
+        EndRequestHandler();
+    }
     //Company Name
     function onGridRequestEndMembershipPermissionCompanyName(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
@@ -341,5 +346,10 @@
     function filterConfig_SegmentByIndustry(e) {
         var parentIDValue = $("#Industry").data("kendoDropDownList").value();
         return { parentID: parentIDValue };
+    }
+    function filterMembershipPermissionByMembershipIDAndIndustryID(e) {
+        var membershipIDValue = $("#ID").val();
+        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
+        return { membershipID: membershipIDValue, industryID: industryIDValue };
     }
 </script>

@@ -297,6 +297,7 @@
     columns.Bound(t => t.Email).Title("Email").Width(200);
     columns.Bound(t => t.FullName).Title("Contact").Width(200);
     columns.Bound(t => t.Phone).Title("Phone").Width(200);
+    columns.Bound(t => t.ID).Title("ID");
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
@@ -331,6 +332,7 @@
 .Model(model =>
 {
     model.Id(t => t.ID);
+    model.Field(t => t.ID).Editable(false);
     model.Field(t => t.ReportType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
 })
 .Events(t => { t.RequestEnd("onGridRequestEndContact"); })
