@@ -77,7 +77,7 @@
     columns.Bound(t => t.ArticleType.TextName).EditorTemplateName("Config_ArticleType").Title("Category").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.Media).Title("Media").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.AdvertisementValue).Title("Ad Value").Width(200).Format("{0:N0}").HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
-    columns.Bound(t => t.Product.TextName).EditorTemplateName("MembershipPermission_Product").Title("Product").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Product.TextName).EditorTemplateName("MembershipPermission_ProductByCode").Title("Product").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.Page).Title("Page").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.Duration).Title("Duration").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.Frequency).Title("Frequency").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
@@ -85,7 +85,7 @@
     columns.Bound(t => t.TargetID).Title("Target").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.IsSummary).Title("Brief").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.IsData).Title("Send").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
-    columns.Bound(t => t.DatePublish).Title("Date").Format("{0:dd/MM/yyyy}").Width(120).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.DatePublish).Title("Publish").Format("{0:dd/MM/yyyy}").Width(120).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
     columns.Bound(t => t.DateUpdated).Title("Upload").Width(150).Format("{0:dd/MM/yyyy HH:mm}").HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
 })
 .ToolBar(toolBar => toolBar.Search())
@@ -352,5 +352,24 @@
         var url = "/Report/ExportExcelReportDailyByDatePublishBeginAndDatePublishEndAndIndustryIDWithVietnamese?industryID=" + industryIDValue + "&datePublishBeginString=" + datePublishBeginValue + "&datePublishEndString=" + datePublishEndValue + "&isUpload=" + isUploadValue;
         window.location.replace(url);
         EndRequestHandler();
+    }
+</script>
+<script>
+    function valueMapper(options) {
+        $.ajax({
+            url: "@Url.Action("Orders_ValueMapper", "MembershipPermission")",
+            data: convertValues(options.value),
+            success: function (data) {
+                options.success(data);
+            }
+        });
+    }
+    function convertValues(value) {
+        var data = {};
+        value = $.isArray(value) ? value : [value];
+        for (var idx = 0; idx < value.length; idx++) {
+            data["values[" + idx + "]"] = value[idx];
+        }
+        return data;
     }
 </script>

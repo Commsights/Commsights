@@ -24,10 +24,9 @@
 .Name("ProductPropertyFalse")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-arrow-right").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:green; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
-    columns.Template(@"<a target='_blank' href='/ProductProperty/ViewContent?fileName=#=FileName#&extension=#=Page#&url=#=Note#' title='#=Note#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70);
-    columns.Template(@"<a onclick='javascript:OpenWindowLeftByURL(""/ProductProperty/ViewContent?fileName=#=FileName#&extension=#=Page#&url=#=Note#"");' title='#=Note#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-arrows-alt'></i></a>").Title("Open").Width(70);
-    columns.Bound(t => t.FileName).Title("File");
+    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-arrow-right").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:green; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);    
+    columns.Template(@"<a onclick='javascript:OpenWindowLeftByURL001(""/ProductProperty/ViewContentFull?fileName=#=FileName#&extension=#=Page#&url=#=Note#"");' title='#=Note#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-arrows-alt'></i></a>").Title("Open").Width(70);    
+    columns.Template(@"<a target='_blank' href='/ProductProperty/ViewContent?fileName=#=FileName#&extension=#=Page#&url=#=Note#' title='#=Note#' style='cursor: pointer; color: blue;'>#=FileName#</a>").Title("File");
 })
 
 .Editable(editable => editable.Mode(GridEditMode.InLine).DisplayDeleteConfirmation(false))
@@ -72,10 +71,9 @@
 .Name("ProductPropertyTrue")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-arrow-left").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:green; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
-    columns.Template(@"<a target='_blank' href='#=Note#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70);
-    columns.Template(@"<a onclick='javascript:OpenWindowLeftByURL(""#=Note#"");' title='#=Note#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-arrows-alt'></i></a>").Title("Open").Width(70);
-    columns.Bound(t => t.FileName).Title("File");
+    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-arrow-right").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:green; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
+    columns.Template(@"<a onclick='javascript:OpenWindowLeftByURL001(""/ProductProperty/ViewContentFull?fileName=#=FileName#&extension=#=Page#&url=#=Note#"");' title='#=Note#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-arrows-alt'></i></a>").Title("Open").Width(70);
+    columns.Template(@"<a target='_blank' href='/ProductProperty/ViewContent?fileName=#=FileName#&extension=#=Page#&url=#=Note#' title='#=Note#' style='cursor: pointer; color: blue;'>#=FileName#</a>").Title("File");
 })
 .Editable(editable => editable.Mode(GridEditMode.InLine).DisplayDeleteConfirmation(false))
 .Sortable()
@@ -119,75 +117,84 @@
         </div>
     </div>
     <div class="col-md-5">
-        <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("CreateProductAndProductProperty", "ProductProperty")'>
-            <div class='form-group'>
-                <label for='Industry'>Industry</label>
-                @(Html.Kendo().DropDownListFor(Model=>Model.IndustryID)
+        <div class='form-group'>
+            <label for='Industry'>Industry</label>
+            @(Html.Kendo().DropDownListFor(Model=>Model.IndustryID)
                      .DataValueField("ID")
                      .DataTextField("CodeName")
                     .HtmlAttributes(new { @class = "form-control" })
                        .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
                             )
-            </div>
-            <div class='form-group'>
-                <label for='Title'>Headline (Vie)</label>
-                @(Html.TextBoxFor(Model => Model.Title, new { @class = "form-control", @title = Model.Title }))
-                <div id="TitleHiden" style="display:none;">@Model.Title</div>
-            </div>
-            <div class='form-group'>
-                <label for='CategorySub'>Media</label>
-                @(Html.Kendo().DropDownListFor(Model=>Model.ProductParentID)
+        </div>
+        <div class='form-group'>
+            <label for='Title'>Headline (Vie)</label>
+            @(Html.TextBoxFor(Model => Model.Title, new { @class = "form-control", @title = Model.Title }))
+            <div id="TitleHiden" style="display:none;">@Model.Title</div>
+        </div>
+        <div class='form-group'>
+            <label for='CategorySub'>Media</label>
+            @(Html.Kendo().DropDownListFor(Model=>Model.ProductParentID)
                      .DataValueField("ID")
                      .DataTextField("Title")
                     .HtmlAttributes(new { @class = "form-control" })
                        .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferPressListByGroupNameAndCodeToList", "Config")))
                             )
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class='form-group'>
-                        <label for='Page'>Page (Newspage)</label>
-                        @(Html.TextBoxFor(Model => Model.Page, new { @class = "form-control", @title = Model.Page }))
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class='form-group'>
-                        <label for='TotalSize'>Total size</label>
-                        @(Html.TextBoxFor(Model => Model.TotalSize, new { @class = "form-control", @title = Model.TotalSize }))
-                    </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class='form-group'>
+                    <label for='Page'>Page (Newspage)</label>
+                    @(Html.TextBoxFor(Model => Model.Page, new { @class = "form-control", @title = Model.Page }))
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class='form-group'>
-                        <label for='TimeLine'>TimeLine (Video)</label>
-                        @(Html.TextBoxFor(Model => Model.TimeLine, new { @class = "form-control", @title = Model.TimeLine }))
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class='form-group'>
-                        <label for='Duration'>Duration (s)</label>
-                        @(Html.TextBoxFor(Model => Model.Duration, new { @class = "form-control", @title = Model.Duration }))
-                    </div>
+            <div class="col-md-6">
+                <div class='form-group'>
+                    <label for='TotalSize'>Total size</label>
+                    @(Html.Kendo().DropDownListFor(Model=>Model.TotalSize)
+                     .DataValueField("CodeName")
+                     .DataTextField("CodeName")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetTotalSizeToList", "Config")))
+                            )
                 </div>
             </div>
-            <div class='form-group'>
-                <label for='Advalue'>Ad value</label>
-                @(Html.TextBoxFor(Model => Model.Advalue, new { @class = "form-control text-right", @title = Model.Advalue }))
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <button class="btn btn-primary"><span class="fas fa-save"></span> Create and Done</button>
-                </div>
-                <div class="col-md-6">
-                    <button class="btn btn-primary"><span class="fas fa-save"></span> Create and Industry</button>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class='form-group'>
+                    <label for='TimeLine'>TimeLine (Video)</label>
+                    @(Html.TextBoxFor(Model => Model.TimeLine, new { @class = "form-control", @title = Model.TimeLine }))
                 </div>
             </div>
-        </form>
+            <div class="col-md-6">
+                <div class='form-group'>
+                    <label for='Duration'>Duration (s)</label>
+                    @(Html.TextBoxFor(Model => Model.Duration, new { @class = "form-control", @title = Model.Duration }))
+                </div>
+            </div>
+        </div>
+        <div class='form-group'>
+            <label for='Advalue'>Ad value</label>
+            @(Html.TextBoxFor(Model => Model.Advalue, new { @class = "form-control text-right", @title = Model.Advalue }))
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <a onclick="onCreateManyIndustry()" class="btn btn-primary" style='color:white; cursor: pointer;' title='Create many Industry'><span class="fas fa-save"></span> Create many Industry</a>
+            </div>
+            <div class="col-md-6">
+                <a onclick="onCreateAndNext()" class="btn btn-primary" style='color:white; cursor: pointer;' title='Create and Next'><span class="fas fa-save"></span> Create and Next</a>
+            </div>
+        </div>
     </div>
 </div>
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
 <script>
     function onProductPropertyFalseGridRequestEnd(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
@@ -200,5 +207,75 @@
             $("#ProductPropertyFalse").data("kendoGrid").dataSource.read();
             $("#ProductPropertyTrue").data("kendoGrid").dataSource.read();
         }
+    }
+    function onCreateManyIndustry() {
+        BeginRequestHandler();
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        var titleValue = $("#Title").val();
+        var productParentIDValue = $("#ProductParentID").data("kendoDropDownList").value();
+        var pageValue = $("#Page").val();
+        var totalSizeValue = $("#TotalSize").data("kendoDropDownList").value();
+        var timeLineValue = $("#TimeLine").val();
+        var durationValue = $("#Duration").val();
+        var advalueValue = $("#Advalue").val();
+        $.ajax({
+            type: 'GET',
+            url: "@Url.Action("CreateManyIndustry", "ProductProperty")",
+            data: {
+                industryID: industryIDValue,
+                title: titleValue,
+                productParentID: productParentIDValue,
+                page: pageValue,
+                totalSize: totalSizeValue,
+                timeLine: timeLineValue,
+                duration: durationValue,
+                advalue: advalueValue,
+            },
+            success: function (result) {
+                var response = result;
+                var messageType = response.split('-')[0];
+                var note = response.split('-')[1];
+                var notification = $("#Notification").data("kendoNotification");
+                notification.show(note, messageType);
+                $("#ProductPropertyTrue").data("kendoGrid").dataSource.read();
+                EndRequestHandler();
+            }
+            }).done(() => {
+        });
+    }
+    function onCreateAndNext() {
+        BeginRequestHandler();
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        var titleValue = $("#Title").val();
+        var productParentIDValue = $("#ProductParentID").data("kendoDropDownList").value();
+        var pageValue = $("#Page").val();
+        var totalSizeValue = $("#TotalSize").data("kendoDropDownList").value();
+        var timeLineValue = $("#TimeLine").val();
+        var durationValue = $("#Duration").val();
+        var advalueValue = $("#Advalue").val();
+        $.ajax({
+            type: 'GET',
+            url: "@Url.Action("CreateAndNext", "ProductProperty")",
+            data: {
+                industryID: industryIDValue,
+                title: titleValue,
+                productParentID: productParentIDValue,
+                page: pageValue,
+                totalSize: totalSizeValue,
+                timeLine: timeLineValue,
+                duration: durationValue,
+                advalue: advalueValue,
+            },
+            success: function (result) {
+                var response = result;
+                var messageType = response.split('-')[0];
+                var note = response.split('-')[1];
+                var notification = $("#Notification").data("kendoNotification");
+                notification.show(note, messageType);
+                $("#ProductPropertyTrue").data("kendoGrid").dataSource.read();
+                EndRequestHandler();
+            }
+            }).done(() => {
+        });
     }
 </script>

@@ -60,5 +60,6 @@ namespace Commsights.Data.Repositories
         public List<MembershipPermission> GetMenuByMembershipIDAndCodeToList(int membershipID, string code);
         public string InitializationMenu(int membershipID, int requestUserID, string code);
         public string UpdateItemsByIDAndIsViewAndCode(int ID, bool isView, string code);
+        public List<MembershipPermission> GetSQLProductByCodeToList(string code);
     }
 }

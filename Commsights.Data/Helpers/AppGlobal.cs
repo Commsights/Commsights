@@ -154,7 +154,15 @@ namespace Commsights.Data.Helpers
         public static string InitGuiCode => Guid.NewGuid().ToString();
         #endregion
 
-        #region AppSettings        
+        #region AppSettings     
+        public static string TotalSize
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("TotalSize").Value;
+            }
+        }
         public static string FTPScanFiles
         {
             get
