@@ -71,7 +71,7 @@
 .Name("ProductPropertyTrue")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-arrow-right").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:green; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
+    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-arrow-left").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:green; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
     columns.Template(@"<a onclick='javascript:OpenWindowLeftByURL001(""/ProductProperty/ViewContentFull?fileName=#=FileName#&extension=#=Page#&url=#=Note#"");' title='#=Note#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-arrows-alt'></i></a>").Title("Open").Width(70);
     columns.Template(@"<a target='_blank' href='/ProductProperty/ViewContent?fileName=#=FileName#&extension=#=Page#&url=#=Note#' title='#=Note#' style='cursor: pointer; color: blue;'>#=FileName#</a>").Title("File");
 })
