@@ -24,8 +24,8 @@
 .Name("ProductPropertyFalse")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-arrow-right").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:green; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);    
-    columns.Template(@"<a onclick='javascript:OpenWindowLeftByURL001(""/ProductProperty/ViewContentFull?fileName=#=FileName#&extension=#=Page#&url=#=Note#"");' title='#=Note#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-arrows-alt'></i></a>").Title("Open").Width(70);    
+    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-arrow-right").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:green; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
+    columns.Template(@"<a onclick='javascript:OpenWindowLeftByURL001(""/ProductProperty/ViewContentFull?fileName=#=FileName#&extension=#=Page#&url=#=Note#"");' title='#=Note#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-arrows-alt'></i></a>").Title("Open").Width(70);
     columns.Template(@"<a target='_blank' href='/ProductProperty/ViewContent?fileName=#=FileName#&extension=#=Page#&url=#=Note#' title='#=Note#' style='cursor: pointer; color: blue;'>#=FileName#</a>").Title("File");
 })
 
@@ -128,11 +128,6 @@
                             )
         </div>
         <div class='form-group'>
-            <label for='Title'>Headline (Vie)</label>
-            @(Html.TextBoxFor(Model => Model.Title, new { @class = "form-control", @title = Model.Title }))
-            <div id="TitleHiden" style="display:none;">@Model.Title</div>
-        </div>
-        <div class='form-group'>
             <label for='CategorySub'>Media</label>
             @(Html.Kendo().DropDownListFor(Model=>Model.ProductParentID)
                      .DataValueField("ID")
@@ -141,6 +136,19 @@
                        .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferPressListByGroupNameAndCodeToList", "Config")))
                             )
+        </div>
+        <div class='form-group'>
+            <label for='DatePublish'>Date publish</label>
+            @(Html.Kendo().DatePickerFor(Model => Model.DatePublish)
+                                     .Format("dd/MM/yyyy")
+                                     .HtmlAttributes(new { @class = "form-control text-right", title = "Date begin" })
+                                     .DateInput()
+             )
+        </div>
+        <div class='form-group'>
+            <label for='Title'>Headline (Vie)</label>
+            @(Html.TextBoxFor(Model => Model.Title, new { @class = "form-control", @title = Model.Title }))
+            <div id="TitleHiden" style="display:none;">@Model.Title</div>
         </div>
         <div class="row">
             <div class="col-md-6">
@@ -175,7 +183,7 @@
                     @(Html.TextBoxFor(Model => Model.Duration, new { @class = "form-control", @title = Model.Duration }))
                 </div>
             </div>
-        </div>        
+        </div>
         <div class="row">
             <div class="col-md-6">
                 <a onclick="onCreateManyIndustry()" class="btn btn-primary" style='color:white; cursor: pointer;' title='Create many Industry'><span class="fas fa-save"></span> Create many Industry</a>
@@ -212,7 +220,8 @@
         var pageValue = $("#Page").val();
         var totalSizeValue = $("#TotalSize").data("kendoDropDownList").value();
         var timeLineValue = $("#TimeLine").val();
-        var durationValue = $("#Duration").val();        
+        var durationValue = $("#Duration").val();
+        var datePublishValue = toDate02($("#DatePublish").val());
         $.ajax({
             type: 'GET',
             url: "@Url.Action("CreateManyIndustry", "ProductProperty")",
@@ -223,7 +232,8 @@
                 page: pageValue,
                 totalSize: totalSizeValue,
                 timeLine: timeLineValue,
-                duration: durationValue,                
+                duration: durationValue,
+                datePublish: datePublishValue,
             },
             success: function (result) {
                 var response = result;
@@ -245,7 +255,8 @@
         var pageValue = $("#Page").val();
         var totalSizeValue = $("#TotalSize").data("kendoDropDownList").value();
         var timeLineValue = $("#TimeLine").val();
-        var durationValue = $("#Duration").val();        
+        var durationValue = $("#Duration").val();
+        var datePublishValue = toDate02($("#DatePublish").val());
         $.ajax({
             type: 'GET',
             url: "@Url.Action("CreateAndNext", "ProductProperty")",
@@ -256,7 +267,8 @@
                 page: pageValue,
                 totalSize: totalSizeValue,
                 timeLine: timeLineValue,
-                duration: durationValue,                
+                duration: durationValue,
+                datePublish: datePublishValue,
             },
             success: function (result) {
                 var response = result;

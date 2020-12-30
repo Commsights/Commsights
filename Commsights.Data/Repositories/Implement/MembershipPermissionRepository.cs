@@ -93,6 +93,21 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<MembershipPermission> GetSQLProductByCodeAndIndustryIDToList(string code, int industryID)
+        {
+            List<MembershipPermission> list = new List<MembershipPermission>();
+            if ((!string.IsNullOrEmpty(code)) && (industryID > 0))
+            {
+                SqlParameter[] parameters =
+                    {
+                    new SqlParameter("@IndustryID",industryID),
+                    new SqlParameter("@Code",code),
+                    };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_MembershipPermissionSelectProductByCodeAndIndustryID", parameters);
+                list = SQLHelper.ToList<MembershipPermission>(dt);
+            }
+            return list;
+        }
         public List<MembershipPermission> GetByCodeToList(string code)
         {
             return _context.MembershipPermission.Where(item => item.Code.Equals(code)).OrderBy(item => item.ProductName).ToList();

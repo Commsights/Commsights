@@ -1,10 +1,10 @@
-﻿@{ ViewData["Title"] = "Company by industry"; }
+﻿@{ ViewData["Title"] = "Product by industry"; }
 
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Company - Company by industry</h3>
+                <h3 class="card-title">Company - Product by industry</h3>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -24,18 +24,14 @@
                     </div>
                 </div>
                 <br />
-                @(Html.Kendo().Grid<Commsights.Data.Models.Membership>()
-.Name("Membership")
+                @(Html.Kendo().Grid<Commsights.Data.Models.MembershipPermission>()
+.Name("MembershipPermission")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Template(@"<a target='_blank' href='/Membership/CompanyDetail/#=ID#' class='btn btn-success' style='color:white;'><i class='fas fa-edit'></i></a>").Width(70).HtmlAttributes(new { style = "text-align:center;" });
-    columns.Bound(t => t.Account).Title("Account");
-    columns.Bound(t => t.ShortName).Title("Short name");
-    columns.Bound(t => t.EnglishName).Title("English name");
-    columns.Bound(t => t.FullName).Title("Full name");
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); }).Width(150);
+    columns.Bound(t => t.Note).Title("Company");
+    columns.Bound(t => t.ProductName).Title("Product");
 })
-.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
 .Sortable()
@@ -67,12 +63,11 @@
 .Model(model =>
 {
     model.Id(t => t.ID);
+    model.Field(t => t.Note).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetByIndustryIDToList", "Membership").Data("filterMembership"))
-.Destroy(t => t.Action("Delete", "Membership"))
-.Create(t => t.Action("CreateWithIndustryID", "Membership").Data("filterMembershipCreateWithIndustryID"))
-.Update(t => t.Action("Update", "Membership"))
+.Read(t => t.Action("GetSQLProductByCodeAndIndustryIDToList", "MembershipPermission").Data("filterMembershipPermission"))
+.Update(t => t.Action("Update", "MembershipPermission"))
 )
 )
             </div>
@@ -94,7 +89,7 @@
             var note = response.split('-')[1];
             var notification = $("#Notification").data("kendoNotification");
             notification.show(note, messageType);
-            $("#Membership").data("kendoGrid").dataSource.read();
+            $("#MembershipPermission").data("kendoGrid").dataSource.read();
         }
     }
     function onIndustryDataBound() {
@@ -106,14 +101,10 @@
         }
     }
     function onIndustryChange() {
-        $("#Membership").data("kendoGrid").dataSource.read();
+        $("#MembershipPermission").data("kendoGrid").dataSource.read();
     }
-    function filterMembership(e) {
+    function filterMembershipPermission(e) {
         var industryIDValue = $("#Industry").data("kendoDropDownList").value();
         return { industryID: industryIDValue };
-    }
-    function filterMembershipCreateWithIndustryID(e) {
-        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
-        return { industryID: industryIDValue };
-    }
+    }    
 </script>

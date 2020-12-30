@@ -46,6 +46,7 @@ namespace Commsights.MVC.Controllers
         public IActionResult ScanFilesHandling()
         {
             CodeData model = new CodeData();
+            model.DatePublish = DateTime.Now;
             return View(model);
         }
         public IActionResult ViewContent(string fileName, string extension, string url)
@@ -158,7 +159,7 @@ namespace Commsights.MVC.Controllers
             _productPropertyRepository.Update(model.ID, model);
             return Json(note);
         }
-        public IActionResult CreateManyIndustry(int industryID, string title, int productParentID, string page, string totalSize, string timeLine, string duration)
+        public IActionResult CreateManyIndustry(int industryID, string title, int productParentID, string page, string totalSize, string timeLine, string duration, DateTime datePublish)
         {
             Config parent = _configResposistory.GetByID(productParentID);
             string note = AppGlobal.InitString;
@@ -167,6 +168,7 @@ namespace Commsights.MVC.Controllers
             model.Initialization(InitType.Insert, RequestUserID);
             model.ParentID = productParentID;
             model.Title = title;
+            model.DatePublish = datePublish;
             List<ProductProperty> listProductProperty = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActiveToList(RequestUserID, -1, AppGlobal.URLCode, DateTime.Now, true);
             if (listProductProperty.Count > 0)
             {
@@ -272,7 +274,7 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
-        public IActionResult CreateAndNext(int industryID, string title, int productParentID, string page, string totalSize, string timeLine, string duration)
+        public IActionResult CreateAndNext(int industryID, string title, int productParentID, string page, string totalSize, string timeLine, string duration, DateTime datePublish)
         {
             Config parent = _configResposistory.GetByID(productParentID);
             string note = AppGlobal.InitString;
@@ -281,6 +283,7 @@ namespace Commsights.MVC.Controllers
             model.Initialization(InitType.Insert, RequestUserID);
             model.ParentID = productParentID;
             model.Title = title;
+            model.DatePublish = datePublish;
             List<ProductProperty> listProductProperty = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActiveToList(RequestUserID, -1, AppGlobal.URLCode, DateTime.Now, true);
             if (listProductProperty.Count > 0)
             {

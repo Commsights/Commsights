@@ -241,6 +241,10 @@ namespace Commsights.MVC.Controllers
         {
             return RedirectToAction("CustomerDetail", new { ID = 0 });
         }
+        public IActionResult ProductByIndustry()
+        {
+            return View();
+        }
         public string Sidebar()
         {
             string result = "";
