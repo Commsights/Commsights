@@ -539,6 +539,7 @@ new SqlParameter("@Title",config.Title),
 new SqlParameter("@IsMenuLeft",config.IsMenuLeft),
 new SqlParameter("@Color",config.Color),
 new SqlParameter("@BlackWhite",config.BlackWhite),
+new SqlParameter("@SortOrder",config.SortOrder),
 };
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ConfigUpdateSingleItem001", parameters);
             return result;
