@@ -158,15 +158,15 @@ namespace Commsights.MVC.Controllers
             _productPropertyRepository.Update(model.ID, model);
             return Json(note);
         }
-        public IActionResult CreateManyIndustry(int industryID, string title, int productParentID, string page, string totalSize, string timeLine, string duration, int advalue)
+        public IActionResult CreateManyIndustry(int industryID, string title, int productParentID, string page, string totalSize, string timeLine, string duration)
         {
+            Config parent = _configResposistory.GetByID(productParentID);
             string note = AppGlobal.InitString;
             note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
             Product model = new Product();
             model.Initialization(InitType.Insert, RequestUserID);
             model.ParentID = productParentID;
             model.Title = title;
-            model.Advalue = advalue;
             List<ProductProperty> listProductProperty = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActiveToList(RequestUserID, -1, AppGlobal.URLCode, DateTime.Now, true);
             if (listProductProperty.Count > 0)
             {
@@ -177,8 +177,27 @@ namespace Commsights.MVC.Controllers
                     model.Image = listProductProperty[0].Note;
                     model.Page = timeLine;
                     model.Duration = duration;
+                    try
+                    {
+                        if (parent != null)
+                        {
+                            if (parent.ID > 0)
+                            {
+                                int advalue = 1;
+                                if (parent.Color > 0)
+                                {
+                                    advalue = parent.Color.Value;
+                                }
+                                int durationValue = int.Parse(duration);
+                                advalue = advalue * durationValue / 30;
+                                model.Advalue = advalue;
+                            }
+                        }
+                    }
+                    catch
+                    {
+                    }
                     _productRepository.Create(model);
-
                 }
                 else
                 {
@@ -188,18 +207,49 @@ namespace Commsights.MVC.Controllers
                     _productRepository.Create(model);
                     if (model.ID > 0)
                     {
-                        Config parent = _configResposistory.GetByID(productParentID);
-                        if (parent != null)
+                        try
                         {
-                            if (parent.ID > 0)
+                            if (parent != null)
                             {
-                                ProductProperty productProperty = new ProductProperty();
-                                productProperty.ParentID = model.ID;
-                                productProperty.Code = AppGlobal.URLCode;
-                                productProperty.Note = parent.Note;
-                                productProperty.Initialization(InitType.Insert, RequestUserID);
-                                _productPropertyRepository.Create(productProperty);
+                                if (parent.ID > 0)
+                                {
+                                    int advalue = 1;
+                                    if (parent.Color > 0)
+                                    {
+                                        advalue = parent.Color.Value;
+                                    }
+                                    double durationValue = 1;
+                                    switch (totalSize)
+                                    {
+                                        case "1/2":
+                                            durationValue = 0.5;
+                                            break;
+                                        case "1/4":
+                                            durationValue = 0.25;
+                                            break;
+                                        case "1/8":
+                                            durationValue = 0.125;
+                                            break;
+                                        case "1/16":
+                                            durationValue = 0.0625;
+                                            break;
+                                        case "1/32":
+                                            durationValue = 0.03125;
+                                            break;
+                                    }
+                                    advalue = (int)(advalue * durationValue);
+                                    model.Advalue = advalue;
+                                    ProductProperty productProperty = new ProductProperty();
+                                    productProperty.ParentID = model.ID;
+                                    productProperty.Code = AppGlobal.URLCode;
+                                    productProperty.Note = parent.Note;
+                                    productProperty.Initialization(InitType.Insert, RequestUserID);
+                                    _productPropertyRepository.Create(productProperty);
+                                }
                             }
+                        }
+                        catch
+                        {
                         }
                         foreach (ProductProperty item in listProductProperty)
                         {
@@ -222,15 +272,15 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
-        public IActionResult CreateAndNext(int industryID, string title, int productParentID, string page, string totalSize, string timeLine, string duration, int advalue)
+        public IActionResult CreateAndNext(int industryID, string title, int productParentID, string page, string totalSize, string timeLine, string duration)
         {
+            Config parent = _configResposistory.GetByID(productParentID);
             string note = AppGlobal.InitString;
             note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
             Product model = new Product();
             model.Initialization(InitType.Insert, RequestUserID);
             model.ParentID = productParentID;
             model.Title = title;
-            model.Advalue = advalue;
             List<ProductProperty> listProductProperty = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActiveToList(RequestUserID, -1, AppGlobal.URLCode, DateTime.Now, true);
             if (listProductProperty.Count > 0)
             {
@@ -241,6 +291,26 @@ namespace Commsights.MVC.Controllers
                     model.Image = listProductProperty[0].Note;
                     model.Page = timeLine;
                     model.Duration = duration;
+                    try
+                    {
+                        if (parent != null)
+                        {
+                            if (parent.ID > 0)
+                            {
+                                int advalue = 1;
+                                if (parent.Color > 0)
+                                {
+                                    advalue = parent.Color.Value;
+                                }
+                                int durationValue = int.Parse(duration);
+                                advalue = advalue * durationValue / 30;
+                                model.Advalue = advalue;
+                            }
+                        }
+                    }
+                    catch
+                    {
+                    }
                     _productRepository.Create(model);
                 }
                 else
@@ -251,18 +321,49 @@ namespace Commsights.MVC.Controllers
                     _productRepository.Create(model);
                     if (model.ID > 0)
                     {
-                        Config parent = _configResposistory.GetByID(productParentID);
-                        if (parent != null)
+                        try
                         {
-                            if (parent.ID > 0)
+                            if (parent != null)
                             {
-                                ProductProperty productProperty = new ProductProperty();
-                                productProperty.ParentID = model.ID;
-                                productProperty.Code = AppGlobal.URLCode;
-                                productProperty.Note = parent.Note;
-                                productProperty.Initialization(InitType.Insert, RequestUserID);
-                                _productPropertyRepository.Create(productProperty);
+                                if (parent.ID > 0)
+                                {
+                                    int advalue = 1;
+                                    if (parent.Color > 0)
+                                    {
+                                        advalue = parent.Color.Value;
+                                    }
+                                    double durationValue = 1;
+                                    switch (totalSize)
+                                    {
+                                        case "1/2":
+                                            durationValue = 0.5;
+                                            break;
+                                        case "1/4":
+                                            durationValue = 0.25;
+                                            break;
+                                        case "1/8":
+                                            durationValue = 0.125;
+                                            break;
+                                        case "1/16":
+                                            durationValue = 0.0625;
+                                            break;
+                                        case "1/32":
+                                            durationValue = 0.03125;
+                                            break;
+                                    }
+                                    advalue = (int)(advalue * durationValue);
+                                    model.Advalue = advalue;
+                                    ProductProperty productProperty = new ProductProperty();
+                                    productProperty.ParentID = model.ID;
+                                    productProperty.Code = AppGlobal.URLCode;
+                                    productProperty.Note = parent.Note;
+                                    productProperty.Initialization(InitType.Insert, RequestUserID);
+                                    _productPropertyRepository.Create(productProperty);
+                                }
                             }
+                        }
+                        catch
+                        {
                         }
                         foreach (ProductProperty item in listProductProperty)
                         {
