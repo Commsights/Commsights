@@ -125,6 +125,11 @@ namespace Commsights.MVC.Controllers
             var data = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActiveToList(RequestUserID, -1, AppGlobal.URLCode, DateTime.Now, false);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetRequestUserIDAndParentIDAndCodeAndFalseToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndActiveToList(RequestUserID, -1, AppGlobal.URLCode, false);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndTrueToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActiveToList(RequestUserID, -1, AppGlobal.URLCode, DateTime.Now, true);

@@ -180,6 +180,23 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<ProductProperty> GetRequestUserIDAndParentIDAndCodeAndActiveToList(int requestUserID, int parentID, string code, bool active)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            if (requestUserID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@RequestUserID",requestUserID),
+                new SqlParameter("@ParentID",parentID),
+                new SqlParameter("@Code",code),                
+                new SqlParameter("@Active",active),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectByRequestUserIDAndParentIDAndCodeAndActive", parameters);
+                list = SQLHelper.ToList<ProductProperty>(dt);
+            }
+            return list;
+        }
         public List<ProductPropertyDataTransfer> GetDataTransferIndustryByParentIDToList(int parentID)
         {
             List<ProductPropertyDataTransfer> list = new List<ProductPropertyDataTransfer>();
