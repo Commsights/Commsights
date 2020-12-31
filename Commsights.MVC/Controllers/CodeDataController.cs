@@ -1132,7 +1132,6 @@ namespace Commsights.MVC.Controllers
             stream.Position = 0;
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
         }
-
         public ActionResult GetReportByDateUpdatedAndHourAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList([DataSourceRequest] DataSourceRequest request, DateTime dateUpdated, int hour, int industryID, string companyName, bool isCoding, bool isAnalysis)
         {
             string isCodingString = isCoding.ToString();
@@ -1841,8 +1840,8 @@ namespace Commsights.MVC.Controllers
                         if (rowIndex == list[i].RowIndex)
                         {
                             model = list[i];
-                            model.CompanyNameHiden = _codeDataRepository.GetCompanyNameByTitle(model.Title);
-                            model.ProductNameHiden = _codeDataRepository.GetProductNameByTitle(model.Title);
+                            model.CompanyNameHiden = _codeDataRepository.GetCompanyNameByURLCode(model.URLCode);
+                            model.ProductNameHiden = _codeDataRepository.GetProductNameByURLCode(model.URLCode);
                             model.RowBack = rowIndex - 1;
                             model.RowCurrent = rowIndex;
                             model.RowNext = rowIndex + 1;
