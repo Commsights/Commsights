@@ -155,6 +155,22 @@ namespace Commsights.Data.Helpers
         #endregion
 
         #region AppSettings     
+        public static string TV
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("TV").Value;
+            }
+        }
+        public static string Newspage
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Newspage").Value;
+            }
+        }
         public static string TotalSize
         {
             get

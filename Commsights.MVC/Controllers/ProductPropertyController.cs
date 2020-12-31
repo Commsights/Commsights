@@ -184,6 +184,7 @@ namespace Commsights.MVC.Controllers
                     model.Image = listProductProperty[0].Note;
                     model.Page = timeLine;
                     model.Duration = duration;
+                    model.Source = AppGlobal.TV;
                     try
                     {
                         if (parent != null)
@@ -204,10 +205,12 @@ namespace Commsights.MVC.Controllers
                     catch
                     {
                     }
+
                     _productRepository.Create(model);
                 }
                 else
                 {
+                    model.Source = AppGlobal.Newspage;
                     model.IsVideo = false;
                     model.Page = page;
                     model.Duration = totalSize;
@@ -296,6 +299,7 @@ namespace Commsights.MVC.Controllers
                 string fileExtension = listProductProperty[0].Page.Replace(@".", @"");
                 if ((fileExtension == "mp4") || (fileExtension == "wmv"))
                 {
+                    model.Source = AppGlobal.TV;
                     model.IsVideo = true;
                     model.Image = listProductProperty[0].Note;
                     model.Page = timeLine;
@@ -324,6 +328,7 @@ namespace Commsights.MVC.Controllers
                 }
                 else
                 {
+                    model.Source = AppGlobal.Newspage;
                     model.IsVideo = false;
                     model.Page = page;
                     model.Duration = totalSize;

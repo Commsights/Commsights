@@ -63,7 +63,7 @@
                     .HtmlAttributes(new { @class = "form-control" })
                     .Events(e => e.DataBound("onIndustryDataBound").Change("onIndustryChange"))
                        .Filter(FilterType.Contains)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByIndustryIDToList", "Config")))
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
                             )
                     </div>
                     <div class='col-sm-6'>
@@ -72,7 +72,7 @@
                      .DataTextField("Account")
                     .HtmlAttributes(new { @class = "form-control" })
                        .Filter(FilterType.Contains)                       
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByIndustryID001ByActiveToList", "Membership")))
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByIndustryID004ByActiveToList", "Membership").Data("filterMembership")))
                             )
                     </div>
                     <div class='col-sm-1'>
@@ -265,5 +265,19 @@
         window.location.replace(url);
         EndRequestHandler();
     }
-
+    function onIndustryChange() {
+        $("#CompanyName").data("kendoDropDownList").dataSource.read();
+    }
+    function onIndustryDataBound() {
+        var control = $("#IndustryID").data("kendoDropDownList");
+        var controlLength = control.dataSource.data().length;
+        if (controlLength > 0) {
+            control.select(0);
+            control.trigger("change");
+        }
+    }
+    function filterMembership(e) {
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        return { industryID: industryIDValue };
+    }
 </script>
