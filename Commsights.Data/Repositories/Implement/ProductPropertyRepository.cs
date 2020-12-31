@@ -189,7 +189,7 @@ namespace Commsights.Data.Repositories
                 {
                 new SqlParameter("@RequestUserID",requestUserID),
                 new SqlParameter("@ParentID",parentID),
-                new SqlParameter("@Code",code),                
+                new SqlParameter("@Code",code),
                 new SqlParameter("@Active",active),
                 };
                 DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectByRequestUserIDAndParentIDAndCodeAndActive", parameters);
@@ -403,6 +403,27 @@ new SqlParameter("@RowIndex",model.RowIndex),
 new SqlParameter("@Title",model.Title),
 };
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyUpdateItemsByCodeDataCopyVersion", parameters);
+            return result;
+        }
+        public string UpdateItemsByDailyDownload(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int hourBegin, int hourEnd, int industryID, string companyName, bool isCoding, bool isAnalysis, int RequestUserID)
+        {
+            string result = "";
+            if (industryID > 0)
+            {
+                dateUpdatedBegin = new DateTime(dateUpdatedBegin.Year, dateUpdatedBegin.Month, dateUpdatedBegin.Day, hourBegin, 0, 0);
+                dateUpdatedEnd = new DateTime(dateUpdatedEnd.Year, dateUpdatedEnd.Month, dateUpdatedEnd.Day, hourEnd, 59, 59);
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@DateUpdatedBegin",dateUpdatedBegin),
+                new SqlParameter("@DateUpdatedEnd",dateUpdatedEnd),
+                new SqlParameter("@IndustryID",industryID),
+                new SqlParameter("@CompanyName",companyName),
+                new SqlParameter("@IsCoding",isCoding),
+                new SqlParameter("@IsAnalysis",isAnalysis),
+                new SqlParameter("@@RequestUserID",RequestUserID),
+                };
+                result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyUpdateItemsByDailyDownload", parameters);
+            }
             return result;
         }
         public int InsertItemsByCopyCodeData(int ID, int RequestUserID, int rowIndex)

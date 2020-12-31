@@ -47,8 +47,7 @@
     columns.Bound(t => t.ProductCount).Title("Source").Width(100).HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });
     columns.Bound(t => t.ProductGoogleCount).Title("Google").Width(100).HtmlAttributes(new { @class = "text-right" });
     columns.Bound(t => t.ProductNewspageCount).Title("Newspage").Width(100).HtmlAttributes(new { @class = "text-right" });
-    columns.Bound(t => t.ProductTVCount).Title("TV").Width(100).HtmlAttributes(new { @class = "text-right" });
-    columns.Bound(t => t.ProductAndiCount).Title("Andi").Width(100).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.ProductTVCount).Title("TV").Width(100).HtmlAttributes(new { @class = "text-right" });    
 })
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))

@@ -152,5 +152,7 @@ namespace Commsights.Data.DataTransferObject
         public string TotalSize { get; set; }
         public int? EmployeeID { get; set; }
         public string FullName { get; set; }
+        public bool? IsDailyDownload { get; set; }
+        public DateTime? DateDailyDownload { get; set; }
     }
 }

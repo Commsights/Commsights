@@ -181,20 +181,32 @@ namespace Commsights.MVC.Controllers
                     productProperty01.ID = 1;
                     productProperty01.Note = header.Note;
                     model.ListProductProperty.Add(productProperty01);
-                }
-                int no = 2;
-                foreach (ProductProperty item in listProductProperty)
-                {
-                    if (item.ID != header.ID)
+                    int no = 2;
+                    foreach (ProductProperty item in listProductProperty)
                     {
-                        ProductProperty productProperty02 = new ProductProperty();
-                        productProperty02.ID = no;
-                        productProperty02.Note = item.Note;
-                        model.ListProductProperty.Add(productProperty02);
-                        no = no + 1;
+                        if (item.ID != header.ID)
+                        {
+                            ProductProperty productProperty02 = new ProductProperty();
+                            productProperty02.ID = no;
+                            productProperty02.Note = item.Note;
+                            model.ListProductProperty.Add(productProperty02);
+                            no = no + 1;
+                        }
                     }
                 }
-
+                else
+                {
+                    model.ListProductProperty = listProductProperty;
+                    //int no = 1;
+                    //foreach (ProductProperty item in listProductProperty)
+                    //{
+                    //    ProductProperty productProperty02 = new ProductProperty();
+                    //    productProperty02.ID = no;
+                    //    productProperty02.Note = item.Note;
+                    //    model.ListProductProperty.Add(productProperty02);
+                    //    no = no + 1;
+                    //}
+                }
             }
             if (model.Product == null)
             {

@@ -39,5 +39,6 @@ namespace Commsights.Data.Repositories
         public List<ProductProperty> GetRequestUserIDAndParentIDAndCodeAndDateUpdatedToList(int requestUserID, int parentID, string code, DateTime dateUpdated);
         public List<ProductProperty> GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActiveToList(int requestUserID, int parentID, string code, DateTime dateUpdated, bool active);
         public List<ProductProperty> GetRequestUserIDAndParentIDAndCodeAndActiveToList(int requestUserID, int parentID, string code, bool active);
+        public string UpdateItemsByDailyDownload(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int hourBegin, int hourEnd, int industryID, string companyName, bool isCoding, bool isAnalysis, int RequestUserID);
     }
 }

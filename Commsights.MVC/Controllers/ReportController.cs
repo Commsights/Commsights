@@ -128,7 +128,19 @@ namespace Commsights.MVC.Controllers
             _reportRepository.UpdateProductByDatePublishBeginAndDatePublishEndAndIndustryID(model.DatePublishBegin, model.DatePublishEnd, model.IndustryID);
             return View(model);
         }
-        public IActionResult DailyData(int industryID, string datePublishBeginString, string datePublishEndString)
+        public IActionResult DailyData()
+        {
+            DateTime now = DateTime.Now;
+            CodeDataViewModel model = new CodeDataViewModel();
+            model.HourBegin = 1;
+            model.HourEnd = now.Hour;
+            model.DatePublishBegin = now;
+            model.DatePublishEnd = now;
+            model.IndustryID = AppGlobal.IndustryID;
+            model.CompanyName = "";
+            return View(model);
+        }
+        public IActionResult DailyData2020(int industryID, string datePublishBeginString, string datePublishEndString)
         {
             BaseViewModel model = new BaseViewModel();
             model.DatePublishBegin = DateTime.Now;

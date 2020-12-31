@@ -211,7 +211,7 @@
                 industryID: industryIDValue,
             },
              success: function (listMembership) {
-                var html = '<table class="border01" id="Data" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                var html = '<table class="border01" id="Data" cellspacing="4" style="background-color:#ffffff; width: 100%; font-size:11px;">';
                 html = html + '<thead>';
                 html = html + '<tr>';
                 html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Customer</a></th>";
@@ -255,17 +255,17 @@
         var companyNameValue = $("#CompanyName").data("kendoDropDownList").value();
         var isCodingValue = document.getElementById('IsCoding').checked;
         var isAnalysisValue = document.getElementById('IsAnalysis').checked;
-        return { dateUpdatedBegin: dateUpdatedBeginValue, dateUpdatedEnd: dateUpdatedEndValue, hourBegin: hourBeginValue, hourEnd: hourEndValue,industryID: industryIDValue, companyName: companyNameValue, isCoding: isCodingValue, isAnalysis: isAnalysisValue };
+        return { dateUpdatedBegin: dateUpdatedBeginValue, dateUpdatedEnd: dateUpdatedEndValue, hourBegin: hourBeginValue, hourEnd: hourEndValue, industryID: industryIDValue, companyName: companyNameValue, isCoding: isCodingValue, isAnalysis: isAnalysisValue };
     }
     function onExportCode() {
         BeginRequestHandler();
-        var url = "/CodeData/ExportExcelByCookiesOfByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndIsCoding";
+        var url = "/CodeData/Export001ExportExcel";
         window.location.replace(url);
         EndRequestHandler();
     }
     function onExportDaily() {
         BeginRequestHandler();
-        var url = "/CodeData/ExportExcelByCookiesOfDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndIsCodingForDaily";
+        var url = "/CodeData/Export001ExportExcelForDaily";
         window.location.replace(url);
         EndRequestHandler();
     }
