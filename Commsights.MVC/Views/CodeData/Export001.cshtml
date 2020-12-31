@@ -47,12 +47,7 @@
                                      .HtmlAttributes(new { @class = "form-control text-right", title = "Date begin" })
                                      .DateInput()
                                 )
-                    </div>
-                    <div class='col-sm-1'>
-                        <button type="button" class="btn btn-success" title="Search" onclick="onSearch()">
-                            <span class="fas fa-search"></span>
-                        </button>
-                    </div>
+                    </div>                   
                 </div>
                 <br />
                 <div class="row">
@@ -66,14 +61,19 @@
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
                             )
                     </div>
-                    <div class='col-sm-6'>
+                    <div class='col-sm-5'>
                         @(Html.Kendo().DropDownListFor(Model => Model.CompanyName)
                      .DataValueField("Account")
                      .DataTextField("Account")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.Contains)                       
+                       .Filter(FilterType.Contains)
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByIndustryID004ByActiveToList", "Membership").Data("filterMembership")))
                             )
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-success" title="Search" onclick="onSearch()">
+                            <span class="fas fa-search"></span>
+                        </button>
                     </div>
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" title="Export Code" onclick="onExportCode()">
@@ -178,16 +178,16 @@
 .RepeatHeaders()
 .FileName("Article.pdf")
 )
-.HtmlAttributes(new { @class = "KendoGrid" })
+.HtmlAttributes(new { @class = "KendoGrid", @style = "font-size:11px;" })
 .Search(search => { search.Field(f => f.URLCode); search.Field(f => f.Title); search.Field(f => f.TitleEnglish); search.Field(f => f.CompanyName); search.Field(f => f.MediaTitle); search.Field(f => f.TierCommsights); search.Field(f => f.MediaType); search.Field(f => f.ProductName_ProjectName); })
 .DataSource(dataSource => dataSource
 .Ajax()
-.PageSize(10)
+.PageSize(10000)
 .Model(model =>
 {
     model.Id(t => t.RowIndex);
 })
-.Read(t => t.Action("GetReportByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndIsCodingToList", "CodeData").Data("filterCodeData"))
+.Read(t => t.Action("GetByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList", "CodeData").Data("filterCodeData"))
 ))
             </div>
         </div>
@@ -249,9 +249,13 @@
     function filterCodeData(e) {
         var dateUpdatedBeginValue = toDate02($("#DatePublishBegin").val());
         var dateUpdatedEndValue = toDate02($("#DatePublishEnd").val());
+        var hourBeginValue = $("#HourBegin").data("kendoDropDownList").value();
+        var hourEndValue = $("#HourEnd").data("kendoDropDownList").value();
         var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        var companyNameValue = $("#CompanyName").data("kendoDropDownList").value();
         var isCodingValue = document.getElementById('IsCoding').checked;
-        return { dateUpdatedBegin: dateUpdatedBeginValue, dateUpdatedEnd: dateUpdatedEndValue, industryID: industryIDValue, isCoding: isCodingValue };
+        var isAnalysisValue = document.getElementById('IsAnalysis').checked;
+        return { dateUpdatedBegin: dateUpdatedBeginValue, dateUpdatedEnd: dateUpdatedEndValue, hourBegin: hourBeginValue, hourEnd: hourEndValue,industryID: industryIDValue, companyName: companyNameValue, isCoding: isCodingValue, isAnalysis: isAnalysisValue };
     }
     function onExportCode() {
         BeginRequestHandler();

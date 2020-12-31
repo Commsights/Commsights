@@ -11,7 +11,7 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-arrow-right").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:green; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
-    columns.Command(command => { command.Custom("View").Click("onViewScanFile").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:green; color:#ffffff; padding-left:10px;" }); }).Width(80);    
+    columns.Command(command => { command.Custom("View").Click("onViewScanFile").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:green; color:#ffffff; padding-left:10px;" }); }).Width(80);
     columns.Template(@"<a target='_blank' href='/ProductProperty/ViewContent?fileName=#=FileName#&extension=#=Page#&url=#=Note#' title='#=Note#' style='cursor: pointer; color: blue;'>#=FileName#</a>").Title("File");
 })
 
@@ -58,7 +58,7 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-arrow-left").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:green; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
-    columns.Command(command => { command.Custom("View").Click("onViewScanFile").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:green; color:#ffffff; padding-left:10px;" }); }).Width(70);    
+    columns.Command(command => { command.Custom("View").Click("onViewScanFile").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:green; color:#ffffff; padding-left:10px;" }); }).Width(80);
     columns.Template(@"<a target='_blank' href='/ProductProperty/ViewContent?fileName=#=FileName#&extension=#=Page#&url=#=Note#' title='#=Note#' style='cursor: pointer; color: blue;'>#=FileName#</a>").Title("File");
 })
 .Editable(editable => editable.Mode(GridEditMode.InLine).DisplayDeleteConfirmation(false))
@@ -99,12 +99,12 @@
 )
             </div>
         </div>
-        <div class="row">
+        <div class="row" style="overflow: scroll; width: 100%; height: 300px;">
             <div id="DataMain" class='col-sm-12'></div>
         </div>
     </div>
     <div class="col-md-4">
-        <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadScanFilesNoUploadFiles", "ProductProperty")'>            
+        <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadScanFilesNoUploadFiles", "ProductProperty")'>
             <div class="row">
                 <div class='col-md-6'>
                     @(Html.Kendo().Upload()
@@ -117,7 +117,7 @@
             </div>
         </form>
         <br />
-        <div class='form-group'>            
+        <div class='form-group'>
             @(Html.Kendo().DropDownListFor(Model=>Model.IndustryID)
                      .DataValueField("ID")
                      .DataTextField("CodeName")
@@ -126,7 +126,7 @@
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
                             )
         </div>
-        <div class='form-group'>            
+        <div class='form-group'>
             @(Html.Kendo().DropDownListFor(Model=>Model.ProductParentID)
                      .DataValueField("ID")
                      .DataTextField("Title")
@@ -135,15 +135,15 @@
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferPressListByGroupNameAndCodeToList", "Config")))
                             )
         </div>
-        <div class='form-group'>            
+        <div class='form-group'>
             @(Html.Kendo().DatePickerFor(Model => Model.DatePublish)
                                      .Format("dd/MM/yyyy")
                                      .HtmlAttributes(new { @class = "form-control text-right", title = "Date begin" })
                                      .DateInput()
              )
         </div>
-        <div class='form-group'>            
-            @(Html.TextBoxFor(Model => Model.Title, new { placeholder = "Headline (Vie)", @class = "form-control", @title = Model.Title }))            
+        <div class='form-group'>
+            @(Html.TextBoxFor(Model => Model.Title, new { placeholder = "Headline (Vie)", @class = "form-control", @title = Model.Title }))
         </div>
         <div class="row">
             <div class="col-md-6">
@@ -154,15 +154,15 @@
             </div>
             <div class="col-md-6">
                 <div class='form-group'>
-                    <label for='TotalSize'>Total size</label>
+                    <label for='TotalSize'>Total size (%)</label>
                     @(Html.TextBoxFor(Model => Model.TotalSize, new { @class = "form-control", @title = Model.TotalSize }))
                     @*@(Html.Kendo().DropDownListFor(Model=>Model.TotalSize)
-                     .DataValueField("CodeName")
-                     .DataTextField("CodeName")
-                    .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.Contains)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetTotalSizeToList", "Config")))
-                            )*@
+                         .DataValueField("CodeName")
+                         .DataTextField("CodeName")
+                        .HtmlAttributes(new { @class = "form-control" })
+                           .Filter(FilterType.Contains)
+                         .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetTotalSizeToList", "Config")))
+                                )*@
                 </div>
             </div>
         </div>
@@ -201,15 +201,15 @@
         var extension = productProperty.Page.replace(".", "");
         var html = "";
         switch (extension) {
-            case "jpg":               
-            case "png":               
-            case "jpeg":   
+            case "jpg":
+            case "png":
+            case "jpeg":
                 html = "<img src='" + productProperty.Note + "' class='img-thumbnail' />";
-                break;            
+                break;
             case "mp4":
             case "wmv":
                 html = "<video width='100%' height='50%' controls><source src='" + productProperty.Note + "' type='video/mp4'></video>";
-                break;  
+                break;
         }
         $("#DataMain").html('');
         html = $.parseHTML(html);
@@ -233,7 +233,7 @@
         var titleValue = $("#Title").val();
         var productParentIDValue = $("#ProductParentID").data("kendoDropDownList").value();
         var pageValue = $("#Page").val();
-        var totalSizeValue = $("#TotalSize").data("kendoDropDownList").value();
+        var totalSizeValue = $("#TotalSize").val();
         var timeLineValue = $("#TimeLine").val();
         var durationValue = $("#Duration").val();
         var datePublishValue = toDate02($("#DatePublish").val());
@@ -251,13 +251,7 @@
                 datePublish: datePublishValue,
             },
             success: function (result) {
-                var response = result;
-                var messageType = response.split('-')[0];
-                var note = response.split('-')[1];
-                var notification = $("#Notification").data("kendoNotification");
-                notification.show(note, messageType);
-                $("#ProductPropertyTrue").data("kendoGrid").dataSource.read();
-                EndRequestHandler();
+                onLoadSuccess(result);
             }
             }).done(() => {
         });
@@ -268,7 +262,7 @@
         var titleValue = $("#Title").val();
         var productParentIDValue = $("#ProductParentID").data("kendoDropDownList").value();
         var pageValue = $("#Page").val();
-        var totalSizeValue = $("#TotalSize").data("kendoDropDownList").value();
+        var totalSizeValue = $("#TotalSize").val();
         var timeLineValue = $("#TimeLine").val();
         var durationValue = $("#Duration").val();
         var datePublishValue = toDate02($("#DatePublish").val());
@@ -286,15 +280,26 @@
                 datePublish: datePublishValue,
             },
             success: function (result) {
-                var response = result;
-                var messageType = response.split('-')[0];
-                var note = response.split('-')[1];
-                var notification = $("#Notification").data("kendoNotification");
-                notification.show(note, messageType);
-                $("#ProductPropertyTrue").data("kendoGrid").dataSource.read();
-                EndRequestHandler();
+                onLoadSuccess(result);
             }
             }).done(() => {
         });
+    }
+    function onLoadSuccess(result) {
+        var response = result;
+        var messageType = response.split('-')[0];
+        var note = response.split('-')[1];
+        var notification = $("#Notification").data("kendoNotification");
+        notification.show(note, messageType);
+        $("#ProductPropertyTrue").data("kendoGrid").dataSource.read();
+        if (messageType == "success") {
+            $("#DatePublish").val(new Date().toDateInputValue());
+            $("#Title").val("");
+            $("#TotalSize").val("");
+            $("#Page").val("");
+            $("#TimeLine").val("");
+            $("#Duration").val("");
+        }
+        EndRequestHandler();
     }
 </script>

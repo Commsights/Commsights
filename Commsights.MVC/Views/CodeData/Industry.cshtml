@@ -39,11 +39,16 @@
 .Name("CodeDataReport")
 .Columns(columns =>
 {
+    columns.Bound(t => t.IndustryID).Title("ID").Width(100);
     columns.Bound(t => t.Industry).Title("Industry").Width(300);
-    columns.Bound(t => t.ProductPropertyCount).Title("Count").Width(100).HtmlAttributes(new { @class = "text-right" });
-    columns.Bound(t => t.CodingCount).Title("Coding").Width(100).HtmlAttributes(new { @class = "text-right" });
-    columns.Bound(t => t.AnalysisCount).Title("Analysis").Width(100).HtmlAttributes(new { @class = "text-right" });
-    columns.Bound(t => t.ProductCount).Title("Source").Width(100).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.ProductPropertyCount).Title("Count").Width(100).HtmlAttributes(new { @class = "text-right text-danger", @style= "font-weight: bold;" });
+    columns.Bound(t => t.CodingCount).Title("Coding").Width(100).HtmlAttributes(new { @class = "text-right text-success" });
+    columns.Bound(t => t.AnalysisCount).Title("Analysis").Width(100).HtmlAttributes(new { @class = "text-right text-success" });
+    columns.Bound(t => t.ProductCount).Title("Source").Width(100).HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });
+    columns.Bound(t => t.ProductGoogleCount).Title("Google").Width(100).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.ProductNewspageCount).Title("Newspage").Width(100).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.ProductTVCount).Title("TV").Width(100).HtmlAttributes(new { @class = "text-right" });
+    columns.Bound(t => t.ProductAndiCount).Title("Andi").Width(100).HtmlAttributes(new { @class = "text-right" });
 })
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
@@ -78,7 +83,7 @@
 {
 })
 
-.Read(t => t.Action("GetReportByDatePublishBeginAndDatePublishEndToList", "CodeData").Data("filterCodeData"))
+.Read(t => t.Action("GetReportByDatePublishBeginAndDatePublishEndAndIsUploadToList", "CodeData").Data("filterCodeData"))
 )
 )
             </div>
@@ -99,6 +104,7 @@
     function filterCodeData(e) {        
         var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
         var datePublishEndValue = toDate02($("#DatePublishEnd").val());
-        return { datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue };
+        var isUploadValue = document.getElementById("IsUpload").checked;
+        return { datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, isUpload: isUploadValue };
     }
 </script>

@@ -17,11 +17,14 @@ namespace Commsights.Data.Repositories
         public string GetProductNameByTitle(string title);
         public string GetProductNameByURLCode(string uRLCode);
         public List<CodeDataReport> GetReportByDatePublishBeginAndDatePublishEndToList(DateTime datePublishBegin, DateTime datePublishEnd);
+        public List<CodeDataReport> GetReportByDateUpdatedBeginAndDateUpdatedEndToList(DateTime datePublishBegin, DateTime datePublishEnd);
+        public List<CodeDataReport> GetReportByDatePublishBeginAndDatePublishEndAndIsUploadToList(DateTime datePublishBegin, DateTime datePublishEnd, bool isUpload);
         public List<Membership> GetReportSelectByDatePublishBeginAndDatePublishEnd001ToList(DateTime datePublishBegin, DateTime datePublishEnd);
         public List<CodeData> GetReportByDateUpdatedAndHourAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList(DateTime dateUpdated, int hour, int industryID, string companyName, bool isCoding, bool isAnalysis);        
         public List<CodeData> GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsPublishToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int employeeID, bool isPublish);
         public List<CodeData> GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int employeeID, bool isUpload);
         public List<CodeData> GetReportByDateUpdatedAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList(DateTime dateUpdated, int hourBegin, int hourEnd, int industryID, string companyName, bool isCoding, bool isAnalysis);
         public List<CodeData> GetReportByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndIsCodingToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int industryID, bool isCoding);
+        public List<CodeData> GetByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int hourBegin, int hourEnd, int industryID, string companyName, bool isCoding, bool isAnalysis);
     }
 }

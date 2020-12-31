@@ -69,10 +69,14 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult Export001()
         {
+            DateTime now = DateTime.Now;
             CodeDataViewModel model = new CodeDataViewModel();
-            model.DatePublishBegin = DateTime.Now;
-            model.DatePublishEnd = DateTime.Now;
+            model.HourBegin = 1;
+            model.HourEnd = now.Hour;
+            model.DatePublishBegin = now;
+            model.DatePublishEnd = now;
             model.IndustryID = AppGlobal.IndustryID;
+            model.CompanyName = "";
             return View(model);
         }
         public IActionResult Industry()
@@ -1177,6 +1181,25 @@ namespace Commsights.MVC.Controllers
             List<CodeData> list = _codeDataRepository.GetReportByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndIsCodingToList(dateUpdatedBegin, dateUpdatedEnd, industryID, isCoding);
             return Json(list.ToDataSourceResult(request));
         }
+        public ActionResult GetByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList([DataSourceRequest] DataSourceRequest request, DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int hourBegin, int hourEnd, int industryID, string companyName, bool isCoding, bool isAnalysis)
+        {
+            if(string.IsNullOrEmpty(companyName))
+            {
+                companyName = "";
+            }    
+            var cookieExpires = new CookieOptions();
+            cookieExpires.Expires = DateTime.Now.AddDays(1);
+            Response.Cookies.Append("CodeDataDateUpdatedBegin", dateUpdatedBegin.ToString("MM/dd/yyyy"), cookieExpires);
+            Response.Cookies.Append("CodeDataDateUpdatedEnd", dateUpdatedEnd.ToString("MM/dd/yyyy"), cookieExpires);
+            Response.Cookies.Append("CodeDataHourBegin", hourBegin.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataHourEnd", hourEnd.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataCompanyName", companyName.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataIsCoding", isCoding.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataIsAnalysis", isAnalysis.ToString(), cookieExpires);
+            List<CodeData> list = _codeDataRepository.GetByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID, companyName, isCoding, isAnalysis);
+            return Json(list.ToDataSourceResult(request));
+        }
         public ActionResult GetReportSelectByDatePublishBeginAndDatePublishEnd001ToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd)
         {
             List<Membership> list = _codeDataRepository.GetReportSelectByDatePublishBeginAndDatePublishEnd001ToList(datePublishBegin, datePublishEnd);
@@ -1185,6 +1208,11 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetReportByDatePublishBeginAndDatePublishEndToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd)
         {
             List<CodeDataReport> list = _codeDataRepository.GetReportByDatePublishBeginAndDatePublishEndToList(datePublishBegin, datePublishEnd);
+            return Json(list.ToDataSourceResult(request));
+        }
+        public ActionResult GetReportByDatePublishBeginAndDatePublishEndAndIsUploadToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, bool isUpload)
+        {
+            List<CodeDataReport> list = _codeDataRepository.GetReportByDatePublishBeginAndDatePublishEndAndIsUploadToList(datePublishBegin, datePublishEnd, isUpload);
             return Json(list.ToDataSourceResult(request));
         }
         public ActionResult GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
@@ -1375,7 +1403,7 @@ namespace Commsights.MVC.Controllers
                     datePublishBegin = DateTime.Parse(Request.Cookies["CodeDataDatePublishBegin"]);
                     datePublishEnd = DateTime.Parse(Request.Cookies["CodeDataDatePublishEnd"]);
                     isUpload = bool.Parse(Request.Cookies["CodeDataIsUpload"]);
-                    List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload).Where(item => item.IsCoding == false || item.IsCoding == null).ToList();
+                    List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload);
                     for (int i = 0; i < list.Count; i++)
                     {
                         if (rowIndex == list[i].RowIndex)
