@@ -495,13 +495,9 @@ namespace Commsights.MVC.Controllers
             catch
             {
             }
-            if (string.IsNullOrEmpty(baseViewModel.ActionView))
-            {
-                baseViewModel.ActionView = "ScanFilesHandling";
-            }
-            return RedirectToAction(baseViewModel.ActionView);
-        }
-        public ActionResult UploadScanFilesNoUploadFiles(Commsights.MVC.Models.BaseViewModel baseViewModel)
+            return RedirectToAction("ScanFilesHandling");
+        }        
+        public ActionResult UploadScanFilesNoUploadFiles()
         {
             try
             {
@@ -546,14 +542,11 @@ namespace Commsights.MVC.Controllers
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
+                string mes = e.Message;
             }
-            if (string.IsNullOrEmpty(baseViewModel.ActionView))
-            {
-                baseViewModel.ActionView = "ScanFilesHandling";
-            }
-            return RedirectToAction(baseViewModel.ActionView);
+            return RedirectToAction("ScanFilesHandling");
         }
     }
 }

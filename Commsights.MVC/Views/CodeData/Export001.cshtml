@@ -8,6 +8,14 @@
         <div class="card card-primary">
             <div class="card-body">
                 <div class="row">
+                    <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
+                        <input id="IsCoding" type="checkbox" checked="checked">
+                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Code</p>
+                    </div>
+                    <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
+                        <input id="IsAnalysis" type="checkbox">
+                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Analysis</p>
+                    </div>
                     <div class='col-sm-1'>
                         @(Html.Kendo().DropDownListFor(Model=>Model.HourBegin)
                      .DataValueField("Display")
@@ -40,19 +48,11 @@
                                      .DateInput()
                                 )
                     </div>
-                    <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
-                        <input id="IsCoding" type="checkbox">
-                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Code</p>
-                    </div>
-                    <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
-                        <input id="IsAnalysis" type="checkbox">
-                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Analysis</p>
-                    </div>
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" title="Search" onclick="onSearch()">
                             <span class="fas fa-search"></span>
                         </button>
-                    </div>                    
+                    </div>
                 </div>
                 <br />
                 <div class="row">
@@ -61,8 +61,18 @@
                      .DataValueField("ID")
                      .DataTextField("CodeName")
                     .HtmlAttributes(new { @class = "form-control" })
+                    .Events(e => e.DataBound("onIndustryDataBound").Change("onIndustryChange"))
                        .Filter(FilterType.Contains)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByIndustryIDToList", "Config")))
+                            )
+                    </div>
+                    <div class='col-sm-6'>
+                        @(Html.Kendo().DropDownListFor(Model => Model.CompanyName)
+                     .DataValueField("Account")
+                     .DataTextField("Account")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.Contains)                       
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByIndustryID001ByActiveToList", "Membership")))
                             )
                     </div>
                     <div class='col-sm-1'>
