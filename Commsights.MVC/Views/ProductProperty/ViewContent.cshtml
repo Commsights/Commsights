@@ -1,0 +1,11 @@
+@{ Layout = "~/Views/Shared/_LayoutWindow.cshtml"; ViewData["Title"] = @Model.FileName; }
+
+@model Commsights.MVC.Models.ViewContentViewModel
+
+<div class="card card-primary card-outline">    
+    <div class="card-body">
+        <div class="text-center" style="margin:auto; margin:0px;">
+            @Html.Raw(Model.Extension)
+        </div>
+    </div>
+</div>

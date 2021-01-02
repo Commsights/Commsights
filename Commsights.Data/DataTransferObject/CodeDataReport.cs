@@ -14,5 +14,9 @@ namespace Commsights.Data.DataTransferObject
         public int? CodingCount { get; set; }
         public int? AnalysisCount { get; set; }
         public int? ProductCount { get; set; }
+        public int? ProductGoogleCount { get; set; }
+        public int? ProductAndiCount { get; set; }
+        public int? ProductTVCount { get; set; }
+        public int? ProductNewspageCount { get; set; }
     }
 }

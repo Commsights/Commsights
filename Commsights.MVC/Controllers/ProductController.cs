@@ -21,6 +21,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace Commsights.MVC.Controllers
 {
@@ -180,20 +181,32 @@ namespace Commsights.MVC.Controllers
                     productProperty01.ID = 1;
                     productProperty01.Note = header.Note;
                     model.ListProductProperty.Add(productProperty01);
-                }
-                int no = 2;
-                foreach (ProductProperty item in listProductProperty)
-                {
-                    if (item.ID != header.ID)
+                    int no = 2;
+                    foreach (ProductProperty item in listProductProperty)
                     {
-                        ProductProperty productProperty02 = new ProductProperty();
-                        productProperty02.ID = no;
-                        productProperty02.Note = item.Note;
-                        model.ListProductProperty.Add(productProperty02);
-                        no = no + 1;
+                        if (item.ID != header.ID)
+                        {
+                            ProductProperty productProperty02 = new ProductProperty();
+                            productProperty02.ID = no;
+                            productProperty02.Note = item.Note;
+                            model.ListProductProperty.Add(productProperty02);
+                            no = no + 1;
+                        }
                     }
                 }
-
+                else
+                {
+                    model.ListProductProperty = listProductProperty;
+                    //int no = 1;
+                    //foreach (ProductProperty item in listProductProperty)
+                    //{
+                    //    ProductProperty productProperty02 = new ProductProperty();
+                    //    productProperty02.ID = no;
+                    //    productProperty02.Note = item.Note;
+                    //    model.ListProductProperty.Add(productProperty02);
+                    //    no = no + 1;
+                    //}
+                }
             }
             if (model.Product == null)
             {
@@ -227,6 +240,16 @@ namespace Commsights.MVC.Controllers
         public async Task<ActionResult> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList([DataSourceRequest] DataSourceRequest request, string search, DateTime datePublishBegin, DateTime datePublishEnd)
         {
             var data = await _productRepository.AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(datePublishBegin, datePublishEnd, search, AppGlobal.SourceAuto);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public async Task<ActionResult> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceAndIsPublishToList([DataSourceRequest] DataSourceRequest request, string search, DateTime datePublishBegin, DateTime datePublishEnd, bool isTitle, bool isDescription, bool isPublish)
+        {
+            var data = await _productRepository.AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceAndIsPublishToList(datePublishBegin, datePublishEnd, search, AppGlobal.SourceAuto, isTitle, isDescription, isPublish);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public async Task<ActionResult> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceAndIsUploadToList([DataSourceRequest] DataSourceRequest request, string search, DateTime datePublishBegin, DateTime datePublishEnd, bool isTitle, bool isDescription, bool isUpload)
+        {
+            var data = await _productRepository.AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceAndIsUploadToList(datePublishBegin, datePublishEnd, search, AppGlobal.SourceAuto, isTitle, isDescription, isUpload);
             return Json(data.ToDataSourceResult(request));
         }
         public async Task<ActionResult> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceToList([DataSourceRequest] DataSourceRequest request, string search, DateTime datePublishBegin, DateTime datePublishEnd, bool isTitle, bool isDescription)
@@ -695,16 +718,12 @@ namespace Commsights.MVC.Controllers
         }
         public async Task<string> AsyncScanWebsiteNoFilterProductByIndexBeginVoid(int indexBegin)
         {
-            List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
-            int listConfigCount = listConfig.Count;
-            int indexEnd = indexBegin + 10;
-            for (int i = indexBegin; i < indexEnd; i++)
+            indexBegin = indexBegin + 1;
+            int indexEnd = indexBegin + 49;
+            List<Config> listConfig = _configResposistory.GetSQLWebsiteByGroupNameAndCodeAndActiveAndRowBeginAndRowEndToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true, indexBegin, indexEnd);
+            foreach (Config item in listConfig)
             {
-                if (i == listConfigCount)
-                {
-                    i = indexEnd;
-                }
-                await this.AsyncCreateProductScanWebsiteNoFilterProduct0001(listConfig[i]);
+                await this.AsyncCreateProductScanWebsiteNoFilterProduct0001(item);
             }
             return "";
         }
@@ -725,16 +744,12 @@ namespace Commsights.MVC.Controllers
         }
         public async Task<string> AsyncScanWebsitePriorityNoFilterProductByIndexBeginVoid001(int indexBegin)
         {
-            List<Config> listConfig = _configResposistory.GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftToList(AppGlobal.CRM, AppGlobal.Website, true, true);
-            int listConfigCount = listConfig.Count;
-            int indexEnd = indexBegin + 5;
-            for (int i = indexBegin; i < indexEnd; i++)
+            indexBegin = indexBegin + 1;
+            int indexEnd = indexBegin + 4;
+            List<Config> listConfig = _configResposistory.GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftAndRowBeginAndRowEndToList(AppGlobal.CRM, AppGlobal.Website, true, true, indexBegin, indexEnd);
+            foreach (Config item in listConfig)
             {
-                if (i == listConfigCount)
-                {
-                    i = indexEnd;
-                }
-                await this.AsyncCreateProductScanWebsiteNoFilterProduct0001(listConfig[i]);
+                await this.AsyncCreateProductScanWebsiteNoFilterProduct0001(item);
             }
             return "";
         }
@@ -1176,10 +1191,6 @@ namespace Commsights.MVC.Controllers
                 {
                     List<LinkItem> list = new List<LinkItem>();
                     AppGlobal.LinkFinder001(config.URLFull, config.URLFull, true, list);
-                    //LinkItem item = new LinkItem();
-                    //item.Href = "https://thanhnien.vn/thoi-su/sai-pham-o-saigon-coop-kiem-diem-nhieu-ca-nhan-to-chuc-1314984.html";
-                    //item.Text = "Sai phạm ở Saigon Co.op: Kiểm điểm nhiều cá nhân, tổ chức";
-                    //list.Add(item);
                     foreach (LinkItem linkItem in list)
                     {
                         try

@@ -427,6 +427,21 @@ namespace Commsights.Data.Repositories
             list = SQLHelper.ToList<Config>(dt);
             return list;
         }
+        public List<Config> GetSQLWebsiteByGroupNameAndCodeAndActiveAndRowBeginAndRowEndToList(string groupName, string code, bool active, int rowBegin, int rowEnd)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@Active",active),
+                new SqlParameter("@RowBegin",rowBegin),
+                new SqlParameter("@RowEnd",rowEnd),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectWebsiteByGroupNameAndCodeAndActiveAndRowBeginAndRowEnd", parameters);
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
         public List<Config> GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftToList(string groupName, string code, bool active, bool isMenuLeft)
         {
             List<Config> list = new List<Config>();
@@ -438,6 +453,22 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@IsMenuLeft",isMenuLeft),
             };
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeft", parameters);
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
+        public List<Config> GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftAndRowBeginAndRowEndToList(string groupName, string code, bool active, bool isMenuLeft, int rowBegin, int rowEnd)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@Active",active),
+                new SqlParameter("@IsMenuLeft",isMenuLeft),
+                new SqlParameter("@RowBegin",rowBegin),
+                new SqlParameter("@RowEnd",rowEnd),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftAndRowBeginAndRowEnd", parameters);
             list = SQLHelper.ToList<Config>(dt);
             return list;
         }
@@ -508,9 +539,24 @@ new SqlParameter("@Title",config.Title),
 new SqlParameter("@IsMenuLeft",config.IsMenuLeft),
 new SqlParameter("@Color",config.Color),
 new SqlParameter("@BlackWhite",config.BlackWhite),
+new SqlParameter("@SortOrder",config.SortOrder),
 };
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ConfigUpdateSingleItem001", parameters);
             return result;
+        }
+        public List<Config> GetProductPermissionDistinctIndustryByEmployeeIDToList(int employeeID)
+        {
+            List<Config> list = new List<Config>();
+            if (employeeID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@EmployeeID",employeeID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPermissionSelectDistinctIndustryByEmployeeID", parameters);
+                list = SQLHelper.ToList<Config>(dt);
+            }
+            return list;
         }
     }
 }

@@ -1,0 +1,9 @@
+@(Html.Kendo().DropDownListFor(t => t)
+                   .DataValueField("ID")
+                   .DataTextField("ProductName")
+                   .HtmlAttributes(new {data_bind= "value: Product", @class = "form-control" })
+                    .Filter(FilterType.Contains)
+                     .Virtual(v => v.ItemHeight(26).ValueMapper("valueMapper"))                     
+                   .DataSource(dataSource => dataSource.Ajax().PageSize(100).Read(t => t.Action("GetSQLProductByCodeToList", "MembershipPermission")))
+)
+

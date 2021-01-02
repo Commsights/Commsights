@@ -63,6 +63,16 @@
             var url = URLParamater;
             window.open(url, '_blank', 'location=yes,height=' + height01 + ',width=' + width01 + ',scrollbars=yes,status=yes,toolbar=yes,top=' + top + ',left=' + left + '');
         }
+        function OpenWindowLeftByURL001(URLParamater, w = 100, h = 200) {
+            var width = screen.width;
+            var height = screen.height;
+            var width01 = width / 2;
+            var height01 = height / 3 * 2;
+            var left = 0;
+            var top = height01 - 120;
+            var url = URLParamater;
+            window.open(url, '_blank', 'location=yes,height=' + height01 + ',width=' + width01 + ',scrollbars=yes,status=yes,toolbar=yes,top=' + top + ',left=' + left + '');
+        }
         function OpenWindowRightByURL(URLParamater, w = 100, h = 200) {
             var width = screen.width;
             var height = screen.height;
@@ -128,7 +138,6 @@
             <section class="content" style="padding-top:10px;">
                 <div class="container-fluid">
                     @RenderBody()
-
                 </div>
             </section>
         </div>
@@ -140,7 +149,7 @@
     <script src="/js/site.js"></script>
     <script>
         jQuery(function ($) {
-            onLoadData();
+            onLoadData();            
         });
         function onLoadData() {
             $.ajax({

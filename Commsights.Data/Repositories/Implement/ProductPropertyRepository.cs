@@ -145,6 +145,58 @@ namespace Commsights.Data.Repositories
 
             return list;
         }
+        public List<ProductProperty> GetRequestUserIDAndParentIDAndCodeAndDateUpdatedToList(int requestUserID, int parentID, string code, DateTime dateUpdated)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            if (requestUserID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@RequestUserID",requestUserID),
+                new SqlParameter("@ParentID",parentID),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@DateUpdated",dateUpdated),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectByRequestUserIDAndParentIDAndCodeAndDateUpdated", parameters);
+                list = SQLHelper.ToList<ProductProperty>(dt);
+            }
+            return list;
+        }
+        public List<ProductProperty> GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActiveToList(int requestUserID, int parentID, string code, DateTime dateUpdated, bool active)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            if (requestUserID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@RequestUserID",requestUserID),
+                new SqlParameter("@ParentID",parentID),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@DateUpdated",dateUpdated),
+                new SqlParameter("@Active",active),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectByRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActive", parameters);
+                list = SQLHelper.ToList<ProductProperty>(dt);
+            }
+            return list;
+        }
+        public List<ProductProperty> GetRequestUserIDAndParentIDAndCodeAndActiveToList(int requestUserID, int parentID, string code, bool active)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            if (requestUserID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@RequestUserID",requestUserID),
+                new SqlParameter("@ParentID",parentID),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@Active",active),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectByRequestUserIDAndParentIDAndCodeAndActive", parameters);
+                list = SQLHelper.ToList<ProductProperty>(dt);
+            }
+            return list;
+        }
         public List<ProductPropertyDataTransfer> GetDataTransferIndustryByParentIDToList(int parentID)
         {
             List<ProductPropertyDataTransfer> list = new List<ProductPropertyDataTransfer>();
@@ -185,6 +237,33 @@ namespace Commsights.Data.Repositories
                 }
             }
 
+            return list;
+        }
+        public ProductProperty GetTitleAndCopyVersionAndIsCoding(string title, int copyVersion, bool isCoding)
+        {
+            ProductProperty model = new ProductProperty();
+
+            SqlParameter[] parameters =
+                   {
+                new SqlParameter("@Title",title),
+                new SqlParameter("@CopyVersion",copyVersion),
+                new SqlParameter("@IsCoding",isCoding),
+             };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectByTitleAndCopyVersionAndIsCoding", parameters);
+            model = SQLHelper.ToList<ProductProperty>(dt).FirstOrDefault();
+
+            return model;
+        }
+        public List<ProductProperty> GetTitleAndSourceToList(string title, int source)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            SqlParameter[] parameters =
+                   {
+                new SqlParameter("@Title",title),
+                new SqlParameter("@Source",source),
+             };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectByTitleAndSource", parameters);
+            list = SQLHelper.ToList<ProductProperty>(dt);
             return list;
         }
         public string Initialization()
@@ -326,6 +405,27 @@ new SqlParameter("@Title",model.Title),
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyUpdateItemsByCodeDataCopyVersion", parameters);
             return result;
         }
+        public string UpdateItemsByDailyDownload(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int hourBegin, int hourEnd, int industryID, string companyName, bool isCoding, bool isAnalysis, int RequestUserID)
+        {
+            string result = "";
+            if (industryID > 0)
+            {
+                dateUpdatedBegin = new DateTime(dateUpdatedBegin.Year, dateUpdatedBegin.Month, dateUpdatedBegin.Day, hourBegin, 0, 0);
+                dateUpdatedEnd = new DateTime(dateUpdatedEnd.Year, dateUpdatedEnd.Month, dateUpdatedEnd.Day, hourEnd, 59, 59);
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@DateUpdatedBegin",dateUpdatedBegin),
+                new SqlParameter("@DateUpdatedEnd",dateUpdatedEnd),
+                new SqlParameter("@IndustryID",industryID),
+                new SqlParameter("@CompanyName",companyName),
+                new SqlParameter("@IsCoding",isCoding),
+                new SqlParameter("@IsAnalysis",isAnalysis),
+                new SqlParameter("@@RequestUserID",RequestUserID),
+                };
+                result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyUpdateItemsByDailyDownload", parameters);
+            }
+            return result;
+        }
         public int InsertItemsByCopyCodeData(int ID, int RequestUserID, int rowIndex)
         {
             List<ProductProperty> listSame = GetProductPropertySelectItemsSameParentIDByIDToList(ID);
@@ -343,6 +443,7 @@ new SqlParameter("@Title",model.Title),
                         for (int i = rowBegin; i < rowEnd; i++)
                         {
                             ProductProperty itemCopy = listSame[i];
+                            itemCopy.IsCoding = true;
                             itemCopy.ParentID = parentID;
                             itemCopy.Source = listDifferent[0].Source;
                             itemCopy.CopyVersion = listSame[i].CopyVersion;

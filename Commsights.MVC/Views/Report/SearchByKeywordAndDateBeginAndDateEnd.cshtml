@@ -27,16 +27,20 @@
                                      .DateInput()
                                 )
                     </div>
-                    <div class='col-sm-4'>
+                    <div class='col-sm-2'>
                         <input id="Search" name="Search" class="form-control" placeholder="Search" type="text" value="" />
+                    </div>
+                    <div class="col-md-2">
+                        <input type="checkbox" id="IsUpload" value="">
+                        <label for='IsUpload' style="font-size:12px;">Up/Pub</label>
                     </div>
                     <div class="col-md-1">
                         <input type="checkbox" id="IsTitle" value="" checked="checked">
-                        <label for='IsTitle' style="font-size:12px;">Headline</label>
+                        <label for='IsTitle' style="font-size:12px;">Head</label>
                     </div>
                     <div class="col-md-1">
                         <input type="checkbox" id="IsDescription" value="" checked="checked">
-                        <label for='IsDescription' style="font-size:12px;">Summary</label>
+                        <label for='IsDescription' style="font-size:12px;">Sum</label>
                     </div>
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" onclick="onSearch()">
@@ -98,7 +102,7 @@
     model.Id(t => t.SearchAndID);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceToList", "Product").Data("filterProduct"))
+.Read(t => t.Action("AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceAndIsUploadToList", "Product").Data("filterProduct"))
 .Update(t => t.Action("UpdateProductCompact", "Product"))
 )
 )
@@ -131,7 +135,8 @@
         var datePublishEndValue = toDate02($("#DatePublishEnd").val());
         var isTitleValue = document.getElementById("IsTitle").checked;
         var isDescriptionValue = document.getElementById("IsDescription").checked;
-        return { search: searchValue, datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, isTitle: isTitleValue, isDescription: isDescriptionValue };
+        var isUploadValue = document.getElementById("IsUpload").checked;
+        return { search: searchValue, datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, isTitle: isTitleValue, isDescription: isDescriptionValue, isUpload: isUploadValue };
     }
     function onSearch() {                    
         onSearchList();

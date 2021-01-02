@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 
@@ -36,7 +37,7 @@ namespace Commsights.Data.Helpers
                 list.Add(model);
             }
             return list;
-        }      
+        }
     }
     public class MonthFinance
     {
@@ -153,7 +154,47 @@ namespace Commsights.Data.Helpers
         public static string InitGuiCode => Guid.NewGuid().ToString();
         #endregion
 
-        #region AppSettings 
+        #region AppSettings     
+        public static string TV
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("TV").Value;
+            }
+        }
+        public static string Newspage
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Newspage").Value;
+            }
+        }
+        public static string TotalSize
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("TotalSize").Value;
+            }
+        }
+        public static string FTPScanFiles
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("FTPScanFiles").Value;
+            }
+        }
+        public static string URLScanFiles
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("URLScanFiles").Value;
+            }
+        }
         public static int AdValue
         {
             get
@@ -2251,7 +2292,7 @@ namespace Commsights.Data.Helpers
         public static List<string> SetContentByDauChamPhay(string content)
         {
             List<string> list = new List<string>();
-            content = content.Replace(@",", @";");            
+            content = content.Replace(@",", @";");
             foreach (string item in content.Split(';'))
             {
                 if (!string.IsNullOrEmpty(item))

@@ -60,7 +60,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DuyetFiles", "DuyetFiles\Du
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DuyetFiles001", "DuyetFiles001\DuyetFiles001.csproj", "{F63447A7-D7AF-4DCE-8877-7FA618641F48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchTool", "SearchTool\SearchTool.csproj", "{9CEBBBED-33BC-4C55-AF1B-BF7EB0B78954}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SearchTool", "SearchTool\SearchTool.csproj", "{9CEBBBED-33BC-4C55-AF1B-BF7EB0B78954}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{493B0E42-1505-417B-BDD0-5C484ECF7099}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -100,6 +102,10 @@ Global
 		{9CEBBBED-33BC-4C55-AF1B-BF7EB0B78954}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CEBBBED-33BC-4C55-AF1B-BF7EB0B78954}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CEBBBED-33BC-4C55-AF1B-BF7EB0B78954}.Release|Any CPU.Build.0 = Release|Any CPU
+		{493B0E42-1505-417B-BDD0-5C484ECF7099}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{493B0E42-1505-417B-BDD0-5C484ECF7099}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{493B0E42-1505-417B-BDD0-5C484ECF7099}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{493B0E42-1505-417B-BDD0-5C484ECF7099}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

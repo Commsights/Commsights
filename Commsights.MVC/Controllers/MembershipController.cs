@@ -241,6 +241,10 @@ namespace Commsights.MVC.Controllers
         {
             return RedirectToAction("CustomerDetail", new { ID = 0 });
         }
+        public IActionResult ProductByIndustry()
+        {
+            return View();
+        }
         public string Sidebar()
         {
             string result = "";
@@ -329,10 +333,10 @@ namespace Commsights.MVC.Controllers
                     Response.Cookies.Append("UserID", membership.ID.ToString(), cookieExpires);
                     Response.Cookies.Append("FullName", fullName, cookieExpires);
                     Response.Cookies.Append("Avatar", avatar, cookieExpires);
-                    string avatarURL = Commsights.Data.Helpers.AppGlobal.Domain + Commsights.Data.Helpers.AppGlobal.URLImagesMembership + "/" + avatar;
+                    string avatarURL = "http://crm.commsightsvn.com/" + Commsights.Data.Helpers.AppGlobal.URLImagesMembership + "/" + avatar;
                     if (string.IsNullOrEmpty(avatar))
                     {
-                        avatarURL = AppGlobal.Domain + "images/logo.png";
+                        avatarURL = "http://crm.commsightsvn.com/images/logo.png";
                     }
                     Response.Cookies.Append("AvatarURL", avatarURL, cookieExpires);
                     controller = "Membership";
@@ -706,9 +710,8 @@ namespace Commsights.MVC.Controllers
         {
             model.Active = false;
             string note = AppGlobal.InitString;
-            model.Initialization(InitType.Update, RequestUserID);
-            int result = 0;
-            //int result = _membershipRepository.Delete(model.ID);
+            model.Initialization(InitType.Update, RequestUserID);            
+            int result = _membershipRepository.Delete(model.ID);
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
@@ -718,7 +721,7 @@ namespace Commsights.MVC.Controllers
                 note = AppGlobal.Error + " - " + AppGlobal.DeleteFail;
             }
             return Json(note);
-        }
+        }       
         public IActionResult Logout()
         {
             Response.Cookies.Append("UserID", "0");

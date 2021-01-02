@@ -23,12 +23,16 @@ namespace Commsights.MVC.Controllers
 {
     public class ProductPropertyController : BaseController
     {
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IProductRepository _productRepository;
         private readonly IProductPropertyRepository _productPropertyRepository;
-        public ProductPropertyController(IProductRepository productRepository, IProductPropertyRepository productPropertyRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
+        private readonly IConfigRepository _configResposistory;
+        public ProductPropertyController(IWebHostEnvironment hostingEnvironment, IConfigRepository configResposistory, IProductRepository productRepository, IProductPropertyRepository productPropertyRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
+            _hostingEnvironment = hostingEnvironment;
             _productRepository = productRepository;
             _productPropertyRepository = productPropertyRepository;
+            _configResposistory = configResposistory;
         }
         public IActionResult Company(int ID)
         {
@@ -37,6 +41,60 @@ namespace Commsights.MVC.Controllers
             {
                 model = _productRepository.GetByID(ID);
             }
+            return View(model);
+        }
+        public IActionResult ScanFilesHandling()
+        {
+            CodeData model = new CodeData();
+            model.DatePublish = DateTime.Now;
+            return View(model);
+        }
+        public IActionResult ViewContent(string fileName, string extension, string url)
+        {
+            ViewContentViewModel model = new ViewContentViewModel();
+            extension = extension.Replace(@".", @"");
+            model.Extension = extension;
+            model.FileName = fileName;
+            StringBuilder txt = new StringBuilder();
+            switch (extension)
+            {
+                case "jpg":
+                case "png":
+                case "jpeg":
+                    txt.AppendLine(@"<img src='" + url + "' class='img-thumbnail' />");
+                    break;
+                case "mp4":
+                case "wmv":
+                    txt.AppendLine(@"<video width='100%' height='80%' controls>");
+                    txt.AppendLine(@"<source src='" + url + "' type='video/mp4'>");
+                    txt.AppendLine(@"</video>");
+                    break;
+            }
+            model.Extension = txt.ToString();
+            return View(model);
+        }
+        public IActionResult ViewContentFull(string fileName, string extension, string url)
+        {
+            ViewContentViewModel model = new ViewContentViewModel();
+            extension = extension.Replace(@".", @"");
+            model.Extension = extension;
+            model.FileName = fileName;
+            StringBuilder txt = new StringBuilder();
+            switch (extension)
+            {
+                case "jpg":
+                case "png":
+                case "jpeg":
+                    txt.AppendLine(@"<img src='" + url + "' class='img-thumbnail' />");
+                    break;
+                case "mp4":
+                case "wmv":
+                    txt.AppendLine(@"<video width='100%' height='80%' controls>");
+                    txt.AppendLine(@"<source src='" + url + "' type='video/mp4'>");
+                    txt.AppendLine(@"</video>");
+                    break;
+            }
+            model.Extension = txt.ToString();
             return View(model);
         }
         public IActionResult Industry(int ID)
@@ -57,6 +115,26 @@ namespace Commsights.MVC.Controllers
             }
             return View(model);
         }
+        public ActionResult GetRequestUserIDAndParentIDAndCodeAndDateUpdatedToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndDateUpdatedToList(RequestUserID, -1, AppGlobal.URLCode, DateTime.Now);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndFalseToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActiveToList(RequestUserID, -1, AppGlobal.URLCode, DateTime.Now, false);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetRequestUserIDAndParentIDAndCodeAndFalseToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndActiveToList(RequestUserID, -1, AppGlobal.URLCode, false);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndTrueToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActiveToList(RequestUserID, -1, AppGlobal.URLCode, DateTime.Now, true);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetDataTransferCompanyByParentIDToList([DataSourceRequest] DataSourceRequest request, int parentID)
         {
             var data = _productPropertyRepository.GetDataTransferCompanyByParentIDToList(parentID);
@@ -72,6 +150,344 @@ namespace Commsights.MVC.Controllers
             var data = _productPropertyRepository.GetDataTransferProductByParentIDToList(parentID);
             return Json(data.ToDataSourceResult(request));
         }
+        public IActionResult ScanFilesUpdateTrue(ProductProperty model)
+        {
+            string note = AppGlobal.InitString;
+            model.Active = true;
+            _productPropertyRepository.Update(model.ID, model);
+            return Json(note);
+        }
+        public IActionResult ScanFilesUpdateFalse(ProductProperty model)
+        {
+            string note = AppGlobal.InitString;
+            model.Active = false;
+            _productPropertyRepository.Update(model.ID, model);
+            return Json(note);
+        }
+        public IActionResult CreateManyIndustry(int industryID, string title, int productParentID, string page, string totalSize, string timeLine, string duration, DateTime datePublish)
+        {
+            string note = AppGlobal.InitString;
+            List<ProductProperty> listProductProperty = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActiveToList(RequestUserID, -1, AppGlobal.URLCode, DateTime.Now, true);
+            string fileExtension = listProductProperty[0].Page.Replace(@".", @"");
+            int check = 0;
+            if (!string.IsNullOrEmpty(title))
+            {
+                check = check + 1;
+            }
+            if ((fileExtension == "mp4") || (fileExtension == "wmv"))
+            {
+                try
+                {
+                    duration = duration.Replace(@"s", @"");
+                    int durationValue = int.Parse(duration);
+                    if (!string.IsNullOrEmpty(timeLine))
+                    {
+                        check = check + 1;
+                    }
+                }
+                catch
+                {
+                }
+            }
+            else
+            {
+                try
+                {
+                    totalSize = totalSize.Replace(@"%", @"");
+                    int durationValue = int.Parse(totalSize);
+                    if (!string.IsNullOrEmpty(page))
+                    {
+                        check = check + 1;
+                    }
+                }
+                catch
+                {
+                }
+            }
+            if (check == 2)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+                Config parent = _configResposistory.GetByID(productParentID);
+                Product model = new Product();
+                model.Initialization(InitType.Insert, RequestUserID);
+                model.ParentID = productParentID;
+                model.Title = title;
+                model.DatePublish = datePublish;
+
+                if (listProductProperty.Count > 0)
+                {
+                    if ((fileExtension == "mp4") || (fileExtension == "wmv"))
+                    {
+                        model.IsVideo = true;
+                        model.Image = listProductProperty[0].Note;
+                        model.Page = timeLine;
+                        model.Duration = duration;
+                        model.Source = AppGlobal.TV;
+                        try
+                        {
+                            if (parent != null)
+                            {
+                                if (parent.ID > 0)
+                                {
+                                    int advalue = 1;
+                                    if (parent.Color > 0)
+                                    {
+                                        advalue = parent.Color.Value;
+                                    }
+                                    duration = duration.Replace(@"s", @"");
+                                    int durationValue = int.Parse(duration);
+                                    advalue = advalue * durationValue / 30;
+                                    model.Advalue = advalue;
+                                }
+                            }
+                        }
+                        catch
+                        {
+                        }
+                        _productRepository.Create(model);
+                    }
+                    else
+                    {
+                        model.Source = AppGlobal.Newspage;
+                        model.IsVideo = false;
+                        model.Page = page;
+                        model.Duration = totalSize;
+                        try
+                        {
+                            if (parent != null)
+                            {
+                                if (parent.ID > 0)
+                                {
+                                    int advalue = 1;
+                                    if (parent.Color > 0)
+                                    {
+                                        advalue = parent.Color.Value;
+                                    }
+                                    totalSize = totalSize.Replace(@"%", @"");
+                                    int durationValue = int.Parse(totalSize);
+                                    advalue = advalue * durationValue / 100;
+                                    model.Advalue = advalue;
+                                }
+                            }
+                        }
+                        catch
+                        {
+                        }
+                        _productRepository.Create(model);
+                        if (model.ID > 0)
+                        {
+                            try
+                            {
+                                if (parent != null)
+                                {
+                                    if (parent.ID > 0)
+                                    {
+                                        ProductProperty productProperty = new ProductProperty();
+                                        productProperty.ParentID = model.ID;
+                                        productProperty.Code = AppGlobal.URLCode;
+                                        productProperty.Note = parent.Note;
+                                        productProperty.Initialization(InitType.Insert, RequestUserID);
+                                        _productPropertyRepository.Create(productProperty);
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                            }
+                            foreach (ProductProperty item in listProductProperty)
+                            {
+                                ProductProperty productProperty = new ProductProperty();
+                                productProperty.Active = false;
+                                productProperty.FileName = item.FileName;
+                                productProperty.Page = item.Page;
+                                productProperty.Note = item.Note;
+                                productProperty.ParentID = model.ID;
+                                productProperty.Code = AppGlobal.URLCode;
+                                productProperty.Initialization(InitType.Insert, RequestUserID);
+                                _productPropertyRepository.Create(productProperty);
+                            }
+                        }
+                    }
+                    if (model.ID > 0)
+                    {
+                        model.URLCode = AppGlobal.DomainMain + "Product/ViewContent/" + model.ID;
+                        _productRepository.Update(model.ID, model);
+                        ProductProperty productProperty = new ProductProperty();
+                        productProperty.Initialization(InitType.Insert, RequestUserID);
+                        productProperty.ParentID = model.ID;
+                        productProperty.IndustryID = industryID;
+                        productProperty.Code = AppGlobal.Industry;
+                        _productPropertyRepository.Create(productProperty);
+                    }
+                }
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateAndNext(int industryID, string title, int productParentID, string page, string totalSize, string timeLine, string duration, DateTime datePublish)
+        {
+            string note = AppGlobal.InitString;
+            List<ProductProperty> listProductProperty = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActiveToList(RequestUserID, -1, AppGlobal.URLCode, DateTime.Now, true);
+            string fileExtension = listProductProperty[0].Page.Replace(@".", @"");
+            int check = 0;
+            if (!string.IsNullOrEmpty(title))
+            {
+                check = check + 1;
+            }
+            if ((fileExtension == "mp4") || (fileExtension == "wmv"))
+            {
+                try
+                {
+                    duration = duration.Replace(@"s", @"");
+                    int durationValue = int.Parse(duration);
+                    if (!string.IsNullOrEmpty(timeLine))
+                    {
+                        check = check + 1;
+                    }
+                }
+                catch
+                {
+                }
+            }
+            else
+            {
+                try
+                {
+                    totalSize = totalSize.Replace(@"%", @"");
+                    int durationValue = int.Parse(totalSize);
+                    if (!string.IsNullOrEmpty(page))
+                    {
+                        check = check + 1;
+                    }
+                }
+                catch
+                {
+                }
+            }
+            if (check == 2)
+            {
+                Config parent = _configResposistory.GetByID(productParentID);
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+                Product model = new Product();
+                model.Initialization(InitType.Insert, RequestUserID);
+                model.ParentID = productParentID;
+                model.Title = title;
+                model.DatePublish = datePublish;
+                if (listProductProperty.Count > 0)
+                {
+                    if ((fileExtension == "mp4") || (fileExtension == "wmv"))
+                    {
+                        model.Source = AppGlobal.TV;
+                        model.IsVideo = true;
+                        model.Image = listProductProperty[0].Note;
+                        model.Page = timeLine;
+                        model.Duration = duration;
+                        try
+                        {
+                            if (parent != null)
+                            {
+                                if (parent.ID > 0)
+                                {
+                                    int advalue = 1;
+                                    if (parent.Color > 0)
+                                    {
+                                        advalue = parent.Color.Value;
+                                    }
+                                    duration = duration.Replace(@"s", @"");
+                                    int durationValue = int.Parse(duration);
+                                    advalue = advalue * durationValue / 30;
+                                    model.Advalue = advalue;
+                                }
+                            }
+                        }
+                        catch
+                        {
+                        }
+                        _productRepository.Create(model);
+                    }
+                    else
+                    {
+                        model.Source = AppGlobal.Newspage;
+                        model.IsVideo = false;
+                        model.Page = page;
+                        model.Duration = totalSize;
+                        try
+                        {
+                            if (parent != null)
+                            {
+                                if (parent.ID > 0)
+                                {
+                                    int advalue = 1;
+                                    if (parent.Color > 0)
+                                    {
+                                        advalue = parent.Color.Value;
+                                    }
+                                    totalSize = totalSize.Replace(@"%", @"");
+                                    int durationValue = int.Parse(totalSize);
+                                    advalue = advalue * durationValue / 100;
+                                    model.Advalue = advalue;
+                                }
+                            }
+                        }
+                        catch
+                        {
+                        }
+                        _productRepository.Create(model);
+                        if (model.ID > 0)
+                        {
+                            if (parent != null)
+                            {
+                                if (parent.ID > 0)
+                                {
+                                    ProductProperty productProperty = new ProductProperty();
+                                    productProperty.ParentID = model.ID;
+                                    productProperty.Code = AppGlobal.URLCode;
+                                    productProperty.Note = parent.Note;
+                                    productProperty.Initialization(InitType.Insert, RequestUserID);
+                                    _productPropertyRepository.Create(productProperty);
+                                }
+                            }
+                            foreach (ProductProperty item in listProductProperty)
+                            {
+                                ProductProperty productProperty = new ProductProperty();
+                                productProperty.Active = false;
+                                productProperty.FileName = item.FileName;
+                                productProperty.Page = item.Page;
+                                productProperty.Note = item.Note;
+                                productProperty.ParentID = model.ID;
+                                productProperty.Code = AppGlobal.URLCode;
+                                productProperty.Initialization(InitType.Insert, RequestUserID);
+                                _productPropertyRepository.Create(productProperty);
+                            }
+                        }
+                    }
+                    if (model.ID > 0)
+                    {
+                        model.URLCode = AppGlobal.DomainMain + "Product/ViewContent/" + model.ID;
+                        _productRepository.Update(model.ID, model);
+                        ProductProperty productProperty = new ProductProperty();
+                        productProperty.Initialization(InitType.Insert, RequestUserID);
+                        productProperty.ParentID = model.ID;
+                        productProperty.IndustryID = industryID;
+                        productProperty.Code = AppGlobal.Industry;
+                        _productPropertyRepository.Create(productProperty);
+                    }
+                    foreach (ProductProperty item in listProductProperty)
+                    {
+                        _productPropertyRepository.Delete(item.ID);
+                    }
+                }
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+
         public IActionResult UpdateDataTransfer(ProductPropertyDataTransfer model)
         {
             string note = AppGlobal.InitString;
@@ -121,6 +537,114 @@ namespace Commsights.MVC.Controllers
                 note = AppGlobal.Error + " - " + AppGlobal.EditFail;
             }
             return Json(note);
+        }
+
+        public ActionResult UploadScanFiles(Commsights.MVC.Models.BaseViewModel baseViewModel)
+        {
+            try
+            {
+                if (Request.Form.Files.Count > 0)
+                {
+                    for (int i = 0; i < Request.Form.Files.Count; i++)
+                    {
+                        var file = Request.Form.Files[i];
+                        if (file == null || file.Length == 0)
+                        {
+                        }
+                        if (file != null)
+                        {
+                            string fileExtension = Path.GetExtension(file.FileName);
+                            string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                            fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
+                            fileName = fileName.Replace(@"%", @"p");
+                            string directoryDay = AppGlobal.DateTimeCodeYearMonthDay;
+                            string mainPath = AppGlobal.FTPScanFiles;
+                            string url = AppGlobal.URLScanFiles;
+                            if (Directory.Exists(mainPath) == false)
+                            {
+                                mainPath = _hostingEnvironment.WebRootPath;
+                                url = AppGlobal.Domain;
+                            }
+                            url = url + AppGlobal.SourceScan + "/" + directoryDay + "/" + fileName;
+                            string subPath = AppGlobal.SourceScan + @"\" + directoryDay;
+                            string fullPath = mainPath + @"\" + subPath;
+                            if (!Directory.Exists(fullPath))
+                            {
+                                Directory.CreateDirectory(fullPath);
+                            }
+                            var physicalPath = Path.Combine(mainPath, subPath, fileName);
+                            using (var stream = new FileStream(physicalPath, FileMode.Create))
+                            {
+                                file.CopyTo(stream);
+                                ProductProperty productProperty = new ProductProperty();
+                                productProperty.Active = false;
+                                productProperty.FileName = fileName;
+                                productProperty.Page = fileExtension;
+                                productProperty.Note = url;
+                                productProperty.ParentID = -1;
+                                productProperty.Code = AppGlobal.URLCode;
+                                productProperty.Initialization(InitType.Insert, RequestUserID);
+                                _productPropertyRepository.Create(productProperty);
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+            return RedirectToAction("ScanFilesHandling");
+        }
+        public ActionResult UploadScanFilesNoUploadFiles()
+        {
+            try
+            {
+                if (Request.Form.Files.Count > 0)
+                {
+                    for (int i = 0; i < Request.Form.Files.Count; i++)
+                    {
+                        var file = Request.Form.Files[i];
+                        if (file == null || file.Length == 0)
+                        {
+                        }
+                        if (file != null)
+                        {
+                            string fileExtension = Path.GetExtension(file.FileName);
+                            string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                            fileName = file.FileName;
+                            string directoryDay = AppGlobal.DateTimeCodeYearMonthDay;
+                            string mainPath = AppGlobal.FTPScanFiles;
+                            string url = AppGlobal.URLScanFiles;
+                            if (Directory.Exists(mainPath) == false)
+                            {
+                                mainPath = _hostingEnvironment.WebRootPath;
+                                url = AppGlobal.Domain;
+                            }
+                            url = url + AppGlobal.SourceScan + "/" + directoryDay + "/" + fileName;
+                            string subPath = AppGlobal.SourceScan + @"\" + directoryDay;
+                            string fullPath = mainPath + @"\" + subPath;
+                            if (!Directory.Exists(fullPath))
+                            {
+                                Directory.CreateDirectory(fullPath);
+                            }
+                            ProductProperty productProperty = new ProductProperty();
+                            productProperty.Active = false;
+                            productProperty.FileName = fileName;
+                            productProperty.Page = fileExtension;
+                            productProperty.Note = url;
+                            productProperty.ParentID = -1;
+                            productProperty.Code = AppGlobal.URLCode;
+                            productProperty.Initialization(InitType.Insert, RequestUserID);
+                            _productPropertyRepository.Create(productProperty);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                string mes = e.Message;
+            }
+            return RedirectToAction("ScanFilesHandling");
         }
     }
 }

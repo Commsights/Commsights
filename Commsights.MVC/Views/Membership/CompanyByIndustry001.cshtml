@@ -30,8 +30,10 @@
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
     columns.Template(@"<a target='_blank' href='/Membership/CompanyDetail/#=ID#' class='btn btn-success' style='color:white;'><i class='fas fa-edit'></i></a>").Width(70).HtmlAttributes(new { style = "text-align:center;" });
-    columns.Bound(t => t.Account).Title("Company").Width(300);
-    columns.Bound(t => t.FullName).Title("Full name").Width(300);
+    columns.Bound(t => t.Account).Title("Account");
+    columns.Bound(t => t.ShortName).Title("Short name");
+    columns.Bound(t => t.EnglishName).Title("English name");
+    columns.Bound(t => t.FullName).Title("Full name");
 })
 .ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())

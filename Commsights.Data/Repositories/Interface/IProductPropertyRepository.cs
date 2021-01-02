@@ -34,5 +34,11 @@ namespace Commsights.Data.Repositories
         public int InsertItemsByCopyCodeData(int ID, int RequestUserID, int rowIndex);
         public string InsertSingleItemByCopyCodeData(int ID, int RequestUserID);
         public string DeleteItemsByIDCodeData(int ID);
+        public ProductProperty GetTitleAndCopyVersionAndIsCoding(string title, int copyVersion, bool isCoding);
+        public List<ProductProperty> GetTitleAndSourceToList(string title, int source);
+        public List<ProductProperty> GetRequestUserIDAndParentIDAndCodeAndDateUpdatedToList(int requestUserID, int parentID, string code, DateTime dateUpdated);
+        public List<ProductProperty> GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActiveToList(int requestUserID, int parentID, string code, DateTime dateUpdated, bool active);
+        public List<ProductProperty> GetRequestUserIDAndParentIDAndCodeAndActiveToList(int requestUserID, int parentID, string code, bool active);
+        public string UpdateItemsByDailyDownload(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int hourBegin, int hourEnd, int industryID, string companyName, bool isCoding, bool isAnalysis, int RequestUserID);
     }
 }
