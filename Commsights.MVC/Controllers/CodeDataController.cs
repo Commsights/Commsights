@@ -1722,6 +1722,7 @@ namespace Commsights.MVC.Controllers
             Color color = Color.FromArgb(int.Parse("#c00000".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));
             Color colorTitle = Color.FromArgb(int.Parse("#ed7d31".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));
             List<Config> listDailyReportColumn = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.DailyReportColumn);
+            List<CodeData> listISummary = list.Where(item => item.IsSummary == true).ToList();
             using (var package = new ExcelPackage(stream))
             {
                 var workSheet = package.Workbook.Worksheets.Add(sheetName);
@@ -1729,6 +1730,72 @@ namespace Commsights.MVC.Controllers
                 {
                     int column = 1;
                     int rowExcel = 1;
+                    workSheet.Cells[rowExcel, 5].Value = "DAILY REPORT (" + DateTime.Now.ToString("dd/MM/yyyy") + ")";
+                    workSheet.Cells[rowExcel, 5].Style.Font.Bold = true;
+                    workSheet.Cells[rowExcel, 5].Style.Font.Size = 12;
+                    workSheet.Cells[rowExcel, 5].Style.Font.Name = "Times New Roman";
+                    workSheet.Cells[rowExcel, 5].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    workSheet.Cells[rowExcel, 5].Style.Font.Color.SetColor(color);
+                    rowExcel = rowExcel + 1;
+                    if (listISummary.Count > 0)
+                    {
+                        workSheet.Cells[rowExcel, 1].Value = "I - HIGHLIGHT NEWS OF THE DAY";
+                        workSheet.Cells[rowExcel, 1].Style.Font.Bold = true;
+                        workSheet.Cells[rowExcel, 1].Style.Font.Size = 12;
+                        workSheet.Cells[rowExcel, 1].Style.Font.Name = "Times New Roman";
+                        workSheet.Cells[rowExcel, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        workSheet.Cells[rowExcel, 1].Style.Font.Color.SetColor(colorTitle);
+                        workSheet.Cells[rowExcel, 1, rowExcel, 3].Merge = true;
+                        rowExcel = 3;
+                        foreach (CodeData data in listISummary)
+                        {
+                            if (data.IsSummary == true)
+                            {
+                                workSheet.Cells[rowExcel, 1].Value = "" + data.CompanyName + ": ";
+                                workSheet.Cells[rowExcel, 1].Style.Font.Bold = true;
+                                workSheet.Cells[rowExcel, 1].Style.Font.Size = 11;
+                                workSheet.Cells[rowExcel, 1].Style.Font.Name = "Times New Roman";
+                                workSheet.Cells[rowExcel, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                                workSheet.Cells[rowExcel, 2].Value = "" + data.TitleEnglish;
+                                if (!string.IsNullOrEmpty(data.Title))
+                                {
+                                    workSheet.Cells[rowExcel, 2].Hyperlink = new Uri(data.URLCode);
+                                    workSheet.Cells[rowExcel, 2].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                                }
+                                workSheet.Cells[rowExcel, 2].Style.Font.Bold = true;
+                                workSheet.Cells[rowExcel, 2].Style.Font.Size = 11;
+                                workSheet.Cells[rowExcel, 2].Style.Font.Name = "Times New Roman";
+                                workSheet.Cells[rowExcel, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                                workSheet.Cells[rowExcel, 3].Value = "(" + data.MediaTitle + " - " + data.DatePublish.ToString("MM/dd/yyyy") + ")";
+                                workSheet.Cells[rowExcel, 3].Style.Font.Bold = true;
+                                workSheet.Cells[rowExcel, 3].Style.Font.Size = 11;
+                                workSheet.Cells[rowExcel, 3].Style.Font.Name = "Times New Roman";
+                                workSheet.Cells[rowExcel, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                if (!string.IsNullOrEmpty(data.Description))
+                                {
+                                    rowExcel = rowExcel + 1;
+                                    workSheet.Cells[rowExcel, 1].Value = "" + data.DescriptionEnglish;
+                                    workSheet.Cells[rowExcel, 1].Style.Font.Bold = true;
+                                    workSheet.Cells[rowExcel, 1].Style.Font.Size = 11;
+                                    workSheet.Cells[rowExcel, 1].Style.Font.Name = "Times New Roman";
+                                    workSheet.Cells[rowExcel, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                    workSheet.Cells[rowExcel, 1, rowExcel, 3].Merge = true;
+                                    rowExcel = rowExcel + 1;
+                                }
+                                rowExcel = rowExcel + 1;
+                            }
+                        }
+                        workSheet.Cells[rowExcel, 1].Value = "II - INFORMATION";
+                        workSheet.Cells[rowExcel, 1].Style.Font.Bold = true;
+                        workSheet.Cells[rowExcel, 1].Style.Font.Size = 12;
+                        workSheet.Cells[rowExcel, 1].Style.Font.Name = "Times New Roman";
+                        workSheet.Cells[rowExcel, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        workSheet.Cells[rowExcel, 1].Style.Font.Color.SetColor(colorTitle);
+                        workSheet.Cells[rowExcel, 1, rowExcel, 3].Merge = true;
+                        rowExcel = rowExcel + 1;
+                    }
                     foreach (Config item in listDailyReportColumn)
                     {
                         workSheet.Cells[rowExcel, column].Value = item.CodeName;
@@ -1978,6 +2045,7 @@ namespace Commsights.MVC.Controllers
             Color color = Color.FromArgb(int.Parse("#c00000".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));
             Color colorTitle = Color.FromArgb(int.Parse("#ed7d31".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));
             List<Config> listDailyReportColumn = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.DailyReportColumn);
+            List<CodeData> listISummary = list.Where(item => item.IsSummary == true).ToList();
             using (var package = new ExcelPackage(stream))
             {
                 var workSheet = package.Workbook.Worksheets.Add(sheetName);
@@ -1985,6 +2053,72 @@ namespace Commsights.MVC.Controllers
                 {
                     int column = 1;
                     int rowExcel = 1;
+                    workSheet.Cells[rowExcel, 5].Value = "DAILY REPORT (" + DateTime.Now.ToString("dd/MM/yyyy") + ")";
+                    workSheet.Cells[rowExcel, 5].Style.Font.Bold = true;
+                    workSheet.Cells[rowExcel, 5].Style.Font.Size = 12;
+                    workSheet.Cells[rowExcel, 5].Style.Font.Name = "Times New Roman";
+                    workSheet.Cells[rowExcel, 5].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    workSheet.Cells[rowExcel, 5].Style.Font.Color.SetColor(color);
+                    rowExcel = rowExcel + 1;
+                    if (listISummary.Count > 0)
+                    {
+                        workSheet.Cells[rowExcel, 1].Value = "I - HIGHLIGHT NEWS OF THE DAY";
+                        workSheet.Cells[rowExcel, 1].Style.Font.Bold = true;
+                        workSheet.Cells[rowExcel, 1].Style.Font.Size = 12;
+                        workSheet.Cells[rowExcel, 1].Style.Font.Name = "Times New Roman";
+                        workSheet.Cells[rowExcel, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        workSheet.Cells[rowExcel, 1].Style.Font.Color.SetColor(colorTitle);
+                        workSheet.Cells[rowExcel, 1, rowExcel, 3].Merge = true;
+                        rowExcel = 3;
+                        foreach (CodeData data in listISummary)
+                        {
+                            if (data.IsSummary == true)
+                            {
+                                workSheet.Cells[rowExcel, 1].Value = "" + data.CompanyName + ": ";
+                                workSheet.Cells[rowExcel, 1].Style.Font.Bold = true;
+                                workSheet.Cells[rowExcel, 1].Style.Font.Size = 11;
+                                workSheet.Cells[rowExcel, 1].Style.Font.Name = "Times New Roman";
+                                workSheet.Cells[rowExcel, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                                workSheet.Cells[rowExcel, 2].Value = "" + data.Title;
+                                if (!string.IsNullOrEmpty(data.Title))
+                                {
+                                    workSheet.Cells[rowExcel, 2].Hyperlink = new Uri(data.URLCode);
+                                    workSheet.Cells[rowExcel, 2].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                                }
+                                workSheet.Cells[rowExcel, 2].Style.Font.Bold = true;
+                                workSheet.Cells[rowExcel, 2].Style.Font.Size = 11;
+                                workSheet.Cells[rowExcel, 2].Style.Font.Name = "Times New Roman";
+                                workSheet.Cells[rowExcel, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                                workSheet.Cells[rowExcel, 3].Value = "(" + data.MediaTitle + " - " + data.DatePublish.ToString("MM/dd/yyyy") + ")";
+                                workSheet.Cells[rowExcel, 3].Style.Font.Bold = true;
+                                workSheet.Cells[rowExcel, 3].Style.Font.Size = 11;
+                                workSheet.Cells[rowExcel, 3].Style.Font.Name = "Times New Roman";
+                                workSheet.Cells[rowExcel, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                if (!string.IsNullOrEmpty(data.Description))
+                                {
+                                    rowExcel = rowExcel + 1;
+                                    workSheet.Cells[rowExcel, 1].Value = "" + data.Description;
+                                    workSheet.Cells[rowExcel, 1].Style.Font.Bold = true;
+                                    workSheet.Cells[rowExcel, 1].Style.Font.Size = 11;
+                                    workSheet.Cells[rowExcel, 1].Style.Font.Name = "Times New Roman";
+                                    workSheet.Cells[rowExcel, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                    workSheet.Cells[rowExcel, 1, rowExcel, 3].Merge = true;
+                                    rowExcel = rowExcel + 1;
+                                }
+                                rowExcel = rowExcel + 1;
+                            }
+                        }
+                        workSheet.Cells[rowExcel, 1].Value = "II - INFORMATION";
+                        workSheet.Cells[rowExcel, 1].Style.Font.Bold = true;
+                        workSheet.Cells[rowExcel, 1].Style.Font.Size = 12;
+                        workSheet.Cells[rowExcel, 1].Style.Font.Name = "Times New Roman";
+                        workSheet.Cells[rowExcel, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                        workSheet.Cells[rowExcel, 1].Style.Font.Color.SetColor(colorTitle);
+                        workSheet.Cells[rowExcel, 1, rowExcel, 3].Merge = true;
+                        rowExcel = rowExcel + 1;
+                    }
                     foreach (Config item in listDailyReportColumn)
                     {
                         workSheet.Cells[rowExcel, column].Value = item.Note;
