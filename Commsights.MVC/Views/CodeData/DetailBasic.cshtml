@@ -15,16 +15,16 @@
                     @Html.HiddenFor(Model => Model.Advalue)
                     @Html.HiddenFor(Model => Model.URLCode)
                     <div class="row">
-                        <div class='col-md-5'>
+                        <div class='col-md-3'>
                         </div>                       
                         @*<div class='col-md-1'>
             <a id="RowBack" onclick="onRowMove(@Model.RowBack)" style="color:#ffffff;" title="Back" class="btn btn-info">
                 <span class="fas fa-angle-left"></span> (1)
             </a>
         </div>*@
-                        @*<div class='col-md-2 text-center'>
-            <span style="font-weight:bold; font-size:18px;">@Model.RowBegin.Value.ToString("N0") < <span style="color: blue;">@Model.RowCurrent</span> > @Model.RowEnd.Value.ToString("N0") / @Model.RowIndexCount</span>
-        </div>*@
+                        <div class='col-md-2 text-center'>
+            <span style="font-weight:bold; font-size:18px;">@Model.RowIndexCount / @Model.RowIndexCount</span>
+        </div>
                         <div class='col-md-1'>
                             <a id="RowNext" onclick="onRowMove(@Model.RowNext)" style="color:#ffffff;" title="Next" class="btn btn-info">
                                 <span class="fas fa-angle-right"></span> (1)
