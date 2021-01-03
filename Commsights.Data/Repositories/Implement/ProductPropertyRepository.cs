@@ -426,7 +426,7 @@ new SqlParameter("@Title",model.Title),
             }
             return result;
         }
-        public int InsertItemsByCopyCodeData(int ID, int RequestUserID, int rowIndex)
+        public int InsertItemsByCopyCodeData(int ID, int RequestUserID)
         {
             List<ProductProperty> listSame = GetProductPropertySelectItemsSameParentIDByIDToList(ID);
             List<ProductProperty> listParentID = GetProductPropertySelectItemsDistinctParentIDSameTitleAndDifferentURLCodeByIDToList(ID);
@@ -461,7 +461,7 @@ new SqlParameter("@Title",model.Title),
                     }
                 }
             }
-            return rowIndex;
+            return 0;
         }
         public string InitializationCodeDataByID(int ID)
         {

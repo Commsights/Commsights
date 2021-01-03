@@ -154,5 +154,6 @@ namespace Commsights.Data.DataTransferObject
         public string FullName { get; set; }
         public bool? IsDailyDownload { get; set; }
         public DateTime? DateDailyDownload { get; set; }
+        public string Note { get; set; }
     }
 }
