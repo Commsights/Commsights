@@ -172,6 +172,10 @@
         $("#CodeData").data("kendoGrid").dataSource.read();
     }
     function onExcelVietnamese() {
+        BeginRequestHandler();
+        var url = "/CodeData/Export001ExportExcelForDailyVietnamese";
+        window.location.replace(url);
+        EndRequestHandler();
     }
     function onExcelEnglish() {
         BeginRequestHandler();

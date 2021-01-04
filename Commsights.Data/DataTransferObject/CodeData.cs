@@ -25,6 +25,8 @@ namespace Commsights.Data.DataTransferObject
         public string FileName { get; set; }
         public string CategoryMain { get; set; }
         public string CategorySub { get; set; }
+        public string CategoryMainVietnamese { get; set; }
+        public string CategorySubVietnamese { get; set; }
         public string CompanyName { get; set; }
         public string CorpCopy { get; set; }
         [DataType(DataType.Currency)]
@@ -38,6 +40,7 @@ namespace Commsights.Data.DataTransferObject
         public decimal? SOEProduct { get; set; }
         public string FeatureProduct { get; set; }
         public string SentimentCorp { get; set; }
+        public string SentimentCorpVietnamese { get; set; }
         [DataType(DataType.Currency)]
         [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? Advalue { get; set; }
@@ -154,5 +157,6 @@ namespace Commsights.Data.DataTransferObject
         public string FullName { get; set; }
         public bool? IsDailyDownload { get; set; }
         public DateTime? DateDailyDownload { get; set; }
+        public string Note { get; set; }
     }
 }

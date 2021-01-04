@@ -31,7 +31,7 @@ namespace Commsights.Data.Repositories
         public List<ProductProperty> GetByReportMonthlyIDToList(int reportMonthlyID);
         public string UpdateSingleItemByCodeData(CodeData model);
         public string UpdateItemsByCodeDataCopyVersion(CodeData model);
-        public int InsertItemsByCopyCodeData(int ID, int RequestUserID, int rowIndex);
+        public int InsertItemsByCopyCodeData(int ID, int RequestUserID);
         public string InsertSingleItemByCopyCodeData(int ID, int RequestUserID);
         public string DeleteItemsByIDCodeData(int ID);
         public ProductProperty GetTitleAndCopyVersionAndIsCoding(string title, int copyVersion, bool isCoding);
