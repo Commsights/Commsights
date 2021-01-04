@@ -2684,7 +2684,7 @@ namespace Commsights.MVC.Controllers
                         {
                             if (listData[index].AssessID != null)
                             {
-                                workSheet.Cells[row, i].Value = _configResposistory.GetByID(listData[index].AssessID.Value).CodeNames;
+                                workSheet.Cells[row, i].Value = _configResposistory.GetByID(listData[index].AssessID.Value).CodeName;
                             }
                             else
                             {

@@ -49,6 +49,14 @@ namespace Commsights.MVC.Controllers
             model.DatePublish = DateTime.Now;
             return View(model);
         }
+        public IActionResult ScanFiles()
+        {
+            CodeDataViewModel model = new CodeDataViewModel();
+            model.DatePublishBegin = DateTime.Now;
+            model.DatePublishEnd = DateTime.Now;
+            model.IndustryID = AppGlobal.IndustryID;
+            return View(model);
+        }
         public IActionResult ViewContent(string fileName, string extension, string url)
         {
             ViewContentViewModel model = new ViewContentViewModel();
@@ -162,6 +170,67 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.InitString;
             model.Active = false;
             _productPropertyRepository.Update(model.ID, model);
+            return Json(note);
+        }
+        public IActionResult UpdateProductPropertyAndProduct(CodeData model)
+        {
+            Config media = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.PressList, model.MediaTitle);
+            Product product = _productRepository.GetByID(model.ProductID.Value);
+            if (product != null)
+            {
+                product.Title = model.Title;
+                product.Advalue = (int)model.Advalue.Value;
+                product.Page = model.Page;
+                product.Duration = model.Duration;
+                if (media != null)
+                {
+                    if (media.ID > 0)
+                    {
+                        product.ParentID = media.ID;
+                    }
+                }
+                product.Initialization(InitType.Update, RequestUserID);
+                _productRepository.Update(product.ID, product);
+            }
+            Config industry = _configResposistory.GetByGroupNameAndCodeAndCodeName(AppGlobal.CRM, AppGlobal.Industry, model.Industry);
+            if (industry != null)
+            {
+                if (industry.ID > 0)
+                {
+                    ProductProperty productProperty = _productPropertyRepository.GetByID(model.ProductPropertyID.Value);
+                    if (productProperty != null)
+                    {
+                        productProperty.IndustryID = industry.ID;
+                        productProperty.Initialization(InitType.Update, RequestUserID);
+                        _productPropertyRepository.Update(productProperty.ID, productProperty);
+                    }
+                }
+            }
+            string note = AppGlobal.InitString;
+            int result = 1;
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.DeleteFail;
+            }
+            return Json(note);
+        }
+        public IActionResult DeleteProductProperty(int productPropertyID)
+        {
+            string note = AppGlobal.InitString;
+            //_productPropertyRepository.DeleteItemsByID(productPropertyID);
+            int result = 1;
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.DeleteFail;
+            }
             return Json(note);
         }
         public IActionResult CreateManyIndustry(int industryID, string title, int productParentID, string page, string totalSize, string timeLine, string duration, DateTime datePublish)

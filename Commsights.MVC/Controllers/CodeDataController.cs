@@ -1402,6 +1402,7 @@ namespace Commsights.MVC.Controllers
             List<CodeDataReport> list = _codeDataRepository.GetReportByDatePublishBeginAndDatePublishEndToList(datePublishBegin, datePublishEnd);
             return Json(list.ToDataSourceResult(request));
         }
+        
         public ActionResult GetReportByDatePublishBeginAndDatePublishEndAndIsUploadToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, bool isUpload)
         {
             List<CodeDataReport> list = _codeDataRepository.GetReportByDatePublishBeginAndDatePublishEndAndIsUploadToList(datePublishBegin, datePublishEnd, isUpload);
@@ -1469,6 +1470,15 @@ namespace Commsights.MVC.Controllers
             Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);
             Response.Cookies.Append("CodeDataIsUpload", isUpload.ToString(), cookieExpires);
             List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNotNewspageAndTVToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload, AppGlobal.Newspage, AppGlobal.TV);
+            return Json(list.ToDataSourceResult(request));
+        }
+        public ActionResult GetByDateUpdatedBeginAndDateUpdatedEndAndSourceIsNewspageAndTVToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd)
+        {
+            var cookieExpires = new CookieOptions();
+            cookieExpires.Expires = DateTime.Now.AddDays(1);            
+            Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), cookieExpires);
+            Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);            
+            List<CodeData> list = _codeDataRepository.GetByDateUpdatedBeginAndDateUpdatedEndAndSourceIsNewspageAndTVToList(datePublishBegin, datePublishEnd, AppGlobal.Newspage, AppGlobal.TV);
             return Json(list.ToDataSourceResult(request));
         }
         public ActionResult GetCategorySubByCategoryMainToList([DataSourceRequest] DataSourceRequest request, string categoryMain)
@@ -1653,10 +1663,9 @@ namespace Commsights.MVC.Controllers
             return model;
         }
         public IActionResult DeleteProductProperty(int productPropertyID)
-        {
-            CodeData model = GetCodeData(productPropertyID);
+        {            
             string note = AppGlobal.InitString;
-            _productPropertyRepository.DeleteItemsByIDCodeData(model.ProductPropertyID.Value);
+            _productPropertyRepository.DeleteItemsByIDCodeData(productPropertyID);
             int result = 1;
             if (result > 0)
             {
@@ -2383,35 +2392,26 @@ namespace Commsights.MVC.Controllers
             string sheetName = AppGlobal.DateTimeCode;
             try
             {
-                string industryName = "";
                 DateTime dateUpdatedBegin = DateTime.Parse(Request.Cookies["CodeDataDatePublishBegin"]);
                 DateTime dateUpdatedEnd = DateTime.Parse(Request.Cookies["CodeDataDatePublishEnd"]);
-                int industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
-                bool isUpload = bool.Parse(Request.Cookies["CodeDataIsUpload"]);
-                list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNewspageAndTVToList(dateUpdatedBegin, dateUpdatedEnd, industryID, RequestUserID, isUpload, AppGlobal.Newspage, AppGlobal.TV);
-                Config industry = _configResposistory.GetByID(industryID);
-                if (industry != null)
-                {
-                    industryName = industry.CodeName;
-                }
-                sheetName = industryName;
-                industryName = AppGlobal.SetName(industryName);
-                excelName = @"ScanFiles_" + industryName + "_" + dateUpdatedBegin.ToString("yyyyMMdd") + "_" + dateUpdatedEnd.ToString("yyyyMMdd") + "_" + AppGlobal.DateTimeCode + ".xlsx";
+                list = _codeDataRepository.GetByDateUpdatedBeginAndDateUpdatedEndAndSourceIsNewspageAndTVToList(dateUpdatedBegin, dateUpdatedEnd, AppGlobal.Newspage, AppGlobal.TV);
+                sheetName = "ScanFiles";
+                excelName = @"ScanFiles_" + dateUpdatedBegin.ToString("yyyyMMdd") + "_" + dateUpdatedEnd.ToString("yyyyMMdd") + "_" + AppGlobal.DateTimeCode + ".xlsx";
             }
             catch
             {
             }
             var stream = new MemoryStream();
             Color color = Color.FromArgb(int.Parse("#c00000".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));
-            Color colorTitle = Color.FromArgb(int.Parse("#ed7d31".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));        
-            
+            Color colorTitle = Color.FromArgb(int.Parse("#ed7d31".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));
+
             using (var package = new ExcelPackage(stream))
             {
                 var workSheet = package.Workbook.Worksheets.Add(sheetName);
                 if (list.Count > 0)
                 {
                     int column = 1;
-                    int rowExcel = 1;                            
+                    int rowExcel = 1;
                     workSheet.Cells[rowExcel, column].Value = "Industry";
                     workSheet.Cells[rowExcel, column].Style.Font.Bold = true;
                     workSheet.Cells[rowExcel, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
@@ -2430,6 +2430,23 @@ namespace Commsights.MVC.Controllers
                     workSheet.Cells[rowExcel, column].Style.Border.Bottom.Color.SetColor(Color.Black);
                     column = column + 1;
                     workSheet.Cells[rowExcel, column].Value = "Media title";
+                    workSheet.Cells[rowExcel, column].Style.Font.Bold = true;
+                    workSheet.Cells[rowExcel, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    workSheet.Cells[rowExcel, column].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                    workSheet.Cells[rowExcel, column].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    workSheet.Cells[rowExcel, column].Style.Fill.BackgroundColor.SetColor(color);
+                    workSheet.Cells[rowExcel, column].Style.Font.Name = "Times New Roman";
+                    workSheet.Cells[rowExcel, column].Style.Font.Size = 11;
+                    workSheet.Cells[rowExcel, column].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    workSheet.Cells[rowExcel, column].Style.Border.Top.Color.SetColor(Color.Black);
+                    workSheet.Cells[rowExcel, column].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    workSheet.Cells[rowExcel, column].Style.Border.Left.Color.SetColor(Color.Black);
+                    workSheet.Cells[rowExcel, column].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    workSheet.Cells[rowExcel, column].Style.Border.Right.Color.SetColor(Color.Black);
+                    workSheet.Cells[rowExcel, column].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    workSheet.Cells[rowExcel, column].Style.Border.Bottom.Color.SetColor(Color.Black);
+                    column = column + 1;
+                    workSheet.Cells[rowExcel, column].Value = "Media type";
                     workSheet.Cells[rowExcel, column].Style.Font.Bold = true;
                     workSheet.Cells[rowExcel, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                     workSheet.Cells[rowExcel, column].Style.Font.Color.SetColor(System.Drawing.Color.White);
@@ -2495,9 +2512,26 @@ namespace Commsights.MVC.Controllers
                     workSheet.Cells[rowExcel, column].Style.Border.Right.Style = ExcelBorderStyle.Thin;
                     workSheet.Cells[rowExcel, column].Style.Border.Right.Color.SetColor(Color.Black);
                     workSheet.Cells[rowExcel, column].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                    workSheet.Cells[rowExcel, column].Style.Border.Bottom.Color.SetColor(Color.Black);         
+                    workSheet.Cells[rowExcel, column].Style.Border.Bottom.Color.SetColor(Color.Black);
                     column = column + 1;
                     workSheet.Cells[rowExcel, column].Value = "Duration/Total size";
+                    workSheet.Cells[rowExcel, column].Style.Font.Bold = true;
+                    workSheet.Cells[rowExcel, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    workSheet.Cells[rowExcel, column].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                    workSheet.Cells[rowExcel, column].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    workSheet.Cells[rowExcel, column].Style.Fill.BackgroundColor.SetColor(color);
+                    workSheet.Cells[rowExcel, column].Style.Font.Name = "Times New Roman";
+                    workSheet.Cells[rowExcel, column].Style.Font.Size = 11;
+                    workSheet.Cells[rowExcel, column].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    workSheet.Cells[rowExcel, column].Style.Border.Top.Color.SetColor(Color.Black);
+                    workSheet.Cells[rowExcel, column].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    workSheet.Cells[rowExcel, column].Style.Border.Left.Color.SetColor(Color.Black);
+                    workSheet.Cells[rowExcel, column].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    workSheet.Cells[rowExcel, column].Style.Border.Right.Color.SetColor(Color.Black);
+                    workSheet.Cells[rowExcel, column].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    workSheet.Cells[rowExcel, column].Style.Border.Bottom.Color.SetColor(Color.Black);
+                    column = column + 1;
+                    workSheet.Cells[rowExcel, column].Value = "Advalue";
                     workSheet.Cells[rowExcel, column].Style.Font.Bold = true;
                     workSheet.Cells[rowExcel, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                     workSheet.Cells[rowExcel, column].Style.Font.Color.SetColor(System.Drawing.Color.White);
@@ -2529,7 +2563,24 @@ namespace Commsights.MVC.Controllers
                     workSheet.Cells[rowExcel, column].Style.Border.Right.Style = ExcelBorderStyle.Thin;
                     workSheet.Cells[rowExcel, column].Style.Border.Right.Color.SetColor(Color.Black);
                     workSheet.Cells[rowExcel, column].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                    workSheet.Cells[rowExcel, column].Style.Border.Bottom.Color.SetColor(Color.Black);                    
+                    workSheet.Cells[rowExcel, column].Style.Border.Bottom.Color.SetColor(Color.Black);
+                    column = column + 1;
+                    workSheet.Cells[rowExcel, column].Value = "Media Advalue";
+                    workSheet.Cells[rowExcel, column].Style.Font.Bold = true;
+                    workSheet.Cells[rowExcel, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    workSheet.Cells[rowExcel, column].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                    workSheet.Cells[rowExcel, column].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    workSheet.Cells[rowExcel, column].Style.Fill.BackgroundColor.SetColor(color);
+                    workSheet.Cells[rowExcel, column].Style.Font.Name = "Times New Roman";
+                    workSheet.Cells[rowExcel, column].Style.Font.Size = 11;
+                    workSheet.Cells[rowExcel, column].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    workSheet.Cells[rowExcel, column].Style.Border.Top.Color.SetColor(Color.Black);
+                    workSheet.Cells[rowExcel, column].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    workSheet.Cells[rowExcel, column].Style.Border.Left.Color.SetColor(Color.Black);
+                    workSheet.Cells[rowExcel, column].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    workSheet.Cells[rowExcel, column].Style.Border.Right.Color.SetColor(Color.Black);
+                    workSheet.Cells[rowExcel, column].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    workSheet.Cells[rowExcel, column].Style.Border.Bottom.Color.SetColor(Color.Black);
                     int index = 0;
                     rowExcel = rowExcel + 1;
                     for (int row = rowExcel; row <= list.Count + rowExcel - 1; row++)
@@ -2539,20 +2590,25 @@ namespace Commsights.MVC.Controllers
                             if (i == 1)
                             {
                                 workSheet.Cells[row, i].Value = list[index].Industry;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;                                
+                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                             }
                             if (i == 2)
+                            {
+                                workSheet.Cells[row, i].Value = list[index].MediaType;
+                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                            }
+                            if (i == 3)
                             {
                                 workSheet.Cells[row, i].Value = list[index].MediaTitle;
                                 workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                             }
-                            if (i == 3)
+                            if (i == 4)
                             {
                                 workSheet.Cells[row, i].Value = list[index].DatePublish;
                                 workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                                 workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy";
                             }
-                            if (i == 4)
+                            if (i == 5)
                             {
                                 workSheet.Cells[row, i].Value = list[index].Title;
                                 if ((!string.IsNullOrEmpty(list[index].Title)) && (!string.IsNullOrEmpty(list[index].URLCode)))
@@ -2569,17 +2625,22 @@ namespace Commsights.MVC.Controllers
                                 }
                                 workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                             }
-                            if (i == 5)
+                            if (i == 6)
                             {
                                 workSheet.Cells[row, i].Value = list[index].Page;
                                 workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                            }                            
-                            if (i == 6)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].Duration;                                
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                             }
                             if (i == 7)
+                            {
+                                workSheet.Cells[row, i].Value = list[index].Duration;
+                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                            }
+                            if (i == 8)
+                            {
+                                workSheet.Cells[row, i].Value = list[index].Advalue.Value.ToString("N0");
+                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                            }
+                            if (i == 9)
                             {
                                 workSheet.Cells[row, i].Value = list[index].URLCode;
                                 if (!string.IsNullOrEmpty(list[index].URLCode))
@@ -2595,6 +2656,11 @@ namespace Commsights.MVC.Controllers
                                     workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
                                 }
                                 workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                            }
+                            if (i == 10)
+                            {
+                                workSheet.Cells[row, i].Value = list[index].Color.Value.ToString("N0");
+                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                             }
                             workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
                             workSheet.Cells[row, i].Style.Font.Size = 11;

@@ -150,6 +150,29 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<CodeData> GetByDateUpdatedBeginAndDateUpdatedEndAndSourceIsNewspageAndTVToList(DateTime datePublishBegin, DateTime datePublishEnd, string sourceNewspage, string sourceTV)
+        {
+            List<CodeData> list = new List<CodeData>();
+            try
+            {
+                datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+                datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@DatePublishBegin",datePublishBegin),
+                    new SqlParameter("@DatePublishEnd",datePublishEnd),
+                    new SqlParameter("@SourceNewspage",sourceNewspage),
+                    new SqlParameter("@SourceTV",sourceTV),
+                    };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataSelectByDateUpdatedBeginAndDateUpdatedEndAndSourceIsNewspageAndTV", parameters);
+                list = SQLHelper.ToList<CodeData>(dt);
+            }
+            catch (Exception e)
+            {
+                string mes = e.Message;
+            }
+            return list;
+        }
         public List<CodeData> GetByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndEmployeeIDAndSourceIsNewspageAndTVToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int employeeID, string sourceNewspage, string sourceTV)
         {
             List<CodeData> list = new List<CodeData>();
@@ -282,7 +305,7 @@ namespace Commsights.Data.Repositories
                 }
             }
             return list;
-        }        
+        }
         public List<CodeData> GetByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndEmployeeIDToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int employeeID)
         {
             List<CodeData> list = new List<CodeData>();

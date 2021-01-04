@@ -491,6 +491,15 @@ new SqlParameter("@Title",model.Title),
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyDeleteItemsByIDCodeData", parameters);
             return result;
         }
+        public string DeleteItemsByID(int ID)
+        {
+            SqlParameter[] parameters =
+            {
+                new SqlParameter("@ID",ID),
+            };
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyDeleteItemsByID", parameters);
+            return result;
+        }
         public List<ProductProperty> GetSQLByParentIDToList(int parentID)
         {
             List<ProductProperty> list = new List<ProductProperty>();
