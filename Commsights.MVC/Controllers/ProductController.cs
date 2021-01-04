@@ -174,7 +174,7 @@ namespace Commsights.MVC.Controllers
             }
             if (model.Product.IsVideo == false)
             {
-                ProductProperty header = listProductProperty.FirstOrDefault(item => item.Note.Contains("getHeader.ashx") == true);
+                ProductProperty header = listProductProperty.FirstOrDefault(item => !string.IsNullOrEmpty(item.Note) && item.Note.Contains("getHeader.ashx") == true);
                 if (header != null)
                 {
                     ProductProperty productProperty01 = new ProductProperty();
@@ -196,16 +196,7 @@ namespace Commsights.MVC.Controllers
                 }
                 else
                 {
-                    model.ListProductProperty = listProductProperty;
-                    //int no = 1;
-                    //foreach (ProductProperty item in listProductProperty)
-                    //{
-                    //    ProductProperty productProperty02 = new ProductProperty();
-                    //    productProperty02.ID = no;
-                    //    productProperty02.Note = item.Note;
-                    //    model.ListProductProperty.Add(productProperty02);
-                    //    no = no + 1;
-                    //}
+                    model.ListProductProperty = listProductProperty;                   
                 }
             }
             if (model.Product == null)

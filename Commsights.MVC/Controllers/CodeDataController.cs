@@ -58,6 +58,22 @@ namespace Commsights.MVC.Controllers
             model.IndustryID = AppGlobal.IndustryID;
             return View(model);
         }
+        public IActionResult DataByEmployeeIDAndSourceIsNewspageAndTV()
+        {
+            CodeDataViewModel model = new CodeDataViewModel();
+            model.DatePublishBegin = DateTime.Now;
+            model.DatePublishEnd = DateTime.Now;
+            model.IndustryID = AppGlobal.IndustryID;
+            return View(model);
+        }
+        public IActionResult DataByEmployeeIDAndSourceIsNotNewspageAndTV()
+        {
+            CodeDataViewModel model = new CodeDataViewModel();
+            model.DatePublishBegin = DateTime.Now;
+            model.DatePublishEnd = DateTime.Now;
+            model.IndustryID = AppGlobal.IndustryID;
+            return View(model);
+        }
         public IActionResult Export()
         {
             CodeDataViewModel model = new CodeDataViewModel();
@@ -1375,7 +1391,7 @@ namespace Commsights.MVC.Controllers
             stream.Position = 0;
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
         }
-        
+
         public ActionResult GetReportSelectByDatePublishBeginAndDatePublishEnd001ToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd)
         {
             List<Membership> list = _codeDataRepository.GetReportSelectByDatePublishBeginAndDatePublishEnd001ToList(datePublishBegin, datePublishEnd);
@@ -1431,6 +1447,28 @@ namespace Commsights.MVC.Controllers
             Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);
             Response.Cookies.Append("CodeDataIsUpload", isUpload.ToString(), cookieExpires);
             List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload);
+            return Json(list.ToDataSourceResult(request));
+        }
+        public ActionResult GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNewspageAndTVToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isUpload)
+        {
+            var cookieExpires = new CookieOptions();
+            cookieExpires.Expires = DateTime.Now.AddDays(1);
+            Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), cookieExpires);
+            Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);
+            Response.Cookies.Append("CodeDataIsUpload", isUpload.ToString(), cookieExpires);            
+            List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNewspageAndTVToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload, AppGlobal.Newspage, AppGlobal.TV);
+            return Json(list.ToDataSourceResult(request));
+        }
+        public ActionResult GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNotNewspageAndTVToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isUpload)
+        {
+            var cookieExpires = new CookieOptions();
+            cookieExpires.Expires = DateTime.Now.AddDays(1);
+            Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), cookieExpires);
+            Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);
+            Response.Cookies.Append("CodeDataIsUpload", isUpload.ToString(), cookieExpires);
+            List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNotNewspageAndTVToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload, AppGlobal.Newspage, AppGlobal.TV);
             return Json(list.ToDataSourceResult(request));
         }
         public ActionResult GetCategorySubByCategoryMainToList([DataSourceRequest] DataSourceRequest request, string categoryMain)
@@ -1703,8 +1741,8 @@ namespace Commsights.MVC.Controllers
                 DateTime dateUpdatedEnd = DateTime.Parse(Request.Cookies["CodeDataDailyDatePublishBegin"]);
                 int hourBegin = int.Parse(Request.Cookies["CodeDataDailyHourBegin"]);
                 int hourEnd = int.Parse(Request.Cookies["CodeDataDailyHourEnd"]);
-                int industryID = int.Parse(Request.Cookies["CodeDataDailyIndustryID"]);                
-                bool isCoding = bool.Parse(Request.Cookies["CodeDataDailyIsCoding"]);                
+                int industryID = int.Parse(Request.Cookies["CodeDataDailyIndustryID"]);
+                bool isCoding = bool.Parse(Request.Cookies["CodeDataDailyIsCoding"]);
                 list = _codeDataRepository.GetDailyByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDAndIsCodingToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID, isCoding);
                 Config industry = _configResposistory.GetByID(industryID);
                 if (industry != null)

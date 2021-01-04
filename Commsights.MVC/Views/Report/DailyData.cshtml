@@ -45,8 +45,8 @@
                      .DataValueField("ID")
                      .DataTextField("CodeName")
                     .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.Contains)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
+                       .Filter(FilterType.StartsWith)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetProductPermissionDistinctIndustryByEmployeeIDToList", "Config")))
                             )
                     </div>
                     <div class='col-sm-1'>
