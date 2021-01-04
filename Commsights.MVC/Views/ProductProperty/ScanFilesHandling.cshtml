@@ -292,14 +292,20 @@
         var notification = $("#Notification").data("kendoNotification");
         notification.show(note, messageType);
         $("#ProductPropertyTrue").data("kendoGrid").dataSource.read();
-        if (messageType == "success") {
+        //if (messageType == "success") {
+        //    $("#DatePublish").val(new Date().toDateInputValue());
+        //    $("#Title").val("");
+        //    $("#TotalSize").val("");
+        //    $("#Page").val("");
+        //    $("#TimeLine").val("");
+        //    $("#Duration").val("");
+        //}
             $("#DatePublish").val(new Date().toDateInputValue());
             $("#Title").val("");
             $("#TotalSize").val("");
             $("#Page").val("");
             $("#TimeLine").val("");
             $("#Duration").val("");
-        }
         EndRequestHandler();
     }
 </script>
