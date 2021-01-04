@@ -22,7 +22,7 @@
                                      .DateInput()
                                 )
                     </div>
-                    <div class='col-sm-5'>
+                    <div class='col-sm-4'>
                         @(Html.Kendo().DropDownListFor(Model=>Model.IndustryID)
                      .DataValueField("ID")
                      .DataTextField("CodeName")
@@ -38,6 +38,11 @@
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" title="Search" onclick="onSearch()">
                             <span class="fas fa-search"></span>
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-success" title="Export excel scan files" onclick="onExportExcelScanFiles()">
+                            <span class="fas fa-file-excel"></span>
                         </button>
                     </div>
                 </div>
@@ -225,5 +230,11 @@
         var datePublishEndValue = toDate02($("#DatePublishEnd").val());
         var isUploadValue = document.getElementById("IsUpload").checked;
         return { datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, industryID: industryIDValue, isUpload: isUploadValue};
+    }
+    function onExportExcelScanFiles() {
+        BeginRequestHandler();
+        var url = "/CodeData/ExportExcelScanFiles";
+        window.location.replace(url);
+        EndRequestHandler();
     }
 </script>
