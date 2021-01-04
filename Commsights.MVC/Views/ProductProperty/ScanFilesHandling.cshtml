@@ -274,9 +274,7 @@
                 datePublish: datePublishValue,
             },
             success: function (result) {
-                onLoadSuccess(result);
-                var todayDate = kendo.toString(kendo.parseDate(new Date()), 'MM/dd/yyyy');
-                $("#DatePublish").data("kendoDatePicker").value(todayDate);
+                onLoadSuccess(result);                                
                 $("#Title").val("");
                 $("#TotalSize").val("");
                 $("#Page").val("");
