@@ -108,9 +108,9 @@ namespace Commsights.MVC.Controllers
             return View();
         }
 
-        public IActionResult Detail(int rowIndex)
+        public IActionResult Detail(int productPropertyID)
         {
-            CodeData model = GetCodeData(rowIndex);
+            CodeData model = GetCodeData(productPropertyID);
             return View(model);
         }
         public IActionResult DetailBasic(int productPropertyID)
