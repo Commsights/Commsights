@@ -427,6 +427,48 @@ namespace Commsights.Data.Repositories
             list = SQLHelper.ToList<Config>(dt);
             return list;
         }
+        public List<Config> GetSQLWebsiteByGroupNameAndCodeToList(string groupName, string code)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectWebsiteByGroupNameAndCode", parameters);
+            list = SQLHelper.ToList<Config>(dt);
+            foreach (Config item in list)
+            {
+                if (item.Active == false)
+                {
+                    bool check = false;
+                    if (string.IsNullOrEmpty(item.URLFull))
+                    {
+                        check = true;
+                    }
+                    else
+                    {
+                        check = item.URLFull.Contains(@"?");
+                        int length = item.URLFull.Split('/').Length;
+                        if (length > 3)
+                        {
+                            string last = item.URLFull.Split('/')[item.URLFull.Split('/').Length - 1];
+                            if (!string.IsNullOrEmpty(last))
+                            {
+                                check = true;
+                            }
+                        }
+                    }
+                    if (check == true)
+                    {
+                        DeleteSingleItem(item.ID);
+                    }
+                }
+            }
+            dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectWebsiteByGroupNameAndCode", parameters);
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
         public List<Config> GetSQLWebsiteByGroupNameAndCodeAndActiveAndRowBeginAndRowEndToList(string groupName, string code, bool active, int rowBegin, int rowEnd)
         {
             List<Config> list = new List<Config>();
@@ -544,6 +586,16 @@ new SqlParameter("@SortOrder",config.SortOrder),
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ConfigUpdateSingleItem001", parameters);
             return result;
         }
+        public string DeleteSingleItem(int ID)
+        {
+
+            SqlParameter[] parameters =
+            {
+                new SqlParameter("@ID",ID),
+            };
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ConfigDeleteSingleItemByID", parameters);
+            return result;
+        }
         public List<Config> GetProductPermissionDistinctIndustryByEmployeeIDToList(int employeeID)
         {
             List<Config> list = new List<Config>();
@@ -558,5 +610,6 @@ new SqlParameter("@SortOrder",config.SortOrder),
             }
             return list;
         }
+
     }
 }

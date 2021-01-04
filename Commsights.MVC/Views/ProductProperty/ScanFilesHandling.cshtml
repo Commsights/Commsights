@@ -38,7 +38,7 @@
 .RepeatHeaders()
 .FileName("Config.pdf")
 )
-.HtmlAttributes(new { @class = "KendoGrid", @style="height:400px;" })
+.HtmlAttributes(new { @class = "KendoGrid", @style= "height:400px; font-size:11px;" })
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
@@ -84,7 +84,7 @@
 .RepeatHeaders()
 .FileName("Config.pdf")
 )
-.HtmlAttributes(new { @class = "KendoGrid", @style= "height:400px;" })
+.HtmlAttributes(new { @class = "KendoGrid", @style= "height:400px; font-size:11px;" })
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(1000)
@@ -104,18 +104,27 @@
         </div>
     </div>
     <div class="col-md-4">
-        <form method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadScanFilesNoUploadFiles", "ProductProperty")'>
-            <div class="row">
-                <div class='col-md-6'>
-                    @(Html.Kendo().Upload()
-                                  .Name("UploadScanFiles")
-                            )
+        @*<form enctype="multipart/form-data" method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadScanFilesNoUploadFiles", "ProductProperty")'>
+                <div class="row">
+                    <div class='col-md-6'>
+                        @(Html.Kendo().Upload()
+                                      .Name("UploadScanFiles")
+                                )
+                    </div>
+                    <div class='col-md-6'>
+                        <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload</button>
+                    </div>
                 </div>
-                <div class='col-md-6'>
-                    <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload</button>
-                </div>
+            </form>*@
+
+        <div class="row">
+            <div class='col-md-6'>
+                <input id="scanFiles" type="file" />
             </div>
-        </form>
+            <div class='col-md-6'>
+                <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload</button>
+            </div>
+        </div>
         <br />
         <div class='form-group'>
             @(Html.Kendo().DropDownListFor(Model=>Model.IndustryID)
@@ -156,7 +165,7 @@
             <div class="col-md-6">
                 <div class='form-group'>
                     <label for='TotalSize'>Total size (%)</label>
-                    @(Html.TextBoxFor(Model => Model.TotalSize, new { @class = "form-control", @title = Model.TotalSize }))                    
+                    @(Html.TextBoxFor(Model => Model.TotalSize, new { @class = "form-control", @title = Model.TotalSize }))
                 </div>
             </div>
         </div>
@@ -274,7 +283,7 @@
                 datePublish: datePublishValue,
             },
             success: function (result) {
-                onLoadSuccess(result);                                
+                onLoadSuccess(result);
                 $("#Title").val("");
                 $("#TotalSize").val("");
                 $("#Page").val("");
@@ -290,7 +299,7 @@
         var note = response.split('-')[1];
         var notification = $("#Notification").data("kendoNotification");
         notification.show(note, messageType);
-        $("#ProductPropertyTrue").data("kendoGrid").dataSource.read();     
+        $("#ProductPropertyTrue").data("kendoGrid").dataSource.read();
         EndRequestHandler();
     }
 </script>

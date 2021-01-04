@@ -54,5 +54,6 @@ namespace Commsights.Data.Repositories
         public List<Config> GetSQLWebsiteByGroupNameAndCodeAndActiveAndRowBeginAndRowEndToList(string groupName, string code, bool active, int rowBegin, int rowEnd);
         public List<Config> GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftAndRowBeginAndRowEndToList(string groupName, string code, bool active, bool isMenuLeft, int rowBegin, int rowEnd);
         public List<Config> GetProductPermissionDistinctIndustryByEmployeeIDToList(int employeeID);
+        public List<Config> GetSQLWebsiteByGroupNameAndCodeToList(string groupName, string code);
     }
 }

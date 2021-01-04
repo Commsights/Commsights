@@ -664,6 +664,8 @@ namespace Commsights.MVC.Controllers
             }
             return RedirectToAction("ScanFilesHandling");
         }
+
+
         public ActionResult UploadScanFilesNoUploadFiles()
         {
             try

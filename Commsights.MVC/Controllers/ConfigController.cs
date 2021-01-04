@@ -621,6 +621,11 @@ namespace Commsights.MVC.Controllers
             var data = _configResposistory.GetSQLWebsiteByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetSQLWebsiteByGroupNameAndCodeToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetSQLWebsiteByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetWebsiteByGroupNameAndCodeAndActiveToList001([DataSourceRequest] DataSourceRequest request)
         {
             var data = _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
