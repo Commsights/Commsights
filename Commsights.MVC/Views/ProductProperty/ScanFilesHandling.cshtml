@@ -104,27 +104,27 @@
         </div>
     </div>
     <div class="col-md-4">
-        @*<form enctype="multipart/form-data" method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadScanFilesNoUploadFiles", "ProductProperty")'>
-                <div class="row">
-                    <div class='col-md-6'>
-                        @(Html.Kendo().Upload()
+        <form enctype="multipart/form-data" method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadScanFilesNoUploadFiles", "ProductProperty")'>
+            <div class="row">
+                <div class='col-md-6'>
+                    @(Html.Kendo().Upload()
                                       .Name("UploadScanFiles")
                                 )
-                    </div>
-                    <div class='col-md-6'>
-                        <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload</button>
-                    </div>
                 </div>
-            </form>*@
+                <div class='col-md-6'>
+                    <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload</button>
+                </div>
+            </div>
+        </form>
 
-        <div class="row">
-            <div class='col-md-6'>
-                <input id="scanFiles" type="file" />
-            </div>
-            <div class='col-md-6'>
-                <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload</button>
-            </div>
-        </div>
+        @*<div class="row">
+                <div class='col-md-6'>
+                    <input id="scanFiles" type="file" />
+                </div>
+                <div class='col-md-6'>
+                    <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload</button>
+                </div>
+            </div>*@
         <br />
         <div class='form-group'>
             @(Html.Kendo().DropDownListFor(Model=>Model.IndustryID)
