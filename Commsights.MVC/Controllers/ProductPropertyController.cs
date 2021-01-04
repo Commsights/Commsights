@@ -354,7 +354,7 @@ namespace Commsights.MVC.Controllers
                                         ProductProperty productProperty = new ProductProperty();
                                         productProperty.ParentID = model.ID;
                                         productProperty.Code = AppGlobal.URLCode;
-                                        productProperty.Note = parent.Note;
+                                        productProperty.Note = parent.Icon;
                                         productProperty.Initialization(InitType.Insert, RequestUserID);
                                         _productPropertyRepository.Create(productProperty);
                                     }
@@ -514,7 +514,7 @@ namespace Commsights.MVC.Controllers
                                     ProductProperty productProperty = new ProductProperty();
                                     productProperty.ParentID = model.ID;
                                     productProperty.Code = AppGlobal.URLCode;
-                                    productProperty.Note = parent.Note;
+                                    productProperty.Note = parent.Icon;
                                     productProperty.Initialization(InitType.Insert, RequestUserID);
                                     _productPropertyRepository.Create(productProperty);
                                 }

@@ -118,6 +118,7 @@ namespace Commsights.MVC.Controllers
             CodeData model = GetCodeData(productPropertyID);
             return View(model);
         }
+       
         public IActionResult EmployeeProductPermission(int rowIndex)
         {
             CodeDataViewModel model = new CodeDataViewModel();
