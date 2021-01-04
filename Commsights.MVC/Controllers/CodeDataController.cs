@@ -1575,12 +1575,12 @@ namespace Commsights.MVC.Controllers
         public IActionResult SaveCoding(CodeData model)
         {
             string actionMessage = CheckCodeData(model);
-            return RedirectToAction("Detail", "CodeData", new { RowIndex = model.RowIndex, ActionMessage = actionMessage });
+            return RedirectToAction("Detail", "CodeData", new { ProductPropertyID = model.ProductPropertyID, ActionMessage = actionMessage });
         }
         public IActionResult SaveCodingDetailBasic(CodeData model)
         {
             string actionMessage = CheckCodeData(model);
-            return RedirectToAction("DetailBasic", "CodeData", new { RowIndex = model.RowIndex, ActionMessage = actionMessage });
+            return RedirectToAction("DetailBasic", "CodeData", new { ProductPropertyID = model.ProductPropertyID, ActionMessage = actionMessage });
         }
         public int CopyURLSame(int productPropertyID)
         {
@@ -1652,9 +1652,9 @@ namespace Commsights.MVC.Controllers
             }
             return model;
         }
-        public IActionResult DeleteProductProperty(int rowIndex)
+        public IActionResult DeleteProductProperty(int productPropertyID)
         {
-            CodeData model = GetCodeData(rowIndex);
+            CodeData model = GetCodeData(productPropertyID);
             string note = AppGlobal.InitString;
             _productPropertyRepository.DeleteItemsByIDCodeData(model.ProductPropertyID.Value);
             int result = 1;

@@ -146,7 +146,7 @@
 .PageSize(10000)
 .Model(model =>
 {
-    model.Id(t => t.RowIndex);
+    model.Id(t => t.ProductPropertyID);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNewspageAndTVToList", "CodeData").Data("filterCodeData"))
