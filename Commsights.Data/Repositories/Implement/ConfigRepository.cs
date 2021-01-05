@@ -437,36 +437,113 @@ namespace Commsights.Data.Repositories
             };
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectWebsiteByGroupNameAndCode", parameters);
             list = SQLHelper.ToList<Config>(dt);
-            foreach (Config item in list)
-            {
-                if (item.Active == false)
-                {
-                    bool check = false;
-                    if (string.IsNullOrEmpty(item.URLFull))
-                    {
-                        check = true;
-                    }
-                    else
-                    {
-                        check = item.URLFull.Contains(@"?");
-                        int length = item.URLFull.Split('/').Length;
-                        if (length > 3)
-                        {
-                            string last = item.URLFull.Split('/')[item.URLFull.Split('/').Length - 1];
-                            if (!string.IsNullOrEmpty(last))
-                            {
-                                check = true;
-                            }
-                        }
-                    }
-                    if (check == true)
-                    {
-                        DeleteSingleItem(item.ID);
-                    }
-                }
-            }
-            dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectWebsiteByGroupNameAndCode", parameters);
-            list = SQLHelper.ToList<Config>(dt);
+            //foreach (Config item in list)
+            //{
+            //    if (item.Active == false)
+            //    {
+            //        bool check = false;
+            //        if (string.IsNullOrEmpty(item.URLFull))
+            //        {
+            //            check = true;
+            //        }
+            //        else
+            //        {
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"@");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@".htm");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"sms");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"lich-thi-dau");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"maito");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"mailto");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"tel");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"#");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"?");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"+");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"tag");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"category");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"2020");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"javascript");
+            //            }
+            //            if (check == false)
+            //            {
+            //                int length = item.URLFull.Split('/').Length;
+            //                if (length > 3)
+            //                {
+            //                    for (int i = 3; i < length; i++)
+            //                    {
+            //                        string last = item.URLFull.Split('/')[i];
+            //                        if (!string.IsNullOrEmpty(last))
+            //                        {
+            //                            check = true;
+            //                            i = length;
+            //                        }
+            //                    }
+            //                }
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = !item.URLFull.Contains(@".vn/");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = !item.URLFull.Contains(@".net/");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = !item.URLFull.Contains(@".info/");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = !item.URLFull.Contains(@".com/");
+            //            }
+            //        }
+            //        if (check == true)
+            //        {
+            //            DeleteSingleItem(item.ID);
+            //        }
+            //    }
+            //}
+            
             return list;
         }
         public List<Config> GetSQLWebsiteByGroupNameAndCodeAndActiveAndRowBeginAndRowEndToList(string groupName, string code, bool active, int rowBegin, int rowEnd)

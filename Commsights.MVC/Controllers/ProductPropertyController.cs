@@ -138,6 +138,11 @@ namespace Commsights.MVC.Controllers
             var data = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndActiveToList(RequestUserID, -1, AppGlobal.URLCode, false);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetRequestUserIDAndParentIDAndCodeAndTrueToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndActiveToList(RequestUserID, -1, AppGlobal.URLCode, true);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndTrueToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActiveToList(RequestUserID, -1, AppGlobal.URLCode, DateTime.Now, true);
@@ -158,18 +163,26 @@ namespace Commsights.MVC.Controllers
             var data = _productPropertyRepository.GetDataTransferProductByParentIDToList(parentID);
             return Json(data.ToDataSourceResult(request));
         }
-        public IActionResult ScanFilesUpdateTrue(ProductProperty model)
+        public IActionResult ScanFilesUpdateTrue(int ID)
         {
             string note = AppGlobal.InitString;
-            model.Active = true;
-            _productPropertyRepository.Update(model.ID, model);
+            ProductProperty model = _productPropertyRepository.GetByID(ID);
+            if (model != null)
+            {
+                model.Active = true;
+                _productPropertyRepository.Update(model.ID, model);
+            }
             return Json(note);
         }
-        public IActionResult ScanFilesUpdateFalse(ProductProperty model)
+        public IActionResult ScanFilesUpdateFalse(int ID)
         {
             string note = AppGlobal.InitString;
-            model.Active = false;
-            _productPropertyRepository.Update(model.ID, model);
+            ProductProperty model = _productPropertyRepository.GetByID(ID);
+            if (model != null)
+            {
+                model.Active = false;
+                _productPropertyRepository.Update(model.ID, model);
+            }
             return Json(note);
         }
         public IActionResult UpdateProductPropertyAndProduct(CodeData model)
@@ -223,6 +236,20 @@ namespace Commsights.MVC.Controllers
             string note = AppGlobal.InitString;
             //_productPropertyRepository.DeleteItemsByID(productPropertyID);
             int result = 1;
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.DeleteFail;
+            }
+            return Json(note);
+        }
+        public IActionResult Delete(int ID)
+        {
+            string note = AppGlobal.InitString;
+            int result = _productPropertyRepository.Delete(ID);
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
@@ -714,6 +741,42 @@ namespace Commsights.MVC.Controllers
             catch (Exception e)
             {
                 string mes = e.Message;
+            }
+            return RedirectToAction("ScanFilesHandling");
+        }
+        public ActionResult UploadScanFilesByFileNameList(string fileNameList)
+        {
+            for (int i = 0; i < fileNameList.Split(';').Length; i++)
+            {
+                string fileName = fileNameList.Split(';')[i];
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    string fileExtension = fileName.Split('.')[fileName.Split('.').Length - 1];                    
+                    string directoryDay = AppGlobal.DateTimeCodeYearMonthDay;
+                    string mainPath = AppGlobal.FTPScanFiles;
+                    string url = AppGlobal.URLScanFiles;
+                    if (Directory.Exists(mainPath) == false)
+                    {
+                        mainPath = _hostingEnvironment.WebRootPath;
+                        url = AppGlobal.Domain;
+                    }
+                    url = url + AppGlobal.SourceScan + "/" + directoryDay + "/" + fileName;
+                    string subPath = AppGlobal.SourceScan + @"\" + directoryDay;
+                    string fullPath = mainPath + @"\" + subPath;
+                    if (!Directory.Exists(fullPath))
+                    {
+                        Directory.CreateDirectory(fullPath);
+                    }
+                    ProductProperty productProperty = new ProductProperty();
+                    productProperty.Active = false;
+                    productProperty.FileName = fileName;
+                    productProperty.Page = fileExtension;
+                    productProperty.Note = url;
+                    productProperty.ParentID = -1;
+                    productProperty.Code = AppGlobal.URLCode;
+                    productProperty.Initialization(InitType.Insert, RequestUserID);
+                    _productPropertyRepository.Create(productProperty);
+                }
             }
             return RedirectToAction("ScanFilesHandling");
         }

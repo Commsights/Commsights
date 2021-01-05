@@ -50,6 +50,8 @@
     columns.Bound(t => t.Page).Title("Page / Timeline").Width(150).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
     columns.Bound(t => t.Duration).Title("Total size / Duration").Width(150).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });        
     columns.Bound(t => t.Advalue).Title("Advalue").Format("{0:N0}").Width(200).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.FullName).Title("Full name").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.DateUpdated).Title("Updated").Format("{0:dd/MM/yyyy HH:mm:ss}").Width(200).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
     columns.Bound(t => t.ProductID).Title("ProductID").Width(100).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
     columns.Bound(t => t.ProductPropertyID).Title("PropertyID").Width(120).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
 })
@@ -85,6 +87,8 @@
 .Model(model =>
 {
     model.Id(t => t.ProductPropertyID);
+    model.Field(t => t.FullName).Editable(false);
+    model.Field(t => t.DateUpdated).Editable(false);
     model.Field(t => t.ProductID).Editable(false);
     model.Field(t => t.ProductPropertyID).Editable(false);
 })
