@@ -216,7 +216,7 @@
                 },
                 success: function () { }
             }).done(() => {
-                $("#ProductPropertyFalse").data("kendoGrid").dataSource.read();                
+                $("#ProductPropertyFalse").data("kendoGrid").dataSource.read();
                 EndRequestHandler();
             });
         }
@@ -294,6 +294,22 @@
         var timeLineValue = $("#TimeLine").val();
         var durationValue = $("#Duration").val();
         var datePublishValue = toDate02($("#DatePublish").val());
+        industryIDValue = encodeURIComponent(industryIDValue);
+        titleValue = encodeURIComponent(titleValue);
+        productParentIDValue = encodeURIComponent(productParentIDValue);
+        pageValue = encodeURIComponent(pageValue);
+        totalSizeValue = encodeURIComponent(totalSizeValue);
+        timeLineValue = encodeURIComponent(timeLineValue);
+        durationValue = encodeURIComponent(durationValue);
+        datePublishValue = encodeURIComponent(datePublishValue);
+        document.cookie = "ScanFileIndustryID=" + industryIDValue;
+        document.cookie = "ScanFileTitle=" + titleValue;
+        document.cookie = "ScanFileProductParentID=" + productParentIDValue;
+        document.cookie = "ScanFilePage=" + pageValue;
+        document.cookie = "ScanFileTotalSize=" + totalSizeValue;
+        document.cookie = "ScanFileTimeLine=" + timeLineValue;
+        document.cookie = "ScanFileDuration=" + durationValue;
+        document.cookie = "ScanFileDatePublish=" + datePublishValue;      
         $.ajax({
             type: 'GET',
             url: "@Url.Action("CreateManyIndustry", "ProductProperty")",
@@ -323,18 +339,26 @@
         var timeLineValue = $("#TimeLine").val();
         var durationValue = $("#Duration").val();
         var datePublishValue = toDate02($("#DatePublish").val());
+        industryIDValue = encodeURIComponent(industryIDValue);
+        titleValue = encodeURIComponent(titleValue);        
+        productParentIDValue = encodeURIComponent(productParentIDValue);
+        pageValue = encodeURIComponent(pageValue);
+        totalSizeValue = encodeURIComponent(totalSizeValue);
+        timeLineValue = encodeURIComponent(timeLineValue);
+        durationValue = encodeURIComponent(durationValue);
+        datePublishValue = encodeURIComponent(datePublishValue);
+        document.cookie = "ScanFileIndustryID=" + industryIDValue;
+        document.cookie = "ScanFileTitle=" + titleValue;
+        document.cookie = "ScanFileProductParentID=" + productParentIDValue;
+        document.cookie = "ScanFilePage=" + pageValue;
+        document.cookie = "ScanFileTotalSize=" + totalSizeValue;
+        document.cookie = "ScanFileTimeLine=" + timeLineValue;
+        document.cookie = "ScanFileDuration=" + durationValue;
+        document.cookie = "ScanFileDatePublish=" + datePublishValue;                
         $.ajax({
             type: 'GET',
             url: "@Url.Action("CreateAndNext", "ProductProperty")",
-            data: {
-                industryID: industryIDValue,
-                title: titleValue,
-                productParentID: productParentIDValue,
-                page: pageValue,
-                totalSize: totalSizeValue,
-                timeLine: timeLineValue,
-                duration: durationValue,
-                datePublish: datePublishValue,
+            data: {                
             },
             success: function (result) {
                 onLoadSuccess(result);

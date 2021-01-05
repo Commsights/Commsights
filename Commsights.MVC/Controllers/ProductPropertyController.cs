@@ -260,8 +260,16 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
-        public IActionResult CreateManyIndustry(int industryID, string title, int productParentID, string page, string totalSize, string timeLine, string duration, DateTime datePublish)
+        public IActionResult CreateManyIndustry()
         {
+            int industryID = int.Parse(Request.Cookies["ScanFileIndustryID"]);
+            string title = Request.Cookies["ScanFileTitle"];
+            int productParentID = int.Parse(Request.Cookies["ScanFileProductParentID"]);
+            string page = Request.Cookies["ScanFilePage"];
+            string totalSize = Request.Cookies["ScanFileTotalSize"];
+            string timeLine = Request.Cookies["ScanFileTimeLine"];
+            string duration = Request.Cookies["ScanFileDuration"];
+            DateTime datePublish = DateTime.Parse(Request.Cookies["ScanFileDatePublish"]);
             string note = AppGlobal.InitString;
             List<ProductProperty> listProductProperty = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActiveToList(RequestUserID, -1, AppGlobal.URLCode, DateTime.Now, true);
             string fileExtension = listProductProperty[0].Page.Replace(@".", @"");
@@ -272,32 +280,16 @@ namespace Commsights.MVC.Controllers
             }
             if ((fileExtension == "mp4") || (fileExtension == "wmv"))
             {
-                try
+                if (!string.IsNullOrEmpty(timeLine))
                 {
-                    duration = duration.Replace(@"s", @"");
-                    int durationValue = int.Parse(duration);
-                    if (!string.IsNullOrEmpty(timeLine))
-                    {
-                        check = check + 1;
-                    }
-                }
-                catch
-                {
+                    check = check + 1;
                 }
             }
             else
             {
-                try
+                if (!string.IsNullOrEmpty(page))
                 {
-                    totalSize = totalSize.Replace(@"%", @"");
-                    int durationValue = int.Parse(totalSize);
-                    if (!string.IsNullOrEmpty(page))
-                    {
-                        check = check + 1;
-                    }
-                }
-                catch
-                {
+                    check = check + 1;
                 }
             }
             if (check == 2)
@@ -423,8 +415,16 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
-        public IActionResult CreateAndNext(int industryID, string title, int productParentID, string page, string totalSize, string timeLine, string duration, DateTime datePublish)
+        public IActionResult CreateAndNext()
         {
+            int industryID = int.Parse(Request.Cookies["ScanFileIndustryID"]);
+            string title = Request.Cookies["ScanFileTitle"];
+            int productParentID = int.Parse(Request.Cookies["ScanFileProductParentID"]);
+            string page = Request.Cookies["ScanFilePage"];
+            string totalSize = Request.Cookies["ScanFileTotalSize"];
+            string timeLine = Request.Cookies["ScanFileTimeLine"];
+            string duration = Request.Cookies["ScanFileDuration"];
+            DateTime datePublish = DateTime.Parse(Request.Cookies["ScanFileDatePublish"]);
             string note = AppGlobal.InitString;
             List<ProductProperty> listProductProperty = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActiveToList(RequestUserID, -1, AppGlobal.URLCode, DateTime.Now, true);
             string fileExtension = listProductProperty[0].Page.Replace(@".", @"");
@@ -435,32 +435,16 @@ namespace Commsights.MVC.Controllers
             }
             if ((fileExtension == "mp4") || (fileExtension == "wmv"))
             {
-                try
+                if (!string.IsNullOrEmpty(timeLine))
                 {
-                    duration = duration.Replace(@"s", @"");
-                    int durationValue = int.Parse(duration);
-                    if (!string.IsNullOrEmpty(timeLine))
-                    {
-                        check = check + 1;
-                    }
-                }
-                catch
-                {
+                    check = check + 1;
                 }
             }
             else
             {
-                try
+                if (!string.IsNullOrEmpty(page))
                 {
-                    totalSize = totalSize.Replace(@"%", @"");
-                    int durationValue = int.Parse(totalSize);
-                    if (!string.IsNullOrEmpty(page))
-                    {
-                        check = check + 1;
-                    }
-                }
-                catch
-                {
+                    check = check + 1;
                 }
             }
             if (check == 2)
@@ -751,7 +735,7 @@ namespace Commsights.MVC.Controllers
                 string fileName = fileNameList.Split(';')[i];
                 if (!string.IsNullOrEmpty(fileName))
                 {
-                    string fileExtension = fileName.Split('.')[fileName.Split('.').Length - 1];                    
+                    string fileExtension = fileName.Split('.')[fileName.Split('.').Length - 1];
                     string directoryDay = AppGlobal.DateTimeCodeYearMonthDay;
                     string mainPath = AppGlobal.FTPScanFiles;
                     string url = AppGlobal.URLScanFiles;

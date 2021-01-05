@@ -160,5 +160,7 @@ namespace Commsights.Data.DataTransferObject
         public bool? IsDailyDownload { get; set; }
         public DateTime? DateDailyDownload { get; set; }
         public string Note { get; set; }
+
+        public bool? IsVideo { get; set; }
     }
 }
