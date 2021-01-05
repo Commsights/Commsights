@@ -202,55 +202,63 @@
 )
 <script>
     function onUploadScanFiles() {
+        BeginRequestHandler();
         var files = document.getElementById("files").files;
+        
         if (files.length > 0) {
             var fileNameListValue = "";
             for (var i = 0; i < files.length; i++) {
                 fileNameListValue = fileNameListValue + ";" + files[i].name;
-            }
+            }            
             $.ajax({
                 type: 'GET',
                 url: "@Url.Action("UploadScanFilesByFileNameList", "ProductProperty")",
                 data: {
                     fileNameList: fileNameListValue
                 },
-                success: function () { }
+                success: function () {
+                    $("#ProductPropertyFalse").data("kendoGrid").dataSource.read();
+                    EndRequestHandler();
+                }
             }).done(() => {
-                $("#ProductPropertyFalse").data("kendoGrid").dataSource.read();
-                EndRequestHandler();
+                
             });
         }
     }
     function onScanFilesUpdateFalse(e) {
-        var productPropertyValue = this.dataItem($(e.currentTarget).closest("tr"));
-            BeginRequestHandler();
+        BeginRequestHandler();
+        var productPropertyValue = this.dataItem($(e.currentTarget).closest("tr"));            
             $.ajax({
                 type: 'GET',
                 url: "@Url.Action("ScanFilesUpdateFalse", "ProductProperty")",
                 data: {
                     ID: productPropertyValue.ID
                 },
-                success: function () { }
+                success: function () {
+                    $("#ProductPropertyFalse").data("kendoGrid").dataSource.read();
+                    $("#ProductPropertyTrue").data("kendoGrid").dataSource.read();
+                    EndRequestHandler();
+                }
             }).done(() => {
-                $("#ProductPropertyFalse").data("kendoGrid").dataSource.read();
-                $("#ProductPropertyTrue").data("kendoGrid").dataSource.read();
-                EndRequestHandler();
+                
             });
     }
     function onScanFilesUpdateTrue(e) {
+        BeginRequestHandler();
         var productPropertyValue = this.dataItem($(e.currentTarget).closest("tr"));
-            BeginRequestHandler();
             $.ajax({
                 type: 'GET',
                 url: "@Url.Action("ScanFilesUpdateTrue", "ProductProperty")",
                 data: {
                     ID: productPropertyValue.ID
                 },
-                success: function () { }
+                success: function () {
+                    $("#ProductPropertyFalse").data("kendoGrid").dataSource.read();
+                    $("#ProductPropertyTrue").data("kendoGrid").dataSource.read();
+                    EndRequestHandler();
+                }
             }).done(() => {
-                $("#ProductPropertyFalse").data("kendoGrid").dataSource.read();
-                $("#ProductPropertyTrue").data("kendoGrid").dataSource.read();
-                EndRequestHandler();
+               
             });
     }
     function onViewScanFile(e) {
@@ -294,27 +302,43 @@
         var timeLineValue = $("#TimeLine").val();
         var durationValue = $("#Duration").val();
         var datePublishValue = toDate02($("#DatePublish").val());
-        industryIDValue = encodeURIComponent(industryIDValue);
-        titleValue = encodeURIComponent(titleValue);
-        productParentIDValue = encodeURIComponent(productParentIDValue);
-        pageValue = encodeURIComponent(pageValue);
-        totalSizeValue = encodeURIComponent(totalSizeValue);
-        timeLineValue = encodeURIComponent(timeLineValue);
-        durationValue = encodeURIComponent(durationValue);
-        datePublishValue = encodeURIComponent(datePublishValue);
-        document.cookie = "ScanFileIndustryID=" + industryIDValue;
-        document.cookie = "ScanFileTitle=" + titleValue;
-        document.cookie = "ScanFileProductParentID=" + productParentIDValue;
-        document.cookie = "ScanFilePage=" + pageValue;
-        document.cookie = "ScanFileTotalSize=" + totalSizeValue;
-        document.cookie = "ScanFileTimeLine=" + timeLineValue;
-        document.cookie = "ScanFileDuration=" + durationValue;
-        document.cookie = "ScanFileDatePublish=" + datePublishValue;      
+        if (industryIDValue != null) {
+            industryIDValue = encodeURIComponent(industryIDValue);
+            document.cookie = "ScanFileIndustryID=" + industryIDValue;
+        }
+        if (titleValue != null) {
+            titleValue = encodeURIComponent(titleValue);
+            document.cookie = "ScanFileTitle=" + titleValue;
+        }
+        if (productParentIDValue == null) {
+            productParentIDValue = encodeURIComponent(productParentIDValue);
+            document.cookie = "ScanFileProductParentID=" + productParentIDValue;
+        }
+        if (pageValue != null) {
+            pageValue = encodeURIComponent(pageValue);
+            document.cookie = "ScanFilePage=" + pageValue;
+        }
+        if (totalSizeValue != null) {
+            totalSizeValue = encodeURIComponent(totalSizeValue);
+            document.cookie = "ScanFileTotalSize=" + totalSizeValue;
+        }
+        if (timeLineValue != null) {
+            timeLineValue = encodeURIComponent(timeLineValue);
+            document.cookie = "ScanFileTimeLine=" + timeLineValue;
+        }
+        if (durationValue != null) {
+            durationValue = encodeURIComponent(durationValue);
+            document.cookie = "ScanFileDuration=" + durationValue;
+        }
+        if (datePublishValue == null) {
+            datePublishValue = encodeURIComponent(datePublishValue);
+            document.cookie = "ScanFileDatePublish=" + datePublishValue;
+        }     
         $.ajax({
             type: 'GET',
             url: "@Url.Action("CreateManyIndustry", "ProductProperty")",
             data: {
-               
+
             },
             success: function (result) {
                 onLoadSuccess(result);
@@ -332,26 +356,44 @@
         var timeLineValue = $("#TimeLine").val();
         var durationValue = $("#Duration").val();
         var datePublishValue = toDate02($("#DatePublish").val());
-        industryIDValue = encodeURIComponent(industryIDValue);
-        titleValue = encodeURIComponent(titleValue);        
-        productParentIDValue = encodeURIComponent(productParentIDValue);
-        pageValue = encodeURIComponent(pageValue);
-        totalSizeValue = encodeURIComponent(totalSizeValue);
-        timeLineValue = encodeURIComponent(timeLineValue);
-        durationValue = encodeURIComponent(durationValue);
-        datePublishValue = encodeURIComponent(datePublishValue);
-        document.cookie = "ScanFileIndustryID=" + industryIDValue;
-        document.cookie = "ScanFileTitle=" + titleValue;
-        document.cookie = "ScanFileProductParentID=" + productParentIDValue;
-        document.cookie = "ScanFilePage=" + pageValue;
-        document.cookie = "ScanFileTotalSize=" + totalSizeValue;
-        document.cookie = "ScanFileTimeLine=" + timeLineValue;
-        document.cookie = "ScanFileDuration=" + durationValue;
-        document.cookie = "ScanFileDatePublish=" + datePublishValue;                
+
+        if (industryIDValue != null) {
+            industryIDValue = encodeURIComponent(industryIDValue);
+            document.cookie = "ScanFileIndustryID=" + industryIDValue;
+        }
+        if (titleValue != null) {
+            titleValue = encodeURIComponent(titleValue);
+            document.cookie = "ScanFileTitle=" + titleValue;
+        }
+        if (productParentIDValue == null) {
+            productParentIDValue = encodeURIComponent(productParentIDValue);
+            document.cookie = "ScanFileProductParentID=" + productParentIDValue;
+        }
+        if (pageValue != null) {
+            pageValue = encodeURIComponent(pageValue);
+            document.cookie = "ScanFilePage=" + pageValue;
+        }
+        if (totalSizeValue != null) {
+            totalSizeValue = encodeURIComponent(totalSizeValue);
+            document.cookie = "ScanFileTotalSize=" + totalSizeValue;
+        }
+        if (timeLineValue != null) {
+            timeLineValue = encodeURIComponent(timeLineValue);
+            document.cookie = "ScanFileTimeLine=" + timeLineValue;
+        }
+        if (durationValue != null) {
+            durationValue = encodeURIComponent(durationValue);
+            document.cookie = "ScanFileDuration=" + durationValue;
+        }
+        if (datePublishValue == null) {
+            datePublishValue = encodeURIComponent(datePublishValue);
+            document.cookie = "ScanFileDatePublish=" + datePublishValue;
+        }     
+        
         $.ajax({
             type: 'GET',
             url: "@Url.Action("CreateAndNext", "ProductProperty")",
-            data: {                
+            data: {
             },
             success: function (result) {
                 onLoadSuccess(result);
