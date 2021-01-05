@@ -260,16 +260,9 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
-        public IActionResult CreateManyIndustry()
+        [HttpPost]
+        public IActionResult CreateManyIndustry2021(int industryID, string title, int productParentID, string page, string totalSize, string timeLine, string duration, DateTime datePublish)
         {
-            int industryID = int.Parse(Request.Cookies["ScanFileIndustryID"]);
-            string title = Request.Cookies["ScanFileTitle"];
-            int productParentID = int.Parse(Request.Cookies["ScanFileProductParentID"]);
-            string page = Request.Cookies["ScanFilePage"];
-            string totalSize = Request.Cookies["ScanFileTotalSize"];
-            string timeLine = Request.Cookies["ScanFileTimeLine"];
-            string duration = Request.Cookies["ScanFileDuration"];
-            DateTime datePublish = DateTime.Parse(Request.Cookies["ScanFileDatePublish"]);
             string note = AppGlobal.InitString;
             List<ProductProperty> listProductProperty = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActiveToList(RequestUserID, -1, AppGlobal.URLCode, DateTime.Now, true);
             string fileExtension = listProductProperty[0].Page.Replace(@".", @"");
@@ -415,16 +408,9 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
-        public IActionResult CreateAndNext()
+        [HttpPost]
+        public IActionResult CreateAndNext2021(int industryID, string title, int productParentID, string page, string totalSize, string timeLine, string duration, DateTime datePublish)
         {
-            int industryID = int.Parse(Request.Cookies["ScanFileIndustryID"]);
-            string title = Request.Cookies["ScanFileTitle"];
-            int productParentID = int.Parse(Request.Cookies["ScanFileProductParentID"]);
-            string page = Request.Cookies["ScanFilePage"];
-            string totalSize = Request.Cookies["ScanFileTotalSize"];
-            string timeLine = Request.Cookies["ScanFileTimeLine"];
-            string duration = Request.Cookies["ScanFileDuration"];
-            DateTime datePublish = DateTime.Parse(Request.Cookies["ScanFileDatePublish"]);
             string note = AppGlobal.InitString;
             List<ProductProperty> listProductProperty = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActiveToList(RequestUserID, -1, AppGlobal.URLCode, DateTime.Now, true);
             string fileExtension = listProductProperty[0].Page.Replace(@".", @"");

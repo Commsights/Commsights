@@ -301,44 +301,19 @@
         var totalSizeValue = $("#TotalSize").val();
         var timeLineValue = $("#TimeLine").val();
         var durationValue = $("#Duration").val();
-        var datePublishValue = toDate02($("#DatePublish").val());
-        if (industryIDValue != null) {
-            industryIDValue = encodeURIComponent(industryIDValue);
-            document.cookie = "ScanFileIndustryID=" + industryIDValue;
-        }
-        if (titleValue != null) {
-            titleValue = encodeURIComponent(titleValue);
-            document.cookie = "ScanFileTitle=" + titleValue;
-        }
-        if (productParentIDValue == null) {
-            productParentIDValue = encodeURIComponent(productParentIDValue);
-            document.cookie = "ScanFileProductParentID=" + productParentIDValue;
-        }
-        if (pageValue != null) {
-            pageValue = encodeURIComponent(pageValue);
-            document.cookie = "ScanFilePage=" + pageValue;
-        }
-        if (totalSizeValue != null) {
-            totalSizeValue = encodeURIComponent(totalSizeValue);
-            document.cookie = "ScanFileTotalSize=" + totalSizeValue;
-        }
-        if (timeLineValue != null) {
-            timeLineValue = encodeURIComponent(timeLineValue);
-            document.cookie = "ScanFileTimeLine=" + timeLineValue;
-        }
-        if (durationValue != null) {
-            durationValue = encodeURIComponent(durationValue);
-            document.cookie = "ScanFileDuration=" + durationValue;
-        }
-        if (datePublishValue == null) {
-            datePublishValue = encodeURIComponent(datePublishValue);
-            document.cookie = "ScanFileDatePublish=" + datePublishValue;
-        }     
+        var datePublishValue = toDate02($("#DatePublish").val());        
         $.ajax({
             type: 'POST',
-            url: "@Url.Action("CreateManyIndustry", "ProductProperty")",
+            url: "@Url.Action("CreateManyIndustry2021", "ProductProperty")",
             data: {
-
+                industryID: industryIDValue,
+                title: titleValue,
+                productParentID: productParentIDValue,
+                page: pageValue,
+                totalSize: totalSizeValue,
+                timeLine: timeLineValue,
+                duration: durationValue,
+                datePublish: datePublishValue,
             },
             success: function (result) {
                 onLoadSuccess(result);
@@ -355,45 +330,20 @@
         var totalSizeValue = $("#TotalSize").val();
         var timeLineValue = $("#TimeLine").val();
         var durationValue = $("#Duration").val();
-        var datePublishValue = toDate02($("#DatePublish").val());
-
-        if (industryIDValue != null) {
-            industryIDValue = encodeURIComponent(industryIDValue);
-            document.cookie = "ScanFileIndustryID=" + industryIDValue;
-        }
-        if (titleValue != null) {
-            titleValue = encodeURIComponent(titleValue);
-            document.cookie = "ScanFileTitle=" + titleValue;
-        }
-        if (productParentIDValue == null) {
-            productParentIDValue = encodeURIComponent(productParentIDValue);
-            document.cookie = "ScanFileProductParentID=" + productParentIDValue;
-        }
-        if (pageValue != null) {
-            pageValue = encodeURIComponent(pageValue);
-            document.cookie = "ScanFilePage=" + pageValue;
-        }
-        if (totalSizeValue != null) {
-            totalSizeValue = encodeURIComponent(totalSizeValue);
-            document.cookie = "ScanFileTotalSize=" + totalSizeValue;
-        }
-        if (timeLineValue != null) {
-            timeLineValue = encodeURIComponent(timeLineValue);
-            document.cookie = "ScanFileTimeLine=" + timeLineValue;
-        }
-        if (durationValue != null) {
-            durationValue = encodeURIComponent(durationValue);
-            document.cookie = "ScanFileDuration=" + durationValue;
-        }
-        if (datePublishValue == null) {
-            datePublishValue = encodeURIComponent(datePublishValue);
-            document.cookie = "ScanFileDatePublish=" + datePublishValue;
-        }     
+        var datePublishValue = toDate02($("#DatePublish").val());       
         
         $.ajax({
             type: 'POST',
-            url: "@Url.Action("CreateAndNext", "ProductProperty")",
+            url: "@Url.Action("CreateAndNext2021", "ProductProperty")",
             data: {
+                industryID: industryIDValue,
+                title: titleValue,
+                productParentID: productParentIDValue,
+                page: pageValue,
+                totalSize: totalSizeValue,
+                timeLine: timeLineValue,
+                duration: durationValue,
+                datePublish: datePublishValue,
             },
             success: function (result) {
                 onLoadSuccess(result);
