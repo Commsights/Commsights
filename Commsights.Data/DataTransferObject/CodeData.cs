@@ -148,6 +148,7 @@ namespace Commsights.Data.DataTransferObject
         public bool? IsCopy { get; set; }
         public string CompanyNameHiden { get; set; }
         public string ProductNameHiden { get; set; }
+        public string CategorySubHiden { get; set; }
         public string URLCoding { get; set; }
         public string Frequency { get; set; }
         public int? CopyVersion { get; set; }

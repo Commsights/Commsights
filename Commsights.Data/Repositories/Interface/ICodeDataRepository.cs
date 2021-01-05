@@ -16,6 +16,7 @@ namespace Commsights.Data.Repositories
         public string GetCompanyNameByURLCode(string uRLCode);
         public string GetProductNameByTitle(string title);
         public string GetProductNameByURLCode(string uRLCode);
+        public string GetCategorySubByURLCode(string uRLCode);
         public List<CodeDataReport> GetReportByDatePublishBeginAndDatePublishEndToList(DateTime datePublishBegin, DateTime datePublishEnd);
         public List<CodeDataReport> GetReportByDateUpdatedBeginAndDateUpdatedEndToList(DateTime datePublishBegin, DateTime datePublishEnd);
         public List<CodeDataReport> GetReportByDatePublishBeginAndDatePublishEndAndIsUploadToList(DateTime datePublishBegin, DateTime datePublishEnd, bool isUpload);

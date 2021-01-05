@@ -472,15 +472,25 @@ new SqlParameter("@Title",model.Title),
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInitializationCodeDataByID", parameters);
             return result;
         }
-        public string InsertSingleItemByCopyCodeData(int ID, int RequestUserID)
+        public int InsertSingleItemByCopyCodeData(int ID, int RequestUserID)
         {
-            SqlParameter[] parameters =
+            int IDNew = 0;
+            using (SqlConnection cn = new SqlConnection(AppGlobal.ConectionString))
             {
-                new SqlParameter("@ID",ID),
-                new SqlParameter("@RequestUserID",RequestUserID),
-            };
-            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertSingleItemByCopyCodeData", parameters);
-            return result;
+                SqlCommand cmd = new SqlCommand("sp_ProductPropertyInsertSingleItemByCopyCodeData", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@ID", SqlDbType.Int).Value = ID;
+                cmd.Parameters.Add("@RequestUserID", SqlDbType.Int).Value = RequestUserID;
+                cmd.Parameters.Add("@returnValue", SqlDbType.Int);
+                cmd.Parameters["@returnValue"].Direction = ParameterDirection.Output;
+                cn.Open();
+                int ret = cmd.ExecuteNonQuery();
+                if (ret > 0)
+                {
+                    IDNew = (int)cmd.Parameters["@returnValue"].Value;
+                }
+            }            
+            return IDNew;
         }
         public string DeleteItemsByIDCodeData(int ID)
         {

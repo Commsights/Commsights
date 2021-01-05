@@ -604,5 +604,26 @@ namespace Commsights.Data.Repositories
             }
             return result;
         }
+        public string GetCategorySubByURLCode(string uRLCode)
+        {
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@URLCode",uRLCode),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataSelectCategorySubByURLCode", parameters);
+            string result = "";
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                if (i == 0)
+                {
+                    result = result + dt.Rows[i][0].ToString();
+                }
+                else
+                {
+                    result = result + " , " + dt.Rows[i][0].ToString();
+                }
+            }
+            return result;
+        }
     }
 }

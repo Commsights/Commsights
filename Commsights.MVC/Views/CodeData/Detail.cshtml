@@ -48,7 +48,7 @@
                     <div class="row">
                         <div class="col-md-2">
                             <div class='form-group'>
-                                <label for='CategorySub'>Category Sub</label>
+                                <label for='CategorySub'>Category Sub (@Model.CategorySubHiden)</label>
                                 @(Html.Kendo().DropDownListFor(Model => Model.CategorySub)
                      .DataValueField("CodeName")
                      .DataTextField("CodeName")
@@ -429,16 +429,16 @@
         }
     }
     function onCopyURLSame() {
-        BeginRequestHandler();
-        var rowIndexValue = $("#RowIndex").val();
+       BeginRequestHandler();
+        var productPropertyIDValue = $("#ProductPropertyID").val();
         $.ajax({
             type: 'GET',
-            url: "@Url.Action("CopyURLSame", "CodeData")",
+            url: "@Url.Action("BasicCopyURLSame", "CodeData")",
             data: {
-                rowIndex: rowIndexValue
+                productPropertyID: productPropertyIDValue
             },
-            success: function (rowIndex) {
-                var url = "/CodeData/Detail?RowIndex=" + rowIndex;
+            success: function (productPropertyIDResult) {
+                var url = "/CodeData/Detail?ProductPropertyID=" + productPropertyIDResult;
                 location.replace(url);
             }
             }).done(() => {
@@ -446,15 +446,15 @@
     }
     function onCopyURLAnother() {
         BeginRequestHandler();
-        var rowIndexValue = $("#RowIndex").val();
+        var productPropertyIDValue = $("#ProductPropertyID").val();
         $.ajax({
             type: 'GET',
-            url: "@Url.Action("CopyURLAnother", "CodeData")",
+            url: "@Url.Action("BasicCopyURLAnother", "CodeData")",
             data: {
-                rowIndex: rowIndexValue
+                productPropertyID: productPropertyIDValue
             },
-            success: function (rowIndex) {
-                var url = "/CodeData/Detail?RowIndex=" + rowIndex;
+            success: function (productPropertyIDResult) {
+                var url = "/CodeData/Detail?ProductPropertyID=" + productPropertyIDResult;
                 location.replace(url);
             }
             }).done(() => {
@@ -483,8 +483,8 @@
         $("#ProductName_ProjectName").data("kendoDropDownList").dataSource.read();
     }
 
-    function onRowMove(rowIndex) {
-        var url = "/CodeData/Detail?RowIndex=" + rowIndex;
+    function onRowMove(productPropertyID) {
+        var url = "/CodeData/DetailBasic?ProductPropertyID=" + productPropertyID;
         location.replace(url);
     }
     function onOpenBlank(url) {

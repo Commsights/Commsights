@@ -32,7 +32,7 @@ namespace Commsights.Data.Repositories
         public string UpdateSingleItemByCodeData(CodeData model);
         public string UpdateItemsByCodeDataCopyVersion(CodeData model);
         public int InsertItemsByCopyCodeData(int ID, int RequestUserID);
-        public string InsertSingleItemByCopyCodeData(int ID, int RequestUserID);
+        public int InsertSingleItemByCopyCodeData(int ID, int RequestUserID);
         public string DeleteItemsByIDCodeData(int ID);
         public string DeleteItemsByID(int ID);
         public ProductProperty GetTitleAndCopyVersionAndIsCoding(string title, int copyVersion, bool isCoding);

@@ -118,7 +118,7 @@ namespace Commsights.MVC.Controllers
             CodeData model = GetCodeData(productPropertyID);
             return View(model);
         }
-       
+
         public IActionResult EmployeeProductPermission(int rowIndex)
         {
             CodeDataViewModel model = new CodeDataViewModel();
@@ -1403,7 +1403,7 @@ namespace Commsights.MVC.Controllers
             List<CodeDataReport> list = _codeDataRepository.GetReportByDatePublishBeginAndDatePublishEndToList(datePublishBegin, datePublishEnd);
             return Json(list.ToDataSourceResult(request));
         }
-        
+
         public ActionResult GetReportByDatePublishBeginAndDatePublishEndAndIsUploadToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, bool isUpload)
         {
             List<CodeDataReport> list = _codeDataRepository.GetReportByDatePublishBeginAndDatePublishEndAndIsUploadToList(datePublishBegin, datePublishEnd, isUpload);
@@ -1476,9 +1476,9 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetByDateUpdatedBeginAndDateUpdatedEndAndSourceIsNewspageAndTVToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd)
         {
             var cookieExpires = new CookieOptions();
-            cookieExpires.Expires = DateTime.Now.AddDays(1);            
+            cookieExpires.Expires = DateTime.Now.AddDays(1);
             Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), cookieExpires);
-            Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);            
+            Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);
             List<CodeData> list = _codeDataRepository.GetByDateUpdatedBeginAndDateUpdatedEndAndSourceIsNewspageAndTVToList(datePublishBegin, datePublishEnd, AppGlobal.Newspage, AppGlobal.TV);
             return Json(list.ToDataSourceResult(request));
         }
@@ -1606,7 +1606,7 @@ namespace Commsights.MVC.Controllers
         public int BasicCopyURLSame(int productPropertyID)
         {
             CodeData model = GetCodeData(productPropertyID);
-            _productPropertyRepository.InsertSingleItemByCopyCodeData(model.ProductPropertyID.Value, RequestUserID);
+            productPropertyID = _productPropertyRepository.InsertSingleItemByCopyCodeData(model.ProductPropertyID.Value, RequestUserID);
             return productPropertyID;
         }
         public int BasicCopyURLAnother(int productPropertyID)
@@ -1643,6 +1643,7 @@ namespace Commsights.MVC.Controllers
                             model = list[i];
                             model.CompanyNameHiden = _codeDataRepository.GetCompanyNameByURLCode(model.URLCode);
                             model.ProductNameHiden = _codeDataRepository.GetProductNameByURLCode(model.URLCode);
+                            model.CategorySubHiden = _codeDataRepository.GetCategorySubByURLCode(model.URLCode);
                             i = list.Count;
                         }
                     }
@@ -1664,7 +1665,7 @@ namespace Commsights.MVC.Controllers
             return model;
         }
         public IActionResult DeleteProductProperty(int productPropertyID)
-        {            
+        {
             string note = AppGlobal.InitString;
             _productPropertyRepository.DeleteItemsByIDCodeData(productPropertyID);
             int result = 1;
