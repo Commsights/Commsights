@@ -1,5 +1,6 @@
 ﻿@{ ViewData["Title"] = "Website site"; }
 
+
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
@@ -12,6 +13,7 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150).Locked(true);
+    columns.Bound(t => t.CountryID).Title("No").Width(100).HtmlAttributes(new { @class = "text-center" });
     columns.Bound(t => t.IsMenuLeft).Title("Priority").Width(100);
     columns.Bound(t => t.SortOrder).Title("Sort").Width(100);
     columns.Bound(t => t.Title).Title("Title").Width(300);
@@ -53,6 +55,7 @@
 .Model(model =>
 {
     model.Id(t => t.ID);
+    model.Field(t => t.CountryID).Editable(false);
     model.Field(t => t.ID).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
@@ -73,6 +76,7 @@
 )
 
 <script>
+    
     function onGridRequestEnd(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
             var response = e.response;

@@ -3025,6 +3025,7 @@ namespace Commsights.MVC.Controllers
             {
                 product.IsSummary = model.IsSummary;
                 product.IsData = model.IsData;
+                product.Title = model.Title;
                 product.TitleEnglish = model.TitleEnglish;
                 product.Description = model.Description;
                 product.DescriptionEnglish = model.DescriptionEnglish;

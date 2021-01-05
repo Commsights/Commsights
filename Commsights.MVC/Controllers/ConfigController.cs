@@ -400,6 +400,11 @@ namespace Commsights.MVC.Controllers
             var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategoryMain).Where(item => item.Active == true).OrderBy(item => item.SortOrder);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true, true);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetSegmentByParentIDToList([DataSourceRequest] DataSourceRequest request)
         {
             List<Config> data = new List<Config>();

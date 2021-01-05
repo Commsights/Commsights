@@ -314,14 +314,7 @@
             type: 'GET',
             url: "@Url.Action("CreateManyIndustry", "ProductProperty")",
             data: {
-                industryID: industryIDValue,
-                title: titleValue,
-                productParentID: productParentIDValue,
-                page: pageValue,
-                totalSize: totalSizeValue,
-                timeLine: timeLineValue,
-                duration: durationValue,
-                datePublish: datePublishValue,
+               
             },
             success: function (result) {
                 onLoadSuccess(result);
