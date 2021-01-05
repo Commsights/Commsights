@@ -211,7 +211,7 @@
                 fileNameListValue = fileNameListValue + ";" + files[i].name;
             }            
             $.ajax({
-                type: 'GET',
+                type: 'POST',
                 url: "@Url.Action("UploadScanFilesByFileNameList", "ProductProperty")",
                 data: {
                     fileNameList: fileNameListValue
@@ -335,7 +335,7 @@
             document.cookie = "ScanFileDatePublish=" + datePublishValue;
         }     
         $.ajax({
-            type: 'GET',
+            type: 'POST',
             url: "@Url.Action("CreateManyIndustry", "ProductProperty")",
             data: {
 
@@ -391,7 +391,7 @@
         }     
         
         $.ajax({
-            type: 'GET',
+            type: 'POST',
             url: "@Url.Action("CreateAndNext", "ProductProperty")",
             data: {
             },
