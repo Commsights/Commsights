@@ -8,10 +8,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using System.Windows.Forms;
 using System.Xml;
 
 namespace Commsights.Data.Helpers
@@ -2793,6 +2795,130 @@ namespace Commsights.Data.Helpers
             {
                 string mes1 = e1.Message;
             }
+        }
+
+        public static string LinkFinder002(string urlCategory, string urlRoot, bool repeat, List<LinkItem> list)
+        {           
+            try
+            {
+                Uri root = new Uri(urlRoot);
+                Uri myUri = new Uri(urlRoot);
+                string html = "";
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlCategory);
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    Stream receiveStream = response.GetResponseStream();
+                    StreamReader readStream = null;
+                    if (response.CharacterSet == null)
+                    {
+                        readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                    }
+                    else
+                    {
+                        readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                    }
+                    html = readStream.ReadToEnd();
+                    response.Close();
+                    readStream.Close();
+                }
+                List<LinkItem> listTrue = new List<LinkItem>();
+                if (!string.IsNullOrEmpty(html))
+                {
+                    MatchCollection m1 = Regex.Matches(html, @"(<a.*?>.*?</a>)", RegexOptions.Singleline);
+                    foreach (Match m in m1)
+                    {
+                        string value = m.Groups[1].Value;
+                        LinkItem i = new LinkItem();
+                        Match m2 = Regex.Match(value, @"href=\""(.*?)\""", RegexOptions.Singleline);
+                        if (m2.Success)
+                        {
+                            i.Href = m2.Groups[1].Value;
+                        }
+                        else
+                        {
+                            m2 = Regex.Match(value, @"href=\'(.*?)\'", RegexOptions.Singleline);
+                            if (m2.Success)
+                            {
+                                i.Href = m2.Groups[1].Value;
+                            }
+                        }
+                        if (!string.IsNullOrEmpty(i.Href))
+                        {
+                            bool checkHref = false;
+                            try
+                            {
+                                myUri = new Uri(i.Href);
+                                checkHref = true;
+                            }
+                            catch (Exception e)
+                            {
+                                string mes = e.Message;
+                                i.Href = root.OriginalString + "/" + i.Href;
+                                i.Href = i.Href.Replace(@"://", @"~SOHU~");
+                                i.Href = i.Href.Replace(@"//", @"/");
+                                i.Href = i.Href.Replace(@"~SOHU~", @"://");
+                                try
+                                {
+                                    myUri = new Uri(i.Href);
+                                    checkHref = true;
+                                }
+                                catch (Exception e1)
+                                {
+                                    string mes1 = e1.Message;
+                                }
+                            }
+                            if (checkHref == true)
+                            {
+                                if (myUri.Host == root.Host)
+                                {
+                                    string rootOriginalString = root.OriginalString + "/";
+                                    if (myUri.OriginalString != rootOriginalString)
+                                    {
+                                        string localPath = myUri.LocalPath;
+                                        if (localPath.Contains(@".") == true)
+                                        {
+                                            string extension = localPath.Split('.')[1];
+                                            if ((extension.Contains(@"/") == false) && (extension.Contains(@"#") == false))
+                                            {
+                                                checkHref = true;
+                                                for (int j = 0; j < list.Count; j++)
+                                                {
+                                                    if (list[j].Href == i.Href)
+                                                    {
+                                                        checkHref = false;
+                                                        j = list.Count;
+                                                    }
+                                                }
+                                                if (checkHref == true)
+                                                {
+                                                    list.Add(i);
+                                                    if (repeat == true)
+                                                    {
+                                                        listTrue.Add(i);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (repeat == true)
+                {
+                    foreach (LinkItem item in listTrue)
+                    {
+                        LinkFinder002(item.Href, urlRoot, false, list);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                string mes = e.Message;
+            }
+            return "";
         }
         public static void FinderContent(string html, Product product)
         {
