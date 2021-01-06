@@ -8,6 +8,7 @@
         <div class="card card-primary" style="margin-bottom: -5px;">
             <div class="card-body" style="padding-top:2px;">
                 <form asp-action="SaveCoding" asp-controller="CodeData">
+                    @Html.HiddenFor(Model => Model.ProductFeatureList)
                     @Html.HiddenFor(Model => Model.Advalue)
                     @Html.HiddenFor(Model => Model.IndustryID)
                     @Html.HiddenFor(Model => Model.RowIndex)
@@ -117,7 +118,7 @@
                                      .HtmlAttributes(new { @class = "form-control text-right"})
                                      .DateInput()
                                 )
-                            </div>                            
+                            </div>
                             <div class='form-group'>
                                 <label for='Title'>Headline (Vie)</label>
                                 @(Html.TextBoxFor(Model => Model.Title, new { @class = "form-control", @title = Model.Title }))
@@ -267,15 +268,16 @@
                      .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCodeDataValueToList", "AppGlobal")))
                             )
                             </div>
-                            
+
                         </div>
                         <div class="col-md-4">
-                            @(Html.Kendo().Grid<Commsights.Data.Models.Config>()
-                                .Name("Config")
+                            @(Html.Kendo().Grid<Commsights.Data.Models.ProductProperty>()
+                                .Name("ProductProperty")
                                 .Columns(columns =>
                                 {
                                     columns.Select().Width(50);
-                                    columns.Bound(t => t.CodeName).Title("Product Feature").Width(300);
+                                    columns.Bound(t => t.Active).Title("Selected").Width(100);
+                                    columns.Bound(t => t.ProductName_ProjectName).Title("Product Feature").Width(300);
                                 })
                                 .Editable(editable => editable.Mode(GridEditMode.InLine))
                                 .Sortable()
@@ -301,7 +303,6 @@
                                 .FileName("Config.pdf")
                                 )
                                 .HtmlAttributes(new { @class = "KendoGrid" })
-                                .Search(search => { search.Field(f => f.CodeName); search.Field(f => f.Note);})
                                 .Events(ev => ev.Change("onGridChange"))
                                 .DataSource(dataSource => dataSource
                                 .Ajax()
@@ -310,7 +311,7 @@
                                 {
                                     model.Id(t => t.ID);
                                 })
-                                .Read(t => t.Action("GetIndustryCategoryByIndustryIDCookieToList", "Config"))
+                                .Read(t => t.Action("GetByIDAndCodeToList", "ProductProperty").Data("filterProductFeature"))
                                 )
                                 )
                         </div>
@@ -326,8 +327,12 @@
     .Width(400)
 )
 <script>
+    function filterProductFeature(e) {
+        var IDValue = $("#ProductPropertyID").val();
+        return { ID: IDValue };
+    }
     function onGridChange(arg) {
-        console.log(this.selectedKeyNames().join(";"));        
+        $("#ProductFeatureList").val(this.selectedKeyNames().join(";"));        
     }
     $(document).ready(() => {
         onLoad();

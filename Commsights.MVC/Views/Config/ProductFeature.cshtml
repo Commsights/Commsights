@@ -71,9 +71,9 @@
     model.Field(t => t.ID).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetIndustryCategoryByIndustryIDToList", "Config").Data("filterIndustryCategory"))
+.Read(t => t.Action("GetProductFeatureByIndustryIDToList", "Config").Data("filterProductFeature"))
 .Destroy(t => t.Action("Delete", "Config"))
-.Create(t => t.Action("CreateIndustryCategory", "Config").Data("filterIndustryCategory"))
+.Create(t => t.Action("CreateProductFeature", "Config").Data("filterProductFeature"))
 .Update(t => t.Action("Update", "Config"))
 )
 )
@@ -100,7 +100,7 @@
             $("#Config").data("kendoGrid").dataSource.read();
         }
     }
-    function filterIndustryCategory(e) {
+    function filterProductFeature(e) {
         var industryIDValue = $("#Industry").data("kendoDropDownList").value();
         return { industryID: industryIDValue };
     }

@@ -78,7 +78,7 @@ namespace Commsights.MVC.Controllers
         {
             CodeDataViewModel model = new CodeDataViewModel();
             model.DatePublishBegin = DateTime.Now;
-            model.HourBegin = 6;
+            model.HourBegin = 0;
             model.HourEnd = DateTime.Now.Hour;
             model.IndustryID = AppGlobal.IndustryID;
             return View(model);
@@ -87,7 +87,7 @@ namespace Commsights.MVC.Controllers
         {
             DateTime now = DateTime.Now;
             CodeDataViewModel model = new CodeDataViewModel();
-            model.HourBegin = 1;
+            model.HourBegin = 0;
             model.HourEnd = now.Hour;
             model.DatePublishBegin = now;
             model.DatePublishEnd = now;
@@ -1287,6 +1287,8 @@ namespace Commsights.MVC.Controllers
         public IActionResult Export001ExportExcel(CancellationToken cancellationToken)
         {
             List<CodeData> list = new List<CodeData>();
+            List<Config> listProductFeature = new List<Config>();
+            Config industry = new Config();
             string excelName = @"Code_" + AppGlobal.DateTimeCode + ".xlsx";
             string sheetName = AppGlobal.DateTimeCode;
             try
@@ -1301,7 +1303,7 @@ namespace Commsights.MVC.Controllers
                 bool isCoding = bool.Parse(Request.Cookies["CodeDataIsCoding"]);
                 bool isAnalysis = bool.Parse(Request.Cookies["CodeDataIsAnalysis"]);
                 list = _codeDataRepository.GetByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID, companyName, isCoding, isAnalysis);
-                Config industry = _configResposistory.GetByID(industryID);
+                industry = _configResposistory.GetByID(industryID);
                 if (industry != null)
                 {
                     industryName = industry.CodeName;
@@ -1310,6 +1312,13 @@ namespace Commsights.MVC.Controllers
                 industryName = AppGlobal.SetName(industryName);
                 excelName = @"Code_" + industryName + "_" + dateUpdatedBegin.ToString("yyyyMMdd") + "_" + dateUpdatedEnd.ToString("yyyyMMdd") + "_" + AppGlobal.DateTimeCode + ".xlsx";
                 _productPropertyRepository.UpdateItemsByDailyDownload(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID, companyName, isCoding, isAnalysis, RequestUserID);
+                if (industry != null)
+                {
+                    if (industry.IsMenuLeft == true)
+                    {
+                        listProductFeature = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(AppGlobal.CRM, AppGlobal.ProductFeature, industryID);
+                    }
+                }
             }
             catch
             {
@@ -1323,6 +1332,7 @@ namespace Commsights.MVC.Controllers
                 if (list.Count > 0)
                 {
                     int rowExcel = 1;
+                    int columnExcel = 1;
                     workSheet.Cells[rowExcel, 1].Value = "Source";
                     workSheet.Cells[rowExcel, 2].Value = "File name";
                     workSheet.Cells[rowExcel, 3].Value = "Date";
@@ -1339,6 +1349,7 @@ namespace Commsights.MVC.Controllers
                     workSheet.Cells[rowExcel, 14].Value = "Sentiment";
                     workSheet.Cells[rowExcel, 15].Value = "Headline";
                     workSheet.Cells[rowExcel, 16].Value = "Headline (Eng)";
+                    workSheet.Cells[rowExcel, 17].Value = "Summary (Eng)";
                     workSheet.Cells[rowExcel, 17].Value = "Summary";
                     workSheet.Cells[rowExcel, 18].Value = "Media Title";
                     workSheet.Cells[rowExcel, 19].Value = "Media tier";
@@ -1351,7 +1362,17 @@ namespace Commsights.MVC.Controllers
                     workSheet.Cells[rowExcel, 26].Value = "Campaign name";
                     workSheet.Cells[rowExcel, 27].Value = "Campaign's key messages";
                     workSheet.Cells[rowExcel, 28].Value = "Note";
-                    for (int i = 1; i < 29; i++)
+                    workSheet.Cells[rowExcel, 29].Value = "Product feature";
+                    columnExcel = 30;
+                    if (listProductFeature.Count > 0)
+                    {
+                        foreach (Config item in listProductFeature)
+                        {
+                            workSheet.Cells[rowExcel, columnExcel].Value = item.CodeName;
+                            columnExcel = columnExcel + 1;
+                        }
+                    }
+                    for (int i = 1; i < columnExcel; i++)
                     {
                         workSheet.Cells[rowExcel, i].Style.Font.Bold = true;
                         workSheet.Cells[rowExcel, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
@@ -1435,7 +1456,38 @@ namespace Commsights.MVC.Controllers
                         workSheet.Cells[rowExcel, 26].Value = item.CampaignName;
                         workSheet.Cells[rowExcel, 27].Value = item.CampaignKeyMessage;
                         workSheet.Cells[rowExcel, 28].Value = item.Note;
-                        for (int i = 1; i < 29; i++)
+                        string productFeature = "";
+                        try
+                        {
+                            if (listProductFeature.Count > 0)
+                            {
+                                List<ProductProperty> listProductProperty = _productPropertyRepository.GetByIDAndCodeToList(item.ProductPropertyID.Value, AppGlobal.ProductFeature);
+                                int listProductPropertyIndex = 0;
+                                for (int i = 30; i < columnExcel; i++)
+                                {
+                                    if (listProductProperty[listProductPropertyIndex].Active == true)
+                                    {
+                                        workSheet.Cells[rowExcel, i].Value = "x";
+                                        productFeature = productFeature + ", " + listProductProperty[listProductPropertyIndex].ProductName_ProjectName;
+                                    }
+                                    listProductPropertyIndex = listProductPropertyIndex + 1;
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            string mes = e.Message;
+                        }
+                        if (!string.IsNullOrEmpty(productFeature))
+                        {
+                            if (productFeature[0] == ',')
+                            {
+                                productFeature[0] = '';
+                            }
+                            productFeature = productFeature.Trim();
+                        }
+                        workSheet.Cells[rowExcel, 29].Value = productFeature;
+                        for (int i = 1; i < columnExcel; i++)
                         {
                             workSheet.Cells[rowExcel, i].Style.Font.Name = "Times New Roman";
                             workSheet.Cells[rowExcel, i].Style.Font.Size = 11;
@@ -1450,7 +1502,7 @@ namespace Commsights.MVC.Controllers
                         }
                         rowExcel = rowExcel + 1;
                     }
-                    for (int i = 1; i < 28; i++)
+                    for (int i = 1; i < columnExcel; i++)
                     {
                         workSheet.Column(i).AutoFit();
                     }
@@ -1580,7 +1632,6 @@ namespace Commsights.MVC.Controllers
             model.UserUpdated = RequestUserID;
             _productPropertyRepository.UpdateItemsByCodeDataCopyVersion(model);
             string actionMessage = "";
-
             if ((!string.IsNullOrEmpty(model.TitleProperty)) && (model.SourceProperty > 0))
             {
                 List<ProductProperty> list = _productPropertyRepository.GetTitleAndSourceToList(model.TitleProperty, model.SourceProperty.Value);
@@ -1645,7 +1696,7 @@ namespace Commsights.MVC.Controllers
                 {
                     model.IsCoding = true;
                     model.UserUpdated = RequestUserID;
-                    _productPropertyRepository.UpdateItemsByCodeDataCopyVersion(model);
+                    _productPropertyRepository.UpdateItemsByIDAndRequestUserIDAndProductFeatureListAndCode(model.ProductPropertyID.Value, RequestUserID, model.ProductFeatureList, AppGlobal.ProductFeature);
                 }
             }
             return actionMessage;
@@ -1742,6 +1793,8 @@ namespace Commsights.MVC.Controllers
                     }
                     model.RowIndexCount = listIsCoding.Count;
                     model.RowCount = list.Count;
+
+                    _productPropertyRepository.InsertItemsByIDAndRequestUserIDAndCode(productPropertyID, RequestUserID, AppGlobal.ProductFeature);
                 }
                 catch
                 {
@@ -1791,7 +1844,7 @@ namespace Commsights.MVC.Controllers
             Response.Cookies.Append("CodeDataDailyDatePublishEnd", dateUpdatedEnd.ToString("MM/dd/yyyy"), cookieExpires);
             Response.Cookies.Append("CodeDataDailyHourBegin", hourBegin.ToString(), cookieExpires);
             Response.Cookies.Append("CodeDataDailyHourEnd", hourEnd.ToString(), cookieExpires);
-            Response.Cookies.Append("CodeDataDailyIndustryID", industryID.ToString(), cookieExpires);            
+            Response.Cookies.Append("CodeDataDailyIndustryID", industryID.ToString(), cookieExpires);
             List<CodeData> list = _codeDataRepository.GetDailyByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID);
             return Json(list.ToDataSourceResult(request));
         }
@@ -2543,7 +2596,7 @@ namespace Commsights.MVC.Controllers
                 DateTime dateUpdatedEnd = DateTime.Parse(Request.Cookies["CodeDataDailyDatePublishEnd"]);
                 int hourBegin = int.Parse(Request.Cookies["CodeDataDailyHourBegin"]);
                 int hourEnd = int.Parse(Request.Cookies["CodeDataDailyHourEnd"]);
-                int industryID = int.Parse(Request.Cookies["CodeDataDailyIndustryID"]);                
+                int industryID = int.Parse(Request.Cookies["CodeDataDailyIndustryID"]);
                 list = _codeDataRepository.GetDailyByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID);
                 Config industry = _configResposistory.GetByID(industryID);
                 if (industry != null)
@@ -2888,7 +2941,7 @@ namespace Commsights.MVC.Controllers
                 DateTime dateUpdatedEnd = DateTime.Parse(Request.Cookies["CodeDataDailyDatePublishEnd"]);
                 int hourBegin = int.Parse(Request.Cookies["CodeDataDailyHourBegin"]);
                 int hourEnd = int.Parse(Request.Cookies["CodeDataDailyHourEnd"]);
-                int industryID = int.Parse(Request.Cookies["CodeDataDailyIndustryID"]);                
+                int industryID = int.Parse(Request.Cookies["CodeDataDailyIndustryID"]);
                 list = _codeDataRepository.GetDailyByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID);
                 Config industry = _configResposistory.GetByID(industryID);
                 if (industry != null)

@@ -266,6 +266,18 @@ namespace Commsights.Data.Repositories
             list = SQLHelper.ToList<ProductProperty>(dt);
             return list;
         }
+        public List<ProductProperty> GetByIDAndCodeToList(int ID, string code)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            SqlParameter[] parameters =
+                   {
+                new SqlParameter("@ID",ID),
+                new SqlParameter("@Code",code),
+             };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectByIDAndCode", parameters);
+            list = SQLHelper.ToList<ProductProperty>(dt);
+            return list;
+        }
         public string Initialization()
         {
             return SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInitialization");
@@ -285,6 +297,29 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@ID",ID),
             };
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertItemByID", parameters);
+            return result;
+        }
+        public string InsertItemsByIDAndRequestUserIDAndCode(int ID, int RequestUserID, string code)
+        {
+            SqlParameter[] parameters =
+                      {
+                new SqlParameter("@ID",ID),
+                new SqlParameter("@RequestUserID",RequestUserID),
+                new SqlParameter("@Code",code),
+            };
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertItemsByIDAndRequestUserIDAndCode", parameters);
+            return result;
+        }
+        public string UpdateItemsByIDAndRequestUserIDAndProductFeatureListAndCode(int ID, int RequestUserID, string productFeatureList,  string code)
+        {
+            SqlParameter[] parameters =
+                      {
+                new SqlParameter("@ID",ID),
+                new SqlParameter("@RequestUserID",RequestUserID),
+                new SqlParameter("@ProductFeatureList",productFeatureList),
+                new SqlParameter("@Code",code),
+            };
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyUpdateItemsByIDAndRequestUserIDAndProductFeatureListAndCode", parameters);
             return result;
         }
         public string UpdateSingleItemByCodeData(CodeData model)

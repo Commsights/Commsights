@@ -128,6 +128,11 @@ namespace Commsights.MVC.Controllers
             var data = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndDateUpdatedToList(RequestUserID, -1, AppGlobal.URLCode, DateTime.Now);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetByIDAndCodeToList([DataSourceRequest] DataSourceRequest request, int ID)
+        {
+            var data = _productPropertyRepository.GetByIDAndCodeToList(ID, AppGlobal.ProductFeature);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndFalseToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _productPropertyRepository.GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActiveToList(RequestUserID, -1, AppGlobal.URLCode, DateTime.Now, false);
@@ -631,7 +636,7 @@ namespace Commsights.MVC.Controllers
                         {
                             string fileExtension = Path.GetExtension(file.FileName);
                             string fileName = Path.GetFileNameWithoutExtension(file.FileName);
-                            fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
+                            fileName = file.FileName;
                             fileName = fileName.Replace(@"%", @"p");
                             string directoryDay = AppGlobal.DateTimeCodeYearMonthDay;
                             string mainPath = AppGlobal.FTPScanFiles;

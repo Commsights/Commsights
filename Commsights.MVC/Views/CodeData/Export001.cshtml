@@ -47,7 +47,7 @@
                                      .HtmlAttributes(new { @class = "form-control text-right", title = "Date begin" })
                                      .DateInput()
                                 )
-                    </div>                   
+                    </div>
                 </div>
                 <br />
                 <div class="row">
@@ -259,9 +259,11 @@
     }
     function onExportCode() {
         BeginRequestHandler();
-        var url = "/CodeData/Export001ExportExcel";
-        window.location.replace(url);
-        EndRequestHandler();
+        var IDValue = $("#ID").val();
+        $.post("/CodeData/Export001ExportExcel", { }, function (result) {
+            window.location.replace(result);
+            EndRequestHandler();
+        });
     }
     function onExportDaily() {
         BeginRequestHandler();
