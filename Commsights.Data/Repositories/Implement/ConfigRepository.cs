@@ -403,6 +403,17 @@ namespace Commsights.Data.Repositories
 
             return result;
         }
+        public string DeleteMenuByID(int ID)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ID",ID),                
+            };
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ConfigDeleteMenuByID", parameters);
+
+            return result;
+        }
         public List<Config> GetByIDListToList(string IDList)
         {
             List<Config> list = new List<Config>();

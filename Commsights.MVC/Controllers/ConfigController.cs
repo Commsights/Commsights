@@ -170,6 +170,10 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult IndustryCategory()
+        {
+            return View();
+        }
         public IActionResult IndustryKeyWord()
         {
             return View();
@@ -535,6 +539,11 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetIndustryKeyWordByIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)
         {
             var data = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.IndustryKeyWord, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetIndustryCategoryByIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.IndustryCategory, industryID);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetKeyMessageByIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)
@@ -1085,6 +1094,26 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
+        public IActionResult CreateIndustryCategory(Config model, int industryID)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.IndustryCategory;
+            model.IndustryID = industryID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _configResposistory.Create(model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
         public IActionResult CreateIndustryKeyWord(Config model, int industryID)
         {
             Initialization(model);
@@ -1554,6 +1583,21 @@ namespace Commsights.MVC.Controllers
         {
             string note = AppGlobal.InitString;
             int result = _configResposistory.Delete(ID);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.DeleteFail;
+            }
+            return Json(note);
+        }
+        public IActionResult DeleteMenu(int ID)
+        {
+            string note = AppGlobal.InitString;
+            int result = 1;
+                _configResposistory.DeleteMenuByID(ID);
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;

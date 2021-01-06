@@ -101,30 +101,30 @@
 )
             </div>
         </div>
-        <div class="row" style="overflow: scroll; width: 100%; height: 300px;">
+        <div class="row" style="overflow: scroll; width: 100%; min-height:300px; height:50%;">
             <div id="DataMain" class='col-sm-12'></div>
         </div>
     </div>
     <div class="col-md-4">
-        @*<form enctype="multipart/form-data" method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadScanFilesNoUploadFiles", "ProductProperty")'>
-                <div class="row">
-                    <div class='col-md-6'>
-                        @(Html.Kendo().Upload()
-                                              .Name("UploadScanFiles")
-                                        )
-                    </div>
-                    <div class='col-md-6'>
-                        <button class="btn btn-primary"><span class="fas fa-upload"></span> Upload</button>
-                    </div>
+        <form enctype="multipart/form-data" method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadScanFiles", "ProductProperty")'>
+            <div class="row">
+                <div class='col-md-4'>
+                    @(Html.Kendo().Upload()
+                      .Name("UploadScanFiles")
+                     )                  
                 </div>
-            </form>*@
-
+                <div class='col-md-8'>
+                    <button class="btn btn-primary" title="Upload and save files (Image)"><span class="fas fa-upload"></span> Files (Image)</button>
+                </div>
+            </div>
+        </form>
+        <br />
         <div class="row">
-            <div class='col-md-6'>
+            <div class='col-md-4'>
                 <input type="file" id="files" name="files" multiple>
             </div>
-            <div class='col-md-6'>
-                <button class="btn btn-primary" onclick="onUploadScanFiles()"><span class="fas fa-upload"></span> Upload</button>
+            <div class='col-md-8'>
+                <button class="btn btn-primary" onclick="onUploadScanFiles()" title="Upload and save files name (not save files) (Video)"><span class="fas fa-upload"></span> Files name (Video)</button>
             </div>
         </div>
         <br />
@@ -204,12 +204,12 @@
     function onUploadScanFiles() {
         BeginRequestHandler();
         var files = document.getElementById("files").files;
-        
+
         if (files.length > 0) {
             var fileNameListValue = "";
             for (var i = 0; i < files.length; i++) {
                 fileNameListValue = fileNameListValue + ";" + files[i].name;
-            }            
+            }
             $.ajax({
                 type: 'POST',
                 url: "@Url.Action("UploadScanFilesByFileNameList", "ProductProperty")",
@@ -221,13 +221,13 @@
                     EndRequestHandler();
                 }
             }).done(() => {
-                
+
             });
         }
     }
     function onScanFilesUpdateFalse(e) {
         BeginRequestHandler();
-        var productPropertyValue = this.dataItem($(e.currentTarget).closest("tr"));            
+        var productPropertyValue = this.dataItem($(e.currentTarget).closest("tr"));
             $.ajax({
                 type: 'GET',
                 url: "@Url.Action("ScanFilesUpdateFalse", "ProductProperty")",
@@ -240,7 +240,7 @@
                     EndRequestHandler();
                 }
             }).done(() => {
-                
+
             });
     }
     function onScanFilesUpdateTrue(e) {
@@ -258,7 +258,7 @@
                     EndRequestHandler();
                 }
             }).done(() => {
-               
+
             });
     }
     function onViewScanFile(e) {
@@ -301,7 +301,7 @@
         var totalSizeValue = $("#TotalSize").val();
         var timeLineValue = $("#TimeLine").val();
         var durationValue = $("#Duration").val();
-        var datePublishValue = toDate02($("#DatePublish").val());        
+        var datePublishValue = toDate02($("#DatePublish").val());
         $.ajax({
             type: 'POST',
             url: "@Url.Action("CreateManyIndustry2021", "ProductProperty")",
@@ -330,8 +330,8 @@
         var totalSizeValue = $("#TotalSize").val();
         var timeLineValue = $("#TimeLine").val();
         var durationValue = $("#Duration").val();
-        var datePublishValue = toDate02($("#DatePublish").val());       
-        
+        var datePublishValue = toDate02($("#DatePublish").val());
+
         $.ajax({
             type: 'POST',
             url: "@Url.Action("CreateAndNext2021", "ProductProperty")",

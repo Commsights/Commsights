@@ -170,6 +170,7 @@ namespace Commsights.MVC.Controllers
             if (model != null)
             {
                 model.Active = true;
+                model.Initialization(InitType.Update, RequestUserID);
                 _productPropertyRepository.Update(model.ID, model);
             }
             return Json(note);
@@ -181,6 +182,7 @@ namespace Commsights.MVC.Controllers
             if (model != null)
             {
                 model.Active = false;
+                model.Initialization(InitType.Update, RequestUserID);
                 _productPropertyRepository.Update(model.ID, model);
             }
             return Json(note);

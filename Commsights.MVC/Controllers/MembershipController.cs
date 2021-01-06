@@ -604,14 +604,11 @@ namespace Commsights.MVC.Controllers
             int result = 0;
             model.Account = model.Account.Trim();
             Membership membership = _membershipRepository.GetByAccount(model.Account);
-            if (membership.ID > 0)
-            {
-            }
-            else
+            if (membership == null)
             {
                 result = _membershipRepository.Create(model);
                 membership = model;
-            }
+            }           
             if (membership.ID > 0)
             {
                 MembershipPermission membershipPermission = new MembershipPermission();
@@ -710,7 +707,7 @@ namespace Commsights.MVC.Controllers
         {
             model.Active = false;
             string note = AppGlobal.InitString;
-            model.Initialization(InitType.Update, RequestUserID);            
+            model.Initialization(InitType.Update, RequestUserID);
             int result = _membershipRepository.Delete(model.ID);
             if (result > 0)
             {
@@ -721,7 +718,7 @@ namespace Commsights.MVC.Controllers
                 note = AppGlobal.Error + " - " + AppGlobal.DeleteFail;
             }
             return Json(note);
-        }       
+        }
         public IActionResult Logout()
         {
             Response.Cookies.Append("UserID", "0");

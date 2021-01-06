@@ -81,7 +81,7 @@ namespace Commsights.MVC.Controllers
         {
             ProductSearch model = new ProductSearch();
             DateTime datePublishEnd = DateTime.Now;
-            DateTime datePublishBegin = datePublishEnd.AddDays(-7);
+            DateTime datePublishBegin = DateTime.Now;
             model.DatePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day);
             model.DatePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day);
             return View(model);

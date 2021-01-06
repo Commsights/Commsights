@@ -62,7 +62,7 @@
     columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=URLCode#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70);
     columns.Select().Width(50);
     columns.Bound(t => t.IsError).Title("Error").Width(80);
-    columns.Bound(t => t.DatePublish).Title("Publish").Format("{0: MM/dd/yyyy}").Width(200).HtmlAttributes(new { @class = "text-right" }).HeaderHtmlAttributes(new { @class = "text-center" });
+    columns.Bound(t => t.DatePublish).Title("Publish").Width(200).HtmlAttributes(new { @class = "text-right" }).HeaderHtmlAttributes(new { @class = "text-center" });
     columns.Bound(t => t.Title).Title("Headline (Vie)").Width(1000);
     columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.ID).Title("ID").Width(100);

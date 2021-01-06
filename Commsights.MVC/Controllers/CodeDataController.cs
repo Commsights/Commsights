@@ -1516,6 +1516,7 @@ namespace Commsights.MVC.Controllers
             Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), cookieExpires);
             Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);
             Response.Cookies.Append("CodeDataIsUpload", isUpload.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataAction", "1", cookieExpires);
             List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload);
             return Json(list.ToDataSourceResult(request));
         }
@@ -1527,6 +1528,7 @@ namespace Commsights.MVC.Controllers
             Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), cookieExpires);
             Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);
             Response.Cookies.Append("CodeDataIsUpload", isUpload.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataAction", "2", cookieExpires);
             List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNewspageAndTVToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload, AppGlobal.Newspage, AppGlobal.TV);
             return Json(list.ToDataSourceResult(request));
         }
@@ -1538,6 +1540,7 @@ namespace Commsights.MVC.Controllers
             Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), cookieExpires);
             Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);
             Response.Cookies.Append("CodeDataIsUpload", isUpload.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataAction", "3", cookieExpires);
             List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNotNewspageAndTVToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload, AppGlobal.Newspage, AppGlobal.TV);
             return Json(list.ToDataSourceResult(request));
         }
@@ -1574,6 +1577,8 @@ namespace Commsights.MVC.Controllers
         public string CheckCodeData(CodeData model)
         {
             _productRepository.UpdateSingleItemByCodeData(model);
+            model.UserUpdated = RequestUserID;
+            _productPropertyRepository.UpdateItemsByCodeDataCopyVersion(model);
             string actionMessage = "";
 
             if ((!string.IsNullOrEmpty(model.TitleProperty)) && (model.SourceProperty > 0))
@@ -1703,7 +1708,20 @@ namespace Commsights.MVC.Controllers
                     datePublishBegin = DateTime.Parse(Request.Cookies["CodeDataDatePublishBegin"]);
                     datePublishEnd = DateTime.Parse(Request.Cookies["CodeDataDatePublishEnd"]);
                     isUpload = bool.Parse(Request.Cookies["CodeDataIsUpload"]);
-                    List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload);
+                    string codeDataAction = Request.Cookies["CodeDataAction"];
+                    List<CodeData> list = new List<CodeData>();
+                    switch (codeDataAction)
+                    {
+                        case "1":
+                            list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload);
+                            break;
+                        case "2":
+                            list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNewspageAndTVToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload, AppGlobal.Newspage, AppGlobal.TV);
+                            break;
+                        case "3":
+                            list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNotNewspageAndTVToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload, AppGlobal.Newspage, AppGlobal.TV);
+                            break;
+                    }
                     for (int i = 0; i < list.Count; i++)
                     {
                         if (productPropertyID == list[i].ProductPropertyID)
@@ -1734,7 +1752,8 @@ namespace Commsights.MVC.Controllers
         public IActionResult DeleteProductProperty(int productPropertyID)
         {
             string note = AppGlobal.InitString;
-            _productPropertyRepository.DeleteItemsByIDCodeData(productPropertyID);
+            //_productPropertyRepository.DeleteItemsByIDCodeData(productPropertyID);
+            _productPropertyRepository.Delete(productPropertyID);
             int result = 1;
             if (result > 0)
             {
@@ -1756,7 +1775,7 @@ namespace Commsights.MVC.Controllers
             var cookieExpires = new CookieOptions();
             cookieExpires.Expires = DateTime.Now.AddDays(1);
             Response.Cookies.Append("CodeDataDailyDatePublishBegin", dateUpdatedBegin.ToString("MM/dd/yyyy"), cookieExpires);
-            Response.Cookies.Append("CodeDataDailyDatePublishBegin", dateUpdatedEnd.ToString("MM/dd/yyyy"), cookieExpires);
+            Response.Cookies.Append("CodeDataDailyDatePublishEnd", dateUpdatedEnd.ToString("MM/dd/yyyy"), cookieExpires);
             Response.Cookies.Append("CodeDataDailyHourBegin", hourBegin.ToString(), cookieExpires);
             Response.Cookies.Append("CodeDataDailyHourEnd", hourEnd.ToString(), cookieExpires);
             Response.Cookies.Append("CodeDataDailyIndustryID", industryID.ToString(), cookieExpires);
@@ -1817,7 +1836,7 @@ namespace Commsights.MVC.Controllers
             {
                 string industryName = "";
                 DateTime dateUpdatedBegin = DateTime.Parse(Request.Cookies["CodeDataDailyDatePublishBegin"]);
-                DateTime dateUpdatedEnd = DateTime.Parse(Request.Cookies["CodeDataDailyDatePublishBegin"]);
+                DateTime dateUpdatedEnd = DateTime.Parse(Request.Cookies["CodeDataDailyDatePublishEnd"]);
                 int hourBegin = int.Parse(Request.Cookies["CodeDataDailyHourBegin"]);
                 int hourEnd = int.Parse(Request.Cookies["CodeDataDailyHourEnd"]);
                 int industryID = int.Parse(Request.Cookies["CodeDataDailyIndustryID"]);
@@ -1933,7 +1952,7 @@ namespace Commsights.MVC.Controllers
                         workSheet.Cells[rowExcel, column].Style.Border.Bottom.Color.SetColor(Color.Black);
                         column = column + 1;
                     }
-                   
+
                     workSheet.Cells[rowExcel, column].Value = "Note";
                     workSheet.Cells[rowExcel, column].Style.Font.Bold = true;
                     workSheet.Cells[rowExcel, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
@@ -2101,7 +2120,7 @@ namespace Commsights.MVC.Controllers
                             {
                                 workSheet.Cells[row, i].Value = list[index].Frequency;
                                 workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }                           
+                            }
                             if (i == 17)
                             {
                                 workSheet.Cells[row, i].Value = list[index].Note;
@@ -2163,7 +2182,7 @@ namespace Commsights.MVC.Controllers
             {
                 string industryName = "";
                 DateTime dateUpdatedBegin = DateTime.Parse(Request.Cookies["CodeDataDailyDatePublishBegin"]);
-                DateTime dateUpdatedEnd = DateTime.Parse(Request.Cookies["CodeDataDailyDatePublishBegin"]);
+                DateTime dateUpdatedEnd = DateTime.Parse(Request.Cookies["CodeDataDailyDatePublishEnd"]);
                 int hourBegin = int.Parse(Request.Cookies["CodeDataDailyHourBegin"]);
                 int hourEnd = int.Parse(Request.Cookies["CodeDataDailyHourEnd"]);
                 int industryID = int.Parse(Request.Cookies["CodeDataDailyIndustryID"]);
@@ -2279,7 +2298,7 @@ namespace Commsights.MVC.Controllers
                         workSheet.Cells[rowExcel, column].Style.Border.Bottom.Color.SetColor(Color.Black);
                         column = column + 1;
                     }
-                   
+
                     workSheet.Cells[rowExcel, column].Value = "Note";
                     workSheet.Cells[rowExcel, column].Style.Font.Bold = true;
                     workSheet.Cells[rowExcel, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
@@ -2447,7 +2466,7 @@ namespace Commsights.MVC.Controllers
                             {
                                 workSheet.Cells[row, i].Value = list[index].Frequency;
                                 workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }                            
+                            }
                             if (i == 17)
                             {
                                 workSheet.Cells[row, i].Value = list[index].Note;

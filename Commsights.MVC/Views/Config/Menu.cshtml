@@ -60,7 +60,7 @@
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetMenuToList", "Config"))
-.Destroy(t => t.Action("Delete", "Config"))
+.Destroy(t => t.Action("DeleteMenu", "Config"))
 .Create(t => t.Action("CreateMenu", "Config"))
 .Update(t => t.Action("Update", "Config"))
 )

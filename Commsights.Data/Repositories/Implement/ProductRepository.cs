@@ -1414,12 +1414,12 @@ new SqlParameter("@Description",product.Description),
         {
             SqlParameter[] parameters =
             {
-new SqlParameter("@ID",product.ID),
-new SqlParameter("@Title",product.Title),
-new SqlParameter("@DatePublish",product.DatePublish),
-new SqlParameter("@TitleEnglish",product.TitleEnglish),
-new SqlParameter("@IsError",product.IsError),
-};
+                new SqlParameter("@ID",product.ID),
+                new SqlParameter("@Title",product.Title),
+                new SqlParameter("@DatePublish",product.DatePublish),
+                new SqlParameter("@TitleEnglish",product.TitleEnglish),
+                new SqlParameter("@IsError",product.IsError),
+            };
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductUpdateSingleItem", parameters);
             return result;
         }

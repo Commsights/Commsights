@@ -155,6 +155,14 @@ namespace Commsights.Data.Helpers
         #endregion
 
         #region AppSettings     
+        public static string IndustryCategory
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("IndustryCategory").Value;
+            }
+        }
         public static string TV
         {
             get
