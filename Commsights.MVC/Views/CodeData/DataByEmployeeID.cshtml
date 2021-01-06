@@ -50,8 +50,8 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 11px; color:#ffffff; background-color:#d73925; padding-left:14px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70).Locked(true);
-    columns.Template(@"<a target='_blank' href='#=URLCoding#' title='#=Title#' class='btn btn-primary' style='color:white; cursor: pointer; font-size: 11px;'><i class='fas fa-edit'></i></a>").Title("Edit").Width(70).Locked(true);
-    columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer; font-size: 11px;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70).Locked(true);
+    columns.Template(@"<a target='_blank' href='#=URLCoding#' title='#=Title#' class='btn btn-primary' style='color:white; cursor: pointer; font-size: 11px; height:30px;'><i class='fas fa-edit'></i></a>").Title("Edit").Width(70).Locked(true);
+    columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer; font-size: 11px; height:30px;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70).Locked(true);
     columns.Bound(t => t.FullName).Title("Permission").Width(200).HtmlAttributes(new { @class = "text-center", @style = "white-space: nowrap;" });
     columns.Bound(t => t.IsCoding).Title("Coding").Width(100).HtmlAttributes(new { @class = "text-center", @style = "white-space: nowrap;" });
     columns.Bound(t => t.RowIndex).Title("No").Width(100).HtmlAttributes(new { @class = "text-center", @style = "white-space: nowrap;" });

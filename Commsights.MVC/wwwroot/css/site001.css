@@ -1,22 +1,28 @@
-.btn
-{
-    height:38px;
-    width:100%;
+.btn {
+    height: 38px;
+    width: 100%;
 }
+
 input[type="checkbox"] {
     width: 30px;
     height: 30px;
     background-color: transparent;
-    cursor:pointer;
+    cursor: pointer;
 }
+
 .KendoGrid {
     font-size: 12px;
     height: 600px;
 }
+
+    .KendoGrid tbody tr {
+        line-height: 14px;
+    }
+
 @media (max-height: 700px) {
-    .KendoGrid {        
+    .KendoGrid {
         height: 450px;
-    } 
+    }
 }
 
 @page {
@@ -58,14 +64,15 @@ body {
     .border .text {
         text-align: left;
     }
-    .border01, .border01 td, .border01 th {
-        border-color: #000000;
-        border-style: solid;
-        border-width: 1px;
-        padding: 2px;
-        white-space: nowrap;
-        overflow: hidden;
-    }
+
+.border01, .border01 td, .border01 th {
+    border-color: #000000;
+    border-style: solid;
+    border-width: 1px;
+    padding: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+}
 
 .border01 {
     border-collapse: collapse;

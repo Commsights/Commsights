@@ -140,6 +140,18 @@ namespace Commsights.MVC.Controllers
             model.CompanyName = "";
             return View(model);
         }
+        public IActionResult DailyDataAll()
+        {
+            DateTime now = DateTime.Now;
+            CodeDataViewModel model = new CodeDataViewModel();
+            model.HourBegin = 0;
+            model.HourEnd = now.Hour;
+            model.DatePublishBegin = now;
+            model.DatePublishEnd = now;
+            model.IndustryID = AppGlobal.IndustryID;
+            model.CompanyName = "";
+            return View(model);
+        }
         public IActionResult DailyData2020(int industryID, string datePublishBeginString, string datePublishEndString)
         {
             BaseViewModel model = new BaseViewModel();

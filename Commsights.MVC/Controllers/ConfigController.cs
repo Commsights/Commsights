@@ -546,6 +546,19 @@ namespace Commsights.MVC.Controllers
             var data = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.IndustryCategory, industryID);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetIndustryCategoryByIndustryIDCookieToList([DataSourceRequest] DataSourceRequest request)
+        {
+            int industryID = 0;
+            try
+            {
+                industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
+            }
+            catch
+            {
+            }
+            var data = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.IndustryCategory, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetKeyMessageByIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)
         {
             var data = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.KeyMessage, industryID);
@@ -1597,7 +1610,7 @@ namespace Commsights.MVC.Controllers
         {
             string note = AppGlobal.InitString;
             int result = 1;
-                _configResposistory.DeleteMenuByID(ID);
+            _configResposistory.DeleteMenuByID(ID);
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;

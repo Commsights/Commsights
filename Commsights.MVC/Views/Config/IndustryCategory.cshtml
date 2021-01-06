@@ -1,10 +1,10 @@
-﻿@{ ViewData["Title"] = "Industry category"; }
+﻿@{ ViewData["Title"] = "Product feature"; }
 
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">System - Industry category</h3>
+                <h3 class="card-title">System - Product Feature</h3>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -31,7 +31,7 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
-    columns.Bound(t => t.CodeName).Title("English").Width(300);
+    columns.Bound(t => t.CodeName).Title("Product feature").Width(300);
     columns.Bound(t => t.Note).Title("Vietnamese").Width(300);
     columns.Bound(t => t.SortOrder).Title("Sort").Width(100);    
 })
@@ -71,7 +71,7 @@
     model.Field(t => t.ID).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetIndustryCategoryByIndustryIDToList", "Config").Data("filterKeyMessage"))
+.Read(t => t.Action("GetIndustryCategoryByIndustryIDToList", "Config").Data("filterIndustryCategory"))
 .Destroy(t => t.Action("Delete", "Config"))
 .Create(t => t.Action("CreateIndustryCategory", "Config").Data("filterKeyMessage"))
 .Update(t => t.Action("Update", "Config"))
@@ -100,7 +100,7 @@
             $("#Config").data("kendoGrid").dataSource.read();
         }
     }
-    function filterKeyMessage(e) {
+    function filterIndustryCategory(e) {
         var industryIDValue = $("#Industry").data("kendoDropDownList").value();
         return { industryID: industryIDValue };
     }

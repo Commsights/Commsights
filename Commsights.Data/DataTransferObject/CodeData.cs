@@ -163,5 +163,7 @@ namespace Commsights.Data.DataTransferObject
         public string Note { get; set; }
 
         public bool? IsVideo { get; set; }
+
+        public string ProductFeatureList { get; set; }
     }
 }
