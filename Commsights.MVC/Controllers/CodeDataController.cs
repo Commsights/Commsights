@@ -1284,7 +1284,7 @@ namespace Commsights.MVC.Controllers
             List<CodeData> list = _codeDataRepository.GetByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID, companyName, isCoding, isAnalysis);
             return Json(list.ToDataSourceResult(request));
         }
-        public IActionResult Export001ExportExcel(CancellationToken cancellationToken)
+        public string Export001ExportExcel(CancellationToken cancellationToken)
         {
             List<CodeData> list = new List<CodeData>();
             List<Config> listProductFeature = new List<Config>();
@@ -1323,10 +1323,10 @@ namespace Commsights.MVC.Controllers
             catch
             {
             }
-            var stream = new MemoryStream();
+            var streamExport = new MemoryStream();
             Color color = Color.FromArgb(int.Parse("#c00000".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));
             Color colorTitle = Color.FromArgb(int.Parse("#ed7d31".Replace("#", ""), System.Globalization.NumberStyles.AllowHexSpecifier));
-            using (var package = new ExcelPackage(stream))
+            using (var package = new ExcelPackage(streamExport))
             {
                 var workSheet = package.Workbook.Worksheets.Add(sheetName);
                 if (list.Count > 0)
@@ -1482,7 +1482,7 @@ namespace Commsights.MVC.Controllers
                         {
                             if (productFeature[0] == ',')
                             {
-                                productFeature[0] = '';
+                                productFeature = productFeature.Substring(1);
                             }
                             productFeature = productFeature.Trim();
                         }
@@ -1509,10 +1509,15 @@ namespace Commsights.MVC.Controllers
                 }
                 package.Save();
             }
-            stream.Position = 0;
-            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+            streamExport.Position = 0;
+            var physicalPathCreate = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.FTPDownloadReprotMonth, excelName);
+            using (var stream = new FileStream(physicalPathCreate, FileMode.Create))
+            {
+                streamExport.CopyTo(stream);
+            }
+            string result = AppGlobal.DomainSub + AppGlobal.URLDownloadReprotMonth + excelName;
+            return result;
         }
-
         public ActionResult GetReportSelectByDatePublishBeginAndDatePublishEnd001ToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd)
         {
             List<Membership> list = _codeDataRepository.GetReportSelectByDatePublishBeginAndDatePublishEnd001ToList(datePublishBegin, datePublishEnd);
