@@ -132,7 +132,7 @@ namespace Commsights.MVC.Controllers
         {
             DateTime now = DateTime.Now;
             CodeDataViewModel model = new CodeDataViewModel();
-            model.HourBegin = 1;
+            model.HourBegin = 0;
             model.HourEnd = now.Hour;
             model.DatePublishBegin = now;
             model.DatePublishEnd = now;

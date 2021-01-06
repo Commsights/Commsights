@@ -66,7 +66,7 @@ namespace Commsights.Data.Helpers
         public static List<HourFinance> GetAllToList()
         {
             List<HourFinance> list = new List<HourFinance>();
-            for (int i = 1; i <= 24; i++)
+            for (int i = 0; i < 24; i++)
             {
                 HourFinance model = new HourFinance();
                 model.Display = i;

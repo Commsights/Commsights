@@ -154,7 +154,7 @@ namespace Commsights.MVC.Controllers
             List<ProductProperty> listProductProperty = new List<ProductProperty>();
             if (ID > 0)
             {
-                model.Product = _productRepository.GetByID(ID);
+                model.Product = _productRepository.GetByID001(ID);
                 if (model.Product != null)
                 {
                     listProductProperty = _productPropertyRepository.GetByParentIDAndCodeToList(model.Product.ID, AppGlobal.URLCode).OrderBy(item => item.Note).ToList();

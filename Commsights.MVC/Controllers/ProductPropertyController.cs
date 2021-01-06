@@ -474,6 +474,10 @@ namespace Commsights.MVC.Controllers
                         catch
                         {
                         }
+                        if (model.Advalue < 0)
+                        {
+                            model.Advalue = model.Advalue * -1;
+                        }
                         _productRepository.Create(model);
                     }
                     else
@@ -502,6 +506,10 @@ namespace Commsights.MVC.Controllers
                         }
                         catch
                         {
+                        }
+                        if (model.Advalue < 0)
+                        {
+                            model.Advalue = model.Advalue * -1;
                         }
                         _productRepository.Create(model);
                         if (model.ID > 0)
