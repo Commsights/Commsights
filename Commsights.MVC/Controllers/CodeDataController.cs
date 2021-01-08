@@ -2769,161 +2769,174 @@ namespace Commsights.MVC.Controllers
                     rowExcel = rowExcel + 1;
                     for (int row = rowExcel; row <= list.Count + rowExcel - 1; row++)
                     {
-                        for (int i = 1; i <= column; i++)
+                        try
                         {
-                            if (i == 1)
+                            for (int i = 1; i <= column; i++)
                             {
-                                workSheet.Cells[row, i].Value = list[index].DatePublish;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                                workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy";
-                            }
-                            if (i == 2)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].CategoryMain;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 3)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].Segment;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 4)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].CategorySub;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 5)
-                            {
-                                if (!string.IsNullOrEmpty(list[index].CompanyName))
+                                if (i == 1)
                                 {
-                                    workSheet.Cells[row, i].Value = list[index].CompanyName;
+                                    workSheet.Cells[row, i].Value = list[index].DatePublish;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                                    workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy";
                                 }
-                                else
+                                if (i == 2)
                                 {
                                     workSheet.Cells[row, i].Value = list[index].CategoryMain;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                                 }
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 6)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].ProductName_ProjectName;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 7)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].SentimentCorp;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 8)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].Title;
-                                if ((!string.IsNullOrEmpty(list[index].Title)) && (!string.IsNullOrEmpty(list[index].URLCode)))
+                                if (i == 3)
                                 {
-                                    try
+                                    workSheet.Cells[row, i].Value = list[index].Segment;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 4)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].CategorySub;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 5)
+                                {
+                                    if (!string.IsNullOrEmpty(list[index].CompanyName))
                                     {
-                                        workSheet.Cells[row, i].Hyperlink = new Uri(list[index].URLCode);
+                                        workSheet.Cells[row, i].Value = list[index].CompanyName;
                                     }
-                                    catch
+                                    else
                                     {
+                                        workSheet.Cells[row, i].Value = list[index].CategoryMain;
+                                    }
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 6)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].ProductName_ProjectName;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 7)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].SentimentCorp;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 8)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].Title;
+                                    if ((!string.IsNullOrEmpty(list[index].Title)) && (!string.IsNullOrEmpty(list[index].URLCode)))
+                                    {
+                                        try
+                                        {
+                                            workSheet.Cells[row, i].Hyperlink = new Uri(list[index].URLCode);
+                                        }
+                                        catch
+                                        {
 
+                                        }
+                                        workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                                    }
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 9)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].TitleEnglish;
+                                    if ((!string.IsNullOrEmpty(list[index].TitleEnglish)) && (!string.IsNullOrEmpty(list[index].URLCode)))
+                                    {
+                                        try
+                                        {
+                                            workSheet.Cells[row, i].Hyperlink = new Uri(list[index].URLCode);
+                                        }
+                                        catch
+                                        {
+
+                                        }
+                                        workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                                    }
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 10)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].MediaTitle;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 11)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].MediaType;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 12)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].Page;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                                }
+                                if (i == 13)
+                                {
+                                    if (list[index].Advalue != null)
+                                    {
+                                        workSheet.Cells[row, i].Value = list[index].Advalue.Value.ToString("N0");
+                                    }
+                                    else
+                                    {
+                                        workSheet.Cells[row, i].Value = "0";
+                                    }
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                                }
+                                if (i == 14)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].DescriptionEnglish;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 15)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].Duration;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 16)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].Frequency;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 17)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].Note;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 18)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].DateUpdated;
+                                    workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy HH:mm:ss";
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                                }
+                                if (i == 19)
+                                {
+                                    if (!string.IsNullOrEmpty(list[index].URLCode))
+                                    {
+                                        try
+                                        {
+                                            workSheet.Cells[row, column].Value = list[index].URLCode;
+                                            workSheet.Cells[row, column].Hyperlink = new Uri(list[index].URLCode);
+                                        }
+                                        catch
+                                        {
+
+                                        }
                                     }
                                     workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                                 }
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
+                                workSheet.Cells[row, i].Style.Font.Size = 11;
+                                workSheet.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                                workSheet.Cells[row, i].Style.Border.Top.Color.SetColor(Color.Black);
+                                workSheet.Cells[row, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                                workSheet.Cells[row, i].Style.Border.Left.Color.SetColor(Color.Black);
+                                workSheet.Cells[row, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                                workSheet.Cells[row, i].Style.Border.Right.Color.SetColor(Color.Black);
+                                workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                                workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
                             }
-                            if (i == 9)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].TitleEnglish;
-                                if ((!string.IsNullOrEmpty(list[index].TitleEnglish)) && (!string.IsNullOrEmpty(list[index].URLCode)))
-                                {
-                                    try
-                                    {
-                                        workSheet.Cells[row, i].Hyperlink = new Uri(list[index].URLCode);
-                                    }
-                                    catch
-                                    {
-
-                                    }
-                                    workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
-                                }
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 10)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].MediaTitle;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 11)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].MediaType;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 12)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].Page;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                            }
-                            if (i == 13)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].Advalue.Value.ToString("N0");
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                            }
-                            if (i == 14)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].DescriptionEnglish;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 15)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].Duration;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 16)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].Frequency;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 17)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].Note;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 18)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].DateUpdated;
-                                workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy HH:mm:ss";
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                            }
-                            if (i == 19)
-                            {
-                                if (!string.IsNullOrEmpty(list[index].URLCode))
-                                {
-                                    try
-                                    {
-                                        workSheet.Cells[row, column].Value = list[index].URLCode;
-                                        workSheet.Cells[row, column].Hyperlink = new Uri(list[index].URLCode);
-                                    }
-                                    catch
-                                    {
-
-                                    }
-                                }
-                                workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
-                            workSheet.Cells[row, i].Style.Font.Size = 11;
-                            workSheet.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                            workSheet.Cells[row, i].Style.Border.Top.Color.SetColor(Color.Black);
-                            workSheet.Cells[row, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                            workSheet.Cells[row, i].Style.Border.Left.Color.SetColor(Color.Black);
-                            workSheet.Cells[row, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                            workSheet.Cells[row, i].Style.Border.Right.Color.SetColor(Color.Black);
-                            workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                            workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
+                            index = index + 1;
                         }
-
-                        index = index + 1;
+                        catch (Exception e)
+                        {
+                            string mes = e.Message;
+                        }
                     }
                     for (int i = 1; i <= column; i++)
                     {
@@ -3114,161 +3127,174 @@ namespace Commsights.MVC.Controllers
                     rowExcel = rowExcel + 1;
                     for (int row = rowExcel; row <= list.Count + rowExcel - 1; row++)
                     {
-                        for (int i = 1; i <= column; i++)
+                        try
                         {
-                            if (i == 1)
+                            for (int i = 1; i <= column; i++)
                             {
-                                workSheet.Cells[row, i].Value = list[index].DatePublish;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                                workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy";
-                            }
-                            if (i == 2)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].CategoryMainVietnamese;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 3)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].Segment;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 4)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].CategorySubVietnamese;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 5)
-                            {
-                                if (!string.IsNullOrEmpty(list[index].CompanyName))
+                                if (i == 1)
                                 {
-                                    workSheet.Cells[row, i].Value = list[index].CompanyName;
+                                    workSheet.Cells[row, i].Value = list[index].DatePublish;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                                    workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy";
                                 }
-                                else
+                                if (i == 2)
                                 {
-                                    workSheet.Cells[row, i].Value = list[index].CategoryMain;
+                                    workSheet.Cells[row, i].Value = list[index].CategoryMainVietnamese;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                                 }
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 6)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].ProductName_ProjectName;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 7)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].SentimentCorpVietnamese;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 8)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].Title;
-                                if ((!string.IsNullOrEmpty(list[index].Title)) && (!string.IsNullOrEmpty(list[index].URLCode)))
+                                if (i == 3)
                                 {
-                                    try
+                                    workSheet.Cells[row, i].Value = list[index].Segment;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 4)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].CategorySubVietnamese;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 5)
+                                {
+                                    if (!string.IsNullOrEmpty(list[index].CompanyName))
                                     {
-                                        workSheet.Cells[row, i].Hyperlink = new Uri(list[index].URLCode);
+                                        workSheet.Cells[row, i].Value = list[index].CompanyName;
                                     }
-                                    catch
+                                    else
                                     {
+                                        workSheet.Cells[row, i].Value = list[index].CategoryMain;
+                                    }
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 6)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].ProductName_ProjectName;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 7)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].SentimentCorpVietnamese;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 8)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].Title;
+                                    if ((!string.IsNullOrEmpty(list[index].Title)) && (!string.IsNullOrEmpty(list[index].URLCode)))
+                                    {
+                                        try
+                                        {
+                                            workSheet.Cells[row, i].Hyperlink = new Uri(list[index].URLCode);
+                                        }
+                                        catch
+                                        {
 
+                                        }
+                                        workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                                    }
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 9)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].TitleEnglish;
+                                    if ((!string.IsNullOrEmpty(list[index].TitleEnglish)) && (!string.IsNullOrEmpty(list[index].URLCode)))
+                                    {
+                                        try
+                                        {
+                                            workSheet.Cells[row, i].Hyperlink = new Uri(list[index].URLCode);
+                                        }
+                                        catch
+                                        {
+
+                                        }
+                                        workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                                    }
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 10)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].MediaTitle;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 11)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].MediaType;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 12)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].Page;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                                }
+                                if (i == 13)
+                                {
+                                    if (list[index].Advalue != null)
+                                    {
+                                        workSheet.Cells[row, i].Value = list[index].Advalue.Value.ToString("N0");
+                                    }
+                                    else
+                                    {
+                                        workSheet.Cells[row, i].Value = "0";
+                                    }
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                                }
+                                if (i == 14)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].DescriptionEnglish;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 15)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].Duration;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 16)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].Frequency;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 17)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].Note;
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                }
+                                if (i == 18)
+                                {
+                                    workSheet.Cells[row, i].Value = list[index].DateUpdated;
+                                    workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy HH:mm:ss";
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                                }
+                                if (i == 19)
+                                {
+                                    if (!string.IsNullOrEmpty(list[index].URLCode))
+                                    {
+                                        try
+                                        {
+                                            workSheet.Cells[row, column].Value = list[index].URLCode;
+                                            workSheet.Cells[row, column].Hyperlink = new Uri(list[index].URLCode);
+                                        }
+                                        catch
+                                        {
+
+                                        }
                                     }
                                     workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                                 }
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                                workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
+                                workSheet.Cells[row, i].Style.Font.Size = 11;
+                                workSheet.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                                workSheet.Cells[row, i].Style.Border.Top.Color.SetColor(Color.Black);
+                                workSheet.Cells[row, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                                workSheet.Cells[row, i].Style.Border.Left.Color.SetColor(Color.Black);
+                                workSheet.Cells[row, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                                workSheet.Cells[row, i].Style.Border.Right.Color.SetColor(Color.Black);
+                                workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                                workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
                             }
-                            if (i == 9)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].TitleEnglish;
-                                if ((!string.IsNullOrEmpty(list[index].TitleEnglish)) && (!string.IsNullOrEmpty(list[index].URLCode)))
-                                {
-                                    try
-                                    {
-                                        workSheet.Cells[row, i].Hyperlink = new Uri(list[index].URLCode);
-                                    }
-                                    catch
-                                    {
-
-                                    }
-                                    workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
-                                }
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 10)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].MediaTitle;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 11)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].MediaType;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 12)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].Page;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                            }
-                            if (i == 13)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].Advalue.Value.ToString("N0");
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                            }
-                            if (i == 14)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].DescriptionEnglish;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 15)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].Duration;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 16)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].Frequency;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 17)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].Note;
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            if (i == 18)
-                            {
-                                workSheet.Cells[row, i].Value = list[index].DateUpdated;
-                                workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy HH:mm:ss";
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                            }
-                            if (i == 19)
-                            {
-                                if (!string.IsNullOrEmpty(list[index].URLCode))
-                                {
-                                    try
-                                    {
-                                        workSheet.Cells[row, column].Value = list[index].URLCode;
-                                        workSheet.Cells[row, column].Hyperlink = new Uri(list[index].URLCode);
-                                    }
-                                    catch
-                                    {
-
-                                    }
-                                }
-                                workSheet.Cells[row, i].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
-                                workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                            }
-                            workSheet.Cells[row, i].Style.Font.Name = "Times New Roman";
-                            workSheet.Cells[row, i].Style.Font.Size = 11;
-                            workSheet.Cells[row, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                            workSheet.Cells[row, i].Style.Border.Top.Color.SetColor(Color.Black);
-                            workSheet.Cells[row, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                            workSheet.Cells[row, i].Style.Border.Left.Color.SetColor(Color.Black);
-                            workSheet.Cells[row, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                            workSheet.Cells[row, i].Style.Border.Right.Color.SetColor(Color.Black);
-                            workSheet.Cells[row, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                            workSheet.Cells[row, i].Style.Border.Bottom.Color.SetColor(Color.Black);
+                            index = index + 1;
                         }
-
-                        index = index + 1;
+                        catch (Exception e)
+                        {
+                            string mes = e.Message;
+                        }
                     }
                     for (int i = 1; i <= column; i++)
                     {
