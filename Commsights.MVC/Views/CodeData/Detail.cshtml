@@ -17,7 +17,11 @@
                     @Html.HiddenFor(Model => Model.KeyMessage)
                     @Html.HiddenFor(Model => Model.URLCode)
                     <div class="row">
-                        <div class='col-md-3'>
+                        <div class='col-md-2'>
+                        </div>
+                        <div class='col-md-1'>
+                            @(Html.CheckBoxFor(Model => Model.IsCoding.Value, new { @disabled = "disabled" }))
+                            <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Code</p>
                         </div>
                         <div class='col-md-2 text-center'>
                             <span style="font-weight:bold; font-size:18px;">@Model.RowIndexCount / @Model.RowCount</span>
