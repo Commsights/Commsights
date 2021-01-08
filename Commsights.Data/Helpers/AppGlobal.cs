@@ -2887,23 +2887,30 @@ namespace Commsights.Data.Helpers
                                         if (localPath.Contains(@".") == true)
                                         {
                                             string extension = localPath.Split('.')[1];
-                                            if ((extension.Contains(@"/") == false) && (extension.Contains(@"#") == false))
+                                            if ((extension.Contains(@"/") == false) || (extension.Contains(@"#") == false))
                                             {
-                                                checkHref = true;
-                                                for (int j = 0; j < list.Count; j++)
+                                                if (i.Href.Contains(@"#") == true)
                                                 {
-                                                    if (list[j].Href == i.Href)
-                                                    {
-                                                        checkHref = false;
-                                                        j = list.Count;
-                                                    }
+
                                                 }
-                                                if (checkHref == true)
+                                                else
                                                 {
-                                                    list.Add(i);
-                                                    if (repeat == true)
+                                                    checkHref = true;
+                                                    for (int j = 0; j < list.Count; j++)
                                                     {
-                                                        listTrue.Add(i);
+                                                        if (list[j].Href == i.Href)
+                                                        {
+                                                            checkHref = false;
+                                                            j = list.Count;
+                                                        }
+                                                    }
+                                                    if (checkHref == true)
+                                                    {
+                                                        list.Add(i);
+                                                        if (repeat == true)
+                                                        {
+                                                            listTrue.Add(i);
+                                                        }
                                                     }
                                                 }
                                             }

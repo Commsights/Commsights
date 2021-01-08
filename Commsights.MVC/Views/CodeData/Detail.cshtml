@@ -170,15 +170,10 @@
                                 @(Html.TextBoxFor(Model => Model.SourceProperty, new { @class = "form-control text-right", @title = Model.SourceProperty }))
                             </div>
                             <div class='form-group'>
-                                <label for='TierCommsights'>Tier Commsights</label>
-                                @(Html.Kendo().DropDownListFor(Model => Model.TierCommsights)
-                                 .DataValueField("CodeName")
-                                 .DataTextField("CodeName")
-                                .HtmlAttributes(new { @class = "form-control" })
-                                   .Filter(FilterType.Contains)
-                                 .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetMediaTierToList", "Config")))
-                                 )
+                                <label for='Source'>Source</label>
+                                @(Html.TextBoxFor(Model => Model.Source, new { @class = "form-control text-right", @title = Model.Source, @readonly = "readonly" }))
                             </div>
+                            
                             <div class='form-group'>
                                 <label for='CampaignName'>Campaign name</label>
                                 @(Html.Kendo().DropDownListFor(Model => Model.CampaignName)
@@ -202,6 +197,16 @@
                             </div>
                         </div>
                         <div class="col-md-2">
+                            <div class='form-group'>
+                                <label for='TierCommsights'>Tier Commsights</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.TierCommsights)
+                                 .DataValueField("CodeName")
+                                 .DataTextField("CodeName")
+                                .HtmlAttributes(new { @class = "form-control" })
+                                   .Filter(FilterType.Contains)
+                                 .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetMediaTierToList", "Config")))
+                                 )
+                            </div>
                             <div class='form-group'>
                                 <label for='CompetitiveWhat'>Comparison</label>
                                 @(Html.Kendo().DropDownListFor(Model => Model.CompetitiveWhat)
