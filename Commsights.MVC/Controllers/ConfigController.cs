@@ -202,6 +202,10 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult PressList001()
+        {
+            return View();
+        }
         public IActionResult PressList()
         {
             return View();
@@ -590,7 +594,7 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetPressListToList([DataSourceRequest] DataSourceRequest request)
         {
-            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.PressList).Where(item => item.ParentID == 0);
+            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.PressList);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetAssessTypeToList([DataSourceRequest] DataSourceRequest request)
@@ -986,6 +990,29 @@ namespace Commsights.MVC.Controllers
             Initialization(model);
             model.GroupName = AppGlobal.CRM;
             model.Code = AppGlobal.MediaTier;
+            model.ParentID = 0;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            if (_configResposistory.IsValidByGroupNameAndCodeAndCodeName(model.GroupName, model.Code, model.CodeName) == true)
+            {
+                result = _configResposistory.Create(model);
+            }
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreatePressList(Config model)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.PressList;
             model.ParentID = 0;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);

@@ -312,6 +312,10 @@ namespace Commsights.Data.Repositories
         }
         public string UpdateItemsByIDAndRequestUserIDAndProductFeatureListAndCode(int ID, int RequestUserID, string productFeatureList,  string code)
         {
+            if(string.IsNullOrEmpty(productFeatureList))
+            {
+                productFeatureList = "";
+            }    
             SqlParameter[] parameters =
                       {
                 new SqlParameter("@ID",ID),

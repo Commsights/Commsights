@@ -23,6 +23,13 @@ namespace Commsights.Data.Helpers
         public string Href;
         public string Text;
     }
+    public class DatePublish
+    {
+        public DateTime DateTime { get; set; }
+        public string Time { get; set; }
+        public int Count { get; set; }
+        public bool IsTime { get; set; }
+    }
     public class YearFinance
     {
         public int Display { get; set; }
@@ -41,6 +48,7 @@ namespace Commsights.Data.Helpers
             return list;
         }
     }
+
     public class MonthFinance
     {
         public int Display { get; set; }
@@ -2798,7 +2806,7 @@ namespace Commsights.Data.Helpers
         }
 
         public static string LinkFinder002(string urlCategory, string urlRoot, bool repeat, List<LinkItem> list)
-        {           
+        {
             try
             {
                 Uri root = new Uri(urlRoot);
@@ -3843,6 +3851,160 @@ namespace Commsights.Data.Helpers
                 }
             }
         }
+        public static void DatePublish003(string html, Product product)
+        {
+            string htmlspan = html;
+            htmlspan = HTMLReplaceAndSplit(htmlspan);
+            htmlspan = htmlspan.Replace(@"~", @"");
+            htmlspan = htmlspan.Replace(@"<body", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            Regex reg = new Regex("<[^>]+>", RegexOptions.IgnoreCase);
+            string content = reg.Replace(html, " ");
+            content = HttpUtility.HtmlDecode(content);
+            content = content.Trim();
+            List<DatePublish> listDatePublish = new List<DatePublish>();
+            DateTime dateTime = new DateTime();
+            DateTime now = DateTime.Now;
+            for (int k = 0; k < content.Split(' ').Length; k++)
+            {
+                string item = content.Split(' ')[k];
+                if (!string.IsNullOrEmpty(item))
+                {
+                    string date = item;
+                    date = date.Replace(@",", @"");
+                    date = date.Replace(@"|", @"");
+                    int timeCount = date.Count(f => f == '/');
+                    if (timeCount == 0)
+                    {
+                        timeCount = date.Count(f => f == '-');
+                    }
+                    if (timeCount == 2)
+                    {
+                        if ((date.Length > 7) && (date.Length < 11))
+                        {
+                            string time = "";
+                            bool timeCheck = false;
+                            try
+                            {
+                                time = content.Split(' ')[k + 1];
+                                if (time.Contains(@":") == true)
+                                {
+                                    if ((time.Length == 5) || (time.Length == 4))
+                                    {
+                                        timeCheck = true;
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                                try
+                                {
+                                    time = content.Split(' ')[k - 1];
+                                    if (time.Contains(@":") == true)
+                                    {
+                                        if ((time.Length == 5) || (time.Length == 4))
+                                        {
+                                            timeCheck = true;
+                                        }
+                                    }
+                                }
+                                catch
+                                {
+                                }
+                            }
+                            time = time.Trim();
+                            time = time.Replace(@"\r", @"");
+                            time = time.Replace(@"\n", @"");
+                            try
+                            {
+                                dateTime = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), 0, 0, 0);
+                                if (dateTime.Year > 2020)
+                                {
+                                    if (listDatePublish.Count == 0)
+                                    {
+                                        DatePublish datePublish = new DatePublish();
+                                        datePublish.Time = "";
+                                        datePublish.IsTime = false;
+                                        datePublish.DateTime = dateTime;
+                                        datePublish.Count = 1;
+                                        if (timeCheck == true)
+                                        {
+                                            datePublish.Time = time;
+                                            datePublish.IsTime = timeCheck;
+                                        }
+                                        listDatePublish.Add(datePublish);
+                                    }
+                                    else
+                                    {
+                                        bool check = true;
+                                        DatePublish datePublish = new DatePublish();
+                                        for (int i = 0; i < listDatePublish.Count; i++)
+                                        {
+                                            if ((listDatePublish[i].DateTime.Year == dateTime.Year) && (listDatePublish[i].DateTime.Month == dateTime.Month) && (listDatePublish[i].DateTime.Day == dateTime.Day))
+                                            {
+                                                listDatePublish[i].Count = listDatePublish[i].Count + 1;
+                                                if (timeCheck == true)
+                                                {
+                                                    datePublish.Time = time;
+                                                    datePublish.IsTime = timeCheck;
+                                                }
+                                                i = listDatePublish.Count;
+                                                check = false;
+                                            }
+                                        }
+                                        if (check == true)
+                                        {
+                                            datePublish.Time = "";
+                                            datePublish.IsTime = false;
+                                            datePublish.DateTime = dateTime;
+                                            datePublish.Count = 1;
+                                            if (timeCheck == true)
+                                            {
+                                                datePublish.Time = time;
+                                                datePublish.IsTime = timeCheck;
+                                            }
+                                            listDatePublish.Add(datePublish);
+                                        }
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                            }
+                        }
+                    }
+                }
+            }
+            DateTime productDatePublish = DateTime.Now;
+            bool productActive = false;
+            for (int i = 0; i < listDatePublish.Count; i++)
+            {
+                DatePublish item = listDatePublish[i];
+                if (item.IsTime == true)
+                {
+                    try
+                    {
+                        item.DateTime = new DateTime(item.DateTime.Year, item.DateTime.Month, item.DateTime.Day, int.Parse(item.Time.Split(':')[0]), int.Parse(item.Time.Split(':')[1]), 0);
+                        if (item.DateTime < productDatePublish)
+                        {
+                            productDatePublish = item.DateTime;
+                            productActive = true;
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+            if (productActive == true)
+            {
+                product.DatePublish = productDatePublish;
+                product.Active = productActive;
+            }
+        }
         public static void FinderContent002(string html, string tagName, Product product)
         {
             string htmlspan = html;
@@ -4200,127 +4362,12 @@ namespace Commsights.Data.Helpers
                 if (product.Active == false)
                 {
                     htmlspan = html;
-                    DatePublish001(htmlspan, "dd", product);
+                    DatePublish003(htmlspan, product);
                 }
                 if (product.Active == false)
                 {
                     htmlspan = html;
-                    DatePublish002(htmlspan, "dd", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish001(htmlspan, "time", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish002(htmlspan, "time", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish001(htmlspan, "span", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish002(htmlspan, "span", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish001(htmlspan, "div", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish002(htmlspan, "div", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish001(htmlspan, "h1", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish002(htmlspan, "h1", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish001(htmlspan, "h2", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish002(htmlspan, "h2", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish001(htmlspan, "h3", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish002(htmlspan, "h3", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish001(htmlspan, "h4", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish002(htmlspan, "h4", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish001(htmlspan, "h5", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish002(htmlspan, "h5", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish001(htmlspan, "h6", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish002(htmlspan, "h6", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish001(htmlspan, "li", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish002(htmlspan, "li", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish001(htmlspan, "em", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish002(htmlspan, "em", product);
-                }
-                if (product.Active == false)
-                {
-                    htmlspan = html;
-                    DatePublish001(htmlspan, "i", product);
+                    DatePublish002(htmlspan, "abbr", product);
                 }
                 if (product.Active == false)
                 {
@@ -4330,7 +4377,62 @@ namespace Commsights.Data.Helpers
                 if (product.Active == false)
                 {
                     htmlspan = html;
-                    DatePublish001(htmlspan, "p", product);
+                    DatePublish002(htmlspan, "em", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "dd", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "time", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h1", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h2", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h3", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h4", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h5", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h6", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "li", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "span", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "div", product);
                 }
                 if (product.Active == false)
                 {

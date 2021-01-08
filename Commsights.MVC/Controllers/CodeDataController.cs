@@ -1701,6 +1701,7 @@ namespace Commsights.MVC.Controllers
                 {
                     model.IsCoding = true;
                     model.UserUpdated = RequestUserID;
+                    _productPropertyRepository.UpdateItemsByCodeDataCopyVersion(model);
                     _productPropertyRepository.UpdateItemsByIDAndRequestUserIDAndProductFeatureListAndCode(model.ProductPropertyID.Value, RequestUserID, model.ProductFeatureList, AppGlobal.ProductFeature);
                 }
             }

@@ -57,7 +57,7 @@
     columns.Bound(t => t.RowIndex).Title("No").Width(100).HtmlAttributes(new { @class = "text-center", @style = "white-space: nowrap;" });
     columns.Bound(t => t.CopyVersion).Title("Copy").Width(80).HtmlAttributes(new { @class = "text-center", @style = "white-space: nowrap;" });
     columns.Bound(t => t.Source).Title("Source").Width(80).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
-    columns.Bound(t => t.DatePublish).Title("Publish").Format("{0:dd/MM/yyyy}").Width(120).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.DatePublish).Title("Publish (dd/MM/yyyy)").Format("{0:dd/MM/yyyy}").Width(150).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
     columns.Bound(t => t.CategoryMain).Title("Category Main").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.CategorySub).Title("Category Sub").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.CompanyName).Title("Company").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
@@ -101,9 +101,9 @@
     columns.Bound(t => t.ROME_Corp_VND).Title("Media Value Corp").Width(200).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
     columns.Bound(t => t.ROME_Product_VND).Title("Media Value Product").Width(200).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
     columns.Bound(t => t.ProductSource).Title("Upload").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
-    columns.Bound(t => t.DateUpload).Title("Upload").Width(200).Format("{0:dd/MM/yyyy HH:mm:ss}").HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
-    columns.Bound(t => t.DateUpdated).Title("Updated").Width(200).Format("{0:dd/MM/yyyy HH:mm:ss}").HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
-    columns.Bound(t => t.DateCoding).Title("Coding").Width(200).Format("{0:dd/MM/yyyy HH:mm:ss}").HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.DateUpload).Title("Upload (dd/MM/yyyy)").Width(200).Format("{0:dd/MM/yyyy HH:mm:ss}").HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.DateUpdated).Title("Updated (dd/MM/yyyy)").Width(200).Format("{0:dd/MM/yyyy HH:mm:ss}").HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.DateCoding).Title("Coding (dd/MM/yyyy)").Width(200).Format("{0:dd/MM/yyyy HH:mm:ss}").HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
     columns.Bound(t => t.Advalue).Title("Advalue").Width(150).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
     columns.Bound(t => t.FileName).Title("FileName").Width(700).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.ProductID).Title("ProductID").Width(100).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });

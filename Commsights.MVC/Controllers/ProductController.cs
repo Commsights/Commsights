@@ -22,6 +22,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Web;
 
 namespace Commsights.MVC.Controllers
 {
@@ -1316,7 +1317,9 @@ namespace Commsights.MVC.Controllers
                                 StreamReader readStream = null;
                                 readStream = new StreamReader(receiveStream, Encoding.UTF8);
                                 string html = readStream.ReadToEnd();
-                                html = html.Replace(@"~", @"");                                
+                                response.Close();
+                                readStream.Close();
+                                html = html.Replace(@"~", @"");
                                 string title = "";
                                 string htmlTitle = html;
                                 if ((htmlTitle.Contains(@"<meta property=""og:title"" content=""") == true) || (htmlTitle.Contains(@"<meta property='og:title' content='") == true))
@@ -1375,27 +1378,25 @@ namespace Commsights.MVC.Controllers
                                 product.Title = title;
                                 product.ParentID = config.ID;
                                 product.CategoryID = config.ID;
-                                product.Source = AppGlobal.SourceAuto;                               
+                                product.Source = AppGlobal.SourceAuto;
                                 product.URLCode = linkItem.Href;
                                 product.DatePublish = DateTime.Now;
                                 product.Initialization(InitType.Insert, RequestUserID);
                                 product.DatePublish = DateTime.Now;
-                                AppGlobal.FinderContentAndDatePublish001(html, product);
-                                if ((product.DatePublish.Year > 2019) && (product.Active == true))
+                                AppGlobal.FinderContentAndDatePublish002(html, product);
+                                if ((product.DatePublish.Year > 2020) && (product.Active == true))
                                 {
                                     if (!string.IsNullOrEmpty(product.Title))
                                     {
-                                        product.Title = AppGlobal.Decode(product.Title);
+                                        product.Title = HttpUtility.HtmlDecode(product.Title);
                                         product.MetaTitle = AppGlobal.SetName(product.Title);
                                     }
                                     if (!string.IsNullOrEmpty(product.Description))
                                     {
-                                        product.Description = AppGlobal.Decode(product.Description);
+                                        product.Description = HttpUtility.HtmlDecode(product.Description);
                                     }
                                     await _productRepository.AsyncInsertSingleItem(product);
                                 }
-                                response.Close();
-                                readStream.Close();
                             }
                         }
                         catch (Exception e1)
