@@ -112,9 +112,9 @@
                         </div>
                         <div class="col-md-2">
                             <div class='form-group'>
-                                <label for='DatePublish'>Date Publish</label>
+                                <label for='DatePublish'>Publish (MM/dd/yyyy)</label>
                                 @(Html.Kendo().DatePickerFor(Model => Model.DatePublish)
-                                     .Format("dd/MM/yyyy")
+                                     .Format("MM/dd/yyyy")
                                      .HtmlAttributes(new { @class = "form-control text-right"})
                                      .DateInput()
                                 )

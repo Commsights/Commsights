@@ -4131,6 +4131,225 @@ namespace Commsights.Data.Helpers
                 }
             }
         }
+        public static void FinderContentAndDatePublish002(string html, Product product)
+        {
+            if (!string.IsNullOrEmpty(html))
+            {
+                DateTime now = DateTime.Now;
+                html = html.Replace(@"~", @"");
+                string htmlspan = html;
+                MatchCollection m1;
+                product.Active = false;
+                DateTime datePublish = new DateTime(2019, 1, 1);
+                string yearString = "";
+                string monthString = "";
+                string dayString = "";
+                int year = now.Year;
+                int month = now.Month;
+                int day = now.Day;
+                int hour = now.Hour;
+                int minute = now.Minute;
+                int second = now.Second;
+                product.DatePublish = now;
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    m1 = Regex.Matches(htmlspan, @"(<meta.*?/>)", RegexOptions.Singleline);
+                    for (int i = 0; i < m1.Count; i++)
+                    {
+                        string value = m1[i].Groups[1].Value;
+                        if ((value.Contains(@"published") == true) || (value.Contains(@"pubdate") == true))
+                        {
+                            value = value.Replace(@"content=""", @"~");
+                            value = value.Replace(@"content='", @"~");
+                            if (value.Split('~').Length > 1)
+                            {
+                                value = value.Split('~')[1];
+                                value = value.Replace(@"""", @"~");
+                                value = value.Replace(@"'", @"~");
+                                value = value.Split('~')[0];
+                                value = value.Trim();
+                                try
+                                {
+                                    datePublish = DateTime.Parse(value);
+                                }
+                                catch
+                                {
+                                    try
+                                    {
+                                        yearString = value.Split('-')[0];
+                                        monthString = value.Split('-')[1];
+                                        dayString = value.Split('-')[2];
+                                        dayString = dayString.Substring(0, 2);
+                                        datePublish = new DateTime(int.Parse(yearString), int.Parse(monthString), int.Parse(dayString), hour, minute, second);
+                                    }
+                                    catch
+                                    {
+                                    }
+                                }
+                                if (product.DatePublish > datePublish)
+                                {
+                                    product.DatePublish = datePublish;
+                                    product.Active = true;
+                                    i = m1.Count;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "dd", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "dd", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "time", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "time", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "span", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "span", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "div", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "div", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "h1", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h1", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "h2", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h2", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "h3", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h3", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "h4", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h4", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "h5", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h5", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "h6", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h6", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "li", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "li", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "em", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "em", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "i", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "i", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish001(htmlspan, "p", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "p", product);
+                }
+                if (string.IsNullOrEmpty(product.Description) || product.Description.Length < 1000)
+                {
+                    htmlspan = html;
+                    FinderContent002(htmlspan, "p", product);
+                }
+                if (string.IsNullOrEmpty(product.Description) || product.Description.Length < 500)
+                {
+                    htmlspan = html;
+                    product.Description = "";
+                    FinderContent002(htmlspan, "div", product);
+                }
+            }
+        }
         public static List<LinkItem> ImgFinder(string html)
         {
             List<LinkItem> list = new List<LinkItem>();

@@ -1327,7 +1327,10 @@ new SqlParameter("@TargetID",product.TargetID),
         }
         public async Task<string> AsyncInsertSingleItem(Product product)
         {
-            SqlParameter[] parameters =
+            string result = "";
+            if (!string.IsNullOrEmpty(product.Title))
+            {
+                SqlParameter[] parameters =
             {
 new SqlParameter("@ID",product.ID),
 new SqlParameter("@UserCreated",product.UserCreated),
@@ -1375,7 +1378,8 @@ new SqlParameter("@IsData",product.IsData),
 new SqlParameter("@SourceID",product.SourceID),
 new SqlParameter("@TargetID",product.TargetID),
 };
-            string result = await SQLHelper.ExecuteNonQueryAsync(AppGlobal.ConectionString, "sp_ProductInsertSingleItem", parameters);
+                result = await SQLHelper.ExecuteNonQueryAsync(AppGlobal.ConectionString, "sp_ProductInsertSingleItem", parameters);
+            }            
             return result;
         }
         public async Task<string> AsyncUpdateSingleItem(Product product)

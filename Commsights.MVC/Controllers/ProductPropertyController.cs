@@ -363,25 +363,7 @@ namespace Commsights.MVC.Controllers
                         }
                         _productRepository.Create(model);
                         if (model.ID > 0)
-                        {
-                            try
-                            {
-                                if (parent != null)
-                                {
-                                    if (parent.ID > 0)
-                                    {
-                                        ProductProperty productProperty = new ProductProperty();
-                                        productProperty.ParentID = model.ID;
-                                        productProperty.Code = AppGlobal.URLCode;
-                                        productProperty.Note = parent.Icon;
-                                        productProperty.Initialization(InitType.Insert, RequestUserID);
-                                        _productPropertyRepository.Create(productProperty);
-                                    }
-                                }
-                            }
-                            catch
-                            {
-                            }
+                        {                           
                             foreach (ProductProperty item in listProductProperty)
                             {
                                 ProductProperty productProperty = new ProductProperty();
@@ -518,19 +500,7 @@ namespace Commsights.MVC.Controllers
                         }
                         _productRepository.Create(model);
                         if (model.ID > 0)
-                        {
-                            if (parent != null)
-                            {
-                                if (parent.ID > 0)
-                                {
-                                    ProductProperty productProperty = new ProductProperty();
-                                    productProperty.ParentID = model.ID;
-                                    productProperty.Code = AppGlobal.URLCode;
-                                    productProperty.Note = parent.Icon;
-                                    productProperty.Initialization(InitType.Insert, RequestUserID);
-                                    _productPropertyRepository.Create(productProperty);
-                                }
-                            }
+                        {                           
                             foreach (ProductProperty item in listProductProperty)
                             {
                                 ProductProperty productProperty = new ProductProperty();

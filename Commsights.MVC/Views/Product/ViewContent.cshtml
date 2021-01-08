@@ -15,10 +15,22 @@
             }
             else
             {
+                string parentIcon = "";
+                if (Model.Parent != null)
+                {
+                    parentIcon = Model.Parent.Icon;
+                }
+                if (Model.Parent != null)
+                {
+                    <img src="@Model.Parent.Icon" class="img-thumbnail" />
+                }
                 foreach (Commsights.Data.Models.ProductProperty item in Model.ListProductProperty)
                 {
-                    <img src="@item.Note" class="img-thumbnail" />
-                    <br />
+                    if (item.Note != parentIcon)
+                    {
+                        <img src="@item.Note" class="img-thumbnail" />
+                        <br />
+                    }
                 }
             }
         </div>
