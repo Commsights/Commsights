@@ -21,20 +21,7 @@
                                      .HtmlAttributes(new { @class = "form-control text-right", title = "Date end" })
                                      .DateInput()
                                 )
-                    </div>
-                    <div class='col-sm-5'>
-                        @(Html.Kendo().DropDownListFor(Model=>Model.IndustryID)
-                     .DataValueField("ID")
-                     .DataTextField("CodeName")
-                    .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.StartsWith)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetProductPermissionDistinctIndustryByEmployeeIDToList", "Config")))
-                            )
-                    </div>
-                    <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
-                        <input id="IsUpload" type="checkbox" checked="checked">
-                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px; margin-right:10px;">Up/Pub</p>
-                    </div>
+                    </div>                                        
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" title="Search" onclick="onSearch()">
                             <span class="fas fa-search"></span>
@@ -84,7 +71,7 @@
     model.Id(t => t.ProductPropertyID);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
-.Read(t => t.Action("GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadToList", "CodeData").Data("filterCodeData"))
+.Read(t => t.Action("GetByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDAndIsFilterToList", "CodeData").Data("filterCodeData"))
 .Destroy(t => t.Action("DeleteProductProperty", "CodeData"))
 ))
             </div>

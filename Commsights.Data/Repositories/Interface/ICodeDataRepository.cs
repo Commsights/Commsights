@@ -34,5 +34,6 @@ namespace Commsights.Data.Repositories
         public List<CodeData> GetByDateUpdatedBeginAndDateUpdatedEndAndSourceIsNewspageAndTVToList(DateTime datePublishBegin, DateTime datePublishEnd, string sourceNewspage, string sourceTV);
         public List<CodeData> GetDailyByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int hourBegin, int hourEnd, int industryID);
         public CodeData GetByProductPropertyID(int productPropertyID);
+        public List<CodeData> GetByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDAndIsFilterToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int employeeID, bool isFilter);
     }
 }

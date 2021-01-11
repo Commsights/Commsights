@@ -17,6 +17,32 @@ namespace Commsights.Data.Repositories
         public CodeDataRepository()
         {
         }
+        public List<CodeData> GetByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDAndIsFilterToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int employeeID, bool isFilter)
+        {
+            List<CodeData> list = new List<CodeData>();
+            if (employeeID > 0)
+            {
+                try
+                {
+                    dateUpdatedBegin = new DateTime(dateUpdatedBegin.Year, dateUpdatedBegin.Month, dateUpdatedBegin.Day, 0, 0, 0);
+                    dateUpdatedEnd = new DateTime(dateUpdatedEnd.Year, dateUpdatedEnd.Month, dateUpdatedEnd.Day, 23, 59, 59);
+                    SqlParameter[] parameters =
+                    {
+                new SqlParameter("@DateUpdatedBegin",dateUpdatedBegin),
+                new SqlParameter("@DateUpdatedEnd",dateUpdatedEnd),
+                new SqlParameter("@EmployeeID",employeeID),
+                new SqlParameter("@IsFilter",isFilter),
+                };
+                    DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataSelectByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDAndIsFilter", parameters);
+                    list = SQLHelper.ToList<CodeData>(dt);
+                }
+                catch (Exception e)
+                {
+                    string mes = e.Message;
+                }
+            }
+            return list;
+        }
         public List<CodeData> GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
         {
             List<CodeData> list = new List<CodeData>();

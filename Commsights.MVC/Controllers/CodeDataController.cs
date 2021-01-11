@@ -1577,6 +1577,11 @@ namespace Commsights.MVC.Controllers
             List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload);
             return Json(list.ToDataSourceResult(request));
         }
+        public ActionResult GetByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDAndIsFilterToList([DataSourceRequest] DataSourceRequest request, DateTime dateUpdatedBegin, DateTime dateUpdatedEnd)
+        {
+            List<CodeData> list = _codeDataRepository.GetByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDAndIsFilterToList(dateUpdatedBegin, dateUpdatedEnd, RequestUserID, true);
+            return Json(list.ToDataSourceResult(request));
+        }
         public ActionResult GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNewspageAndTVToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isUpload)
         {
             var cookieExpires = new CookieOptions();
