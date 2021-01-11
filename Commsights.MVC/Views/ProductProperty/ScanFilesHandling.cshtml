@@ -13,7 +13,7 @@
     columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 11px; color:#ffffff; background-color:#d73925; padding-left:12px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
     columns.Command(command => { command.Custom("View").Click("onViewScanFile").HtmlAttributes(new { style = "font-size: 11px; border-radius: 6px; font-weight:bold; background-color:green; color:#ffffff; padding-left:10px;" }); }).Width(70);
     columns.Command(command => { command.Custom("Right").Click("onScanFilesUpdateTrue").HtmlAttributes(new { style = "font-size: 11px; color:#ffffff; background-color:blue; padding-left:12px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
-    columns.Template(@"<a target='_blank' href='/ProductProperty/ViewContent?fileName=#=FileName#&extension=#=Page#&url=#=Note#' title='#=Note#' style='cursor: pointer; color: blue;'>#=FileName#</a>").Title("File");
+    columns.Template(@"<a target='_blank' href='/ProductProperty/ViewContent?fileName=#=FileName#&extension=#=Page#&url=#=Note#' title='#=Note#' style='cursor: pointer; color: blue; font-size: 14px;'>#=FileName#</a>").Title("File");
 })
 
 .Editable(editable => editable.Mode(GridEditMode.InLine).DisplayDeleteConfirmation(false))
@@ -61,7 +61,7 @@
     columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 11px; color:#ffffff; background-color:#d73925; padding-left:12px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
     columns.Command(command => { command.Custom("View").Click("onViewScanFile").HtmlAttributes(new { style = "font-size: 11px; border-radius: 6px; font-weight:bold; background-color:green; color:#ffffff; padding-left:10px;" }); }).Width(70);
     columns.Command(command => { command.Custom("Left").Click("onScanFilesUpdateFalse").HtmlAttributes(new { style = "font-size: 11px; color:#ffffff; background-color:blue; padding-left:12px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
-    columns.Template(@"<a target='_blank' href='/ProductProperty/ViewContent?fileName=#=FileName#&extension=#=Page#&url=#=Note#' title='#=Note#' style='cursor: pointer; color: blue;'>#=FileName#</a>").Title("File");
+    columns.Template(@"<a target='_blank' href='/ProductProperty/ViewContent?fileName=#=FileName#&extension=#=Page#&url=#=Note#' title='#=Note#' style='cursor: pointer; color: blue; font-size: 14px;'>#=FileName#</a>").Title("File");
 })
 .Editable(editable => editable.Mode(GridEditMode.InLine).DisplayDeleteConfirmation(false))
 .Sortable()
@@ -111,7 +111,7 @@
                 <div class='col-md-4'>
                     @(Html.Kendo().Upload()
                       .Name("UploadScanFiles")
-                     )                  
+                     )
                 </div>
                 <div class='col-md-8'>
                     <button class="btn btn-primary" title="Upload and save files (Image)"><span class="fas fa-upload"></span> Files (Image)</button>
@@ -155,7 +155,7 @@
              )
         </div>
         <div class='form-group'>
-            @(Html.TextBoxFor(Model => Model.Title, new { placeholder = "Headline (Vie)", @class = "form-control", @title = Model.Title }))
+            @(Html.TextBoxFor(Model => Model.Title, new { placeholder = "Headline (Vie)", @class = "form-control", @style= "font-size: 14px;",  @title = Model.Title }))
         </div>
         <div class="row">
             <div class="col-md-6">

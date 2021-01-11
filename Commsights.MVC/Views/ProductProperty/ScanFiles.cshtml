@@ -43,7 +43,7 @@
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150).Locked(true);
     columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70).Locked(true);
-    columns.Bound(t => t.Industry).Title("Industry").Width(200).EditorTemplateName("Config_IndustryByEmployeeID").HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Industry).Title("Industry").Width(300).EditorTemplateName("Config_IndustryCodeName").HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
     columns.Bound(t => t.MediaTitle).Title("Media title").Width(200).EditorTemplateName("Config_PressList").HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
     columns.Bound(t => t.DatePublish).Title("Publish (dd/MM/yyyy)").Format("{0:dd/MM/yyyy}").Width(200).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
     columns.Bound(t => t.Title).Title("Headline (Vie)").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });

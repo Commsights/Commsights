@@ -242,6 +242,7 @@ namespace Commsights.MVC.Controllers
         {
             string note = AppGlobal.InitString;
             //_productPropertyRepository.DeleteItemsByID(productPropertyID);
+            _productPropertyRepository.Delete(productPropertyID);
             int result = 1;
             if (result > 0)
             {

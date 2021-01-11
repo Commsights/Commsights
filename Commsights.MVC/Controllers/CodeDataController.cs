@@ -1725,13 +1725,16 @@ namespace Commsights.MVC.Controllers
         }
         public int CopyURLSame(int productPropertyID)
         {
-            productPropertyID = Copy(productPropertyID);
+            CodeData model = GetCodeData(productPropertyID);
+            productPropertyID = _productPropertyRepository.InsertSingleItemByCopyCodeData(model.ProductPropertyID.Value, RequestUserID);
             return productPropertyID;
         }
         public int CopyURLAnother(int productPropertyID)
         {
-            productPropertyID = Copy(productPropertyID);
-            return productPropertyID;
+            CodeData model = GetCodeData(productPropertyID);
+            _productPropertyRepository.InsertItemsByCopyCodeData(model.ProductPropertyID.Value, RequestUserID);
+            model = GetCodeData(productPropertyID);
+            return model.RowNext.Value;
         }
         public int BasicCopyURLSame(int productPropertyID)
         {
@@ -1784,13 +1787,22 @@ namespace Commsights.MVC.Controllers
                         if (productPropertyID == list[i].ProductPropertyID)
                         {
                             model = list[i];
-                            model.CompanyNameHiden = _codeDataRepository.GetCompanyNameByURLCode(model.URLCode);
-                            model.ProductNameHiden = _codeDataRepository.GetProductNameByURLCode(model.URLCode);
-                            model.CategorySubHiden = _codeDataRepository.GetCategorySubByURLCode(model.URLCode);
                             i = list.Count;
                         }
                     }
-
+                    if ((model == null) || (string.IsNullOrEmpty(model.Title)))
+                    {
+                        model = _codeDataRepository.GetByProductPropertyID(productPropertyID);
+                    }
+                    if (model != null)
+                    {
+                        if (!string.IsNullOrEmpty(model.Title))
+                        {
+                            model.CompanyNameHiden = _codeDataRepository.GetCompanyNameByURLCode(model.URLCode);
+                            model.ProductNameHiden = _codeDataRepository.GetProductNameByURLCode(model.URLCode);
+                            model.CategorySubHiden = _codeDataRepository.GetCategorySubByURLCode(model.URLCode);
+                        }
+                    }
                     model.RowNext = 0;
                     List<CodeData> listIsCoding = list.Where(item => item.IsCoding == false || item.IsCoding == null).ToList();
                     if (listIsCoding.Count > 0)
