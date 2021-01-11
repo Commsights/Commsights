@@ -24,6 +24,8 @@ using System.Diagnostics.Eventing.Reader;
 using Commsights.Service.Mail;
 using System.Drawing;
 using Microsoft.AspNetCore.Http;
+using System.Web;
+using System.Text.RegularExpressions;
 
 namespace Commsights.MVC.Controllers
 {
@@ -48,6 +50,13 @@ namespace Commsights.MVC.Controllers
             model.DatePublishBegin = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             model.DatePublishEnd = DateTime.Now;
             model.IndustryID = AppGlobal.IndustryID;
+            return View(model);
+        }
+        public IActionResult SearchByEmployeeID()
+        {
+            CodeDataViewModel model = new CodeDataViewModel();
+            model.DatePublishBegin = DateTime.Now;
+            model.DatePublishEnd = DateTime.Now;
             return View(model);
         }
         public IActionResult DataByEmployeeID()
@@ -3622,6 +3631,142 @@ namespace Commsights.MVC.Controllers
             }
             stream.Position = 0;
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+        }
+
+
+
+        public IActionResult Create(CodeData model)
+        {
+            string note = AppGlobal.InitString;
+            int result = 0;
+            Uri website = new Uri(model.URLCode);
+            Config config = _configResposistory.GetByGroupNameAndCodeAndTitle(AppGlobal.CRM, AppGlobal.Website, website.Authority);
+            if ((config == null) || (config.ID == 0))
+            {
+                config.GroupName = AppGlobal.CRM;
+                config.Code = AppGlobal.Website;
+                config.Title = website.Authority;
+                config.URLFull = website.Scheme + "/" + website.Authority;
+                config.Initialization(InitType.Insert, RequestUserID);
+                _configResposistory.Create(config);
+            }
+            if ((config != null) && (config.ID > 0))
+            {
+                try
+                {
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(model.URLCode);
+                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        Stream receiveStream = response.GetResponseStream();
+                        StreamReader readStream = null;
+                        readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                        string html = readStream.ReadToEnd();
+                        response.Close();
+                        readStream.Close();
+                        html = html.Replace(@"~", @"");
+                        string title = "";
+                        string htmlTitle = html;
+                        if ((htmlTitle.Contains(@"<meta property=""og:title"" content=""") == true) || (htmlTitle.Contains(@"<meta property='og:title' content='") == true))
+                        {
+                            htmlTitle = htmlTitle.Replace(@"<meta property=""og:title"" content=""", @"~");
+                            htmlTitle = htmlTitle.Replace(@"<meta property='og:title' content='", @"~");
+                            if (htmlTitle.Split('~').Length > 1)
+                            {
+                                htmlTitle = htmlTitle.Split('~')[1];
+                                htmlTitle = htmlTitle.Replace(@"""", @"~");
+                                htmlTitle = htmlTitle.Replace(@"'", @"~");
+                                htmlTitle = htmlTitle.Split('~')[0];
+                                title = htmlTitle.Trim();
+                            }
+                        }
+                        else
+                        {
+                            MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
+                            if (m1.Count > 0)
+                            {
+                                string value = m1[m1.Count - 1].Groups[1].Value;
+                                if (!string.IsNullOrEmpty(value))
+                                {
+                                    value = value.Replace(@"<title>", @"");
+                                    value = value.Replace(@"</title>", @"");
+                                    title = value.Trim();
+                                }
+                            }
+                        }
+                        bool isUnicode = AppGlobal.ContainsUnicodeCharacter(title);
+                        if ((title.Contains(@"&#") == true) || (isUnicode == false))
+                        {
+                            MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
+                            if (m1.Count > 0)
+                            {
+                                string value = m1[m1.Count - 1].Groups[1].Value;
+                                if (!string.IsNullOrEmpty(value))
+                                {
+                                    value = value.Replace(@"<title>", @"");
+                                    value = value.Replace(@"</title>", @"");
+                                    title = value.Trim();
+                                }
+                            }
+                        }
+                        if (title.Split('|').Length > 2)
+                        {
+                            title = title.Split('|')[1];
+                        }
+                        if (title.Split('|').Length > 1)
+                        {
+                            title = title.Split('|')[0];
+                        }
+                        title = title.Trim();
+                        Product product = new Product();
+                        product.IsFilter = true;
+                        product.Description = "";
+                        product.Title = title;
+                        product.ParentID = config.ID;
+                        product.CategoryID = config.ID;
+                        product.Source = AppGlobal.SourceAuto;
+                        product.URLCode = model.URLCode;
+                        product.DatePublish = DateTime.Now;
+                        product.Initialization(InitType.Insert, RequestUserID);
+                        product.DatePublish = DateTime.Now;
+                        AppGlobal.FinderContentAndDatePublish002(html, product);
+                        if ((product.DatePublish.Year > 2020) && (product.Active == true))
+                        {
+                            if (!string.IsNullOrEmpty(product.Title))
+                            {
+                                product.Title = HttpUtility.HtmlDecode(product.Title);
+                                product.MetaTitle = AppGlobal.SetName(product.Title);
+                            }
+                            if (!string.IsNullOrEmpty(product.Description))
+                            {
+                                product.Description = HttpUtility.HtmlDecode(product.Description);
+                            }
+                            if (!string.IsNullOrEmpty(product.ContentMain))
+                            {
+                                product.ContentMain = HttpUtility.HtmlDecode(product.ContentMain);
+                            }
+                            string resultString = _productRepository.InsertSingleItemAuto(product);
+                            if (resultString == "-1")
+                            {
+                                result = 1;
+                            }
+                        }
+                    }
+                }
+                catch (Exception e1)
+                {
+                    string mes1 = e1.Message;
+                }
+                if (result > 0)
+                {
+                    note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+                }
+                else
+                {
+                    note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+                }
+            }
+            return Json(note);
         }
     }
 }

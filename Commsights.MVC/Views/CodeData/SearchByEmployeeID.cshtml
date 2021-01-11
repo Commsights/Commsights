@@ -21,22 +21,30 @@
                                      .HtmlAttributes(new { @class = "form-control text-right", title = "Date end" })
                                      .DateInput()
                                 )
-                    </div>                                        
+                    </div>
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" title="Search" onclick="onSearch()">
                             <span class="fas fa-search"></span>
                         </button>
                     </div>
-                </div>               
+                </div>
+                <br />
                 @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.CodeData>()
 .Name("CodeData")
 .Columns(columns =>
 {
-    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 11px; color:#ffffff; background-color:#d73925; padding-left:14px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70).Locked(true);
-    columns.Template(@"<a target='_blank' href='#=URLCoding#' title='#=Title#' class='btn btn-primary' style='color:white; cursor: pointer; font-size: 11px; height:30px;'><i class='fas fa-edit'></i></a>").Title("Code").Width(70).Locked(true);
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 11px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 11px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150).Locked(true);
     columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer; font-size: 11px; height:30px;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70).Locked(true);
-   
+    columns.Bound(t => t.URLCode).Title("URL").Width(200).HtmlAttributes(new { @class = "text-center", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Title).Title("Headline (Vie)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Description).Title("Summary (Vie)").Width(200).HtmlAttributes(new { @class = "text-center", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.DatePublish).Title("Publish (MM/dd/yyyy)").Format("{0:MM/dd/yyyy}").Width(200).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.CompanyName).Title("Company").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.ProductName_ProjectName).Title("Product").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Industry).Title("Industry").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.MediaTitle).Title("Media").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
 })
+.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
 .Sortable()
@@ -62,17 +70,23 @@
 .FileName("Article.pdf")
 )
 .HtmlAttributes(new { @class = "KendoGrid", @style="font-size:11px;" })
-.Search(search => { search.Field(f => f.URLCode); search.Field(f => f.Title); search.Field(f => f.TitleEnglish); search.Field(f => f.CompanyName); search.Field(f => f.MediaTitle); search.Field(f => f.TierCommsights); search.Field(f => f.MediaType); search.Field(f => f.ProductName_ProjectName); })
+.Search(search => { search.Field(f => f.URLCode); search.Field(f => f.Title); search.Field(f => f.CompanyName); search.Field(f => f.MediaTitle); search.Field(f => f.ProductName_ProjectName); })
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(10000)
 .Model(model =>
 {
     model.Id(t => t.ProductPropertyID);
+    model.Field(t => t.CompanyName).Editable(false);
+    model.Field(t => t.ProductName_ProjectName).Editable(false);
+    model.Field(t => t.Industry).Editable(false);
+    model.Field(t => t.MediaTitle).Editable(false);
 })
 .Events(t => { t.RequestEnd("onGridRequestEnd"); })
 .Read(t => t.Action("GetByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDAndIsFilterToList", "CodeData").Data("filterCodeData"))
 .Destroy(t => t.Action("DeleteProductProperty", "CodeData"))
+.Create(t => t.Action("Create", "CodeData"))
+.Update(t => t.Action("Update", "CodeData"))
 ))
             </div>
         </div>
@@ -85,8 +99,8 @@
 )
 <script>
     $(document).ready(() => {
-    });    
-    function onSearch() {    
+    });
+    function onSearch() {
         $("#CodeData").data("kendoGrid").dataSource.read();
     }
     function onGridRequestEnd(e) {
@@ -100,10 +114,27 @@
         }
     }
     function filterCodeData(e) {
-        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
-        var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
-        var datePublishEndValue = toDate02($("#DatePublishEnd").val());
-        var isUploadValue = document.getElementById("IsUpload").checked;
-        return { datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, industryID: industryIDValue, isUpload: isUploadValue};
+        var dateUpdatedBeginValue = toDate02($("#DatePublishBegin").val());
+        var dateUpdatedEndValue = toDate02($("#DatePublishEnd").val());
+        return { dateUpdatedBegin: dateUpdatedBeginValue, dateUpdatedEnd: dateUpdatedEndValue };
+    }
+</script>
+<script>
+    function valueMapper(options) {
+        $.ajax({
+            url: "@Url.Action("Orders_ValueMapper", "MembershipPermission")",
+            data: convertValues(options.value),
+            success: function (data) {
+                options.success(data);
+            }
+        });
+    }
+    function convertValues(value) {
+        var data = {};
+        value = $.isArray(value) ? value : [value];
+        for (var idx = 0; idx < value.length; idx++) {
+            data["values[" + idx + "]"] = value[idx];
+        }
+        return data;
     }
 </script>

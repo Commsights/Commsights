@@ -1,0 +1,8 @@
+
+@(Html.Kendo().DropDownListFor(t => t)
+                   .DataValueField("Account")
+                   .DataTextField("Account")
+                   .HtmlAttributes(new {data_bind= "value: CompanyName", @class = "form-control", @style = "font-size:11px;" })
+                    .Filter(FilterType.Contains)
+                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetAllCompany001ToList", "Membership")))
+)

@@ -1026,6 +1026,6 @@ namespace Commsights.MVC.Controllers
                 }
             }
             return Json(indices);
-        }
+        }      
     }
 }

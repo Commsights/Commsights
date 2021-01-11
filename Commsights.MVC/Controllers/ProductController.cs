@@ -1395,6 +1395,10 @@ namespace Commsights.MVC.Controllers
                                     {
                                         product.Description = HttpUtility.HtmlDecode(product.Description);
                                     }
+                                    if (!string.IsNullOrEmpty(product.ContentMain))
+                                    {
+                                        product.ContentMain = HttpUtility.HtmlDecode(product.ContentMain);
+                                    }
                                     await _productRepository.AsyncInsertSingleItemAuto(product);
                                 }
                             }
