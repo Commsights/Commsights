@@ -1307,105 +1307,34 @@ namespace Commsights.MVC.Controllers
                     AppGlobal.LinkFinder002(config.URLFull, config.URLFull, true, list);
                     foreach (LinkItem linkItem in list)
                     {
-                        try
+                        Product product = new Product();
+                        product.Description = "";
+                        product.Title = AppGlobal.FinderTitle(linkItem.Href);
+                        product.ParentID = config.ID;
+                        product.CategoryID = config.ID;
+                        product.Source = AppGlobal.SourceAuto;
+                        product.URLCode = linkItem.Href;
+                        product.DatePublish = DateTime.Now;
+                        product.Initialization(InitType.Insert, RequestUserID);
+                        product.DatePublish = DateTime.Now;
+                        string html = AppGlobal.FinderHTMLContent(linkItem.Href);
+                        AppGlobal.FinderContentAndDatePublish002(html, product);
+                        if ((product.DatePublish.Year > 2020) && (product.Active == true))
                         {
-                            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(linkItem.Href);
-                            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                            if (response.StatusCode == HttpStatusCode.OK)
+                            if (!string.IsNullOrEmpty(product.Title))
                             {
-                                Stream receiveStream = response.GetResponseStream();
-                                StreamReader readStream = null;
-                                readStream = new StreamReader(receiveStream, Encoding.UTF8);
-                                string html = readStream.ReadToEnd();
-                                response.Close();
-                                readStream.Close();
-                                html = html.Replace(@"~", @"");
-                                string title = "";
-                                string htmlTitle = html;
-                                if ((htmlTitle.Contains(@"<meta property=""og:title"" content=""") == true) || (htmlTitle.Contains(@"<meta property='og:title' content='") == true))
-                                {
-                                    htmlTitle = htmlTitle.Replace(@"<meta property=""og:title"" content=""", @"~");
-                                    htmlTitle = htmlTitle.Replace(@"<meta property='og:title' content='", @"~");
-                                    if (htmlTitle.Split('~').Length > 1)
-                                    {
-                                        htmlTitle = htmlTitle.Split('~')[1];
-                                        htmlTitle = htmlTitle.Replace(@"""", @"~");
-                                        htmlTitle = htmlTitle.Replace(@"'", @"~");
-                                        htmlTitle = htmlTitle.Split('~')[0];
-                                        title = htmlTitle.Trim();
-                                    }
-                                }
-                                else
-                                {
-                                    MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
-                                    if (m1.Count > 0)
-                                    {
-                                        string value = m1[m1.Count - 1].Groups[1].Value;
-                                        if (!string.IsNullOrEmpty(value))
-                                        {
-                                            value = value.Replace(@"<title>", @"");
-                                            value = value.Replace(@"</title>", @"");
-                                            title = value.Trim();
-                                        }
-                                    }
-                                }
-                                bool isUnicode = AppGlobal.ContainsUnicodeCharacter(title);
-                                if ((title.Contains(@"&#") == true) || (isUnicode == false))
-                                {
-                                    MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
-                                    if (m1.Count > 0)
-                                    {
-                                        string value = m1[m1.Count - 1].Groups[1].Value;
-                                        if (!string.IsNullOrEmpty(value))
-                                        {
-                                            value = value.Replace(@"<title>", @"");
-                                            value = value.Replace(@"</title>", @"");
-                                            title = value.Trim();
-                                        }
-                                    }
-                                }
-                                if (title.Split('|').Length > 2)
-                                {
-                                    title = title.Split('|')[1];
-                                }
-                                if (title.Split('|').Length > 1)
-                                {
-                                    title = title.Split('|')[0];
-                                }
-                                title = title.Trim();
-                                Product product = new Product();
-                                product.Description = "";
-                                product.Title = title;
-                                product.ParentID = config.ID;
-                                product.CategoryID = config.ID;
-                                product.Source = AppGlobal.SourceAuto;
-                                product.URLCode = linkItem.Href;
-                                product.DatePublish = DateTime.Now;
-                                product.Initialization(InitType.Insert, RequestUserID);
-                                product.DatePublish = DateTime.Now;
-                                AppGlobal.FinderContentAndDatePublish002(html, product);
-                                if ((product.DatePublish.Year > 2020) && (product.Active == true))
-                                {
-                                    if (!string.IsNullOrEmpty(product.Title))
-                                    {
-                                        product.Title = HttpUtility.HtmlDecode(product.Title);
-                                        product.MetaTitle = AppGlobal.SetName(product.Title);
-                                    }
-                                    if (!string.IsNullOrEmpty(product.Description))
-                                    {
-                                        product.Description = HttpUtility.HtmlDecode(product.Description);
-                                    }
-                                    if (!string.IsNullOrEmpty(product.ContentMain))
-                                    {
-                                        product.ContentMain = HttpUtility.HtmlDecode(product.ContentMain);
-                                    }
-                                    await _productRepository.AsyncInsertSingleItemAuto(product);
-                                }
+                                product.Title = HttpUtility.HtmlDecode(product.Title);
+                                product.MetaTitle = AppGlobal.SetName(product.Title);
                             }
-                        }
-                        catch (Exception e1)
-                        {
-                            string mes1 = e1.Message;
+                            if (!string.IsNullOrEmpty(product.Description))
+                            {
+                                product.Description = HttpUtility.HtmlDecode(product.Description);
+                            }
+                            if (!string.IsNullOrEmpty(product.ContentMain))
+                            {
+                                product.ContentMain = HttpUtility.HtmlDecode(product.ContentMain);
+                            }
+                            await _productRepository.AsyncInsertSingleItemAuto(product);
                         }
                     }
                 }

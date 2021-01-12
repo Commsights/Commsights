@@ -120,11 +120,19 @@ namespace Commsights.MVC.Controllers
         public IActionResult Detail(int productPropertyID)
         {
             CodeData model = GetCodeData(productPropertyID);
+            if (string.IsNullOrEmpty(model.Title))
+            {
+                return RedirectToAction("Detail", "CodeData", new { ProductPropertyID = model.ProductPropertyID });
+            }
             return View(model);
         }
         public IActionResult DetailBasic(int productPropertyID)
         {
             CodeData model = GetCodeData(productPropertyID);
+            if (string.IsNullOrEmpty(model.Title))
+            {
+                return RedirectToAction("DetailBasic", "CodeData", new { ProductPropertyID = model.ProductPropertyID });
+            }
             return View(model);
         }
 
@@ -1546,7 +1554,7 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
         {
             var cookieExpires = new CookieOptions();
-            cookieExpires.Expires = DateTime.Now.AddDays(1);
+            cookieExpires.Expires = DateTime.Now.AddMonths(1);
             Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), cookieExpires);
             Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), cookieExpires);
             Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);
@@ -1556,7 +1564,7 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
         {
             var cookieExpires = new CookieOptions();
-            cookieExpires.Expires = DateTime.Now.AddDays(1);
+            cookieExpires.Expires = DateTime.Now.AddMonths(1);
             Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), cookieExpires);
             Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), cookieExpires);
             Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);
@@ -1566,7 +1574,7 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsPublishToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isPublish)
         {
             var cookieExpires = new CookieOptions();
-            cookieExpires.Expires = DateTime.Now.AddDays(1);
+            cookieExpires.Expires = DateTime.Now.AddMonths(1);
             Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), cookieExpires);
             Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), cookieExpires);
             Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);
@@ -1577,7 +1585,7 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isUpload)
         {
             var cookieExpires = new CookieOptions();
-            cookieExpires.Expires = DateTime.Now.AddDays(1);
+            cookieExpires.Expires = DateTime.Now.AddMonths(1);
             Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), cookieExpires);
             Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), cookieExpires);
             Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);
@@ -1594,7 +1602,7 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNewspageAndTVToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isUpload)
         {
             var cookieExpires = new CookieOptions();
-            cookieExpires.Expires = DateTime.Now.AddDays(1);
+            cookieExpires.Expires = DateTime.Now.AddMonths(1);
             Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), cookieExpires);
             Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), cookieExpires);
             Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);
@@ -1606,7 +1614,7 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNotNewspageAndTVToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isUpload)
         {
             var cookieExpires = new CookieOptions();
-            cookieExpires.Expires = DateTime.Now.AddDays(1);
+            cookieExpires.Expires = DateTime.Now.AddMonths(1);
             Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), cookieExpires);
             Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), cookieExpires);
             Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);
@@ -1618,7 +1626,7 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetByDateUpdatedBeginAndDateUpdatedEndAndSourceIsNewspageAndTVToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd)
         {
             var cookieExpires = new CookieOptions();
-            cookieExpires.Expires = DateTime.Now.AddDays(1);
+            cookieExpires.Expires = DateTime.Now.AddMonths(1);
             Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), cookieExpires);
             Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);
             List<CodeData> list = _codeDataRepository.GetByDateUpdatedBeginAndDateUpdatedEndAndSourceIsNewspageAndTVToList(datePublishBegin, datePublishEnd, AppGlobal.Newspage, AppGlobal.TV);
@@ -1826,10 +1834,13 @@ namespace Commsights.MVC.Controllers
                     if (listIsCoding.Count > 0)
                     {
                         model.RowNext = listIsCoding[0].ProductPropertyID;
+                        if (string.IsNullOrEmpty(model.Title))
+                        {
+                            model.ProductPropertyID = model.RowNext;
+                        }
                     }
                     model.RowIndexCount = listIsCoding.Count;
                     model.RowCount = list.Count;
-
                     _productPropertyRepository.InsertItemsByIDAndRequestUserIDAndCode(productPropertyID, RequestUserID, AppGlobal.ProductFeature);
                 }
                 catch
@@ -1840,8 +1851,7 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult DeleteProductProperty(int productPropertyID)
         {
-            string note = AppGlobal.InitString;
-            //_productPropertyRepository.DeleteItemsByIDCodeData(productPropertyID);
+            string note = AppGlobal.InitString;            
             _productPropertyRepository.Delete(productPropertyID);
             int result = 1;
             if (result > 0)
@@ -3653,125 +3663,59 @@ namespace Commsights.MVC.Controllers
             }
             if ((config != null) && (config.ID > 0))
             {
-                Product product = _productRepository.GetByURLCode(model.URLCode);
+                Product product = _productRepository.GetByURLCode(model.URLCode);                
                 if ((product == null) || (product.ID == 0))
                 {
                     product = new Product();
-                    product.Active = true;
+                    
                     product.Title = model.Title;
                     product.Description = model.Description;
                     product.DatePublish = model.DatePublish;
+                    product.IsFilter = true;
+                    product.ParentID = config.ID;
+                    product.CategoryID = config.ID;
+                    product.Source = AppGlobal.SourceAuto;
+                    product.URLCode = model.URLCode;
                     if (product.DatePublish.Year == 2020)
                     {
                         product.Active = false;
                     }
-                    try
-                    {
-                        if (!string.IsNullOrEmpty(product.Title))
-                        {
-                            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(model.URLCode);
-                            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                            if (response.StatusCode == HttpStatusCode.OK)
-                            {
-                                Stream receiveStream = response.GetResponseStream();
-                                StreamReader readStream = null;
-                                readStream = new StreamReader(receiveStream, Encoding.UTF8);
-                                string html = readStream.ReadToEnd();
-                                response.Close();
-                                readStream.Close();
-                                html = html.Replace(@"~", @"");
-                                string title = "";
-                                string htmlTitle = html;
-                                if ((htmlTitle.Contains(@"<meta property=""og:title"" content=""") == true) || (htmlTitle.Contains(@"<meta property='og:title' content='") == true))
-                                {
-                                    htmlTitle = htmlTitle.Replace(@"<meta property=""og:title"" content=""", @"~");
-                                    htmlTitle = htmlTitle.Replace(@"<meta property='og:title' content='", @"~");
-                                    if (htmlTitle.Split('~').Length > 1)
-                                    {
-                                        htmlTitle = htmlTitle.Split('~')[1];
-                                        htmlTitle = htmlTitle.Replace(@"""", @"~");
-                                        htmlTitle = htmlTitle.Replace(@"'", @"~");
-                                        htmlTitle = htmlTitle.Split('~')[0];
-                                        title = htmlTitle.Trim();
-                                    }
-                                }
-                                else
-                                {
-                                    MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
-                                    if (m1.Count > 0)
-                                    {
-                                        string value = m1[m1.Count - 1].Groups[1].Value;
-                                        if (!string.IsNullOrEmpty(value))
-                                        {
-                                            value = value.Replace(@"<title>", @"");
-                                            value = value.Replace(@"</title>", @"");
-                                            title = value.Trim();
-                                        }
-                                    }
-                                }
-                                bool isUnicode = AppGlobal.ContainsUnicodeCharacter(title);
-                                if ((title.Contains(@"&#") == true) || (isUnicode == false))
-                                {
-                                    MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
-                                    if (m1.Count > 0)
-                                    {
-                                        string value = m1[m1.Count - 1].Groups[1].Value;
-                                        if (!string.IsNullOrEmpty(value))
-                                        {
-                                            value = value.Replace(@"<title>", @"");
-                                            value = value.Replace(@"</title>", @"");
-                                            title = value.Trim();
-                                        }
-                                    }
-                                }
-                                if (title.Split('|').Length > 2)
-                                {
-                                    title = title.Split('|')[1];
-                                }
-                                if (title.Split('|').Length > 1)
-                                {
-                                    title = title.Split('|')[0];
-                                }
-                                title = title.Trim();
-                                product.Title = title;
-                                AppGlobal.FinderContentAndDatePublish002(html, product);
-                            }
-                            product.IsFilter = true;
-                            product.Description = "";
-                            product.ParentID = config.ID;
-                            product.CategoryID = config.ID;
-                            product.Source = AppGlobal.SourceAuto;
-                            product.URLCode = model.URLCode;
-                            product.DatePublish = DateTime.Now;
-                            if ((product.DatePublish.Year > 2020) && (product.Active == true))
-                            {
-                                if (!string.IsNullOrEmpty(product.Title))
-                                {
-                                    product.Title = HttpUtility.HtmlDecode(product.Title);
-                                    product.MetaTitle = AppGlobal.SetName(product.Title);
-                                }
-                                if (!string.IsNullOrEmpty(product.Description))
-                                {
-                                    product.Description = HttpUtility.HtmlDecode(product.Description);
-                                }
-                                if (!string.IsNullOrEmpty(product.ContentMain))
-                                {
-                                    product.ContentMain = HttpUtility.HtmlDecode(product.ContentMain);
-                                }
-
-                            }
-                        }
-                    }
-                    catch (Exception e1)
-                    {
-                        string mes1 = e1.Message;
-                    }
                 }
-                product.Initialization(InitType.Insert, RequestUserID);
-                string resultString = _productRepository.InsertSingleItemAuto(product);
-                if (resultString == "-1")
+                else
                 {
-                    result = 1;
+                    product.Active = true;
+                }
+                if (string.IsNullOrEmpty(product.Title))
+                {
+                    product.Title = AppGlobal.FinderTitle(product.URLCode);
+                }
+                if (string.IsNullOrEmpty(product.Description))
+                {
+                    string html = AppGlobal.FinderHTMLContent(product.URLCode);
+                    AppGlobal.FinderContent004(html, product);
+                }
+
+                if ((product.DatePublish.Year > 2020) && (product.Active == true))
+                {
+                    if (!string.IsNullOrEmpty(product.Title))
+                    {
+                        product.Title = HttpUtility.HtmlDecode(product.Title);
+                        product.MetaTitle = AppGlobal.SetName(product.Title);
+                    }
+                    if (!string.IsNullOrEmpty(product.Description))
+                    {
+                        product.Description = HttpUtility.HtmlDecode(product.Description);
+                    }
+                    if (!string.IsNullOrEmpty(product.ContentMain))
+                    {
+                        product.ContentMain = HttpUtility.HtmlDecode(product.ContentMain);
+                    }
+                    product.Initialization(InitType.Insert, RequestUserID);
+                    string resultString = _productRepository.InsertSingleItemAuto(product);
+                    if (resultString == "-1")
+                    {
+                        result = 1;
+                    }
                 }
                 if (result > 0)
                 {

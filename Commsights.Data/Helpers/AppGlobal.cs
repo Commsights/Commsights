@@ -4459,6 +4459,110 @@ namespace Commsights.Data.Helpers
                 }
             }
         }
+        public static void FinderContent004(string html, Product product)
+        {            
+            if (!string.IsNullOrEmpty(html))
+            {
+                string htmlspan = "";
+                if (string.IsNullOrEmpty(product.Description) || product.Description.Length < 1000)
+                {
+                    htmlspan = html;
+                    FinderContent002(htmlspan, "p", product);
+                }
+                if (string.IsNullOrEmpty(product.Description) || product.Description.Length < 500)
+                {
+                    htmlspan = html;
+                    product.Description = "";
+                    FinderContent002(htmlspan, "div", product);
+                }
+            }
+        }
+        public static string FinderTitle(string url)
+        {
+            string title = "";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Stream receiveStream = response.GetResponseStream();
+                StreamReader readStream = null;
+                readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                string html = readStream.ReadToEnd();
+                response.Close();
+                readStream.Close();
+                html = html.Replace(@"~", @"");
+                string htmlTitle = html;
+                if ((htmlTitle.Contains(@"<meta property=""og:title"" content=""") == true) || (htmlTitle.Contains(@"<meta property='og:title' content='") == true))
+                {
+                    htmlTitle = htmlTitle.Replace(@"<meta property=""og:title"" content=""", @"~");
+                    htmlTitle = htmlTitle.Replace(@"<meta property='og:title' content='", @"~");
+                    if (htmlTitle.Split('~').Length > 1)
+                    {
+                        htmlTitle = htmlTitle.Split('~')[1];
+                        htmlTitle = htmlTitle.Replace(@"""", @"~");
+                        htmlTitle = htmlTitle.Replace(@"'", @"~");
+                        htmlTitle = htmlTitle.Split('~')[0];
+                        title = htmlTitle.Trim();
+                    }
+                }
+                else
+                {
+                    MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
+                    if (m1.Count > 0)
+                    {
+                        string value = m1[m1.Count - 1].Groups[1].Value;
+                        if (!string.IsNullOrEmpty(value))
+                        {
+                            value = value.Replace(@"<title>", @"");
+                            value = value.Replace(@"</title>", @"");
+                            title = value.Trim();
+                        }
+                    }
+                }
+                bool isUnicode = AppGlobal.ContainsUnicodeCharacter(title);
+                if ((title.Contains(@"&#") == true) || (isUnicode == false))
+                {
+                    MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
+                    if (m1.Count > 0)
+                    {
+                        string value = m1[m1.Count - 1].Groups[1].Value;
+                        if (!string.IsNullOrEmpty(value))
+                        {
+                            value = value.Replace(@"<title>", @"");
+                            value = value.Replace(@"</title>", @"");
+                            title = value.Trim();
+                        }
+                    }
+                }
+                if (title.Split('|').Length > 2)
+                {
+                    title = title.Split('|')[1];
+                }
+                if (title.Split('|').Length > 1)
+                {
+                    title = title.Split('|')[0];
+                }
+                title = title.Trim();
+            }
+            return title;
+        }
+        public static string FinderHTMLContent(string url)
+        {
+            string html = "";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Stream receiveStream = response.GetResponseStream();
+                StreamReader readStream = null;
+                readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                html = readStream.ReadToEnd();
+                response.Close();
+                readStream.Close();
+                html = html.Replace(@"~", @"");
+            }
+            return html;
+        }
         public static List<LinkItem> ImgFinder(string html)
         {
             List<LinkItem> list = new List<LinkItem>();
