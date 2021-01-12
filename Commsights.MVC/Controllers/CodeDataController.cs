@@ -1808,6 +1808,10 @@ namespace Commsights.MVC.Controllers
                     {
                         model = _codeDataRepository.GetByProductPropertyID(productPropertyID);
                     }
+                    if ((model == null) || (string.IsNullOrEmpty(model.Title)))
+                    {
+                        model = new CodeData();
+                    }
                     if (model != null)
                     {
                         if (!string.IsNullOrEmpty(model.Title))
@@ -3632,9 +3636,6 @@ namespace Commsights.MVC.Controllers
             stream.Position = 0;
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
         }
-
-
-
         public IActionResult Create(CodeData model)
         {
             string note = AppGlobal.InitString;
@@ -3652,110 +3653,125 @@ namespace Commsights.MVC.Controllers
             }
             if ((config != null) && (config.ID > 0))
             {
-                try
+                Product product = _productRepository.GetByURLCode(model.URLCode);
+                if ((product == null) || (product.ID == 0))
                 {
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(model.URLCode);
-                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                    if (response.StatusCode == HttpStatusCode.OK)
+                    product = new Product();
+                    product.Active = true;
+                    product.Title = model.Title;
+                    product.Description = model.Description;
+                    product.DatePublish = model.DatePublish;
+                    if (product.DatePublish.Year == 2020)
                     {
-                        Stream receiveStream = response.GetResponseStream();
-                        StreamReader readStream = null;
-                        readStream = new StreamReader(receiveStream, Encoding.UTF8);
-                        string html = readStream.ReadToEnd();
-                        response.Close();
-                        readStream.Close();
-                        html = html.Replace(@"~", @"");
-                        string title = "";
-                        string htmlTitle = html;
-                        if ((htmlTitle.Contains(@"<meta property=""og:title"" content=""") == true) || (htmlTitle.Contains(@"<meta property='og:title' content='") == true))
+                        product.Active = false;
+                    }
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(product.Title))
                         {
-                            htmlTitle = htmlTitle.Replace(@"<meta property=""og:title"" content=""", @"~");
-                            htmlTitle = htmlTitle.Replace(@"<meta property='og:title' content='", @"~");
-                            if (htmlTitle.Split('~').Length > 1)
+                            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(model.URLCode);
+                            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                            if (response.StatusCode == HttpStatusCode.OK)
                             {
-                                htmlTitle = htmlTitle.Split('~')[1];
-                                htmlTitle = htmlTitle.Replace(@"""", @"~");
-                                htmlTitle = htmlTitle.Replace(@"'", @"~");
-                                htmlTitle = htmlTitle.Split('~')[0];
-                                title = htmlTitle.Trim();
-                            }
-                        }
-                        else
-                        {
-                            MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
-                            if (m1.Count > 0)
-                            {
-                                string value = m1[m1.Count - 1].Groups[1].Value;
-                                if (!string.IsNullOrEmpty(value))
+                                Stream receiveStream = response.GetResponseStream();
+                                StreamReader readStream = null;
+                                readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                                string html = readStream.ReadToEnd();
+                                response.Close();
+                                readStream.Close();
+                                html = html.Replace(@"~", @"");
+                                string title = "";
+                                string htmlTitle = html;
+                                if ((htmlTitle.Contains(@"<meta property=""og:title"" content=""") == true) || (htmlTitle.Contains(@"<meta property='og:title' content='") == true))
                                 {
-                                    value = value.Replace(@"<title>", @"");
-                                    value = value.Replace(@"</title>", @"");
-                                    title = value.Trim();
+                                    htmlTitle = htmlTitle.Replace(@"<meta property=""og:title"" content=""", @"~");
+                                    htmlTitle = htmlTitle.Replace(@"<meta property='og:title' content='", @"~");
+                                    if (htmlTitle.Split('~').Length > 1)
+                                    {
+                                        htmlTitle = htmlTitle.Split('~')[1];
+                                        htmlTitle = htmlTitle.Replace(@"""", @"~");
+                                        htmlTitle = htmlTitle.Replace(@"'", @"~");
+                                        htmlTitle = htmlTitle.Split('~')[0];
+                                        title = htmlTitle.Trim();
+                                    }
                                 }
-                            }
-                        }
-                        bool isUnicode = AppGlobal.ContainsUnicodeCharacter(title);
-                        if ((title.Contains(@"&#") == true) || (isUnicode == false))
-                        {
-                            MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
-                            if (m1.Count > 0)
-                            {
-                                string value = m1[m1.Count - 1].Groups[1].Value;
-                                if (!string.IsNullOrEmpty(value))
+                                else
                                 {
-                                    value = value.Replace(@"<title>", @"");
-                                    value = value.Replace(@"</title>", @"");
-                                    title = value.Trim();
+                                    MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
+                                    if (m1.Count > 0)
+                                    {
+                                        string value = m1[m1.Count - 1].Groups[1].Value;
+                                        if (!string.IsNullOrEmpty(value))
+                                        {
+                                            value = value.Replace(@"<title>", @"");
+                                            value = value.Replace(@"</title>", @"");
+                                            title = value.Trim();
+                                        }
+                                    }
                                 }
+                                bool isUnicode = AppGlobal.ContainsUnicodeCharacter(title);
+                                if ((title.Contains(@"&#") == true) || (isUnicode == false))
+                                {
+                                    MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
+                                    if (m1.Count > 0)
+                                    {
+                                        string value = m1[m1.Count - 1].Groups[1].Value;
+                                        if (!string.IsNullOrEmpty(value))
+                                        {
+                                            value = value.Replace(@"<title>", @"");
+                                            value = value.Replace(@"</title>", @"");
+                                            title = value.Trim();
+                                        }
+                                    }
+                                }
+                                if (title.Split('|').Length > 2)
+                                {
+                                    title = title.Split('|')[1];
+                                }
+                                if (title.Split('|').Length > 1)
+                                {
+                                    title = title.Split('|')[0];
+                                }
+                                title = title.Trim();
+                                product.Title = title;
+                                AppGlobal.FinderContentAndDatePublish002(html, product);
                             }
-                        }
-                        if (title.Split('|').Length > 2)
-                        {
-                            title = title.Split('|')[1];
-                        }
-                        if (title.Split('|').Length > 1)
-                        {
-                            title = title.Split('|')[0];
-                        }
-                        title = title.Trim();
-                        Product product = new Product();
-                        product.IsFilter = true;
-                        product.Description = "";
-                        product.Title = title;
-                        product.ParentID = config.ID;
-                        product.CategoryID = config.ID;
-                        product.Source = AppGlobal.SourceAuto;
-                        product.URLCode = model.URLCode;
-                        product.DatePublish = DateTime.Now;
-                        product.Initialization(InitType.Insert, RequestUserID);
-                        product.DatePublish = DateTime.Now;
-                        AppGlobal.FinderContentAndDatePublish002(html, product);
-                        if ((product.DatePublish.Year > 2020) && (product.Active == true))
-                        {
-                            if (!string.IsNullOrEmpty(product.Title))
+                            product.IsFilter = true;
+                            product.Description = "";
+                            product.ParentID = config.ID;
+                            product.CategoryID = config.ID;
+                            product.Source = AppGlobal.SourceAuto;
+                            product.URLCode = model.URLCode;
+                            product.DatePublish = DateTime.Now;
+                            if ((product.DatePublish.Year > 2020) && (product.Active == true))
                             {
-                                product.Title = HttpUtility.HtmlDecode(product.Title);
-                                product.MetaTitle = AppGlobal.SetName(product.Title);
-                            }
-                            if (!string.IsNullOrEmpty(product.Description))
-                            {
-                                product.Description = HttpUtility.HtmlDecode(product.Description);
-                            }
-                            if (!string.IsNullOrEmpty(product.ContentMain))
-                            {
-                                product.ContentMain = HttpUtility.HtmlDecode(product.ContentMain);
-                            }
-                            string resultString = _productRepository.InsertSingleItemAuto(product);
-                            if (resultString == "-1")
-                            {
-                                result = 1;
+                                if (!string.IsNullOrEmpty(product.Title))
+                                {
+                                    product.Title = HttpUtility.HtmlDecode(product.Title);
+                                    product.MetaTitle = AppGlobal.SetName(product.Title);
+                                }
+                                if (!string.IsNullOrEmpty(product.Description))
+                                {
+                                    product.Description = HttpUtility.HtmlDecode(product.Description);
+                                }
+                                if (!string.IsNullOrEmpty(product.ContentMain))
+                                {
+                                    product.ContentMain = HttpUtility.HtmlDecode(product.ContentMain);
+                                }
+
                             }
                         }
                     }
+                    catch (Exception e1)
+                    {
+                        string mes1 = e1.Message;
+                    }
                 }
-                catch (Exception e1)
+                product.Initialization(InitType.Insert, RequestUserID);
+                string resultString = _productRepository.InsertSingleItemAuto(product);
+                if (resultString == "-1")
                 {
-                    string mes1 = e1.Message;
+                    result = 1;
                 }
                 if (result > 0)
                 {

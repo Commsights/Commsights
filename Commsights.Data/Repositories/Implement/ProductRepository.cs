@@ -477,12 +477,34 @@ namespace Commsights.Data.Repositories
         }
         public Product GetByURLCode(string uRLCode)
         {
+            Product model = new Product();
             SqlParameter[] parameters =
             {
                     new SqlParameter("@URLCode",uRLCode),
             };
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectByURLCode", parameters);
-            return SQLHelper.ToList<Product>(dt).FirstOrDefault();
+            model = SQLHelper.ToList<Product>(dt).FirstOrDefault();
+            if (model == null)
+            {
+                if (uRLCode.Contains(@"http://") == true)
+                {
+                    uRLCode = uRLCode.Replace(@"http://", @"https://");
+                }
+                else
+                {
+                    if (uRLCode.Contains(@"https://") == true)
+                    {
+                        uRLCode = uRLCode.Replace(@"https://", @"http://");
+                    }
+                }    
+                SqlParameter[] parameters01 =
+                {
+                        new SqlParameter("@URLCode",uRLCode),
+                };
+                DataTable dt01 = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectByURLCode", parameters01);
+                model = SQLHelper.ToList<Product>(dt01).FirstOrDefault();
+            }
+            return model;
         }
         public Product GetByByDatePublishBeginAndDatePublishEndAndIndustryIDAndSourceID(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int sourceID)
         {

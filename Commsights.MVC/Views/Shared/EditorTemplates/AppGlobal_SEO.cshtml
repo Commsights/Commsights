@@ -1,0 +1,7 @@
+@(Html.Kendo().DropDownListFor(t => t)
+                   .DataValueField("Display")
+                   .DataTextField("Display")
+                   .HtmlAttributes(new {data_bind= "value: ArticleType", @class = "form-control", @style = "font-size:11px;" })
+                    .Filter(FilterType.StartsWith)
+                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetSEOToList", "AppGlobal")))
+)
