@@ -198,6 +198,7 @@ namespace Commsights.MVC.Controllers
             Product product = _productRepository.GetByID(model.ProductID.Value);
             if (product != null)
             {
+                product.DatePublish = model.DatePublish;
                 product.Title = model.Title;
                 product.Advalue = (int)model.Advalue.Value;
                 product.Page = model.Page;

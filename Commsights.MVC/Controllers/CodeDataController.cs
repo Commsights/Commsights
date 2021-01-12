@@ -1591,7 +1591,7 @@ namespace Commsights.MVC.Controllers
             Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);
             Response.Cookies.Append("CodeDataIsUpload", isUpload.ToString(), cookieExpires);
             Response.Cookies.Append("CodeDataAction", "1", cookieExpires);
-            List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload);
+            List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload).OrderBy(item => item.IsCoding).ToList();
             return Json(list.ToDataSourceResult(request));
         }
         public ActionResult GetByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDAndIsFilterToList([DataSourceRequest] DataSourceRequest request, DateTime dateUpdatedBegin, DateTime dateUpdatedEnd)
@@ -1746,18 +1746,18 @@ namespace Commsights.MVC.Controllers
             return RedirectToAction("DetailBasic", "CodeData", new { ProductPropertyID = model.ProductPropertyID, ActionMessage = actionMessage });
         }
         public int CopyURLSame(int productPropertyID)
-        {            
+        {
             productPropertyID = _productPropertyRepository.InsertSingleItemByCopyCodeData(productPropertyID, RequestUserID);
             return productPropertyID;
         }
         public int CopyURLAnother(int productPropertyID)
-        {            
+        {
             _productPropertyRepository.InsertItemsByCopyCodeData(productPropertyID, RequestUserID);
             CodeData model = GetCodeData(productPropertyID);
             return model.RowNext.Value;
         }
         public int BasicCopyURLSame(int productPropertyID)
-        {            
+        {
             productPropertyID = _productPropertyRepository.InsertSingleItemByCopyCodeData(productPropertyID, RequestUserID);
             return productPropertyID;
         }
@@ -1847,7 +1847,7 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult DeleteProductProperty(int productPropertyID)
         {
-            string note = AppGlobal.InitString;            
+            string note = AppGlobal.InitString;
             _productPropertyRepository.Delete(productPropertyID);
             int result = 1;
             if (result > 0)
@@ -3659,11 +3659,11 @@ namespace Commsights.MVC.Controllers
             }
             if ((config != null) && (config.ID > 0))
             {
-                Product product = _productRepository.GetByURLCode(model.URLCode);                
+                Product product = _productRepository.GetByURLCode(model.URLCode);
                 if ((product == null) || (product.ID == 0))
                 {
                     product = new Product();
-                    
+
                     product.Title = model.Title;
                     product.Description = model.Description;
                     product.DatePublish = model.DatePublish;

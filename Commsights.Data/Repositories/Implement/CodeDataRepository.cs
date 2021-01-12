@@ -86,13 +86,12 @@ namespace Commsights.Data.Repositories
             List<CodeData> list = new List<CodeData>();
             if (isUpload == false)
             {
-                list.AddRange(GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsCodingToList(datePublishBegin, datePublishEnd, industryID, employeeID, false));
+                list.AddRange(GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDToList(datePublishBegin, datePublishEnd, industryID, employeeID));
             }
             else
             {
-                list.AddRange(GetByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndEmployeeIDAndIsCodingToList(datePublishBegin, datePublishEnd, industryID, employeeID, false));
-            }
-            list.AddRange(GetByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndEmployeeID001ToList(datePublishBegin, datePublishEnd, industryID, employeeID));
+                list.AddRange(GetByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndEmployeeIDToList(datePublishBegin, datePublishEnd, industryID, employeeID));
+            }            
             return list;
         }
         public List<CodeData> GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNewspageAndTVToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int employeeID, bool isUpload, string sourceNewspage, string sourceTV)
@@ -100,13 +99,12 @@ namespace Commsights.Data.Repositories
             List<CodeData> list = new List<CodeData>();
             if (isUpload == false)
             {
-                list.AddRange(GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndSourceIsNewspageAndTVAndIsCodingToList(datePublishBegin, datePublishEnd, industryID, employeeID, sourceNewspage, sourceTV, false));
+                list.AddRange(GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndSourceIsNewspageAndTVToList(datePublishBegin, datePublishEnd, industryID, employeeID, sourceNewspage, sourceTV));
             }
             else
             {
-                list.AddRange(GetByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndEmployeeIDAndSourceIsNewspageAndTVAndIsCodingToList(datePublishBegin, datePublishEnd, industryID, employeeID, sourceNewspage, sourceTV, false));
-            }
-            list.AddRange(GetByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndEmployeeID001ToList(datePublishBegin, datePublishEnd, industryID, employeeID));
+                list.AddRange(GetByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndEmployeeIDAndSourceIsNewspageAndTVToList(datePublishBegin, datePublishEnd, industryID, employeeID, sourceNewspage, sourceTV));
+            }            
             return list;
         }
         public List<CodeData> GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNotNewspageAndTVToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int employeeID, bool isUpload, string sourceNewspage, string sourceTV)
@@ -114,13 +112,12 @@ namespace Commsights.Data.Repositories
             List<CodeData> list = new List<CodeData>();
             if (isUpload == false)
             {
-                list.AddRange(GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndSourceIsNotNewspageAndTVAndIsCodingToList(datePublishBegin, datePublishEnd, industryID, employeeID, sourceNewspage, sourceTV, false));
+                list.AddRange(GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndSourceIsNotNewspageAndTVToList(datePublishBegin, datePublishEnd, industryID, employeeID, sourceNewspage, sourceTV));
             }
             else
             {
-                list.AddRange(GetByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndEmployeeIDAndSourceIsNotNewspageAndTVAndIsCodingToList(datePublishBegin, datePublishEnd, industryID, employeeID, sourceNewspage, sourceTV, false));
-            }
-            list.AddRange(GetByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndEmployeeID001ToList(datePublishBegin, datePublishEnd, industryID, employeeID));
+                list.AddRange(GetByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndEmployeeIDAndSourceIsNotNewspageAndTVToList(datePublishBegin, datePublishEnd, industryID, employeeID, sourceNewspage, sourceTV));
+            }            
             return list;
         }
         public List<CodeData> GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndSourceIsNewspageAndTVToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int employeeID, string sourceNewspage, string sourceTV)
