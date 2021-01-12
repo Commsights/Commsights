@@ -35,5 +35,10 @@ namespace Commsights.Data.Repositories
         public List<CodeData> GetDailyByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int hourBegin, int hourEnd, int industryID);
         public CodeData GetByProductPropertyID(int productPropertyID);
         public List<CodeData> GetByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDAndIsFilterToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int employeeID, bool isFilter);
+        public List<CodeData> GetByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisAndIsUploadToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int hourBegin, int hourEnd, int industryID, string companyName, bool isCoding, bool isAnalysis, bool isUpload);
+        public List<CodeDataReport> GetReportByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsUploadToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isUpload);
+        public List<CodeDataReport> GetReportEmployeeByDateUpdatedBeginAndDateUpdatedEndToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd);
+        public List<CodeDataReport> GetReportIndustryByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int employeeID);
+        public List<CodeDataReport> GetReportCompanyNameByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int employeeID);
     }
 }

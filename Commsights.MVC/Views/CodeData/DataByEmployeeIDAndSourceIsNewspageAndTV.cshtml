@@ -78,7 +78,7 @@
     columns.Bound(t => t.MediaType).Title("Type").Width(120).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(1000).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.Description).Title("Summary (Vie)").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
-    columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });    
     //columns.Bound(t => t.Author).Title("Journalist").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
     //columns.Bound(t => t.TierCommsights).Title("Tier Commsights").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
     //columns.Bound(t => t.SpokePersonName).Title("Spoke Person Name").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
@@ -144,7 +144,7 @@
 .FileName("Article.pdf")
 )
 .HtmlAttributes(new { @class = "KendoGrid", @style="font-size:11px;" })
-.Search(search => { search.Field(f => f.URLCode); search.Field(f => f.Title); search.Field(f => f.TitleEnglish); search.Field(f => f.CompanyName); search.Field(f => f.MediaTitle); search.Field(f => f.TierCommsights); search.Field(f => f.MediaType); search.Field(f => f.ProductName_ProjectName); })
+.Search(search => { search.Field(f => f.URLCode); search.Field(f => f.Title); search.Field(f => f.TitleEnglish); search.Field(f => f.CompanyName); search.Field(f => f.MediaTitle); search.Field(f => f.ProductName_ProjectName); })
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(100)
@@ -210,7 +210,7 @@
         });
     }
     function onSearch() {
-        GetByIndustryIDAndParrentIDToList();
+        //GetByIndustryIDAndParrentIDToList();
         $("#CodeData").data("kendoGrid").dataSource.read();
     }
     function onGridRequestEnd(e) {

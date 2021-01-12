@@ -139,7 +139,7 @@
 .FileName("Article.pdf")
 )
 .HtmlAttributes(new { @class = "KendoGrid", @style="font-size:11px;" })
-.Search(search => { search.Field(f => f.URLCode); search.Field(f => f.Title); search.Field(f => f.TitleEnglish); search.Field(f => f.CompanyName); search.Field(f => f.MediaTitle); search.Field(f => f.TierCommsights); search.Field(f => f.MediaType); search.Field(f => f.ProductName_ProjectName); })
+.Search(search => { search.Field(f => f.URLCode); search.Field(f => f.Title); search.Field(f => f.TitleEnglish); search.Field(f => f.CompanyName); search.Field(f => f.MediaTitle); search.Field(f => f.ProductName_ProjectName); })
 .DataSource(dataSource => dataSource
 .Ajax()
 .PageSize(100)
@@ -205,7 +205,7 @@
         });
     }
     function onSearch() {
-        GetByIndustryIDAndParrentIDToList();
+        //GetByIndustryIDAndParrentIDToList();
         $("#CodeData").data("kendoGrid").dataSource.read();
     }
     function onGridRequestEnd(e) {

@@ -106,7 +106,7 @@
         </div>
     </div>
     <div class="col-md-4">
-        <form enctype="multipart/form-data" method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("UploadScanFiles", "ProductProperty")'>
+        <form enctype="multipart/form-data" method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("AsyncUploadScanFiles", "ProductProperty")'>
             <div class="row">
                 <div class='col-md-4'>
                     @(Html.Kendo().Upload()

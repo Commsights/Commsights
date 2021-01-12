@@ -365,7 +365,7 @@ namespace Commsights.MVC.Controllers
                         }
                         _productRepository.Create(model);
                         if (model.ID > 0)
-                        {                           
+                        {
                             foreach (ProductProperty item in listProductProperty)
                             {
                                 ProductProperty productProperty = new ProductProperty();
@@ -502,7 +502,7 @@ namespace Commsights.MVC.Controllers
                         }
                         _productRepository.Create(model);
                         if (model.ID > 0)
-                        {                           
+                        {
                             foreach (ProductProperty item in listProductProperty)
                             {
                                 ProductProperty productProperty = new ProductProperty();
@@ -648,7 +648,62 @@ namespace Commsights.MVC.Controllers
             }
             return RedirectToAction("ScanFilesHandling");
         }
-
+        public async Task<ActionResult> AsyncUploadScanFiles(Commsights.MVC.Models.BaseViewModel baseViewModel)
+        {
+            try
+            {
+                if (Request.Form.Files.Count > 0)
+                {
+                    for (int i = 0; i < Request.Form.Files.Count; i++)
+                    {
+                        var file = Request.Form.Files[i];
+                        if (file == null || file.Length == 0)
+                        {
+                        }
+                        if (file != null)
+                        {
+                            string fileExtension = Path.GetExtension(file.FileName);
+                            string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                            fileName = file.FileName;
+                            fileName = fileName.Replace(@"%", @"p");
+                            string directoryDay = AppGlobal.DateTimeCodeYearMonthDay;
+                            string mainPath = AppGlobal.FTPScanFiles;
+                            string url = AppGlobal.URLScanFiles;
+                            if (Directory.Exists(mainPath) == false)
+                            {
+                                mainPath = _hostingEnvironment.WebRootPath;
+                                url = AppGlobal.Domain;
+                            }
+                            url = url + AppGlobal.SourceScan + "/" + directoryDay + "/" + fileName;
+                            string subPath = AppGlobal.SourceScan + @"\" + directoryDay;
+                            string fullPath = mainPath + @"\" + subPath;
+                            if (!Directory.Exists(fullPath))
+                            {
+                                Directory.CreateDirectory(fullPath);
+                            }
+                            var physicalPath = Path.Combine(mainPath, subPath, fileName);
+                            using (var stream = new FileStream(physicalPath, FileMode.Create))
+                            {
+                                await file.CopyToAsync(stream);
+                                ProductProperty productProperty = new ProductProperty();
+                                productProperty.Active = false;
+                                productProperty.FileName = fileName;
+                                productProperty.Page = fileExtension;
+                                productProperty.Note = url;
+                                productProperty.ParentID = -1;
+                                productProperty.Code = AppGlobal.URLCode;
+                                productProperty.Initialization(InitType.Insert, RequestUserID);
+                                await _productPropertyRepository.AsyncCreate(productProperty);
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+            return RedirectToAction("ScanFilesHandling");
+        }
 
         public ActionResult UploadScanFilesNoUploadFiles()
         {

@@ -10,6 +10,9 @@ namespace Commsights.Data.DataTransferObject
     {
         public int? IndustryID { get; set; }
         public string Industry { get; set; }
+        public int? EmployeeID { get; set; }
+        public string Employee { get; set; }
+        public string CompanyName { get; set; }
         public int? ProductPropertyCount { get; set; }
         public int? CodingCount { get; set; }
         public int? AnalysisCount { get; set; }
@@ -18,5 +21,11 @@ namespace Commsights.Data.DataTransferObject
         public int? ProductAndiCount { get; set; }
         public int? ProductTVCount { get; set; }
         public int? ProductNewspageCount { get; set; }
+        public int? ProductPropertyCoding { get; set; }
+        public int? ProductPropertyCodingNot { get; set; }
+        public int? ProductPropertyEmployeeCount { get; set; }
+        public int? ProductPropertyEmployeeNotCount { get; set; }
+        public int? ProductPropertyEmployeeCodingCount { get; set; }
+        public int? ProductPropertyEmployeeCodingNotCount { get; set; }
     }
 }

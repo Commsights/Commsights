@@ -112,6 +112,14 @@ namespace Commsights.MVC.Controllers
             model.IndustryID = AppGlobal.IndustryID;
             return View(model);
         }
+        public IActionResult Employee()
+        {
+            CodeDataViewModel model = new CodeDataViewModel();
+            model.DatePublishBegin = DateTime.Now;
+            model.DatePublishEnd = DateTime.Now;
+            model.IndustryID = AppGlobal.IndustryID;
+            return View(model);
+        }
         public IActionResult Company()
         {
             return View();
@@ -1301,6 +1309,27 @@ namespace Commsights.MVC.Controllers
             List<CodeData> list = _codeDataRepository.GetByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID, companyName, isCoding, isAnalysis);
             return Json(list.ToDataSourceResult(request));
         }
+
+        public ActionResult GetByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisAndIsUploadToList([DataSourceRequest] DataSourceRequest request, DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int hourBegin, int hourEnd, int industryID, string companyName, bool isCoding, bool isAnalysis, bool isUpload)
+        {
+            if (string.IsNullOrEmpty(companyName))
+            {
+                companyName = "";
+            }
+            var cookieExpires = new CookieOptions();
+            cookieExpires.Expires = DateTime.Now.AddDays(1);
+            Response.Cookies.Append("CodeDataDateUpdatedBegin", dateUpdatedBegin.ToString("MM/dd/yyyy"), cookieExpires);
+            Response.Cookies.Append("CodeDataDateUpdatedEnd", dateUpdatedEnd.ToString("MM/dd/yyyy"), cookieExpires);
+            Response.Cookies.Append("CodeDataHourBegin", hourBegin.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataHourEnd", hourEnd.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataCompanyName", companyName.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataIsCoding", isCoding.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataIsAnalysis", isAnalysis.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataIsUpload", isUpload.ToString(), cookieExpires);
+            List<CodeData> list = _codeDataRepository.GetByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisAndIsUploadToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID, companyName, isCoding, isAnalysis, isUpload);
+            return Json(list.ToDataSourceResult(request));
+        }
         public string Export001ExportExcel(CancellationToken cancellationToken)
         {
             List<CodeData> list = new List<CodeData>();
@@ -1319,7 +1348,8 @@ namespace Commsights.MVC.Controllers
                 string companyName = Request.Cookies["CodeDataCompanyName"];
                 bool isCoding = bool.Parse(Request.Cookies["CodeDataIsCoding"]);
                 bool isAnalysis = bool.Parse(Request.Cookies["CodeDataIsAnalysis"]);
-                list = _codeDataRepository.GetByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID, companyName, isCoding, isAnalysis);
+                bool isUpload = bool.Parse(Request.Cookies["CodeDataIsUpload"]);
+                list = _codeDataRepository.GetByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisAndIsUploadToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID, companyName, isCoding, isAnalysis, isUpload);
                 industry = _configResposistory.GetByID(industryID);
                 if (industry != null)
                 {
@@ -1551,6 +1581,26 @@ namespace Commsights.MVC.Controllers
             List<CodeDataReport> list = _codeDataRepository.GetReportByDatePublishBeginAndDatePublishEndAndIsUploadToList(datePublishBegin, datePublishEnd, isUpload);
             return Json(list.ToDataSourceResult(request));
         }
+        public ActionResult GetReportEmployeeByDateUpdatedBeginAndDateUpdatedEndToList([DataSourceRequest] DataSourceRequest request, DateTime dateUpdatedBegin, DateTime dateUpdatedEnd)
+        {
+            List<CodeDataReport> list = _codeDataRepository.GetReportEmployeeByDateUpdatedBeginAndDateUpdatedEndToList(dateUpdatedBegin, dateUpdatedEnd);
+            return Json(list.ToDataSourceResult(request));
+        }
+        public ActionResult GetReportIndustryByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDToList([DataSourceRequest] DataSourceRequest request, DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int employeeID)
+        {
+            List<CodeDataReport> list = _codeDataRepository.GetReportIndustryByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDToList(dateUpdatedBegin, dateUpdatedEnd, employeeID);
+            return Json(list.ToDataSourceResult(request));
+        }
+        public ActionResult GetReportCompanyNameByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDToList([DataSourceRequest] DataSourceRequest request, DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int employeeID)
+        {
+            List<CodeDataReport> list = _codeDataRepository.GetReportCompanyNameByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDToList(dateUpdatedBegin, dateUpdatedEnd, employeeID);
+            return Json(list.ToDataSourceResult(request));
+        }
+        public ActionResult GetReportByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsUploadToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isUpload)
+        {
+            List<CodeDataReport> list = _codeDataRepository.GetReportByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsUploadToList(datePublishBegin, datePublishEnd, industryID, isUpload);
+            return Json(list.ToDataSourceResult(request));
+        }
         public ActionResult GetByDatePublishBeginAndDatePublishEndAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
         {
             var cookieExpires = new CookieOptions();
@@ -1737,11 +1787,13 @@ namespace Commsights.MVC.Controllers
         }
         public IActionResult SaveCoding(CodeData model)
         {
+            model.DatePublish = new DateTime(model.DatePublish.Year, model.DatePublish.Month, model.DatePublish.Day);
             string actionMessage = CheckCodeData(model);
             return RedirectToAction("Detail", "CodeData", new { ProductPropertyID = model.ProductPropertyID, ActionMessage = actionMessage });
         }
         public IActionResult SaveCodingDetailBasic(CodeData model)
         {
+            model.DatePublish = new DateTime(model.DatePublish.Year, model.DatePublish.Month, model.DatePublish.Day);
             string actionMessage = CheckCodeData(model);
             return RedirectToAction("DetailBasic", "CodeData", new { ProductPropertyID = model.ProductPropertyID, ActionMessage = actionMessage });
         }
@@ -1922,8 +1974,7 @@ namespace Commsights.MVC.Controllers
                     product.Note = model.Note;
                     result = _productRepository.Update(product.ID, product);
                 }
-            }
-
+            }           
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
@@ -3721,6 +3772,45 @@ namespace Commsights.MVC.Controllers
                 {
                     note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
                 }
+            }
+            return Json(note);
+        }
+        public IActionResult Update(CodeData model)
+        {
+            string note = AppGlobal.InitString;
+            int result = 0;
+
+            Product product = _productRepository.GetByID(model.ProductID.Value);
+            if (product != null)
+            {
+                if (product.ID > 0)
+                {
+                    product.Title = model.Title;
+                    product.Description = model.Description;
+                    product.DatePublish = model.DatePublish;
+                    product.Initialization(InitType.Update, RequestUserID);
+                    _productRepository.Update(product.ID, product);
+                }
+            }
+            ProductProperty productProperty = _productPropertyRepository.GetByID(model.ProductID.Value);
+            if (productProperty != null)
+            {
+                if (productProperty.ID > 0)
+                {
+                    productProperty.SentimentCorp = model.SentimentCorp;
+                    productProperty.SOECompany = model.SOECompany;
+                    productProperty.SOEProduct = model.SOEProduct;
+                    productProperty.Initialization(InitType.Update, RequestUserID);
+                    _productPropertyRepository.Update(productProperty.ID, productProperty);
+                }
+            }            
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
             }
             return Json(note);
         }

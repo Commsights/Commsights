@@ -91,7 +91,7 @@ namespace Commsights.Data.Repositories
             else
             {
                 list.AddRange(GetByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndEmployeeIDToList(datePublishBegin, datePublishEnd, industryID, employeeID));
-            }            
+            }
             return list;
         }
         public List<CodeData> GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNewspageAndTVToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int employeeID, bool isUpload, string sourceNewspage, string sourceTV)
@@ -104,7 +104,7 @@ namespace Commsights.Data.Repositories
             else
             {
                 list.AddRange(GetByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndEmployeeIDAndSourceIsNewspageAndTVToList(datePublishBegin, datePublishEnd, industryID, employeeID, sourceNewspage, sourceTV));
-            }            
+            }
             return list;
         }
         public List<CodeData> GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNotNewspageAndTVToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int employeeID, bool isUpload, string sourceNewspage, string sourceTV)
@@ -117,7 +117,7 @@ namespace Commsights.Data.Repositories
             else
             {
                 list.AddRange(GetByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndEmployeeIDAndSourceIsNotNewspageAndTVToList(datePublishBegin, datePublishEnd, industryID, employeeID, sourceNewspage, sourceTV));
-            }            
+            }
             return list;
         }
         public List<CodeData> GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndSourceIsNewspageAndTVToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int employeeID, string sourceNewspage, string sourceTV)
@@ -590,7 +590,7 @@ namespace Commsights.Data.Repositories
                         new SqlParameter("@DatePublishBegin",datePublishBegin),
                         new SqlParameter("@DatePublishEnd",datePublishEnd),
                         new SqlParameter("@IndustryID",industryID),
-                        new SqlParameter("@EmployeeID",employeeID),                        
+                        new SqlParameter("@EmployeeID",employeeID),
                     };
                     DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataSelectByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndEmployeeID001", parameters);
                     list = SQLHelper.ToList<CodeData>(dt);
@@ -628,6 +628,19 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<CodeData> GetByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisAndIsUploadToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int hourBegin, int hourEnd, int industryID, string companyName, bool isCoding, bool isAnalysis, bool isUpload)
+        {
+            List<CodeData> list = new List<CodeData>();
+            if(isUpload==true)
+            {
+                list = GetByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID, companyName, isCoding, isAnalysis);
+            }    
+            else
+            {
+                list = GetByDatePublishBeginAndDatePublishEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID, companyName, isCoding, isAnalysis);
+            }    
+            return list;
+        }
         public List<CodeData> GetByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int hourBegin, int hourEnd, int industryID, string companyName, bool isCoding, bool isAnalysis)
         {
             List<CodeData> list = new List<CodeData>();
@@ -656,6 +669,34 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<CodeData> GetByDatePublishBeginAndDatePublishEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int hourBegin, int hourEnd, int industryID, string companyName, bool isCoding, bool isAnalysis)
+        {
+            List<CodeData> list = new List<CodeData>();
+            if (industryID > 0)
+            {
+                try
+                {
+                    dateUpdatedBegin = new DateTime(dateUpdatedBegin.Year, dateUpdatedBegin.Month, dateUpdatedBegin.Day, hourBegin, 0, 0);
+                    dateUpdatedEnd = new DateTime(dateUpdatedEnd.Year, dateUpdatedEnd.Month, dateUpdatedEnd.Day, hourEnd, 59, 59);
+                    SqlParameter[] parameters =
+                    {
+                        new SqlParameter("@DatePublishBegin",dateUpdatedBegin),
+                        new SqlParameter("@DatePublishEnd",dateUpdatedEnd),
+                        new SqlParameter("@IndustryID",industryID),
+                        new SqlParameter("@CompanyName",companyName),
+                        new SqlParameter("@IsCoding",isCoding),
+                        new SqlParameter("@IsAnalysis",isAnalysis),
+                    };
+                    DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataSelectByDatePublishBeginAndDatePublishEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysis", parameters);
+                    list = SQLHelper.ToList<CodeData>(dt);
+                }
+                catch (Exception e)
+                {
+                    string mes = e.Message;
+                }
+            }
+            return list;
+        }
         public List<CodeDataReport> GetReportByDatePublishBeginAndDatePublishEndAndIsUploadToList(DateTime datePublishBegin, DateTime datePublishEnd, bool isUpload)
         {
             List<CodeDataReport> list = new List<CodeDataReport>();
@@ -666,6 +707,63 @@ namespace Commsights.Data.Repositories
             else
             {
                 list = GetReportByDatePublishBeginAndDatePublishEndToList(datePublishBegin, datePublishEnd);
+            }
+            return list;
+        }
+        public List<CodeDataReport> GetReportByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsUploadToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isUpload)
+        {
+            List<CodeDataReport> list = new List<CodeDataReport>();
+            if (isUpload == true)
+            {
+                list = GetReportByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
+            }
+            else
+            {
+                list = GetReportByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
+            }
+            return list;
+        }
+        public List<CodeDataReport> GetReportByDatePublishBeginAndDatePublishEndAndIndustryIDToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
+        {
+            List<CodeDataReport> list = new List<CodeDataReport>();
+            try
+            {
+                datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+                datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@DatePublishBegin",datePublishBegin),
+                new SqlParameter("@DatePublishEnd",datePublishEnd),
+                new SqlParameter("@IndustryID",industryID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataReportSelectByDatePublishBeginAndDatePublishEndAndIndustryID", parameters);
+                list = SQLHelper.ToList<CodeDataReport>(dt);
+            }
+            catch (Exception e)
+            {
+                string mes = e.Message;
+            }
+            return list;
+        }
+        public List<CodeDataReport> GetReportByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
+        {
+            List<CodeDataReport> list = new List<CodeDataReport>();
+            try
+            {
+                datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+                datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@DatePublishBegin",datePublishBegin),
+                new SqlParameter("@DatePublishEnd",datePublishEnd),
+                new SqlParameter("@IndustryID",industryID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataReportSelectByDateUpdatedBeginAndDateUpdatedEndAndIndustryID", parameters);
+                list = SQLHelper.ToList<CodeDataReport>(dt);
+            }
+            catch (Exception e)
+            {
+                string mes = e.Message;
             }
             return list;
         }
@@ -920,6 +1018,72 @@ namespace Commsights.Data.Repositories
                 }
             }
             return result;
+        }
+
+        public List<CodeDataReport> GetReportEmployeeByDateUpdatedBeginAndDateUpdatedEndToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd)
+        {
+            List<CodeDataReport> list = new List<CodeDataReport>();
+            try
+            {
+                dateUpdatedBegin = new DateTime(dateUpdatedBegin.Year, dateUpdatedBegin.Month, dateUpdatedBegin.Day, 0, 0, 0);
+                dateUpdatedEnd = new DateTime(dateUpdatedEnd.Year, dateUpdatedEnd.Month, dateUpdatedEnd.Day, 23, 59, 59);
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@DateUpdatedBegin",dateUpdatedBegin),
+                new SqlParameter("@DateUpdatedEnd",dateUpdatedEnd),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataReportSelectEmployeeByDateUpdatedBeginAndDateUpdatedEnd", parameters);
+                list = SQLHelper.ToList<CodeDataReport>(dt);
+            }
+            catch (Exception e)
+            {
+                string mes = e.Message;
+            }
+            return list;
+        }
+        public List<CodeDataReport> GetReportIndustryByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int employeeID)
+        {
+            List<CodeDataReport> list = new List<CodeDataReport>();
+            try
+            {
+                dateUpdatedBegin = new DateTime(dateUpdatedBegin.Year, dateUpdatedBegin.Month, dateUpdatedBegin.Day, 0, 0, 0);
+                dateUpdatedEnd = new DateTime(dateUpdatedEnd.Year, dateUpdatedEnd.Month, dateUpdatedEnd.Day, 23, 59, 59);
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@DateUpdatedBegin",dateUpdatedBegin),
+                new SqlParameter("@DateUpdatedEnd",dateUpdatedEnd),
+                new SqlParameter("@EmployeeID",employeeID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataReportSelectIndustryByDateUpdatedBeginAndDateUpdatedEndAndEmployeeID", parameters);
+                list = SQLHelper.ToList<CodeDataReport>(dt);
+            }
+            catch (Exception e)
+            {
+                string mes = e.Message;
+            }
+            return list;
+        }
+        public List<CodeDataReport> GetReportCompanyNameByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int employeeID)
+        {
+            List<CodeDataReport> list = new List<CodeDataReport>();
+            try
+            {
+                dateUpdatedBegin = new DateTime(dateUpdatedBegin.Year, dateUpdatedBegin.Month, dateUpdatedBegin.Day, 0, 0, 0);
+                dateUpdatedEnd = new DateTime(dateUpdatedEnd.Year, dateUpdatedEnd.Month, dateUpdatedEnd.Day, 23, 59, 59);
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@DateUpdatedBegin",dateUpdatedBegin),
+                new SqlParameter("@DateUpdatedEnd",dateUpdatedEnd),
+                new SqlParameter("@EmployeeID",employeeID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataReportSelectCompanyNameByDateUpdatedBeginAndDateUpdatedEndAndEmployeeID", parameters);
+                list = SQLHelper.ToList<CodeDataReport>(dt);
+            }
+            catch (Exception e)
+            {
+                string mes = e.Message;
+            }
+            return list;
         }
     }
 }

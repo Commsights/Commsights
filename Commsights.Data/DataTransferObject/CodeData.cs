@@ -123,7 +123,7 @@ namespace Commsights.Data.DataTransferObject
         public string Duration { get; set; }
         public bool? IsSummary { get; set; }
 
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         [DataType(DataType.Date)]
         public DateTime DatePublish { get; set; }        
         public DateTime DateUpload { get; set; }

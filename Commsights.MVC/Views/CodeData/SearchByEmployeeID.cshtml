@@ -20,7 +20,7 @@
                                      .Format("dd/MM/yyyy")
                                      .HtmlAttributes(new { @class = "form-control text-right", title = "Date end" })
                                      .DateInput()
-                                )
+                          )
                     </div>
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" title="Search" onclick="onSearch()">
@@ -35,10 +35,11 @@
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 11px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 11px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150).Locked(true);
     columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer; font-size: 11px; height:30px;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70).Locked(true);
+    columns.Bound(t => t.IsCoding).Title("Code").Width(50).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.URLCode).Title("URL").Width(150).HtmlAttributes(new { @class = "text-center", @style = "white-space: nowrap; font-size:11px;" });
     columns.Bound(t => t.Title).Title("Headline (Vie)").Width(150).HtmlAttributes(new { @style = "white-space: nowrap; font-size:11px;" });
     columns.Bound(t => t.Description).Title("Summary (Vie)").Width(150).HtmlAttributes(new { @class = "text-center", @style = "white-space: nowrap; font-size:11px;" });
-    columns.Bound(t => t.DatePublish).Title("Publish (MM/dd/yyyy)").Format("{0:MM/dd/yyyy}").Width(160).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap; font-size:11px;" });
+    columns.Bound(t => t.DatePublish).Title("Publish (dd/MM/yyyy)").Format("{0:dd/MM/yyyy}").Width(170).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap; font-size:11px;" });
     columns.Bound(t => t.SentimentCorp).Title("Sentiment").Width(150).EditorTemplateName("Config_SentimentCodeName").HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.CompanyName).Title("Company").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.SOECompany).Title("SOE (%)").Width(100).EditorTemplateName("AppGlobal_SEO").HtmlAttributes(new { @style = "white-space: nowrap;" });
@@ -83,6 +84,7 @@
 {
     model.Id(t => t.ProductPropertyID);
     model.Field(t => t.DatePublish).DefaultValue(new DateTime(2020,1,1));
+    model.Field(t => t.IsCoding).Editable(false);
     model.Field(t => t.CompanyName).Editable(false);
     model.Field(t => t.ProductName_ProjectName).Editable(false);
     model.Field(t => t.Industry).Editable(false);

@@ -81,7 +81,7 @@
     columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.Title).Title("Headline (Vie)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.Description).Title("Summary (Vie)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
-    columns.Bound(t => t.DatePublish).Title("Publish").Width(120).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.DatePublish).Title("Publish (dd/MM/yyyy)").Width(180).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
     columns.Bound(t => t.Note).Title("Note").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.CategoryMain).Title("Category Main").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.CategorySub).Title("Category Sub").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
