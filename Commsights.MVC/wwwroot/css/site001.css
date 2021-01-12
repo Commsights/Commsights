@@ -3,6 +3,10 @@
     width: 100%;
 }
 
+input{
+    font-size:11px;
+}
+
 input[type="checkbox"] {
     width: 30px;
     height: 30px;
