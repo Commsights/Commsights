@@ -241,6 +241,7 @@
                 productPropertyID: productPropertyIDValue
             },
             success: function (productPropertyIDResult) {
+                console.log(productPropertyIDResult);
                 var url = "/CodeData/DetailBasic?ProductPropertyID=" + productPropertyIDResult;
                 location.replace(url);
             }

@@ -1746,29 +1746,25 @@ namespace Commsights.MVC.Controllers
             return RedirectToAction("DetailBasic", "CodeData", new { ProductPropertyID = model.ProductPropertyID, ActionMessage = actionMessage });
         }
         public int CopyURLSame(int productPropertyID)
-        {
-            CodeData model = GetCodeData(productPropertyID);
-            productPropertyID = _productPropertyRepository.InsertSingleItemByCopyCodeData(model.ProductPropertyID.Value, RequestUserID);
+        {            
+            productPropertyID = _productPropertyRepository.InsertSingleItemByCopyCodeData(productPropertyID, RequestUserID);
             return productPropertyID;
         }
         public int CopyURLAnother(int productPropertyID)
-        {
+        {            
+            _productPropertyRepository.InsertItemsByCopyCodeData(productPropertyID, RequestUserID);
             CodeData model = GetCodeData(productPropertyID);
-            _productPropertyRepository.InsertItemsByCopyCodeData(model.ProductPropertyID.Value, RequestUserID);
-            model = GetCodeData(productPropertyID);
             return model.RowNext.Value;
         }
         public int BasicCopyURLSame(int productPropertyID)
-        {
-            CodeData model = GetCodeData(productPropertyID);
-            productPropertyID = _productPropertyRepository.InsertSingleItemByCopyCodeData(model.ProductPropertyID.Value, RequestUserID);
+        {            
+            productPropertyID = _productPropertyRepository.InsertSingleItemByCopyCodeData(productPropertyID, RequestUserID);
             return productPropertyID;
         }
         public int BasicCopyURLAnother(int productPropertyID)
         {
+            _productPropertyRepository.InsertItemsByCopyCodeData(productPropertyID, RequestUserID);
             CodeData model = GetCodeData(productPropertyID);
-            _productPropertyRepository.InsertItemsByCopyCodeData(model.ProductPropertyID.Value, RequestUserID);
-            model = GetCodeData(productPropertyID);
             return model.RowNext.Value;
         }
         public IActionResult ExportExcelEnglish()
