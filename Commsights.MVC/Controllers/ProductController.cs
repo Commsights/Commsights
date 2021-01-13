@@ -739,7 +739,7 @@ namespace Commsights.MVC.Controllers
         public async Task<string> AsyncScanWebsitePriorityNoFilterProductByIndexBeginVoid001(int indexBegin)
         {
             indexBegin = indexBegin + 1;
-            int indexEnd = indexBegin + 9;
+            int indexEnd = indexBegin + 5;
             List<Config> listConfig = _configResposistory.GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftAndRowBeginAndRowEndToList(AppGlobal.CRM, AppGlobal.Website, true, true, indexBegin, indexEnd);
             foreach (Config item in listConfig)
             {
@@ -1334,7 +1334,7 @@ namespace Commsights.MVC.Controllers
                             {
                                 product.ContentMain = HttpUtility.HtmlDecode(product.ContentMain);
                             }
-                            await _productRepository.AsyncInsertSingleItemAuto(product);
+                            await _productRepository.AsyncInsertSingleItemAutoNoFilter(product);
                         }
                     }
                 }

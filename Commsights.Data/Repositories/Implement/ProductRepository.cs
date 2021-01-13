@@ -1431,6 +1431,33 @@ new SqlParameter("@TargetID",product.TargetID),
             }
             return result;
         }
+        public async Task<string> AsyncInsertSingleItemAutoNoFilter(Product product)
+        {
+            string result = "";
+            if (!string.IsNullOrEmpty(product.Title))
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@UserCreated",product.UserCreated),
+                    new SqlParameter("@DateCreated",product.DateCreated),
+                    new SqlParameter("@UserUpdated",product.UserUpdated),
+                    new SqlParameter("@DateUpdated",product.DateUpdated),
+                    new SqlParameter("@ParentID",product.ParentID),
+                    new SqlParameter("@Active",product.Active),
+                    new SqlParameter("@CategoryID",product.CategoryID),
+                    new SqlParameter("@Title",product.Title),
+                    new SqlParameter("@URLCode",product.URLCode),
+                    new SqlParameter("@MetaTitle",product.MetaTitle),
+                    new SqlParameter("@Description",product.Description),
+                    new SqlParameter("@ContentMain",product.ContentMain),
+                    new SqlParameter("@DatePublish",product.DatePublish),
+                    new SqlParameter("@GUICode",product.GUICode),
+                    new SqlParameter("@Source",product.Source),
+                };
+                result = await SQLHelper.ExecuteNonQueryAsync(AppGlobal.ConectionString, "sp_ProductInsertSingleItemAutoNoFilter", parameters);
+            }
+            return result;
+        }
         public string InsertSingleItemAuto(Product product)
         {
             string result = "";
