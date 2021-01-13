@@ -469,6 +469,31 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<CodeData> GetDailyByDatePublishBeginAndDatePublishEndAndHourBeginAndHourEndAndIndustryIDToList(DateTime dateBegin, DateTime dateEnd, int hourBegin, int hourEnd, int industryID)
+        {
+            List<CodeData> list = new List<CodeData>();
+            if (industryID > 0)
+            {
+                try
+                {
+                    dateBegin = new DateTime(dateBegin.Year, dateBegin.Month, dateBegin.Day, hourBegin, 0, 0);
+                    dateEnd = new DateTime(dateEnd.Year, dateEnd.Month, dateEnd.Day, hourEnd, 59, 59);
+                    SqlParameter[] parameters =
+                    {
+                        new SqlParameter("@DatePublishBegin",dateBegin),
+                        new SqlParameter("@DatePublishEnd",dateEnd),
+                        new SqlParameter("@IndustryID",industryID),
+                    };
+                    DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataDailySelectByDatePublishBeginAndDatePublishEndAndIndustryID", parameters);
+                    list = SQLHelper.ToList<CodeData>(dt);
+                }
+                catch (Exception e)
+                {
+                    string mes = e.Message;
+                }
+            }
+            return list;
+        }
         public List<CodeData> GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDToList(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int employeeID)
         {
             List<CodeData> list = new List<CodeData>();
@@ -631,14 +656,14 @@ namespace Commsights.Data.Repositories
         public List<CodeData> GetByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisAndIsUploadToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int hourBegin, int hourEnd, int industryID, string companyName, bool isCoding, bool isAnalysis, bool isUpload)
         {
             List<CodeData> list = new List<CodeData>();
-            if(isUpload==true)
+            if (isUpload == true)
             {
                 list = GetByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID, companyName, isCoding, isAnalysis);
-            }    
+            }
             else
             {
                 list = GetByDatePublishBeginAndDatePublishEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID, companyName, isCoding, isAnalysis);
-            }    
+            }
             return list;
         }
         public List<CodeData> GetByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int hourBegin, int hourEnd, int industryID, string companyName, bool isCoding, bool isAnalysis)
@@ -1107,7 +1132,7 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
-        public List<CodeDataReport> GetReportCompanyNameByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDAndIndustryIDToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int employeeID,  int industryID)
+        public List<CodeDataReport> GetReportCompanyNameByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDAndIndustryIDToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int employeeID, int industryID)
         {
             List<CodeDataReport> list = new List<CodeDataReport>();
             try

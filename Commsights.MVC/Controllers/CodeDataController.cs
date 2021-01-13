@@ -1745,8 +1745,8 @@ namespace Commsights.MVC.Controllers
             try
             {
                 model.DatePublish = new DateTime(model.DatePublish.Year, model.DatePublish.Day, model.DatePublish.Month);
-                model.SOECompany = decimal.Parse(model.SOECompanyString);
-                model.SOEProduct = decimal.Parse(model.SOEProductString);
+                //model.SOECompany = decimal.Parse(model.SOECompanyString);
+                //model.SOEProduct = decimal.Parse(model.SOEProductString);
             }
             catch
             {
@@ -1982,6 +1982,18 @@ namespace Commsights.MVC.Controllers
             Response.Cookies.Append("CodeDataDailyHourEnd", hourEnd.ToString(), cookieExpires);
             Response.Cookies.Append("CodeDataDailyIndustryID", industryID.ToString(), cookieExpires);
             List<CodeData> list = _codeDataRepository.GetDailyByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID);
+            return Json(list.ToDataSourceResult(request));
+        }
+        public ActionResult GetDailyByDatePublishBeginAndDatePublishEndAndHourBeginAndHourEndAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int hourBegin, int hourEnd, int industryID)
+        {
+            var cookieExpires = new CookieOptions();
+            cookieExpires.Expires = DateTime.Now.AddDays(1);
+            Response.Cookies.Append("CodeDataDailyDatePublishBegin", dateUpdatedBegin.ToString("MM/dd/yyyy"), cookieExpires);
+            Response.Cookies.Append("CodeDataDailyDatePublishEnd", dateUpdatedEnd.ToString("MM/dd/yyyy"), cookieExpires);
+            Response.Cookies.Append("CodeDataDailyHourBegin", hourBegin.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataDailyHourEnd", hourEnd.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataDailyIndustryID", industryID.ToString(), cookieExpires);
+            List<CodeData> list = _codeDataRepository.GetDailyByDatePublishBeginAndDatePublishEndAndHourBeginAndHourEndAndIndustryIDToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID);
             return Json(list.ToDataSourceResult(request));
         }
         public IActionResult DeleteProductPropertyByID(int ProductPropertyID)
@@ -2732,7 +2744,7 @@ namespace Commsights.MVC.Controllers
                 int hourBegin = int.Parse(Request.Cookies["CodeDataDailyHourBegin"]);
                 int hourEnd = int.Parse(Request.Cookies["CodeDataDailyHourEnd"]);
                 int industryID = int.Parse(Request.Cookies["CodeDataDailyIndustryID"]);
-                list = _codeDataRepository.GetDailyByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID);
+                list = _codeDataRepository.GetDailyByDatePublishBeginAndDatePublishEndAndHourBeginAndHourEndAndIndustryIDToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID);
                 Config industry = _configResposistory.GetByID(industryID);
                 if (industry != null)
                 {
@@ -2904,9 +2916,8 @@ namespace Commsights.MVC.Controllers
                             {
                                 if (i == 1)
                                 {
-                                    workSheet.Cells[row, i].Value = list[index].DatePublish;
-                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                                    workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy";
+                                    workSheet.Cells[row, i].Value = list[index].DatePublish.ToString("MM/dd/yyyy");
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;                                    
                                 }
                                 if (i == 2)
                                 {
@@ -3028,8 +3039,8 @@ namespace Commsights.MVC.Controllers
                                 }
                                 if (i == 18)
                                 {
-                                    workSheet.Cells[row, i].Value = list[index].DateUpdated;
-                                    workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy HH:mm:ss";
+                                    workSheet.Cells[row, i].Value = list[index].DateUpdated.ToString("MM/dd/yyyy HH:mm:ss");
+                                    //workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy HH:mm:ss";
                                     workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                                 }
                                 if (i == 19)
@@ -3090,7 +3101,7 @@ namespace Commsights.MVC.Controllers
                 int hourBegin = int.Parse(Request.Cookies["CodeDataDailyHourBegin"]);
                 int hourEnd = int.Parse(Request.Cookies["CodeDataDailyHourEnd"]);
                 int industryID = int.Parse(Request.Cookies["CodeDataDailyIndustryID"]);
-                list = _codeDataRepository.GetDailyByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID);
+                list = _codeDataRepository.GetDailyByDatePublishBeginAndDatePublishEndAndHourBeginAndHourEndAndIndustryIDToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID);
                 Config industry = _configResposistory.GetByID(industryID);
                 if (industry != null)
                 {
@@ -3262,9 +3273,8 @@ namespace Commsights.MVC.Controllers
                             {
                                 if (i == 1)
                                 {
-                                    workSheet.Cells[row, i].Value = list[index].DatePublish;
-                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                                    workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy";
+                                    workSheet.Cells[row, i].Value = list[index].DatePublish.ToString("MM/dd/yyyy");
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;                                    
                                 }
                                 if (i == 2)
                                 {
@@ -3386,8 +3396,7 @@ namespace Commsights.MVC.Controllers
                                 }
                                 if (i == 18)
                                 {
-                                    workSheet.Cells[row, i].Value = list[index].DateUpdated;
-                                    workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy HH:mm:ss";
+                                    workSheet.Cells[row, i].Value = list[index].DateUpdated.ToString("MM/dd/yyyy HH:mm:ss");                                    
                                     workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                                 }
                                 if (i == 19)
