@@ -3,6 +3,7 @@
 @model Commsights.MVC.Models.CodeDataViewModel
 
 @Html.HiddenFor(Model => Model.IndustryID)
+@Html.HiddenFor(Model => Model.ID)
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
@@ -24,7 +25,7 @@
                                      .HtmlAttributes(new { @class = "form-control text-right", title = "Date end" })
                                      .DateInput()
                                 )
-                    </div>                    
+                    </div>
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" title="Search" onclick="onSearch()">
                             <span class="fas fa-search"></span>
@@ -40,7 +41,8 @@
                                  columns.Select().Width(50);
                                  columns.Bound(t => t.EmployeeID).Title("EmployeeID").Width(50);
                                  columns.Bound(t => t.Employee).Title("Employee").Width(100);
-                                 columns.Bound(t => t.ProductPropertyCount).Title("Count").Width(50).HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });
+                                 columns.Bound(t => t.ProductPropertyCount).Title("Copy").Width(50).HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });
+                                 columns.Bound(t => t.ProductCount).Title("Source").Width(50).HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });
                              })
                             .ToolBar(toolBar => toolBar.Search())
                             .Editable(editable => editable.Mode(GridEditMode.InLine))
@@ -85,9 +87,12 @@
                             .Name("CodeDataReportIndustry")
                             .Columns(columns =>
                             {
+                                columns.Select().Width(50);
+                                columns.Bound(t => t.IndustryID).Title("ID").Width(50);
                                 columns.Bound(t => t.Industry).Title("Industry").Width(150);
-                                columns.Bound(t => t.ProductPropertyCount).Title("Count").Width(50).HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });
-                            })                            
+                                columns.Bound(t => t.ProductPropertyCount).Title("Copy").Width(50).HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });
+                                columns.Bound(t => t.ProductCount).Title("Source").Width(50).HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });
+                            })
                             .Editable(editable => editable.Mode(GridEditMode.InLine))
                             .Sortable()
                             .Scrollable()
@@ -113,11 +118,13 @@
                             )
                             .HtmlAttributes(new { @class = "KendoGrid", @style = "font-size:11px; height:300px;" })
                             .Search(search => { search.Field(f => f.Employee);})
+                            .Events(ev => ev.Change("onCodeDataReportIndustryGridChange"))
                             .DataSource(dataSource => dataSource
                             .Ajax()
                             .PageSize(1000)
                             .Model(model =>
                             {
+                                model.Id(t => t.IndustryID);
                             })
                             .Read(t => t.Action("GetReportIndustryByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDToList", "CodeData").Data("filterCodeDataReportIndustry"))
                             )
@@ -127,8 +134,9 @@
                             .Columns(columns =>
                             {
                                 columns.Bound(t => t.CompanyName).Title("Company").Width(150);
-                                columns.Bound(t => t.ProductPropertyCount).Title("Count").Width(50).HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });
-                            })                            
+                                columns.Bound(t => t.ProductPropertyCount).Title("Copy").Width(50).HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });
+                                columns.Bound(t => t.ProductCount).Title("Source").Width(50).HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });
+                            })
                             .Editable(editable => editable.Mode(GridEditMode.InLine))
                             .Sortable()
                             .Scrollable()
@@ -160,7 +168,7 @@
                             .Model(model =>
                             {
                             })
-                            .Read(t => t.Action("GetReportCompanyNameByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDToList", "CodeData").Data("filterCodeDataReportIndustry"))
+                            .Read(t => t.Action("GetReportCompanyNameByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDAndIndustryIDToList", "CodeData").Data("filterCodeDataReportCompany"))
                             )
                             )
                     </div>
@@ -183,18 +191,28 @@
     }
     function filterCodeData(e) {
         var dateUpdatedBeginValue = toDate02($("#DatePublishBegin").val());
-        var dateUpdatedEndValue = toDate02($("#DatePublishEnd").val());        
+        var dateUpdatedEndValue = toDate02($("#DatePublishEnd").val());
         return { dateUpdatedBegin: dateUpdatedBeginValue, dateUpdatedEnd: dateUpdatedEndValue };
-    }   
+    }
     function filterCodeDataReportIndustry(e) {
         var dateUpdatedBeginValue = toDate02($("#DatePublishBegin").val());
         var dateUpdatedEndValue = toDate02($("#DatePublishEnd").val());
-        var employeeIDValue = $("#IndustryID").val();
+        var employeeIDValue = $("#ID").val();
         return { dateUpdatedBegin: dateUpdatedBeginValue, dateUpdatedEnd: dateUpdatedEndValue, employeeID: employeeIDValue };
-    }   
+    }
+    function filterCodeDataReportCompany(e) {
+        var dateUpdatedBeginValue = toDate02($("#DatePublishBegin").val());
+        var dateUpdatedEndValue = toDate02($("#DatePublishEnd").val());
+        var employeeIDValue = $("#ID").val();
+        var industryIDValue = $("#IndustryID").val();
+        return { dateUpdatedBegin: dateUpdatedBeginValue, dateUpdatedEnd: dateUpdatedEndValue, employeeID: employeeIDValue, industryID: industryIDValue };
+    }
     function onGridChange(arg) {
+        $("#ID").val(this.selectedKeyNames().join(";"));
+        $("#CodeDataReportIndustry").data("kendoGrid").dataSource.read();        
+    }
+    function onCodeDataReportIndustryGridChange(arg) {
         $("#IndustryID").val(this.selectedKeyNames().join(";"));
-        $("#CodeDataReportIndustry").data("kendoGrid").dataSource.read();
         $("#CodeDataReportCompany").data("kendoGrid").dataSource.read();
     }
 </script>

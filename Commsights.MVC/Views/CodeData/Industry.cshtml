@@ -24,11 +24,7 @@
                                      .HtmlAttributes(new { @class = "form-control text-right", title = "Date end" })
                                      .DateInput()
                                 )
-                    </div>
-                    <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
-                        <input id="IsUpload" type="checkbox" checked="checked">
-                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px; margin-right:10px;">Up/Pub</p>
-                    </div>
+                    </div>                    
                     <div class='col-sm-1'>
                         <button type="button" class="btn btn-success" title="Search" onclick="onSearch()">
                             <span class="fas fa-search"></span>
@@ -42,11 +38,12 @@
                              .Columns(columns =>
                              {
                                  columns.Select().Width(50);
+                                 columns.Bound(t => t.IndustryID).Title("ID").Width(50);
                                  columns.Bound(t => t.Industry).Title("Industry").Width(150);
-                                 columns.Bound(t => t.ProductPropertyCount).Title("Count").Width(50).HtmlAttributes(new { @class = "text-right text-danger", @style = "font-weight: bold;" });
-                                 columns.Bound(t => t.CodingCount).Title("Code").Width(50).HtmlAttributes(new { @class = "text-right text-success" });
+                                 columns.Bound(t => t.ProductPropertyCount).Title("Copy").Width(50).HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });
                                  columns.Bound(t => t.ProductCount).Title("Source").Width(50).HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });
-                                 columns.Bound(t => t.ProductGoogleCount).Title("Google").Width(50).HtmlAttributes(new { @class = "text-right" });
+                                 columns.Bound(t => t.CodingCount).Title("Code").Width(50).HtmlAttributes(new { @class = "text-right text-success" });
+                                 columns.Bound(t => t.ProductGoogleCount).Title("Search").Width(50).HtmlAttributes(new { @class = "text-right" });
                                  columns.Bound(t => t.ProductNewspageCount).Title("Scan").Width(50).HtmlAttributes(new { @class = "text-right" });
                                  columns.Bound(t => t.ProductTVCount).Title("TV").Width(50).HtmlAttributes(new { @class = "text-right" });
                              })
@@ -84,21 +81,22 @@
                             {
                                 model.Id(t => t.IndustryID);
                             })
-                            .Read(t => t.Action("GetReportByDatePublishBeginAndDatePublishEndAndIsUploadToList", "CodeData").Data("filterCodeData"))
+                            .Read(t => t.Action("GetReportByDatePublishBeginAndDatePublishEndToList", "CodeData").Data("filterCodeData"))
                             )
                             )
                     </div>
                     <div class='col-sm-6'>
                         @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.CodeDataReport>()
-                            .Name("CodeDataReportIndustry")                           
+                            .Name("CodeDataReportIndustry")
                             .Columns(columns =>
                             {
-                                columns.Bound(t => t.Employee).Title("Employee").Width(150);                                
-                                columns.Bound(t => t.ProductPropertyCodingNot).Title("Sum").Width(50).HtmlAttributes(new { @class = "text-right text-danger" });
-                                columns.Bound(t => t.ProductPropertyEmployeeCount).Title("Employee").Width(50).HtmlAttributes(new { @class = "text-right" });
-                                columns.Bound(t => t.ProductPropertyEmployeeNotCount).Title(".").Width(50).HtmlAttributes(new { @class = "text-right" });
-                                columns.Bound(t => t.ProductPropertyEmployeeCodingCount).Title("Code").Width(50).HtmlAttributes(new { @class = "text-right text-success", @style = "font-weight: bold;" });
-                                columns.Bound(t => t.ProductPropertyEmployeeCodingNotCount).Title("No code").Width(50).HtmlAttributes(new { @class = "text-right text-danger", @style = "font-weight: bold;" });
+                                columns.Bound(t => t.EmployeeID).Title("ID").Width(50);
+                                columns.Bound(t => t.Employee).Title("Employee").Width(150);
+                                columns.Bound(t => t.ProductCodingNot).Title("Sum").Width(50).HtmlAttributes(new { @class = "text-right text-danger", @style = "font-weight: bold;" });
+                                columns.Bound(t => t.ProductEmployeeCount).Title("Source").Width(50).HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });                                
+                                columns.Bound(t => t.ProductEmployeeCodingCount).Title("Code").Width(50).HtmlAttributes(new { @class = "text-right text-success", @style = "font-weight: bold;" });
+                                columns.Bound(t => t.ProductPropertyEmployeeCodingCount).Title("Copy").Width(50).HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });
+                                columns.Bound(t => t.ProductEmployeeCodingNotCount).Title("No code").Width(50).HtmlAttributes(new { @class = "text-right text-danger", @style = "font-weight: bold;" });
                             })
                             .ToolBar(toolBar => toolBar.Search())
                             .Editable(editable => editable.Mode(GridEditMode.InLine))
@@ -125,14 +123,14 @@
                             .FileName("Config.pdf")
                             )
                             .HtmlAttributes(new { @class = "KendoGrid", @style = "font-size:11px;" })
-                            .Search(search => { search.Field(f => f.Employee);})                            
+                            .Search(search => { search.Field(f => f.Employee);})
                             .DataSource(dataSource => dataSource
                             .Ajax()
                             .PageSize(1000)
                             .Model(model =>
                             {
                             })
-                            .Read(t => t.Action("GetReportByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsUploadToList", "CodeData").Data("filterCodeDataReportIndustry"))
+                            .Read(t => t.Action("GetReportByDatePublishBeginAndDatePublishEndAndIndustryIDToList", "CodeData").Data("filterCodeDataReportIndustry"))
                             )
                             )
                     </div>
@@ -155,16 +153,14 @@
     }
     function filterCodeData(e) {
         var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
-        var datePublishEndValue = toDate02($("#DatePublishEnd").val());
-        var isUploadValue = document.getElementById("IsUpload").checked;
-        return { datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, isUpload: isUploadValue };
+        var datePublishEndValue = toDate02($("#DatePublishEnd").val());        
+        return { datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue };
     }
     function filterCodeDataReportIndustry(e) {
         var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
-        var datePublishEndValue = toDate02($("#DatePublishEnd").val());
-        var isUploadValue = document.getElementById("IsUpload").checked;
+        var datePublishEndValue = toDate02($("#DatePublishEnd").val());        
         var industryIDValue = $("#IndustryID").val();
-        return { datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, industryID: industryIDValue, isUpload: isUploadValue };
+        return { datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, industryID: industryIDValue };
     }
     function onGridChange(arg) {
         $("#IndustryID").val(this.selectedKeyNames().join(";"));

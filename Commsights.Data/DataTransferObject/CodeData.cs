@@ -29,6 +29,8 @@ namespace Commsights.Data.DataTransferObject
         public string CategorySubVietnamese { get; set; }
         public string CompanyName { get; set; }
         public string CorpCopy { get; set; }
+        public string SOECompanyString { get; set; }
+        public string SOEProductString { get; set; }
         [DataType(DataType.Currency)]
         [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? SOECompany { get; set; }
@@ -40,7 +42,7 @@ namespace Commsights.Data.DataTransferObject
         public decimal? SOEProduct { get; set; }
         public string FeatureProduct { get; set; }
         public string SentimentCorp { get; set; }
-        public string SentimentCorpVietnamese { get; set; }           
+        public string SentimentCorpVietnamese { get; set; }
         public decimal? Advalue { get; set; }
         public decimal? Color { get; set; }
         public string TierCommsights { get; set; }
@@ -117,7 +119,7 @@ namespace Commsights.Data.DataTransferObject
         public string Author { get; set; }
         public string URLCode { get; set; }
         public string ProductSource { get; set; }
-        public string MediaTitle { get; set; }        
+        public string MediaTitle { get; set; }
         public string MediaType { get; set; }
         public string Page { get; set; }
         public string Duration { get; set; }
@@ -125,7 +127,7 @@ namespace Commsights.Data.DataTransferObject
 
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         [DataType(DataType.Date)]
-        public DateTime DatePublish { get; set; }        
+        public DateTime DatePublish { get; set; }
         public DateTime DateUpload { get; set; }
         public DateTime DateUpdated { get; set; }
         public DateTime DateCoding { get; set; }

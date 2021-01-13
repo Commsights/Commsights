@@ -87,7 +87,7 @@ namespace Commsights.Data.Helpers
     }
     public class SOE
     {
-        public int Display { get; set; }
+        public string Display { get; set; }
         public SOE()
         {
         }
@@ -97,7 +97,7 @@ namespace Commsights.Data.Helpers
             for (int i = 0; i <= 100; i = i + 5)
             {
                 SOE model = new SOE();
-                model.Display = i;
+                model.Display = i.ToString();
                 list.Add(model);
             }
             return list;

@@ -27,5 +27,11 @@ namespace Commsights.Data.DataTransferObject
         public int? ProductPropertyEmployeeNotCount { get; set; }
         public int? ProductPropertyEmployeeCodingCount { get; set; }
         public int? ProductPropertyEmployeeCodingNotCount { get; set; }
+
+        public int? ProductCodingNot { get; set; }
+        public int? ProductEmployeeCount { get; set; }
+        public int? ProductEmployeeCodingCount { get; set; }
+        public int? ProductEmployeeCodingNotCount { get; set; }
+        
     }
 }

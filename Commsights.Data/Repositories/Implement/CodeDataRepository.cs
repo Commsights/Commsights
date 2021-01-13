@@ -1085,5 +1085,50 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<CodeDataReport> GetReportCompanyNameByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int industryID)
+        {
+            List<CodeDataReport> list = new List<CodeDataReport>();
+            try
+            {
+                dateUpdatedBegin = new DateTime(dateUpdatedBegin.Year, dateUpdatedBegin.Month, dateUpdatedBegin.Day, 0, 0, 0);
+                dateUpdatedEnd = new DateTime(dateUpdatedEnd.Year, dateUpdatedEnd.Month, dateUpdatedEnd.Day, 23, 59, 59);
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@DateUpdatedBegin",dateUpdatedBegin),
+                new SqlParameter("@DateUpdatedEnd",dateUpdatedEnd),
+                new SqlParameter("@IndustryID",industryID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataReportSelectCompanyNameByDateUpdatedBeginAndDateUpdatedEndAndIndustryID", parameters);
+                list = SQLHelper.ToList<CodeDataReport>(dt);
+            }
+            catch (Exception e)
+            {
+                string mes = e.Message;
+            }
+            return list;
+        }
+        public List<CodeDataReport> GetReportCompanyNameByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDAndIndustryIDToList(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int employeeID,  int industryID)
+        {
+            List<CodeDataReport> list = new List<CodeDataReport>();
+            try
+            {
+                dateUpdatedBegin = new DateTime(dateUpdatedBegin.Year, dateUpdatedBegin.Month, dateUpdatedBegin.Day, 0, 0, 0);
+                dateUpdatedEnd = new DateTime(dateUpdatedEnd.Year, dateUpdatedEnd.Month, dateUpdatedEnd.Day, 23, 59, 59);
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@DateUpdatedBegin",dateUpdatedBegin),
+                new SqlParameter("@DateUpdatedEnd",dateUpdatedEnd),
+                new SqlParameter("@EmployeeID",employeeID),
+                new SqlParameter("@IndustryID",industryID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_CodeDataReportSelectCompanyNameByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDAndIndustryID", parameters);
+                list = SQLHelper.ToList<CodeDataReport>(dt);
+            }
+            catch (Exception e)
+            {
+                string mes = e.Message;
+            }
+            return list;
+        }
     }
 }

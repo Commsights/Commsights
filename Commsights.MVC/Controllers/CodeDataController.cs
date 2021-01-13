@@ -1570,6 +1570,11 @@ namespace Commsights.MVC.Controllers
             List<Membership> list = _codeDataRepository.GetReportSelectByDatePublishBeginAndDatePublishEnd001ToList(datePublishBegin, datePublishEnd);
             return Json(list.ToDataSourceResult(request));
         }
+        public ActionResult GetReportByDatePublishBeginAndDatePublishEndAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID)
+        {
+            List<CodeDataReport> list = _codeDataRepository.GetReportByDatePublishBeginAndDatePublishEndAndIndustryIDToList(datePublishBegin, datePublishEnd, industryID);
+            return Json(list.ToDataSourceResult(request));
+        }
         public ActionResult GetReportByDatePublishBeginAndDatePublishEndToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd)
         {
             List<CodeDataReport> list = _codeDataRepository.GetReportByDatePublishBeginAndDatePublishEndToList(datePublishBegin, datePublishEnd);
@@ -1594,6 +1599,16 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetReportCompanyNameByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDToList([DataSourceRequest] DataSourceRequest request, DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int employeeID)
         {
             List<CodeDataReport> list = _codeDataRepository.GetReportCompanyNameByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDToList(dateUpdatedBegin, dateUpdatedEnd, employeeID);
+            return Json(list.ToDataSourceResult(request));
+        }
+        public ActionResult GetReportCompanyNameByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int industryID)
+        {
+            List<CodeDataReport> list = _codeDataRepository.GetReportCompanyNameByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDToList(dateUpdatedBegin, dateUpdatedEnd, industryID);
+            return Json(list.ToDataSourceResult(request));
+        }
+        public ActionResult GetReportCompanyNameByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int employeeID, int industryID)
+        {
+            List<CodeDataReport> list = _codeDataRepository.GetReportCompanyNameByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDAndIndustryIDToList(dateUpdatedBegin, dateUpdatedEnd, employeeID, industryID);
             return Json(list.ToDataSourceResult(request));
         }
         public ActionResult GetReportByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsUploadToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isUpload)
@@ -1730,6 +1745,8 @@ namespace Commsights.MVC.Controllers
             try
             {
                 model.DatePublish = new DateTime(model.DatePublish.Year, model.DatePublish.Day, model.DatePublish.Month);
+                model.SOECompany = decimal.Parse(model.SOECompanyString);
+                model.SOEProduct = decimal.Parse(model.SOEProductString);
             }
             catch
             {
@@ -1815,12 +1832,12 @@ namespace Commsights.MVC.Controllers
             return productPropertyID;
         }
         public IActionResult SaveCoding(CodeData model)
-        {            
+        {
             string actionMessage = CheckCodeData(model);
             return RedirectToAction("Detail", "CodeData", new { ProductPropertyID = model.ProductPropertyID, ActionMessage = actionMessage });
         }
         public IActionResult SaveCodingDetailBasic(CodeData model)
-        {            
+        {
             string actionMessage = CheckCodeData(model);
             return RedirectToAction("DetailBasic", "CodeData", new { ProductPropertyID = model.ProductPropertyID, ActionMessage = actionMessage });
         }
