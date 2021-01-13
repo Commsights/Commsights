@@ -1727,6 +1727,13 @@ namespace Commsights.MVC.Controllers
         }
         public string CheckCodeData(CodeData model)
         {
+            try
+            {
+                model.DatePublish = new DateTime(model.DatePublish.Year, model.DatePublish.Day, model.DatePublish.Month);
+            }
+            catch
+            {
+            }
             _productRepository.UpdateSingleItemByCodeData(model);
             model.UserUpdated = RequestUserID;
             _productPropertyRepository.UpdateItemsByCodeDataCopyVersion(model);
@@ -1808,14 +1815,12 @@ namespace Commsights.MVC.Controllers
             return productPropertyID;
         }
         public IActionResult SaveCoding(CodeData model)
-        {
-            model.DatePublish = new DateTime(model.DatePublish.Year, model.DatePublish.Month, model.DatePublish.Day);
+        {            
             string actionMessage = CheckCodeData(model);
             return RedirectToAction("Detail", "CodeData", new { ProductPropertyID = model.ProductPropertyID, ActionMessage = actionMessage });
         }
         public IActionResult SaveCodingDetailBasic(CodeData model)
-        {
-            model.DatePublish = new DateTime(model.DatePublish.Year, model.DatePublish.Month, model.DatePublish.Day);
+        {            
             string actionMessage = CheckCodeData(model);
             return RedirectToAction("DetailBasic", "CodeData", new { ProductPropertyID = model.ProductPropertyID, ActionMessage = actionMessage });
         }
@@ -1853,7 +1858,6 @@ namespace Commsights.MVC.Controllers
                 DateTime datePublishBegin = DateTime.Now;
                 DateTime datePublishEnd = DateTime.Now;
                 int industryID = 0;
-                bool isUpload = false;
                 try
                 {
                     industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);

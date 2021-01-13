@@ -1510,6 +1510,7 @@ new SqlParameter("@Description",product.Description),
         }
         public string UpdateSingleItemByCodeData(CodeData model)
         {
+
             SqlParameter[] parameters =
             {
 new SqlParameter("@ID",model.ProductID),
