@@ -64,6 +64,6 @@ namespace Commsights.Data.Repositories
         public Task<List<ProductCompact>> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceAndIsPublishToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source, bool isTitle, bool isDescription, bool isPublish);
         public Task<List<ProductCompact>> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceAndIsUploadToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source, bool isTitle, bool isDescription, bool isUpload);
         public string InsertSingleItemAuto(Product product);
-        public Task<string> AsyncInsertSingleItemAutoNoFilter(Product product)
+        public Task<string> AsyncInsertSingleItemAutoNoFilter(Product product);
     }
 }
