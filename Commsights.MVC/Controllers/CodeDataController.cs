@@ -1633,6 +1633,7 @@ namespace Commsights.MVC.Controllers
             Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), cookieExpires);
             Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), cookieExpires);
             Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);
+            Response.Cookies.Append("CodeDataAction", "1", cookieExpires);
             List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDToList(datePublishBegin, datePublishEnd, industryID, RequestUserID);
             return Json(list.ToDataSourceResult(request));
         }
@@ -2738,7 +2739,7 @@ namespace Commsights.MVC.Controllers
                 int hourBegin = int.Parse(Request.Cookies["CodeDataDailyHourBegin"]);
                 int hourEnd = int.Parse(Request.Cookies["CodeDataDailyHourEnd"]);
                 int industryID = int.Parse(Request.Cookies["CodeDataDailyIndustryID"]);
-                list = _codeDataRepository.GetDailyByDatePublishBeginAndDatePublishEndAndHourBeginAndHourEndAndIndustryIDToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID);
+                list = _codeDataRepository.GetDailyByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID);
                 Config industry = _configResposistory.GetByID(industryID);
                 if (industry != null)
                 {
@@ -3095,7 +3096,7 @@ namespace Commsights.MVC.Controllers
                 int hourBegin = int.Parse(Request.Cookies["CodeDataDailyHourBegin"]);
                 int hourEnd = int.Parse(Request.Cookies["CodeDataDailyHourEnd"]);
                 int industryID = int.Parse(Request.Cookies["CodeDataDailyIndustryID"]);
-                list = _codeDataRepository.GetDailyByDatePublishBeginAndDatePublishEndAndHourBeginAndHourEndAndIndustryIDToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID);
+                list = _codeDataRepository.GetDailyByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDToList(dateUpdatedBegin, dateUpdatedEnd, hourBegin, hourEnd, industryID);
                 Config industry = _configResposistory.GetByID(industryID);
                 if (industry != null)
                 {
