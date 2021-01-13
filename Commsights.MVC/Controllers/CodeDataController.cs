@@ -1741,16 +1741,7 @@ namespace Commsights.MVC.Controllers
             return _codeDataRepository.GetProductNameByURLCode(uRLCode);
         }
         public string CheckCodeData(CodeData model)
-        {
-            try
-            {
-                model.DatePublish = new DateTime(model.DatePublish.Year, model.DatePublish.Day, model.DatePublish.Month);
-                //model.SOECompany = decimal.Parse(model.SOECompanyString);
-                //model.SOEProduct = decimal.Parse(model.SOEProductString);
-            }
-            catch
-            {
-            }
+        {            
             _productRepository.UpdateSingleItemByCodeData(model);
             model.UserUpdated = RequestUserID;
             _productPropertyRepository.UpdateItemsByCodeDataCopyVersion(model);
@@ -2917,7 +2908,7 @@ namespace Commsights.MVC.Controllers
                                 if (i == 1)
                                 {
                                     workSheet.Cells[row, i].Value = list[index].DatePublish.ToString("MM/dd/yyyy");
-                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;                                    
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                                 }
                                 if (i == 2)
                                 {
@@ -3274,7 +3265,7 @@ namespace Commsights.MVC.Controllers
                                 if (i == 1)
                                 {
                                     workSheet.Cells[row, i].Value = list[index].DatePublish.ToString("MM/dd/yyyy");
-                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;                                    
+                                    workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                                 }
                                 if (i == 2)
                                 {
@@ -3396,7 +3387,7 @@ namespace Commsights.MVC.Controllers
                                 }
                                 if (i == 18)
                                 {
-                                    workSheet.Cells[row, i].Value = list[index].DateUpdated.ToString("MM/dd/yyyy HH:mm:ss");                                    
+                                    workSheet.Cells[row, i].Value = list[index].DateUpdated.ToString("MM/dd/yyyy HH:mm:ss");
                                     workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                                 }
                                 if (i == 19)
