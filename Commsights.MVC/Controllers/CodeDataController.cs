@@ -1661,6 +1661,17 @@ namespace Commsights.MVC.Controllers
             List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNewspageAndTVToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload, AppGlobal.Newspage, AppGlobal.TV);
             return Json(list.ToDataSourceResult(request));
         }
+        public ActionResult GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndSourceIsNewspageAndTVToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isUpload)
+        {
+            var cookieExpires = new CookieOptions();
+            cookieExpires.Expires = DateTime.Now.AddMonths(1);
+            Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), cookieExpires);
+            Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);
+            Response.Cookies.Append("CodeDataAction", "2", cookieExpires);
+            List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndSourceIsNewspageAndTVToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, AppGlobal.Newspage, AppGlobal.TV);
+            return Json(list.ToDataSourceResult(request));
+        }
         public ActionResult GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNotNewspageAndTVToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isUpload)
         {
             var cookieExpires = new CookieOptions();
@@ -1671,6 +1682,17 @@ namespace Commsights.MVC.Controllers
             Response.Cookies.Append("CodeDataIsUpload", isUpload.ToString(), cookieExpires);
             Response.Cookies.Append("CodeDataAction", "3", cookieExpires);
             List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNotNewspageAndTVToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload, AppGlobal.Newspage, AppGlobal.TV);
+            return Json(list.ToDataSourceResult(request));
+        }
+        public ActionResult GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndSourceIsNotNewspageAndTVToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd, int industryID, bool isUpload)
+        {
+            var cookieExpires = new CookieOptions();
+            cookieExpires.Expires = DateTime.Now.AddMonths(1);
+            Response.Cookies.Append("CodeDataIndustryID", industryID.ToString(), cookieExpires);
+            Response.Cookies.Append("CodeDataDatePublishBegin", datePublishBegin.ToString("MM/dd/yyyy"), cookieExpires);
+            Response.Cookies.Append("CodeDataDatePublishEnd", datePublishEnd.ToString("MM/dd/yyyy"), cookieExpires);
+            Response.Cookies.Append("CodeDataAction", "3", cookieExpires);
+            List<CodeData> list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndSourceIsNotNewspageAndTVToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, AppGlobal.Newspage, AppGlobal.TV);
             return Json(list.ToDataSourceResult(request));
         }
         public ActionResult GetByDateUpdatedBeginAndDateUpdatedEndAndSourceIsNewspageAndTVToList([DataSourceRequest] DataSourceRequest request, DateTime datePublishBegin, DateTime datePublishEnd)
@@ -1837,19 +1859,18 @@ namespace Commsights.MVC.Controllers
                     industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
                     datePublishBegin = DateTime.Parse(Request.Cookies["CodeDataDatePublishBegin"]);
                     datePublishEnd = DateTime.Parse(Request.Cookies["CodeDataDatePublishEnd"]);
-                    isUpload = bool.Parse(Request.Cookies["CodeDataIsUpload"]);
                     string codeDataAction = Request.Cookies["CodeDataAction"];
                     List<CodeData> list = new List<CodeData>();
                     switch (codeDataAction)
                     {
                         case "1":
-                            list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload);
+                            list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDToList(datePublishBegin, datePublishEnd, industryID, RequestUserID);
                             break;
                         case "2":
-                            list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNewspageAndTVToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload, AppGlobal.Newspage, AppGlobal.TV);
+                            list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndSourceIsNewspageAndTVToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, AppGlobal.Newspage, AppGlobal.TV);
                             break;
                         case "3":
-                            list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndIsUploadAndSourceIsNotNewspageAndTVToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, isUpload, AppGlobal.Newspage, AppGlobal.TV);
+                            list = _codeDataRepository.GetByDatePublishBeginAndDatePublishEndAndIndustryIDAndEmployeeIDAndSourceIsNotNewspageAndTVToList(datePublishBegin, datePublishEnd, industryID, RequestUserID, AppGlobal.Newspage, AppGlobal.TV);
                             break;
                     }
                     for (int i = 0; i < list.Count; i++)
@@ -1974,7 +1995,7 @@ namespace Commsights.MVC.Controllers
                     product.Note = model.Note;
                     result = _productRepository.Update(product.ID, product);
                 }
-            }           
+            }
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
@@ -3803,7 +3824,7 @@ namespace Commsights.MVC.Controllers
                     productProperty.Initialization(InitType.Update, RequestUserID);
                     _productPropertyRepository.Update(productProperty.ID, productProperty);
                 }
-            }            
+            }
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
