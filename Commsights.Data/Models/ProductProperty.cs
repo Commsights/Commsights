@@ -99,6 +99,7 @@ namespace Commsights.Data.Models
         public bool? IsSend { get; set; }
         public bool? IsCopy { get; set; }
         public string CampaignKeyMessage { get; set; }
+        public string TitleProperty { get; set; }
         public int? CopyVersion { get; set; }
         public int? SourceProperty { get; set; }
         public DateTime? DateCoding { get; set; }

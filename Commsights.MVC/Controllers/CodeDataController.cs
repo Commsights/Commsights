@@ -1748,10 +1748,13 @@ namespace Commsights.MVC.Controllers
             string actionMessage = "";
             if ((!string.IsNullOrEmpty(model.TitleProperty)) && (model.SourceProperty > 0))
             {
+                _productPropertyRepository.Delete(model.ProductPropertyID.Value);
                 List<ProductProperty> list = _productPropertyRepository.GetTitleAndSourceToList(model.TitleProperty, model.SourceProperty.Value);
                 foreach (ProductProperty productProperty in list)
                 {
                     productProperty.ID = 0;
+                    productProperty.TitleProperty = model.TitleProperty;
+                    productProperty.SourceProperty = model.SourceProperty;
                     productProperty.FileName = "";
                     productProperty.MediaTitle = "";
                     productProperty.MediaType = "";
@@ -1761,8 +1764,8 @@ namespace Commsights.MVC.Controllers
                     productProperty.DateCoding = DateTime.Now;
                     productProperty.Initialization(InitType.Insert, RequestUserID);
                     _productPropertyRepository.Create(productProperty);
-                }
-                _productPropertyRepository.Delete(model.ProductPropertyID.Value);
+                    model.ProductPropertyID = productProperty.ID;
+                }                
             }
             else
             {
