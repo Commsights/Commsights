@@ -1397,20 +1397,22 @@ namespace Commsights.MVC.Controllers
                     workSheet.Cells[rowExcel, 15].Value = "Headline";
                     workSheet.Cells[rowExcel, 16].Value = "Headline (Eng)";
                     workSheet.Cells[rowExcel, 17].Value = "Summary (Eng)";
-                    workSheet.Cells[rowExcel, 17].Value = "Summary";
-                    workSheet.Cells[rowExcel, 18].Value = "Media Title";
-                    workSheet.Cells[rowExcel, 19].Value = "Media tier";
-                    workSheet.Cells[rowExcel, 20].Value = "Media Type";
-                    workSheet.Cells[rowExcel, 21].Value = "Journalist";
-                    workSheet.Cells[rowExcel, 22].Value = "Ad Value";
-                    workSheet.Cells[rowExcel, 23].Value = "Media Value Corp";
-                    workSheet.Cells[rowExcel, 24].Value = "Media Value Pro";
-                    workSheet.Cells[rowExcel, 25].Value = "Key message";
-                    workSheet.Cells[rowExcel, 26].Value = "Campaign name";
-                    workSheet.Cells[rowExcel, 27].Value = "Campaign's key messages";
-                    workSheet.Cells[rowExcel, 28].Value = "Note";
-                    workSheet.Cells[rowExcel, 29].Value = "Product feature";
-                    columnExcel = 30;
+                    workSheet.Cells[rowExcel, 18].Value = "Summary";
+                    workSheet.Cells[rowExcel, 19].Value = "URL";
+                    workSheet.Cells[rowExcel, 20].Value = "Page";
+                    workSheet.Cells[rowExcel, 21].Value = "Media Title";
+                    workSheet.Cells[rowExcel, 22].Value = "Media tier";
+                    workSheet.Cells[rowExcel, 23].Value = "Media Type";
+                    workSheet.Cells[rowExcel, 24].Value = "Journalist";
+                    workSheet.Cells[rowExcel, 25].Value = "Ad Value";
+                    workSheet.Cells[rowExcel, 26].Value = "Media Value Corp";
+                    workSheet.Cells[rowExcel, 27].Value = "Media Value Pro";
+                    workSheet.Cells[rowExcel, 28].Value = "Key message";
+                    workSheet.Cells[rowExcel, 29].Value = "Campaign name";
+                    workSheet.Cells[rowExcel, 30].Value = "Campaign's key messages";
+                    workSheet.Cells[rowExcel, 21].Value = "Note";
+                    workSheet.Cells[rowExcel, 32].Value = "Product feature";
+                    columnExcel = 33;
                     if (listProductFeature.Count > 0)
                     {
                         foreach (Config item in listProductFeature)
@@ -1442,7 +1444,8 @@ namespace Commsights.MVC.Controllers
                     {
                         workSheet.Cells[rowExcel, 1].Value = item.Source;
                         workSheet.Cells[rowExcel, 2].Value = item.FileName;
-                        workSheet.Cells[rowExcel, 3].Value = item.DatePublish.ToString("MM/dd/yyyy");
+                        workSheet.Cells[rowExcel, 3].Value = item.DatePublish;
+                        workSheet.Cells[rowExcel, 3].Style.Numberformat.Format = "mm/dd/yyyy";
                         workSheet.Cells[rowExcel, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         workSheet.Cells[rowExcel, 4].Value = item.CategoryMain;
                         workSheet.Cells[rowExcel, 5].Value = item.CategorySub;
@@ -1489,20 +1492,34 @@ namespace Commsights.MVC.Controllers
                             workSheet.Cells[rowExcel, 16].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
                         }
                         workSheet.Cells[rowExcel, 17].Value = item.Description;
-                        workSheet.Cells[rowExcel, 18].Value = item.MediaTitle;
-                        workSheet.Cells[rowExcel, 19].Value = item.TierCommsights;
-                        workSheet.Cells[rowExcel, 20].Value = item.MediaType;
-                        workSheet.Cells[rowExcel, 21].Value = item.Journalist;
-                        workSheet.Cells[rowExcel, 22].Value = item.Advalue.Value.ToString("N0");
-                        workSheet.Cells[rowExcel, 22].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                        workSheet.Cells[rowExcel, 23].Value = item.ROME_Corp_VND;
-                        workSheet.Cells[rowExcel, 23].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                        workSheet.Cells[rowExcel, 24].Value = item.ROME_Product_VND;
-                        workSheet.Cells[rowExcel, 24].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                        workSheet.Cells[rowExcel, 25].Value = item.KeyMessage;
-                        workSheet.Cells[rowExcel, 26].Value = item.CampaignName;
-                        workSheet.Cells[rowExcel, 27].Value = item.CampaignKeyMessage;
-                        workSheet.Cells[rowExcel, 28].Value = item.Note;
+                        workSheet.Cells[rowExcel, 18].Value = item.DescriptionEnglish;
+                        workSheet.Cells[rowExcel, 19].Value = item.URLCode;
+                        if (!string.IsNullOrEmpty(item.URLCode))
+                        {
+                            try
+                            {
+                                workSheet.Cells[rowExcel, 19].Hyperlink = new Uri(item.URLCode);
+                            }
+                            catch
+                            {
+                            }
+                            workSheet.Cells[rowExcel, 19].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                        }
+                        workSheet.Cells[rowExcel, 20].Value = item.Page;
+                        workSheet.Cells[rowExcel, 21].Value = item.MediaTitle;
+                        workSheet.Cells[rowExcel, 22].Value = item.TierCommsights;
+                        workSheet.Cells[rowExcel, 23].Value = item.MediaType;
+                        workSheet.Cells[rowExcel, 24].Value = item.Journalist;
+                        workSheet.Cells[rowExcel, 25].Value = item.Advalue.Value.ToString("N0");
+                        workSheet.Cells[rowExcel, 25].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        workSheet.Cells[rowExcel, 26].Value = item.ROME_Corp_VND;
+                        workSheet.Cells[rowExcel, 26].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        workSheet.Cells[rowExcel, 27].Value = item.ROME_Product_VND;
+                        workSheet.Cells[rowExcel, 27].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        workSheet.Cells[rowExcel, 28].Value = item.KeyMessage;
+                        workSheet.Cells[rowExcel, 29].Value = item.CampaignName;
+                        workSheet.Cells[rowExcel, 30].Value = item.CampaignKeyMessage;
+                        workSheet.Cells[rowExcel, 31].Value = item.Note;
                         string productFeature = "";
                         try
                         {
@@ -1533,7 +1550,7 @@ namespace Commsights.MVC.Controllers
                             }
                             productFeature = productFeature.Trim();
                         }
-                        workSheet.Cells[rowExcel, 29].Value = productFeature;
+                        workSheet.Cells[rowExcel, 32].Value = productFeature;
                         for (int i = 1; i < columnExcel; i++)
                         {
                             workSheet.Cells[rowExcel, i].Style.Font.Name = "Times New Roman";
@@ -1551,7 +1568,7 @@ namespace Commsights.MVC.Controllers
                     }
                     for (int i = 1; i < columnExcel; i++)
                     {
-                        workSheet.Column(i).AutoFit();
+                        workSheet.Column(i).Width = 30;
                     }
                 }
                 package.Save();
@@ -1946,6 +1963,22 @@ namespace Commsights.MVC.Controllers
                     result = _productPropertyRepository.Delete(productPropertyID);
                 }
             }
+            result = 1;
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.DeleteFail;
+            }
+            return Json(note);
+        }
+        public IActionResult DeleteProductPropertyCode(int productPropertyID)
+        {
+            string note = AppGlobal.InitString;
+            int result = 0;
+            result = _productPropertyRepository.Delete(productPropertyID);
             result = 1;
             if (result > 0)
             {
@@ -3797,7 +3830,7 @@ namespace Commsights.MVC.Controllers
                         }
                         if (string.IsNullOrEmpty(product.Title))
                         {
-                            product.Title = AppGlobal.FinderTitle(product.URLCode);
+                            product.Title = AppGlobal.FinderTitle001(product.URLCode);
                         }
                         if (string.IsNullOrEmpty(product.Description))
                         {

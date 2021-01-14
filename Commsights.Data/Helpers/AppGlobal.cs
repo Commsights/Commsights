@@ -4553,6 +4553,44 @@ namespace Commsights.Data.Helpers
             }
             return title;
         }
+        public static string FinderTitle001(string url)
+        {
+            string title = "";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Stream receiveStream = response.GetResponseStream();
+                StreamReader readStream = null;
+                readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                string html = readStream.ReadToEnd();
+                response.Close();
+                readStream.Close();
+                html = html.Replace(@"~", @"");
+                string htmlTitle = html;
+                MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
+                if (m1.Count > 0)
+                {
+                    string value = m1[m1.Count - 1].Groups[1].Value;
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        value = value.Replace(@"<title>", @"");
+                        value = value.Replace(@"</title>", @"");
+                        title = value.Trim();
+                    }
+                }
+                if (title.Split('|').Length > 2)
+                {
+                    title = title.Split('|')[1];
+                }
+                if (title.Split('|').Length > 1)
+                {
+                    title = title.Split('|')[0];
+                }
+                title = title.Trim();
+            }
+            return title;
+        }
         public static string FinderHTMLContent(string url)
         {
             string html = "";

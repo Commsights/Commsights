@@ -1309,7 +1309,7 @@ namespace Commsights.MVC.Controllers
                     {
                         Product product = new Product();
                         product.Description = "";
-                        product.Title = AppGlobal.FinderTitle(linkItem.Href);
+                        product.Title = AppGlobal.FinderTitle001(linkItem.Href);
                         product.ParentID = config.ID;
                         product.CategoryID = config.ID;
                         product.Source = AppGlobal.SourceAuto;
@@ -1334,7 +1334,7 @@ namespace Commsights.MVC.Controllers
                             {
                                 product.ContentMain = HttpUtility.HtmlDecode(product.ContentMain);
                             }
-                            await _productRepository.AsyncInsertSingleItemAuto(product);
+                            await _productRepository.AsyncInsertSingleItemAutoNoFilter(product);
                         }
                     }
                 }
