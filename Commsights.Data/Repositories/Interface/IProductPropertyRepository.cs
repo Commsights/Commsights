@@ -44,5 +44,6 @@ namespace Commsights.Data.Repositories
         public string InsertItemsByIDAndRequestUserIDAndCode(int ID, int RequestUserID, string code);
         public List<ProductProperty> GetByIDAndCodeToList(int ID, string code);
         public string UpdateItemsByIDAndRequestUserIDAndProductFeatureListAndCode(int ID, int RequestUserID, string productFeatureList, string code);
+        public string DeleteItemsByIDList(string IDList);
     }
 }

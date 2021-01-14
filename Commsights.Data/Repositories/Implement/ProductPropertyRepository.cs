@@ -310,12 +310,12 @@ namespace Commsights.Data.Repositories
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertItemsByIDAndRequestUserIDAndCode", parameters);
             return result;
         }
-        public string UpdateItemsByIDAndRequestUserIDAndProductFeatureListAndCode(int ID, int RequestUserID, string productFeatureList,  string code)
+        public string UpdateItemsByIDAndRequestUserIDAndProductFeatureListAndCode(int ID, int RequestUserID, string productFeatureList, string code)
         {
-            if(string.IsNullOrEmpty(productFeatureList))
+            if (string.IsNullOrEmpty(productFeatureList))
             {
                 productFeatureList = "";
-            }    
+            }
             SqlParameter[] parameters =
                       {
                 new SqlParameter("@ID",ID),
@@ -368,7 +368,7 @@ new SqlParameter("@ROME_Product_VND",model.ROME_Product_VND),
 new SqlParameter("@FeatureCorp",model.FeatureCorp),
 new SqlParameter("@FeatureProduct",model.FeatureProduct),
 new SqlParameter("@Advalue",model.Advalue),
-new SqlParameter("@IsCoding",model.IsCoding),       
+new SqlParameter("@IsCoding",model.IsCoding),
 new SqlParameter("@UserUpdated",model.UserUpdated),
 new SqlParameter("@DatePublish",model.DatePublish),
 new SqlParameter("@MediaType",model.MediaType),
@@ -528,7 +528,7 @@ new SqlParameter("@Title",model.Title),
                 {
                     IDNew = (int)cmd.Parameters["@returnValue"].Value;
                 }
-            }            
+            }
             return IDNew;
         }
         public string DeleteItemsByIDCodeData(int ID)
@@ -603,6 +603,19 @@ new SqlParameter("@Title",model.Title),
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectItemsSameParentIDByID", parameters);
             list = SQLHelper.ToList<ProductProperty>(dt);
             return list;
+        }
+        public string DeleteItemsByIDList(string IDList)
+        {
+            string result = "";
+            if (!string.IsNullOrEmpty(IDList))
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@IDList",IDList),
+                };
+                result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyDeleteItemsByIDList", parameters);
+            }
+            return result;
         }
     }
 }

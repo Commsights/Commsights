@@ -270,6 +270,22 @@ namespace Commsights.MVC.Controllers
             return Json(note);
         }
         [HttpPost]
+        public IActionResult DeleteByIDList(string IDList)
+        {
+            _productPropertyRepository.DeleteItemsByIDList(IDList);
+            string note = AppGlobal.InitString;
+            int result = 1;
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.DeleteFail;
+            }
+            return Json(note);
+        }
+        [HttpPost]
         public IActionResult CreateManyIndustry2021(int industryID, string title, int productParentID, string page, string totalSize, string timeLine, string duration, DateTime datePublish)
         {
             string note = AppGlobal.InitString;

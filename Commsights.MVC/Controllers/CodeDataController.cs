@@ -1941,11 +1941,12 @@ namespace Commsights.MVC.Controllers
             ProductProperty model = _productPropertyRepository.GetByID(productPropertyID);
             if (model.ID > 0)
             {
-                if (model.IsCoding == false)
+                if ((model.IsCoding == false) || (model.IsCoding == null))
                 {
                     result = _productPropertyRepository.Delete(productPropertyID);
                 }
             }
+            result = 1;
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;

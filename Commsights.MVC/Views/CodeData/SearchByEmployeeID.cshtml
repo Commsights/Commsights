@@ -27,6 +27,11 @@
                             <span class="fas fa-search"></span>
                         </button>
                     </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-danger" title="Delete" onclick="onDelete()">
+                            <span class="fas fa-trash-alt"></span>
+                        </button>
+                    </div>
                 </div>
                 <br />
                 @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.CodeData>()
@@ -35,6 +40,7 @@
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 11px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 11px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(140).Locked(true);
     columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer; font-size: 11px; height:30px;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70).Locked(true);
+    columns.Select().Width(50);
     columns.Bound(t => t.IsCoding).Title("Code").Width(50).HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.URLCode).Title("URL").Width(150).HtmlAttributes(new { @class = "text-center", @style = "white-space: nowrap; font-size:11px;" });
     columns.Bound(t => t.Title).Title("Headline (Vie)").Width(150).HtmlAttributes(new { @style = "white-space: nowrap; font-size:11px;" });
@@ -78,9 +84,10 @@
 )
 .HtmlAttributes(new { @class = "KendoGrid", @style="font-size:11px;" })
 .Search(search => { search.Field(f => f.URLCode); search.Field(f => f.Title); search.Field(f => f.CompanyName); search.Field(f => f.MediaTitle); search.Field(f => f.ProductName_ProjectName); })
+.Events(ev => ev.Change("onGridChange"))
 .DataSource(dataSource => dataSource
 .Ajax()
-.PageSize(10000)
+.PageSize(10)
 .Model(model =>
 {
     model.Id(t => t.ProductPropertyID);
@@ -113,6 +120,21 @@
     });
     function onSearch() {
         $("#CodeData").data("kendoGrid").dataSource.read();
+    }
+    function onDelete() {
+        BeginRequestHandler();        
+        var IDListValue = $("#ID").val();        
+        $.ajax({
+            type: 'POST',
+            url: "@Url.Action("DeleteByIDList", "ProductProperty")",
+            data: {
+                IDList: IDListValue,                
+            },
+            success: function (result) {
+                onSearch();
+            }
+            }).done(() => {
+        });        
     }
     function onGridRequestEnd(e) {
         if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
@@ -147,5 +169,8 @@
             data["values[" + idx + "]"] = value[idx];
         }
         return data;
+    }
+    function onGridChange(arg) {
+        $("#ID").val(this.selectedKeyNames().join(";"));        
     }
 </script>
