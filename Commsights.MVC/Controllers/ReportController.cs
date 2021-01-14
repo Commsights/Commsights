@@ -5223,7 +5223,7 @@ namespace Commsights.MVC.Controllers
                                                         if (workSheet.Cells[i, 1].Value != null)
                                                         {
                                                             model.URLCode = workSheet.Cells[i, 1].Value.ToString().Trim();
-                                                        }                                                        
+                                                        }
                                                         if (!string.IsNullOrEmpty(model.URLCode))
                                                         {
                                                             BaiVietUpload baiVietUpload = new BaiVietUpload();
@@ -5318,7 +5318,7 @@ namespace Commsights.MVC.Controllers
             {
                 baseViewModel.ActionView = "Upload";
             }
-            return RedirectToAction(baseViewModel.ActionView);
+            return RedirectToAction("SearchByEmployeeID", "CodeData");
         }
         public ActionResult UploadAndiBad(Commsights.MVC.Models.BaseViewModel baseViewModel)
         {
