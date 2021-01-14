@@ -27,6 +27,7 @@ namespace Commsights.Data.Helpers
     {
         public DateTime DateTime { get; set; }
         public string Time { get; set; }
+        public string DateTimeString { get; set; }
         public int Count { get; set; }
         public bool IsTime { get; set; }
     }
@@ -3881,6 +3882,7 @@ namespace Commsights.Data.Helpers
                 if (!string.IsNullOrEmpty(item))
                 {
                     string date = item;
+                    date = Regex.Replace(date, @"\t|\n|\r", "");
                     date = date.Replace(@",", @"");
                     date = date.Replace(@"|", @"");
                     int timeCount = date.Count(f => f == '/');
@@ -3923,8 +3925,6 @@ namespace Commsights.Data.Helpers
                                 }
                             }
                             time = time.Trim();
-                            time = time.Replace(@"\r", @"");
-                            time = time.Replace(@"\n", @"");
                             try
                             {
                                 dateTime = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), 0, 0, 0);
@@ -3987,25 +3987,113 @@ namespace Commsights.Data.Helpers
             }
             DateTime productDatePublish = DateTime.Now;
             bool productActive = false;
-            for (int i = 0; i < listDatePublish.Count; i++)
+            if (listDatePublish.Count == 1)
             {
-                DatePublish item = listDatePublish[i];
-                if (item.IsTime == true)
+                productDatePublish = listDatePublish[0].DateTime;
+                productActive = true;
+            }
+            else
+            {
+                for (int i = 0; i < listDatePublish.Count; i++)
                 {
-                    try
+                    DatePublish item = listDatePublish[i];
+                    if (item.IsTime == true)
                     {
-                        item.DateTime = new DateTime(item.DateTime.Year, item.DateTime.Month, item.DateTime.Day, int.Parse(item.Time.Split(':')[0]), int.Parse(item.Time.Split(':')[1]), 0);
-                        if (item.DateTime < productDatePublish)
+                        try
                         {
-                            productDatePublish = item.DateTime;
-                            productActive = true;
+                            item.DateTime = new DateTime(item.DateTime.Year, item.DateTime.Month, item.DateTime.Day, int.Parse(item.Time.Split(':')[0]), int.Parse(item.Time.Split(':')[1]), 0);
+                            if (item.DateTime < productDatePublish)
+                            {
+                                productDatePublish = item.DateTime;
+                                productActive = true;
+                            }
                         }
-                    }
-                    catch
-                    {
+                        catch
+                        {
+                        }
                     }
                 }
             }
+            if (productActive == true)
+            {
+                product.DatePublish = productDatePublish;
+                product.Active = productActive;
+            }
+        }
+        public static void DatePublish004(string html, Product product)
+        {
+            string htmlspan = html;
+            htmlspan = HTMLReplaceAndSplit(htmlspan);
+            htmlspan = htmlspan.Replace(@"~", @"");
+            htmlspan = htmlspan.Replace(@"<body", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            Regex reg = new Regex("<[^>]+>", RegexOptions.IgnoreCase);
+            string content = reg.Replace(html, " ");
+            content = HttpUtility.HtmlDecode(content);
+            content = content.Trim();
+            List<DatePublish> listDatePublish = new List<DatePublish>();
+
+            DateTime now = DateTime.Now;
+            for (int k = 0; k < content.Split(' ').Length; k++)
+            {
+                string item = content.Split(' ')[k];
+                if (!string.IsNullOrEmpty(item))
+                {
+                    string date = item;
+                    date = Regex.Replace(date, @"\t|\n|\r", "");
+                    date = date.Replace(@",", @"");
+                    date = date.Replace(@"|", @"");
+                    int timeCount = date.Count(f => f == '/');
+                    if (timeCount == 0)
+                    {
+                        timeCount = date.Count(f => f == '-');
+                    }
+                    if (timeCount == 2)
+                    {
+                        if ((date.Length > 7) && (date.Length < 11))
+                        {
+                            try
+                            {
+                                DateTime dateTime = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), 0, 0, 0);
+                                if (dateTime.Year > 2020)
+                                {
+                                    DatePublish datePublish = new DatePublish();
+                                    datePublish.DateTimeString = date;
+                                    if (date.Contains(@":") == true)
+                                    {
+                                        datePublish.IsTime = true;
+                                    }
+                                    listDatePublish.Add(datePublish);
+                                }
+                            }
+                            catch
+                            {
+                            }
+                        }
+                    }
+                }
+            }
+            DateTime productDatePublish = DateTime.Now;
+            bool productActive = false;
+            if (listDatePublish.Count == 1)
+            {
+                try
+                {
+                    productDatePublish = DateTime.Parse(listDatePublish[0].DateTimeString);
+                    productActive = true;
+                }
+                catch
+                {
+                }
+            }
+            else
+            {
+
+            }
+
             if (productActive == true)
             {
                 product.DatePublish = productDatePublish;

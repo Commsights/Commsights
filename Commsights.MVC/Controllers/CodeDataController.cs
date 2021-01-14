@@ -3805,6 +3805,7 @@ namespace Commsights.MVC.Controllers
                     Config config = _configResposistory.GetByGroupNameAndCodeAndTitle(AppGlobal.CRM, AppGlobal.Website, website.Authority);
                     if ((config == null) || (config.ID == 0))
                     {
+                        config = new Config();
                         config.GroupName = AppGlobal.CRM;
                         config.Code = AppGlobal.Website;
                         config.Title = website.Authority;
