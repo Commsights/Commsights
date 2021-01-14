@@ -112,6 +112,14 @@ namespace Commsights.MVC.Controllers
             model.IndustryID = AppGlobal.IndustryID;
             return View(model);
         }
+        public IActionResult SearchStatistical()
+        {
+            CodeDataViewModel model = new CodeDataViewModel();
+            model.DatePublishBegin = DateTime.Now;
+            model.DatePublishEnd = DateTime.Now;
+            model.IndustryID = AppGlobal.IndustryID;
+            return View(model);
+        }
         public IActionResult Employee()
         {
             CodeDataViewModel model = new CodeDataViewModel();
@@ -1410,7 +1418,7 @@ namespace Commsights.MVC.Controllers
                     workSheet.Cells[rowExcel, 28].Value = "Key message";
                     workSheet.Cells[rowExcel, 29].Value = "Campaign name";
                     workSheet.Cells[rowExcel, 30].Value = "Campaign's key messages";
-                    workSheet.Cells[rowExcel, 21].Value = "Note";
+                    workSheet.Cells[rowExcel, 31].Value = "Note";
                     workSheet.Cells[rowExcel, 32].Value = "Product feature";
                     columnExcel = 33;
                     if (listProductFeature.Count > 0)
