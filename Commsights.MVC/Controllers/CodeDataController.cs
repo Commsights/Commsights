@@ -1742,7 +1742,7 @@ namespace Commsights.MVC.Controllers
             return _codeDataRepository.GetProductNameByURLCode(uRLCode);
         }
         public string CheckCodeData(CodeData model)
-        {            
+        {
             _productRepository.UpdateSingleItemByCodeData(model);
             model.UserUpdated = RequestUserID;
             _productPropertyRepository.UpdateItemsByCodeDataCopyVersion(model);
@@ -1766,7 +1766,7 @@ namespace Commsights.MVC.Controllers
                     productProperty.Initialization(InitType.Insert, RequestUserID);
                     _productPropertyRepository.Create(productProperty);
                     model.ProductPropertyID = productProperty.ID;
-                }                
+                }
             }
             else
             {
@@ -2911,7 +2911,8 @@ namespace Commsights.MVC.Controllers
                             {
                                 if (i == 1)
                                 {
-                                    workSheet.Cells[row, i].Value = list[index].DatePublish.ToString("MM/dd/yyyy");
+                                    workSheet.Cells[row, i].Value = list[index].DatePublish;
+                                    workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy";
                                     workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                                 }
                                 if (i == 2)
@@ -3034,8 +3035,8 @@ namespace Commsights.MVC.Controllers
                                 }
                                 if (i == 18)
                                 {
-                                    workSheet.Cells[row, i].Value = list[index].DateUpdated.ToString("MM/dd/yyyy HH:mm:ss");
-                                    //workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy HH:mm:ss";
+                                    workSheet.Cells[row, i].Value = list[index].DateUpdated;
+                                    workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy HH:mm:ss";
                                     workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                                 }
                                 if (i == 19)
@@ -3268,7 +3269,8 @@ namespace Commsights.MVC.Controllers
                             {
                                 if (i == 1)
                                 {
-                                    workSheet.Cells[row, i].Value = list[index].DatePublish.ToString("MM/dd/yyyy");
+                                    workSheet.Cells[row, i].Value = list[index].DatePublish;
+                                    workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy";
                                     workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                                 }
                                 if (i == 2)
@@ -3391,7 +3393,8 @@ namespace Commsights.MVC.Controllers
                                 }
                                 if (i == 18)
                                 {
-                                    workSheet.Cells[row, i].Value = list[index].DateUpdated.ToString("MM/dd/yyyy HH:mm:ss");
+                                    workSheet.Cells[row, i].Value = list[index].DateUpdated;
+                                    workSheet.Cells[row, i].Style.Numberformat.Format = "mm/dd/yyyy HH:mm:ss";
                                     workSheet.Cells[row, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                                 }
                                 if (i == 19)
@@ -3743,81 +3746,90 @@ namespace Commsights.MVC.Controllers
         {
             string note = AppGlobal.InitString;
             int result = 0;
-            Uri website = new Uri(model.URLCode);
-            Config config = _configResposistory.GetByGroupNameAndCodeAndTitle(AppGlobal.CRM, AppGlobal.Website, website.Authority);
-            if ((config == null) || (config.ID == 0))
+            foreach (string item in model.URLCode.Split(' '))
             {
-                config.GroupName = AppGlobal.CRM;
-                config.Code = AppGlobal.Website;
-                config.Title = website.Authority;
-                config.URLFull = website.Scheme + "/" + website.Authority;
-                config.Initialization(InitType.Insert, RequestUserID);
-                _configResposistory.Create(config);
+                string url = item;
+                url = url.Trim();
+                if (!string.IsNullOrEmpty(url))
+                {
+                    Uri website = new Uri(url);
+                    Config config = _configResposistory.GetByGroupNameAndCodeAndTitle(AppGlobal.CRM, AppGlobal.Website, website.Authority);
+                    if ((config == null) || (config.ID == 0))
+                    {
+                        config.GroupName = AppGlobal.CRM;
+                        config.Code = AppGlobal.Website;
+                        config.Title = website.Authority;
+                        config.URLFull = website.Scheme + "/" + website.Authority;
+                        config.Initialization(InitType.Insert, RequestUserID);
+                        _configResposistory.Create(config);
+                    }
+                    if ((config != null) && (config.ID > 0))
+                    {
+                        Product product = _productRepository.GetByURLCode(url);
+                        if ((product == null) || (product.ID == 0))
+                        {
+                            product = new Product();
+
+                            product.Title = model.Title;
+                            product.Description = model.Description;
+                            product.DatePublish = model.DatePublish;
+                            product.IsFilter = true;
+                            product.ParentID = config.ID;
+                            product.CategoryID = config.ID;
+                            product.Source = AppGlobal.SourceAuto;
+                            product.URLCode = url;
+                            if (product.DatePublish.Year == 2020)
+                            {
+                                product.Active = false;
+                            }
+                        }
+                        else
+                        {
+                            product.Active = true;
+                        }
+                        if (string.IsNullOrEmpty(product.Title))
+                        {
+                            product.Title = AppGlobal.FinderTitle(product.URLCode);
+                        }
+                        if (string.IsNullOrEmpty(product.Description))
+                        {
+                            string html = AppGlobal.FinderHTMLContent(product.URLCode);
+                            AppGlobal.FinderContentAndDatePublish002(html, product);
+                        }
+
+                        if ((product.DatePublish.Year > 2020) && (product.Active == true))
+                        {
+                            if (!string.IsNullOrEmpty(product.Title))
+                            {
+                                product.Title = HttpUtility.HtmlDecode(product.Title);
+                                product.MetaTitle = AppGlobal.SetName(product.Title);
+                            }
+                            if (!string.IsNullOrEmpty(product.Description))
+                            {
+                                product.Description = HttpUtility.HtmlDecode(product.Description);
+                            }
+                            if (!string.IsNullOrEmpty(product.ContentMain))
+                            {
+                                product.ContentMain = HttpUtility.HtmlDecode(product.ContentMain);
+                            }
+                            product.Initialization(InitType.Insert, RequestUserID);
+                            string resultString = _productRepository.InsertSingleItemAuto(product);
+                            if (resultString == "-1")
+                            {
+                                result = 1;
+                            }
+                        }
+                    }
+                }
             }
-            if ((config != null) && (config.ID > 0))
+
+            if (result > 0)
             {
-                Product product = _productRepository.GetByURLCode(model.URLCode);
-                if ((product == null) || (product.ID == 0))
-                {
-                    product = new Product();
-
-                    product.Title = model.Title;
-                    product.Description = model.Description;
-                    product.DatePublish = model.DatePublish;
-                    product.IsFilter = true;
-                    product.ParentID = config.ID;
-                    product.CategoryID = config.ID;
-                    product.Source = AppGlobal.SourceAuto;
-                    product.URLCode = model.URLCode;
-                    if (product.DatePublish.Year == 2020)
-                    {
-                        product.Active = false;
-                    }
-                }
-                else
-                {
-                    product.Active = true;
-                }
-                if (string.IsNullOrEmpty(product.Title))
-                {
-                    product.Title = AppGlobal.FinderTitle(product.URLCode);
-                }
-                if (string.IsNullOrEmpty(product.Description))
-                {
-                    string html = AppGlobal.FinderHTMLContent(product.URLCode);
-                    AppGlobal.FinderContent004(html, product);
-                }
-
-                if ((product.DatePublish.Year > 2020) && (product.Active == true))
-                {
-                    if (!string.IsNullOrEmpty(product.Title))
-                    {
-                        product.Title = HttpUtility.HtmlDecode(product.Title);
-                        product.MetaTitle = AppGlobal.SetName(product.Title);
-                    }
-                    if (!string.IsNullOrEmpty(product.Description))
-                    {
-                        product.Description = HttpUtility.HtmlDecode(product.Description);
-                    }
-                    if (!string.IsNullOrEmpty(product.ContentMain))
-                    {
-                        product.ContentMain = HttpUtility.HtmlDecode(product.ContentMain);
-                    }
-                    product.Initialization(InitType.Insert, RequestUserID);
-                    string resultString = _productRepository.InsertSingleItemAuto(product);
-                    if (resultString == "-1")
-                    {
-                        result = 1;
-                    }
-                }
-                if (result > 0)
-                {
-                    note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
-                }
-                else
-                {
-                    note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
-                }
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
             }
             return Json(note);
         }
