@@ -4327,7 +4327,7 @@ namespace Commsights.Data.Helpers
                     for (int i = 0; i < m1.Count; i++)
                     {
                         string value = m1[i].Groups[1].Value;
-                        if ((value.Contains(@"published") == true) || (value.Contains(@"pubdate") == true))
+                        if ((value.Contains(@"published") == true) || (value.Contains(@"pubdate") == true) || (value.Contains(@"dateModified") == true) || (value.Contains(@"dateCreated") == true))
                         {
                             value = value.Replace(@"content=""", @"~");
                             value = value.Replace(@"content='", @"~");
@@ -4338,9 +4338,15 @@ namespace Commsights.Data.Helpers
                                 value = value.Replace(@"'", @"~");
                                 value = value.Split('~')[0];
                                 value = value.Trim();
+                                bool datePublishCheck = false;
                                 try
                                 {
-                                    datePublish = DateTime.Parse(value);
+                                    int count = value.Count(f => f == '-');
+                                    if (count > 1)
+                                    {
+                                        datePublish = DateTime.Parse(value);
+                                        datePublishCheck = true;
+                                    }
                                 }
                                 catch
                                 {
@@ -4351,12 +4357,13 @@ namespace Commsights.Data.Helpers
                                         dayString = value.Split('-')[2];
                                         dayString = dayString.Substring(0, 2);
                                         datePublish = new DateTime(int.Parse(yearString), int.Parse(monthString), int.Parse(dayString), hour, minute, second);
+                                        datePublishCheck = true;
                                     }
                                     catch
                                     {
                                     }
                                 }
-                                if (product.DatePublish > datePublish)
+                                if (datePublishCheck == true)
                                 {
                                     product.DatePublish = datePublish;
                                     product.Active = true;
@@ -4460,7 +4467,7 @@ namespace Commsights.Data.Helpers
             }
         }
         public static void FinderContent004(string html, Product product)
-        {            
+        {
             if (!string.IsNullOrEmpty(html))
             {
                 string htmlspan = "";
