@@ -23,6 +23,7 @@ using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using System.Diagnostics.Eventing.Reader;
 using Commsights.Service.Mail;
 using System.Drawing;
+using System.Web;
 
 namespace Commsights.MVC.Controllers
 {
@@ -37,8 +38,10 @@ namespace Commsights.MVC.Controllers
         private readonly IMembershipRepository _membershipRepository;
         private readonly IMembershipPermissionRepository _membershipPermissionRepository;
         private readonly IConfigRepository _configResposistory;
+        private readonly IBaiVietUploadCountRepository _baiVietUploadCountRepository;
+        private readonly IBaiVietUploadRepository _baiVietUploadRepository;
         private readonly IMailService _mailService;
-        public ReportController(IWebHostEnvironment hostingEnvironment, IMailService mailService, IConfigRepository configResposistory, IMembershipRepository membershipRepository, IMembershipPermissionRepository membershipPermissionRepository, IProductRepository productRepository, IProductPropertyRepository productPropertyRepository, IReportRepository reportRepository, IProductSearchRepository productSearchRepository, IProductSearchPropertyRepository productSearchPropertyRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
+        public ReportController(IWebHostEnvironment hostingEnvironment, IMailService mailService, IBaiVietUploadCountRepository baiVietUploadCountRepository, IBaiVietUploadRepository baiVietUploadRepository, IConfigRepository configResposistory, IMembershipRepository membershipRepository, IMembershipPermissionRepository membershipPermissionRepository, IProductRepository productRepository, IProductPropertyRepository productPropertyRepository, IReportRepository reportRepository, IProductSearchRepository productSearchRepository, IProductSearchPropertyRepository productSearchPropertyRepository, IMembershipAccessHistoryRepository membershipAccessHistoryRepository) : base(membershipAccessHistoryRepository)
         {
             _hostingEnvironment = hostingEnvironment;
             _reportRepository = reportRepository;
@@ -49,6 +52,8 @@ namespace Commsights.MVC.Controllers
             _membershipRepository = membershipRepository;
             _membershipPermissionRepository = membershipPermissionRepository;
             _configResposistory = configResposistory;
+            _baiVietUploadRepository = baiVietUploadRepository;
+            _baiVietUploadCountRepository = baiVietUploadCountRepository;
             _mailService = mailService;
         }
         private void Initialization(ProductSearchDataTransfer model)
@@ -4058,7 +4063,7 @@ namespace Commsights.MVC.Controllers
                                                                         productProperty.ParentID = product.ID;
                                                                         productProperty.GUICode = product.GUICode;
                                                                         productProperty.AssessID = AppGlobal.AssessID;
-                                                                        productProperty.IndustryID = industry.IndustryID;                                                                        
+                                                                        productProperty.IndustryID = industry.IndustryID;
                                                                         productProperty.ArticleTypeID = AppGlobal.TinDoanhNghiepID;
                                                                         productProperty.Code = AppGlobal.Industry;
                                                                         productProperty.IsDaily = true;
@@ -4874,6 +4879,11 @@ namespace Commsights.MVC.Controllers
                                             if (workSheet != null)
                                             {
                                                 int totalRows = workSheet.Dimension.Rows;
+                                                BaiVietUploadCount baiVietUploadCount = new BaiVietUploadCount();
+                                                baiVietUploadCount.Count = totalRows - 1;
+                                                baiVietUploadCount.IndustryID = baseViewModel.IndustryIDUploadGoogleSearch;
+                                                baiVietUploadCount.Initialization(InitType.Insert, RequestUserID);
+                                                _baiVietUploadCountRepository.Create(baiVietUploadCount);
                                                 for (int i = 2; i <= totalRows; i++)
                                                 {
                                                     try
@@ -4959,6 +4969,12 @@ namespace Commsights.MVC.Controllers
                                                         }
                                                         if (!string.IsNullOrEmpty(model.URLCode))
                                                         {
+                                                            BaiVietUpload baiVietUpload = new BaiVietUpload();
+                                                            baiVietUpload.ParentID = baiVietUploadCount.ID;
+                                                            baiVietUpload.Title = model.Title;
+                                                            baiVietUpload.URLCode = model.URLCode;
+                                                            baiVietUpload.Initialization(InitType.Insert, RequestUserID);
+                                                            _baiVietUploadRepository.Create(baiVietUpload);
                                                             Product product = _productRepository.GetByURLCode(model.URLCode);
                                                             if (product == null)
                                                             {
@@ -5133,6 +5149,151 @@ namespace Commsights.MVC.Controllers
                                                                     }
                                                                 }
                                                                 _productPropertyRepository.Initialization();
+                                                            }
+                                                        }
+                                                    }
+                                                    catch (Exception e)
+                                                    {
+                                                        string message = e.Message;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+            if (string.IsNullOrEmpty(baseViewModel.ActionView))
+            {
+                baseViewModel.ActionView = "Upload";
+            }
+            return RedirectToAction(baseViewModel.ActionView);
+        }
+        public ActionResult UploadGoogleSearchAndAutoFilter(Commsights.MVC.Models.BaseViewModel baseViewModel)
+        {
+            try
+            {
+                if (Request.Form.Files.Count > 0)
+                {
+                    var file = Request.Form.Files[0];
+                    if (file == null || file.Length == 0)
+                    {
+                    }
+                    if (file != null)
+                    {
+                        string fileExtension = Path.GetExtension(file.FileName);
+                        string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                        fileName = AppGlobal.SourceGoogle;
+                        fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
+                        var physicalPath = Path.Combine(_hostingEnvironment.WebRootPath, AppGlobal.FTPUploadExcel, fileName);
+                        using (var stream = new FileStream(physicalPath, FileMode.Create))
+                        {
+                            file.CopyTo(stream);
+                            FileInfo fileLocation = new FileInfo(physicalPath);
+                            if (fileLocation.Length > 0)
+                            {
+                                if ((fileExtension == ".xlsx") || (fileExtension == ".xls"))
+                                {
+                                    using (ExcelPackage package = new ExcelPackage(stream))
+                                    {
+                                        if (package.Workbook.Worksheets.Count > 0)
+                                        {
+                                            ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
+                                            if (workSheet != null)
+                                            {
+                                                int totalRows = workSheet.Dimension.Rows;
+                                                BaiVietUploadCount baiVietUploadCount = new BaiVietUploadCount();
+                                                baiVietUploadCount.Count = totalRows - 1;
+                                                baiVietUploadCount.IndustryID = baseViewModel.IndustryIDUploadGoogleSearchAndAutoFilter;
+                                                baiVietUploadCount.Initialization(InitType.Insert, RequestUserID);
+                                                _baiVietUploadCountRepository.Create(baiVietUploadCount);
+                                                for (int i = 2; i <= totalRows; i++)
+                                                {
+                                                    try
+                                                    {
+                                                        Product model = new Product();
+                                                        model.Note = fileName;
+                                                        model.Initialization(InitType.Insert, RequestUserID);
+                                                        if (workSheet.Cells[i, 1].Value != null)
+                                                        {
+                                                            model.URLCode = workSheet.Cells[i, 1].Value.ToString().Trim();
+                                                        }                                                        
+                                                        if (!string.IsNullOrEmpty(model.URLCode))
+                                                        {
+                                                            BaiVietUpload baiVietUpload = new BaiVietUpload();
+                                                            baiVietUpload.ParentID = baiVietUploadCount.ID;
+                                                            baiVietUpload.Title = model.Title;
+                                                            baiVietUpload.URLCode = model.URLCode;
+                                                            baiVietUpload.Initialization(InitType.Insert, RequestUserID);
+                                                            _baiVietUploadRepository.Create(baiVietUpload);
+
+                                                            Uri website = new Uri(model.URLCode);
+                                                            Config config = _configResposistory.GetByGroupNameAndCodeAndTitle(AppGlobal.CRM, AppGlobal.Website, website.Authority);
+                                                            if ((config == null) || (config.ID == 0))
+                                                            {
+                                                                config.GroupName = AppGlobal.CRM;
+                                                                config.Code = AppGlobal.Website;
+                                                                config.Title = website.Authority;
+                                                                config.URLFull = website.Scheme + "/" + website.Authority;
+                                                                config.Initialization(InitType.Insert, RequestUserID);
+                                                                _configResposistory.Create(config);
+                                                            }
+                                                            if ((config != null) && (config.ID > 0))
+                                                            {
+                                                                Product product = _productRepository.GetByURLCode(model.URLCode);
+                                                                if ((product == null) || (product.ID == 0))
+                                                                {
+                                                                    product = new Product();
+                                                                    product.Title = model.Title;
+                                                                    product.Description = model.Description;
+                                                                    product.DatePublish = model.DatePublish;
+                                                                    product.IsFilter = true;
+                                                                    product.ParentID = config.ID;
+                                                                    product.CategoryID = config.ID;
+                                                                    product.Source = AppGlobal.SourceGoogle;
+                                                                    product.URLCode = model.URLCode;
+                                                                    if (product.DatePublish.Year == 2020)
+                                                                    {
+                                                                        product.Active = false;
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    product.Active = true;
+                                                                }
+                                                                if (string.IsNullOrEmpty(product.Title))
+                                                                {
+                                                                    product.Title = AppGlobal.FinderTitle(product.URLCode);
+                                                                }
+                                                                if (string.IsNullOrEmpty(product.Description))
+                                                                {
+                                                                    string html = AppGlobal.FinderHTMLContent(product.URLCode);
+                                                                    AppGlobal.FinderContentAndDatePublish002(html, product);
+                                                                }
+                                                                if ((product.DatePublish.Year > 2020) && (product.Active == true))
+                                                                {
+                                                                    if (!string.IsNullOrEmpty(product.Title))
+                                                                    {
+                                                                        product.Title = HttpUtility.HtmlDecode(product.Title);
+                                                                        product.MetaTitle = AppGlobal.SetName(product.Title);
+                                                                    }
+                                                                    if (!string.IsNullOrEmpty(product.Description))
+                                                                    {
+                                                                        product.Description = HttpUtility.HtmlDecode(product.Description);
+                                                                    }
+                                                                    if (!string.IsNullOrEmpty(product.ContentMain))
+                                                                    {
+                                                                        product.ContentMain = HttpUtility.HtmlDecode(product.ContentMain);
+                                                                    }
+                                                                    product.Initialization(InitType.Insert, RequestUserID);
+                                                                    string resultString = _productRepository.InsertSingleItemAuto(product);
+                                                                }
                                                             }
                                                         }
                                                     }

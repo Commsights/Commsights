@@ -48,9 +48,11 @@ namespace Commsights.MVC
             services.AddTransient<IEmailStoragePropertyRepository, EmailStoragePropertyRepository>();
             services.AddTransient<IReportMonthlyRepository, ReportMonthlyRepository>();
             services.AddTransient<IReportMonthlyPropertyRepository, ReportMonthlyPropertyRepository>();
-            services.AddTransient<IMailService, MailService>();            
+            services.AddTransient<IBaiVietUploadCountRepository, BaiVietUploadCountRepository>();
+            services.AddTransient<IBaiVietUploadRepository, BaiVietUploadRepository>();
+            services.AddTransient<IMailService, MailService>();
             services.AddControllersWithViews();
-            
+
             services.AddKendo();
 
             services.Configure<FormOptions>(x =>

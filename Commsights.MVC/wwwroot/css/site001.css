@@ -3,16 +3,16 @@
     width: 100%;
 }
 
-input{
-    font-size:11px;
+input {
+    font-size: 11px;
 }
 
-input[type="checkbox"] {
-    width: 30px;
-    height: 30px;
-    background-color: transparent;
-    cursor: pointer;
-}
+    input[type="checkbox"] {
+        width: 30px;
+        height: 30px;
+        background-color: transparent;
+        cursor: pointer;
+    }
 
 .KendoGrid {
     font-size: 12px;
@@ -26,6 +26,16 @@ input[type="checkbox"] {
 @media (max-height: 700px) {
     .KendoGrid {
         height: 450px;
+    }
+}
+
+.ViewContentVideo {
+    height: 600px;   
+}
+
+@media (max-width: 500px) {
+    .ViewContentVideo {
+        height: 300px;        
     }
 }
 

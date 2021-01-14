@@ -12,6 +12,7 @@ namespace Commsights.MVC.Models
         public string IndustryName { get; set; }
         public int IndustryIDUploadScan { get; set; }
         public int IndustryIDUploadGoogleSearch { get; set; }
+        public int IndustryIDUploadGoogleSearchAndAutoFilter { get; set; }
         public int IndustryIDUploadGoogleSearch001 { get; set; }
         public int IndustryIDUploadAndiSource { get; set; }
         public int IndustryIDUploadYounet { get; set; }

@@ -1937,8 +1937,15 @@ namespace Commsights.MVC.Controllers
         public IActionResult DeleteProductProperty(int productPropertyID)
         {
             string note = AppGlobal.InitString;
-            _productPropertyRepository.Delete(productPropertyID);
-            int result = 1;
+            int result = 0;
+            ProductProperty model = _productPropertyRepository.GetByID(productPropertyID);
+            if (model.ID > 0)
+            {
+                if (model.IsCoding == false)
+                {
+                    result = _productPropertyRepository.Delete(productPropertyID);
+                }
+            }
             if (result > 0)
             {
                 note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;

@@ -43,19 +43,19 @@
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150).Locked(true);
     columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70).Locked(true);
-    columns.Bound(t => t.Industry).Title("Industry").Width(300).EditorTemplateName("Config_IndustryCodeName").HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
-    columns.Bound(t => t.MediaTitle).Title("Media title").Width(200).EditorTemplateName("Config_PressList").HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
-    columns.Bound(t => t.DatePublish).Title("Publish (dd/MM/yyyy)").Format("{0:dd/MM/yyyy}").Width(200).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
-    columns.Bound(t => t.Title).Title("Headline (Vie)").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
-    columns.Bound(t => t.Page).Title("Page / Timeline").Width(150).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
-    columns.Bound(t => t.Duration).Title("Total size / Duration").Width(150).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });        
-    columns.Bound(t => t.Advalue).Title("Advalue").Format("{0:N0}").Width(200).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
-    columns.Bound(t => t.Color).Title("Media advalue").Format("{0:N0}").Width(200).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Industry).Title("Industry").Width(200).EditorTemplateName("Config_IndustryCodeName").HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.MediaTitle).Title("Media title").Width(100).EditorTemplateName("Config_PressList").HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.DatePublish).Title("Publish (MM/dd/yyyy)").Format("{0:MM/dd/yyyy}").Width(180).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Title).Title("Headline (Vie)").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Page).Title("Page/Timeline").Width(100).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Duration).Title("Total size/Duration").Width(100).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });        
+    columns.Bound(t => t.Advalue).Title("Advalue").Format("{0:N0}").Width(100).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Color).Title("Media advalue").Format("{0:N0}").Width(100).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
     columns.Bound(t => t.IsVideo).Title("Video").Width(50).HtmlAttributes(new { @style = "white-space: nowrap;" });
-    columns.Bound(t => t.FullName).Title("Full name").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
-    columns.Bound(t => t.DateUpdated).Title("Updated").Format("{0:dd/MM/yyyy HH:mm:ss}").Width(200).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.FullName).Title("Full name").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.DateUpdated).Title("Updated").Format("{0:dd/MM/yyyy HH:mm:ss}").Width(100).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
     columns.Bound(t => t.ProductID).Title("ProductID").Width(100).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
-    columns.Bound(t => t.ProductPropertyID).Title("PropertyID").Width(120).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.ProductPropertyID).Title("PropertyID").Width(100).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
 })
 .ToolBar(toolBar => toolBar.Search())
 .Editable(editable => editable.Mode(GridEditMode.InLine))
