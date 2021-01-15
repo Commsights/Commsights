@@ -41,5 +41,30 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public List<BaiVietReport> GetReportByDateBeginAndDateEndAndIndustryIDToList(DateTime dateBegin, DateTime dateEnd, int industryID)
+        {
+            List<BaiVietReport> list = new List<BaiVietReport>();
+            if (industryID > 0)
+            {
+                try
+                {
+                    dateBegin = new DateTime(dateBegin.Year, dateBegin.Month, dateBegin.Day, 0, 0, 0);
+                    dateEnd = new DateTime(dateEnd.Year, dateEnd.Month, dateEnd.Day, 23, 59, 59);
+                    SqlParameter[] parameters =
+                    {
+                    new SqlParameter("@DateBegin",dateBegin),
+                    new SqlParameter("@DateEnd",dateEnd),
+                    new SqlParameter("@IndustryID",industryID),
+                    };
+                    DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_BaiVietUploadReportByDateBeginAndDateEndAndIndustryID", parameters);
+                    list = SQLHelper.ToList<BaiVietReport>(dt);
+                }
+                catch (Exception e)
+                {
+                    string mes = e.Message;
+                }
+            }
+            return list;
+        }
     }
 }

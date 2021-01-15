@@ -26,5 +26,10 @@ namespace Commsights.MVC.Controllers
             var data = _baiVietUploadCountRepository.GetReportByDateBeginAndDateEndToList(dateBegin, dateEnd);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetReportByDateBeginAndDateEndAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, DateTime dateBegin, DateTime dateEnd, int industryID)
+        {
+            var data = _baiVietUploadCountRepository.GetReportByDateBeginAndDateEndAndIndustryIDToList(dateBegin, dateEnd, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
     }
 }

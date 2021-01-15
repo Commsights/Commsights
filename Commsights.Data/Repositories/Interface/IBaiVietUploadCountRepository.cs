@@ -10,5 +10,6 @@ namespace Commsights.Data.Repositories
     public interface IBaiVietUploadCountRepository : IRepository<BaiVietUploadCount>
     {
         public List<BaiVietReport> GetReportByDateBeginAndDateEndToList(DateTime dateBegin, DateTime dateEnd);
+        public List<BaiVietReport> GetReportByDateBeginAndDateEndAndIndustryIDToList(DateTime dateBegin, DateTime dateEnd, int industryID);
     }
 }
