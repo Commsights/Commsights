@@ -185,13 +185,7 @@
             }).done(() => {
                 $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
                 EndRequestHandler();
-            });
-
-        //BeginRequestHandler();
-        //var IDListValue = $("#ID").val();
-        //$.post("/Report/DeleteByDatePublishBeginAndDatePublishEndAndIndustryIDAndIDList", { industryID: industryIDValue, datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, IDList: IDListValue }, function (result) {
-        //    EndRequestHandler();
-        //});
+            });        
     }
     function addProductProperty(e) {
         var productProperty = this.dataItem($(e.currentTarget).closest("tr"));

@@ -42,6 +42,7 @@
 .Columns(columns =>
 {
     columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150).Locked(true);
+    columns.Command(command => { command.Custom("Copy").Click("onScanFilesCopyProductPropertyAndProduct").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#007bff; color:#ffffff; padding-left:10px;" }); }).Width(80).Locked(true);
     columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70).Locked(true);
     columns.Bound(t => t.Industry).Title("Industry").Width(200).EditorTemplateName("Config_IndustryCodeName").HtmlAttributes(new { @style = "white-space: nowrap;" });
     columns.Bound(t => t.MediaTitle).Title("Media title").Width(100).EditorTemplateName("Config_PressList").HtmlAttributes(new { @style = "white-space: nowrap;" });
@@ -89,6 +90,8 @@
 .Model(model =>
 {
     model.Id(t => t.ProductPropertyID);
+    model.Field(t => t.Advalue).Editable(false);
+    model.Field(t => t.IsVideo).Editable(false);
     model.Field(t => t.Color).Editable(false);
     model.Field(t => t.FullName).Editable(false);
     model.Field(t => t.DateUpdated).Editable(false);
@@ -111,8 +114,8 @@
 )
 <script>
     $(document).ready(() => {
-    });    
-    function onSearch() {    
+    });
+    function onSearch() {
         $("#CodeData").data("kendoGrid").dataSource.read();
     }
     function onGridRequestEnd(e) {
@@ -125,9 +128,9 @@
             $("#CodeData").data("kendoGrid").dataSource.read();
         }
     }
-    function filterCodeData(e) {      
+    function filterCodeData(e) {
         var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
-        var datePublishEndValue = toDate02($("#DatePublishEnd").val());        
+        var datePublishEndValue = toDate02($("#DatePublishEnd").val());
         return { datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue};
     }
     function onExportExcelScanFiles() {
@@ -135,5 +138,21 @@
         var url = "/CodeData/ExportExcelScanFiles";
         window.location.replace(url);
         EndRequestHandler();
+    }
+    function onScanFilesCopyProductPropertyAndProduct(e) {       
+        var productProperty = this.dataItem($(e.currentTarget).closest("tr"));       
+        BeginRequestHandler();
+        $.ajax({
+            type: 'GET',
+            url: "@Url.Action("ScanFilesCopyProductPropertyAndProduct", "ProductProperty")",
+            data: {
+                productPropertyID: productProperty.ProductPropertyID,
+                productID: productProperty.ProductID,
+            },
+            success: function () {
+                EndRequestHandler();
+            }
+            }).done(() => {
+        });
     }
 </script>

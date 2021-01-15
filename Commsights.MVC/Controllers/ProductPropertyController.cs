@@ -208,7 +208,26 @@ namespace Commsights.MVC.Controllers
                     if (media.ID > 0)
                     {
                         product.ParentID = media.ID;
+                        int advalue = 1;
+                        if (media.Color > 0)
+                        {
+                            advalue = media.Color.Value;
+                        }
+                        int durationValue = int.Parse(product.Duration);
+                        if (model.IsVideo == true)
+                        {
+                            advalue = advalue * durationValue / 30;
+                        }
+                        else
+                        {
+                            advalue = advalue * durationValue / 100;
+                        }
+                        product.Advalue = advalue;
                     }
+                }
+                if (model.Advalue < 0)
+                {
+                    model.Advalue = model.Advalue * -1;
                 }
                 product.Initialization(InitType.Update, RequestUserID);
                 _productRepository.Update(product.ID, product);
@@ -221,6 +240,8 @@ namespace Commsights.MVC.Controllers
                     ProductProperty productProperty = _productPropertyRepository.GetByID(model.ProductPropertyID.Value);
                     if (productProperty != null)
                     {
+                        productProperty.Advalue = 0;
+                        productProperty.MediaTitle = "";
                         productProperty.IndustryID = industry.ID;
                         productProperty.Initialization(InitType.Update, RequestUserID);
                         _productPropertyRepository.Update(productProperty.ID, productProperty);
@@ -608,6 +629,44 @@ namespace Commsights.MVC.Controllers
             return Json(note);
         }
 
+        public IActionResult ScanFilesCopyProductPropertyAndProduct(int productPropertyID, int productID)
+        {
+            Product product = _productRepository.GetByID(productID);
+            if (product != null)
+            {
+                if (product.ID > 0)
+                {
+                    product.ID = 0;
+                    product.Initialization(InitType.Insert, RequestUserID);
+                    _productRepository.Create(product);
+                    if (product.ID > 0)
+                    {
+                        ProductProperty productProperty = _productPropertyRepository.GetByID(productPropertyID);
+                        if (productProperty != null)
+                        {
+                            if (productProperty.ID > 0)
+                            {
+                                productProperty.ID = 0;
+                                productProperty.ParentID = product.ID;
+                                productProperty.Initialization(InitType.Insert, RequestUserID);
+                                _productPropertyRepository.Create(productProperty);
+                            }
+                        }
+                    }
+                }
+            }
+            string note = AppGlobal.InitString;
+            int result = 1;
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.EditSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.EditFail;
+            }
+            return Json(note);
+        }
         public ActionResult UploadScanFiles(Commsights.MVC.Models.BaseViewModel baseViewModel)
         {
             try
