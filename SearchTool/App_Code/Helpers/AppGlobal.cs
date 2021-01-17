@@ -57,7 +57,7 @@ namespace Commsights.Data.Helpers
         {
             get
             {
-                return "SourceAuto";
+                return "Auto";
             }
         }
         #endregion

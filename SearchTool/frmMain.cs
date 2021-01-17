@@ -94,7 +94,7 @@ namespace SearchTool
         {
 
         }
-        public async Task<string> AsyncCreateProductScanWebsiteNoFilterProduct0001(Config config)
+        public string AsyncCreateProductScanWebsiteNoFilterProduct0001(Config config)
         {
             try
             {
@@ -193,7 +193,7 @@ namespace SearchTool
                                     {
                                         product.Description = AppGlobal.Decode(product.Description);
                                     }
-                                    await ProductRepository.AsyncInsertSingleItem(product);
+                                    ProductRepository.InsertSingleItem(product);
                                 }
                                 response.Close();
                                 readStream.Close();
