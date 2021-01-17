@@ -12,6 +12,7 @@ using Newtonsoft.Json.Serialization;
 using Commsights.Data.Models;
 using Commsights.Data.Repositories;
 using Commsights.Service.Mail;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace Commsights.MVC
 {
@@ -47,11 +48,18 @@ namespace Commsights.MVC
             services.AddTransient<IEmailStoragePropertyRepository, EmailStoragePropertyRepository>();
             services.AddTransient<IReportMonthlyRepository, ReportMonthlyRepository>();
             services.AddTransient<IReportMonthlyPropertyRepository, ReportMonthlyPropertyRepository>();
-            services.AddTransient<IMailService, MailService>();            
+            services.AddTransient<IBaiVietUploadCountRepository, BaiVietUploadCountRepository>();
+            services.AddTransient<IBaiVietUploadRepository, BaiVietUploadRepository>();
+            services.AddTransient<IMailService, MailService>();
             services.AddControllersWithViews();
 
-            // Add Kendo UI services to the services container
             services.AddKendo();
+
+            services.Configure<FormOptions>(x =>
+            {
+                x.ValueLengthLimit = int.MaxValue;
+                x.MultipartBodyLengthLimit = int.MaxValue;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -49,6 +49,8 @@ namespace Commsights.Data.Models
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
         public DateTime DatePublish { get; set; }
         public bool? IsError { get; set; }
+        public bool? IsFilter { get; set; }
         public int? Advalue { get; set; }
+        public string TitleProperty { get; set; }
     }
 }

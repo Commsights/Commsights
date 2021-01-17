@@ -1,0 +1,368 @@
+﻿@{ Layout = "~/Views/Shared/_LayoutNoHeader.cshtml"; ViewData["Title"] = "Scan files handling"; }
+
+@model Commsights.Data.DataTransferObject.CodeData
+
+<div class="row">
+    <div class="col-md-8">
+        <div class='row'>
+            <div class="col-md-6">
+                @(Html.Kendo().Grid<Commsights.Data.Models.ProductProperty>()
+.Name("ProductPropertyFalse")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 11px; color:#ffffff; background-color:#d73925; padding-left:12px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
+    columns.Command(command => { command.Custom("View").Click("onViewScanFile").HtmlAttributes(new { style = "font-size: 11px; border-radius: 6px; font-weight:bold; background-color:green; color:#ffffff; padding-left:10px;" }); }).Width(70);
+    columns.Command(command => { command.Custom("Right").Click("onScanFilesUpdateTrue").HtmlAttributes(new { style = "font-size: 11px; color:#ffffff; background-color:blue; padding-left:12px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
+    columns.Template(@"<a target='_blank' href='/ProductProperty/ViewContent?fileName=#=FileName#&extension=#=Page#&url=#=Note#' title='#=Note#' style='cursor: pointer; color: blue; font-size: 14px;'>#=FileName#</a>").Title("File");
+})
+
+.Editable(editable => editable.Mode(GridEditMode.InLine).DisplayDeleteConfirmation(false))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid", @style= "height:400px; font-size:11px;" })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.ID);
+})
+.Events(t => { t.RequestEnd("onProductPropertyFalseGridRequestEnd"); })
+.Read(t => t.Action("GetRequestUserIDAndParentIDAndCodeAndFalseToList", "ProductProperty"))
+.Destroy(t => t.Action("Delete", "ProductProperty"))
+)
+)
+            </div>
+            <div class="col-md-6">
+                @(Html.Kendo().Grid<Commsights.Data.Models.ProductProperty>()
+.Name("ProductPropertyTrue")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 11px; color:#ffffff; background-color:#d73925; padding-left:12px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
+    columns.Command(command => { command.Custom("View").Click("onViewScanFile").HtmlAttributes(new { style = "font-size: 11px; border-radius: 6px; font-weight:bold; background-color:green; color:#ffffff; padding-left:10px;" }); }).Width(70);
+    columns.Command(command => { command.Custom("Left").Click("onScanFilesUpdateFalse").HtmlAttributes(new { style = "font-size: 11px; color:#ffffff; background-color:blue; padding-left:12px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(70);
+    columns.Template(@"<a target='_blank' href='/ProductProperty/ViewContent?fileName=#=FileName#&extension=#=Page#&url=#=Note#' title='#=Note#' style='cursor: pointer; color: blue; font-size: 14px;'>#=FileName#</a>").Title("File");
+})
+.Editable(editable => editable.Mode(GridEditMode.InLine).DisplayDeleteConfirmation(false))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid", @style= "height:400px; font-size:11px;" })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.ID);
+})
+.Events(t => { t.RequestEnd("onProductPropertyTrueGridRequestEnd"); })
+.Read(t => t.Action("GetRequestUserIDAndParentIDAndCodeAndTrueToList", "ProductProperty"))
+.Destroy(t => t.Action("Delete", "ProductProperty"))
+)
+)
+            </div>
+        </div>
+        <div class="row" style="overflow: scroll; width: 100%; min-height:300px; height:50%;">
+            <div id="DataMain" class='col-sm-12'></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <form enctype="multipart/form-data" method="post" onsubmit="return BeginRequestHandler()" action='@Url.Action("AsyncUploadScanFiles", "ProductProperty")'>
+            <div class="row">
+                <div class='col-md-4'>
+                    @(Html.Kendo().Upload()
+                      .Name("UploadScanFiles")
+                     )
+                </div>
+                <div class='col-md-8'>
+                    <button class="btn btn-primary" title="Upload and save files (Image)"><span class="fas fa-upload"></span> Files (Image)</button>
+                </div>
+            </div>
+        </form>
+        <br />
+        <div class="row">
+            <div class='col-md-4'>
+                <input type="file" id="files" name="files" multiple>
+            </div>
+            <div class='col-md-8'>
+                <button class="btn btn-primary" onclick="onUploadScanFiles()" title="Upload and save files name (not save files) (Video)"><span class="fas fa-upload"></span> Files name (Video)</button>
+            </div>
+        </div>
+        <br />
+        <div class='form-group'>
+            @(Html.Kendo().DropDownListFor(Model=>Model.IndustryID)
+                     .DataValueField("ID")
+                     .DataTextField("CodeName")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
+                            )
+        </div>
+        <div class='form-group'>
+            @(Html.Kendo().DropDownListFor(Model=>Model.ProductParentID)
+                     .DataValueField("ID")
+                     .DataTextField("Title")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetDataTransferPressListByGroupNameAndCodeToList", "Config")))
+                            )
+        </div>
+        <div class='form-group'>
+            <label for='DatePublish'>Publish (dd/MM/yyyy)</label>
+            @(Html.Kendo().DatePickerFor(Model => Model.DatePublish)
+                                     .Format("dd/MM/yyyy")
+                                     .HtmlAttributes(new { @class = "form-control text-right" })
+                                     .DateInput()
+             )
+        </div>
+        <div class='form-group'>
+            @(Html.TextBoxFor(Model => Model.Title, new { placeholder = "Headline (Vie)", @class = "form-control", @style= "font-size: 20px;",  @title = Model.Title }))
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class='form-group'>
+                    <label for='Page'>Page (Newspage)</label>
+                    @(Html.TextBoxFor(Model => Model.Page, new { @class = "form-control", @title = Model.Page }))
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class='form-group'>
+                    <label for='TotalSize'>Total size (%)</label>
+                    @(Html.TextBoxFor(Model => Model.TotalSize, new { @class = "form-control", @title = Model.TotalSize }))
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class='form-group'>
+                    <label for='TimeLine'>TimeLine (Video)</label>
+                    @(Html.TextBoxFor(Model => Model.TimeLine, new { @class = "form-control", @title = Model.TimeLine }))
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class='form-group'>
+                    <label for='Duration'>Duration (s)</label>
+                    @(Html.TextBoxFor(Model => Model.Duration, new { @class = "form-control", @title = Model.Duration }))
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <a onclick="onCreateManyIndustry()" class="btn btn-primary" style='color:white; cursor: pointer;' title='Create many Industry'><span class="fas fa-save"></span> Create many Industry</a>
+            </div>
+            <div class="col-md-6">
+                <a onclick="onCreateAndNext()" class="btn btn-primary" style='color:white; cursor: pointer;' title='Create and Next'><span class="fas fa-save"></span> Create and Next</a>
+            </div>
+        </div>
+    </div>
+</div>
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+<script>
+    function onUploadScanFiles() {
+        BeginRequestHandler();
+        var files = document.getElementById("files").files;
+
+        if (files.length > 0) {
+            var fileNameListValue = "";
+            for (var i = 0; i < files.length; i++) {
+                fileNameListValue = fileNameListValue + ";" + files[i].name;
+            }
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("UploadScanFilesByFileNameList", "ProductProperty")",
+                data: {
+                    fileNameList: fileNameListValue
+                },
+                success: function () {
+                    $("#ProductPropertyFalse").data("kendoGrid").dataSource.read();
+                    EndRequestHandler();
+                }
+            }).done(() => {
+
+            });
+        }
+    }
+    function onScanFilesUpdateFalse(e) {
+        BeginRequestHandler();
+        var productPropertyValue = this.dataItem($(e.currentTarget).closest("tr"));
+            $.ajax({
+                type: 'GET',
+                url: "@Url.Action("ScanFilesUpdateFalse", "ProductProperty")",
+                data: {
+                    ID: productPropertyValue.ID
+                },
+                success: function () {
+                    $("#ProductPropertyFalse").data("kendoGrid").dataSource.read();
+                    $("#ProductPropertyTrue").data("kendoGrid").dataSource.read();
+                    EndRequestHandler();
+                }
+            }).done(() => {
+
+            });
+    }
+    function onScanFilesUpdateTrue(e) {
+        BeginRequestHandler();
+        var productPropertyValue = this.dataItem($(e.currentTarget).closest("tr"));
+            $.ajax({
+                type: 'GET',
+                url: "@Url.Action("ScanFilesUpdateTrue", "ProductProperty")",
+                data: {
+                    ID: productPropertyValue.ID
+                },
+                success: function () {
+                    $("#ProductPropertyFalse").data("kendoGrid").dataSource.read();
+                    $("#ProductPropertyTrue").data("kendoGrid").dataSource.read();
+                    EndRequestHandler();
+                }
+            }).done(() => {
+
+            });
+    }
+    function onViewScanFile(e) {
+        var productProperty = this.dataItem($(e.currentTarget).closest("tr"));
+        var extension = productProperty.Page.replace(".", "");
+        var html = "";
+        switch (extension) {
+            case "jpg":
+            case "png":
+            case "jpeg":
+                html = "<img src='" + productProperty.Note + "' class='img-thumbnail' />";
+                break;
+            case "mp4":
+            case "wmv":
+                html = "<video width='100%' height='50%' controls><source src='" + productProperty.Note + "' type='video/mp4'></video>";
+                break;
+        }
+        $("#DataMain").html('');
+        html = $.parseHTML(html);
+        $("#DataMain").append(html);
+    }
+    function onProductPropertyFalseGridRequestEnd(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            $("#ProductPropertyFalse").data("kendoGrid").dataSource.read();
+            $("#ProductPropertyTrue").data("kendoGrid").dataSource.read();
+        }
+    }
+    function onProductPropertyTrueGridRequestEnd(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            $("#ProductPropertyFalse").data("kendoGrid").dataSource.read();
+            $("#ProductPropertyTrue").data("kendoGrid").dataSource.read();
+        }
+    }
+    function onCreateManyIndustry() {
+        BeginRequestHandler();
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        var titleValue = $("#Title").val();
+        var productParentIDValue = $("#ProductParentID").data("kendoDropDownList").value();
+        var pageValue = $("#Page").val();
+        var totalSizeValue = $("#TotalSize").val();
+        var timeLineValue = $("#TimeLine").val();
+        var durationValue = $("#Duration").val();
+        var datePublishValue = toDate02($("#DatePublish").val());
+        $.ajax({
+            type: 'POST',
+            url: "@Url.Action("CreateManyIndustry2021", "ProductProperty")",
+            data: {
+                industryID: industryIDValue,
+                title: titleValue,
+                productParentID: productParentIDValue,
+                page: pageValue,
+                totalSize: totalSizeValue,
+                timeLine: timeLineValue,
+                duration: durationValue,
+                datePublish: datePublishValue,
+            },
+            success: function (result) {
+                onLoadSuccess(result);
+            }
+            }).done(() => {
+        });
+    }
+    function onCreateAndNext() {
+        BeginRequestHandler();
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        var titleValue = $("#Title").val();
+        var productParentIDValue = $("#ProductParentID").data("kendoDropDownList").value();
+        var pageValue = $("#Page").val();
+        var totalSizeValue = $("#TotalSize").val();
+        var timeLineValue = $("#TimeLine").val();
+        var durationValue = $("#Duration").val();
+        var datePublishValue = toDate02($("#DatePublish").val());
+
+        $.ajax({
+            type: 'POST',
+            url: "@Url.Action("CreateAndNext2021", "ProductProperty")",
+            data: {
+                industryID: industryIDValue,
+                title: titleValue,
+                productParentID: productParentIDValue,
+                page: pageValue,
+                totalSize: totalSizeValue,
+                timeLine: timeLineValue,
+                duration: durationValue,
+                datePublish: datePublishValue,
+            },
+            success: function (result) {
+                onLoadSuccess(result);
+                $("#Title").val("");
+                $("#TotalSize").val("");
+                $("#Page").val("");
+                $("#TimeLine").val("");
+                $("#Duration").val("");
+            }
+            }).done(() => {
+        });
+    }
+    function onLoadSuccess(result) {
+        var response = result;
+        var messageType = response.split('-')[0];
+        var note = response.split('-')[1];
+        var notification = $("#Notification").data("kendoNotification");
+        notification.show(note, messageType);
+        $("#ProductPropertyTrue").data("kendoGrid").dataSource.read();
+        EndRequestHandler();
+    }
+</script>

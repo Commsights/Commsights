@@ -25,8 +25,12 @@ namespace Commsights.Data.DataTransferObject
         public string FileName { get; set; }
         public string CategoryMain { get; set; }
         public string CategorySub { get; set; }
+        public string CategoryMainVietnamese { get; set; }
+        public string CategorySubVietnamese { get; set; }
         public string CompanyName { get; set; }
         public string CorpCopy { get; set; }
+        public string SOECompanyString { get; set; }
+        public string SOEProductString { get; set; }
         [DataType(DataType.Currency)]
         [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? SOECompany { get; set; }
@@ -38,9 +42,9 @@ namespace Commsights.Data.DataTransferObject
         public decimal? SOEProduct { get; set; }
         public string FeatureProduct { get; set; }
         public string SentimentCorp { get; set; }
-        [DataType(DataType.Currency)]
-        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
+        public string SentimentCorpVietnamese { get; set; }
         public decimal? Advalue { get; set; }
+        public decimal? Color { get; set; }
         public string TierCommsights { get; set; }
         public string CampaignName { get; set; }
         public string CampaignKeyMessage { get; set; }
@@ -106,6 +110,7 @@ namespace Commsights.Data.DataTransferObject
         [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal? ROME_Product_VND { get; set; }
         public int? ProductID { get; set; }
+        public int? ProductParentID { get; set; }
         public string Title { get; set; }
         public string TitleEnglish { get; set; }
         public string Description { get; set; }
@@ -119,7 +124,10 @@ namespace Commsights.Data.DataTransferObject
         public string Page { get; set; }
         public string Duration { get; set; }
         public bool? IsSummary { get; set; }
-        public DateTime DatePublish { get; set; }        
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        [DataType(DataType.Date)]
+        public DateTime DatePublish { get; set; }
         public DateTime DateUpload { get; set; }
         public DateTime DateUpdated { get; set; }
         public DateTime DateCoding { get; set; }
@@ -142,8 +150,22 @@ namespace Commsights.Data.DataTransferObject
         public bool? IsCopy { get; set; }
         public string CompanyNameHiden { get; set; }
         public string ProductNameHiden { get; set; }
+        public string CategorySubHiden { get; set; }
         public string URLCoding { get; set; }
         public string Frequency { get; set; }
         public int? CopyVersion { get; set; }
+        public string TitleProperty { get; set; }
+        public int? SourceProperty { get; set; }
+        public string TimeLine { get; set; }
+        public string TotalSize { get; set; }
+        public int? EmployeeID { get; set; }
+        public string FullName { get; set; }
+        public bool? IsDailyDownload { get; set; }
+        public DateTime? DateDailyDownload { get; set; }
+        public string Note { get; set; }
+
+        public bool? IsVideo { get; set; }
+
+        public string ProductFeatureList { get; set; }
     }
 }

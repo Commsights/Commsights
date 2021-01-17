@@ -1,0 +1,7 @@
+@(Html.Kendo().DropDownListFor(t => t)
+                   .DataValueField("CodeName")
+                   .DataTextField("CodeName")
+                   .HtmlAttributes(new {data_bind= "value: SentimentCorp", @class = "form-control", @style = "font-size:11px;" })
+                    .Filter(FilterType.StartsWith)
+                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetSentimentToList", "Config")))
+)

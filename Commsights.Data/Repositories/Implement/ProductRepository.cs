@@ -217,6 +217,26 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public async Task<List<ProductCompact>> AsyncGetProductCompactByDateUpdatedBeginAndDateUpdatedEndAndSearchAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source)
+        {
+            List<ProductCompact> list = new List<ProductCompact>();
+            if (!string.IsNullOrEmpty(search))
+            {
+                search = search.Replace(@"""", @"");
+                datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+                datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@DatePublishBegin",datePublishBegin),
+                    new SqlParameter("@DatePublishEnd",datePublishEnd),
+                    new SqlParameter("@Search",search),
+                    new SqlParameter("@Source",source),
+                };
+                DataTable dt = await SQLHelper.FillAsync(AppGlobal.ConectionString, "sp_ProductSelectByDateUpdatedBeginAndDateUpdatedEndAndSearchAndSource", parameters);
+                list = SQLHelper.ToList<ProductCompact>(dt);
+            }
+            return list;
+        }
         public async Task<List<ProductCompact>> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string source)
         {
             List<ProductCompact> list = new List<ProductCompact>();
@@ -231,6 +251,47 @@ namespace Commsights.Data.Repositories
             DataTable dt = await SQLHelper.FillAsync(AppGlobal.ConectionString, "sp_ProductSelectByDatePublishBeginAndDatePublishEndAndSource", parameters);
             list = SQLHelper.ToList<ProductCompact>(dt);
 
+            return list;
+        }
+        public async Task<List<ProductCompact>> AsyncGetProductCompactByDateUpdatedBeginAndDateUpdatedEndAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string source)
+        {
+            List<ProductCompact> list = new List<ProductCompact>();
+            datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+            datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+            SqlParameter[] parameters =
+            {
+                    new SqlParameter("@DatePublishBegin",datePublishBegin),
+                    new SqlParameter("@DatePublishEnd",datePublishEnd),
+                    new SqlParameter("@Source",source),
+                };
+            DataTable dt = await SQLHelper.FillAsync(AppGlobal.ConectionString, "sp_ProductSelectByDateUpdatedBeginAndDateUpdatedEndAndSource", parameters);
+            list = SQLHelper.ToList<ProductCompact>(dt);
+            return list;
+        }
+        public async Task<List<ProductCompact>> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceAndIsPublishToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source, bool isTitle, bool isDescription, bool isPublish)
+        {
+            List<ProductCompact> list = new List<ProductCompact>();
+            if (isPublish == true)
+            {
+                list = await AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceToList(datePublishBegin, datePublishEnd, search, source, isTitle, isDescription);
+            }
+            else
+            {
+                list = await AsyncGetProductCompactByDateUpdatedBeginAndDateUpdatedEndAndSearchAndIsTitleAndIsDescriptionAndSourceToList(datePublishBegin, datePublishEnd, search, source, isTitle, isDescription);
+            }
+            return list;
+        }
+        public async Task<List<ProductCompact>> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceAndIsUploadToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source, bool isTitle, bool isDescription, bool isUpload)
+        {
+            List<ProductCompact> list = new List<ProductCompact>();
+            if (isUpload == false)
+            {
+                list = await AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceToList(datePublishBegin, datePublishEnd, search, source, isTitle, isDescription);
+            }
+            else
+            {
+                list = await AsyncGetProductCompactByDateUpdatedBeginAndDateUpdatedEndAndSearchAndIsTitleAndIsDescriptionAndSourceToList(datePublishBegin, datePublishEnd, search, source, isTitle, isDescription);
+            }
             return list;
         }
         public async Task<List<ProductCompact>> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source, bool isTitle, bool isDescription)
@@ -260,6 +321,33 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public async Task<List<ProductCompact>> AsyncGetProductCompactByDateUpdatedBeginAndDateUpdatedEndAndSearchAndIsTitleAndIsDescriptionAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source, bool isTitle, bool isDescription)
+        {
+            List<ProductCompact> list = new List<ProductCompact>();
+            if (!string.IsNullOrEmpty(search))
+            {
+                if (search.Equals("*") == true)
+                {
+                    list = await AsyncGetProductCompactByDateUpdatedBeginAndDateUpdatedEndAndSourceToList(datePublishBegin, datePublishEnd, source);
+                }
+                if ((isTitle == true) && (isDescription == true))
+                {
+                    list = await AsyncGetProductCompactByDateUpdatedBeginAndDateUpdatedEndAndSearchAndSourceToList(datePublishBegin, datePublishEnd, search, source);
+                }
+                else
+                {
+                    if (isTitle == true)
+                    {
+                        list = await AsyncGetProductCompactByDateUpdatedBeginAndDateUpdatedEndAndSearchTitleAndSourceToList(datePublishBegin, datePublishEnd, search, source);
+                    }
+                    if (isDescription == true)
+                    {
+                        list = await AsyncGetProductCompactByDateUpdatedBeginAndDateUpdatedEndAndSearchDescriptionAndSourceToList(datePublishBegin, datePublishEnd, search, source);
+                    }
+                }
+            }
+            return list;
+        }
         public async Task<List<ProductCompact>> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchTitleAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source)
         {
             List<ProductCompact> list = new List<ProductCompact>();
@@ -280,6 +368,26 @@ namespace Commsights.Data.Repositories
             }
             return list;
         }
+        public async Task<List<ProductCompact>> AsyncGetProductCompactByDateUpdatedBeginAndDateUpdatedEndAndSearchTitleAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source)
+        {
+            List<ProductCompact> list = new List<ProductCompact>();
+            if (!string.IsNullOrEmpty(search))
+            {
+                search = search.Replace(@"""", @"");
+                datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+                datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@DatePublishBegin",datePublishBegin),
+                    new SqlParameter("@DatePublishEnd",datePublishEnd),
+                    new SqlParameter("@Search",search),
+                    new SqlParameter("@Source",source),
+                };
+                DataTable dt = await SQLHelper.FillAsync(AppGlobal.ConectionString, "sp_ProductSelectByDateUpdatedBeginAndDateUpdatedEndAndSearchTitleAndSource", parameters);
+                list = SQLHelper.ToList<ProductCompact>(dt);
+            }
+            return list;
+        }
         public async Task<List<ProductCompact>> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchDescriptionAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source)
         {
             List<ProductCompact> list = new List<ProductCompact>();
@@ -296,6 +404,26 @@ namespace Commsights.Data.Repositories
                     new SqlParameter("@Source",source),
                 };
                 DataTable dt = await SQLHelper.FillAsync(AppGlobal.ConectionString, "sp_ProductSelectByDatePublishBeginAndDatePublishEndAndSearchDescriptionAndSource", parameters);
+                list = SQLHelper.ToList<ProductCompact>(dt);
+            }
+            return list;
+        }
+        public async Task<List<ProductCompact>> AsyncGetProductCompactByDateUpdatedBeginAndDateUpdatedEndAndSearchDescriptionAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source)
+        {
+            List<ProductCompact> list = new List<ProductCompact>();
+            if (!string.IsNullOrEmpty(search))
+            {
+                search = search.Replace(@"""", @"");
+                datePublishBegin = new DateTime(datePublishBegin.Year, datePublishBegin.Month, datePublishBegin.Day, 0, 0, 0);
+                datePublishEnd = new DateTime(datePublishEnd.Year, datePublishEnd.Month, datePublishEnd.Day, 23, 59, 59);
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@DatePublishBegin",datePublishBegin),
+                    new SqlParameter("@DatePublishEnd",datePublishEnd),
+                    new SqlParameter("@Search",search),
+                    new SqlParameter("@Source",source),
+                };
+                DataTable dt = await SQLHelper.FillAsync(AppGlobal.ConectionString, "sp_ProductSelectByDateUpdatedBeginAndDateUpdatedEndAndSearchDescriptionAndSource", parameters);
                 list = SQLHelper.ToList<ProductCompact>(dt);
             }
             return list;
@@ -349,12 +477,34 @@ namespace Commsights.Data.Repositories
         }
         public Product GetByURLCode(string uRLCode)
         {
+            Product model = new Product();
             SqlParameter[] parameters =
             {
                     new SqlParameter("@URLCode",uRLCode),
             };
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectByURLCode", parameters);
-            return SQLHelper.ToList<Product>(dt).FirstOrDefault();
+            model = SQLHelper.ToList<Product>(dt).FirstOrDefault();
+            if (model == null)
+            {
+                if (uRLCode.Contains(@"http://") == true)
+                {
+                    uRLCode = uRLCode.Replace(@"http://", @"https://");
+                }
+                else
+                {
+                    if (uRLCode.Contains(@"https://") == true)
+                    {
+                        uRLCode = uRLCode.Replace(@"https://", @"http://");
+                    }
+                }    
+                SqlParameter[] parameters01 =
+                {
+                        new SqlParameter("@URLCode",uRLCode),
+                };
+                DataTable dt01 = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductSelectByURLCode", parameters01);
+                model = SQLHelper.ToList<Product>(dt01).FirstOrDefault();
+            }
+            return model;
         }
         public Product GetByByDatePublishBeginAndDatePublishEndAndIndustryIDAndSourceID(DateTime datePublishBegin, DateTime datePublishEnd, int industryID, int sourceID)
         {
@@ -1199,7 +1349,10 @@ new SqlParameter("@TargetID",product.TargetID),
         }
         public async Task<string> AsyncInsertSingleItem(Product product)
         {
-            SqlParameter[] parameters =
+            string result = "";
+            if (!string.IsNullOrEmpty(product.Title))
+            {
+                SqlParameter[] parameters =
             {
 new SqlParameter("@ID",product.ID),
 new SqlParameter("@UserCreated",product.UserCreated),
@@ -1247,7 +1400,89 @@ new SqlParameter("@IsData",product.IsData),
 new SqlParameter("@SourceID",product.SourceID),
 new SqlParameter("@TargetID",product.TargetID),
 };
-            string result = await SQLHelper.ExecuteNonQueryAsync(AppGlobal.ConectionString, "sp_ProductInsertSingleItem", parameters);
+                result = await SQLHelper.ExecuteNonQueryAsync(AppGlobal.ConectionString, "sp_ProductInsertSingleItem", parameters);
+            }
+            return result;
+        }
+        public async Task<string> AsyncInsertSingleItemAuto(Product product)
+        {
+            string result = "";
+            if (!string.IsNullOrEmpty(product.Title))
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@UserCreated",product.UserCreated),
+                    new SqlParameter("@DateCreated",product.DateCreated),
+                    new SqlParameter("@UserUpdated",product.UserUpdated),
+                    new SqlParameter("@DateUpdated",product.DateUpdated),
+                    new SqlParameter("@ParentID",product.ParentID),
+                    new SqlParameter("@Active",product.Active),
+                    new SqlParameter("@CategoryID",product.CategoryID),
+                    new SqlParameter("@Title",product.Title),
+                    new SqlParameter("@URLCode",product.URLCode),
+                    new SqlParameter("@MetaTitle",product.MetaTitle),
+                    new SqlParameter("@Description",product.Description),
+                    new SqlParameter("@ContentMain",product.ContentMain),
+                    new SqlParameter("@DatePublish",product.DatePublish),
+                    new SqlParameter("@GUICode",product.GUICode),
+                    new SqlParameter("@Source",product.Source),
+                };
+                result = await SQLHelper.ExecuteNonQueryAsync(AppGlobal.ConectionString, "sp_ProductInsertSingleItemAuto", parameters);
+            }
+            return result;
+        }
+        public async Task<string> AsyncInsertSingleItemAutoNoFilter(Product product)
+        {
+            string result = "";
+            if (!string.IsNullOrEmpty(product.Title))
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@UserCreated",product.UserCreated),
+                    new SqlParameter("@DateCreated",product.DateCreated),
+                    new SqlParameter("@UserUpdated",product.UserUpdated),
+                    new SqlParameter("@DateUpdated",product.DateUpdated),
+                    new SqlParameter("@ParentID",product.ParentID),
+                    new SqlParameter("@Active",product.Active),
+                    new SqlParameter("@CategoryID",product.CategoryID),
+                    new SqlParameter("@Title",product.Title),
+                    new SqlParameter("@URLCode",product.URLCode),
+                    new SqlParameter("@MetaTitle",product.MetaTitle),
+                    new SqlParameter("@Description",product.Description),
+                    new SqlParameter("@ContentMain",product.ContentMain),
+                    new SqlParameter("@DatePublish",product.DatePublish),
+                    new SqlParameter("@GUICode",product.GUICode),
+                    new SqlParameter("@Source",product.Source),
+                };
+                result = await SQLHelper.ExecuteNonQueryAsync(AppGlobal.ConectionString, "sp_ProductInsertSingleItemAutoNoFilter", parameters);
+            }
+            return result;
+        }
+        public string InsertSingleItemAuto(Product product)
+        {
+            string result = "";
+            if (!string.IsNullOrEmpty(product.Title))
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@UserCreated",product.UserCreated),
+                    new SqlParameter("@DateCreated",product.DateCreated),
+                    new SqlParameter("@UserUpdated",product.UserUpdated),
+                    new SqlParameter("@DateUpdated",product.DateUpdated),
+                    new SqlParameter("@ParentID",product.ParentID),
+                    new SqlParameter("@Active",product.Active),
+                    new SqlParameter("@CategoryID",product.CategoryID),
+                    new SqlParameter("@Title",product.Title),
+                    new SqlParameter("@URLCode",product.URLCode),
+                    new SqlParameter("@MetaTitle",product.MetaTitle),
+                    new SqlParameter("@Description",product.Description),
+                    new SqlParameter("@ContentMain",product.ContentMain),
+                    new SqlParameter("@DatePublish",product.DatePublish),
+                    new SqlParameter("@GUICode",product.GUICode),
+                    new SqlParameter("@Source",product.Source),
+                };
+                result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductInsertSingleItemAuto", parameters);
+            }
             return result;
         }
         public async Task<string> AsyncUpdateSingleItem(Product product)
@@ -1286,22 +1521,23 @@ new SqlParameter("@Description",product.Description),
         {
             SqlParameter[] parameters =
             {
-new SqlParameter("@ID",product.ID),
-new SqlParameter("@Title",product.Title),
-new SqlParameter("@DatePublish",product.DatePublish),
-new SqlParameter("@TitleEnglish",product.TitleEnglish),
-new SqlParameter("@IsError",product.IsError),
-};
+                new SqlParameter("@ID",product.ID),
+                new SqlParameter("@Title",product.Title),
+                new SqlParameter("@DatePublish",product.DatePublish),
+                new SqlParameter("@TitleEnglish",product.TitleEnglish),
+                new SqlParameter("@IsError",product.IsError),
+            };
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductUpdateSingleItem", parameters);
             return result;
         }
         public string Initialization()
-        {            
+        {
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductInitialization");
             return result;
         }
         public string UpdateSingleItemByCodeData(CodeData model)
         {
+
             SqlParameter[] parameters =
             {
 new SqlParameter("@ID",model.ProductID),
@@ -1311,6 +1547,9 @@ new SqlParameter("@Description",model.Description),
 new SqlParameter("@DescriptionEnglish",model.DescriptionEnglish),
 new SqlParameter("@Author",model.Author),
 new SqlParameter("@UserUpdated",model.UserUpdated),
+new SqlParameter("@TitleProperty",model.TitleProperty),
+new SqlParameter("@SourceProperty",model.SourceProperty),
+new SqlParameter("@DatePublish",model.DatePublish),
 };
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductUpdateSingleItemByCodeData", parameters);
             return result;

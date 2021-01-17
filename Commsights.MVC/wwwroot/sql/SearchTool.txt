@@ -1,0 +1,85 @@
+
+IF OBJECT_ID('tempdb..#A01') IS NOT NULL
+    DROP TABLE #A01
+
+IF OBJECT_ID('tempdb..#A02') IS NOT NULL
+    DROP TABLE #A02
+
+IF OBJECT_ID('tempdb..#A03') IS NOT NULL
+    DROP TABLE #A03
+
+declare @ID int=1470327
+
+declare @Title nvarchar(4000)=''
+
+declare @Description nvarchar(4000)=''
+
+declare @ProductName nvarchar(4000)=''
+
+declare @MembershipID int=0
+
+declare @ProductID int=0
+
+declare @MembershipCount int=0
+
+declare @ProductCount int=0
+
+select @Title=Title, @Description=Description from Product (nolock) where ID=@ID
+
+select MembershipID=ID, Account, ProductName='' into #A01 from Membership (nolock) where ParentID in (150,1726) 
+
+and (
+
+@Description like '% ' + Account + ' %' 
+
+or @Description like Account + ' %' or @Description like Account + ',%' or @Description like Account + '.%' or @Description like Account + ')%'
+
+or @Description like '% ' + Account or @Description like '%(' + Account
+
+or @Title like '% ' + Account + ' %' 
+
+or @Title like Account + ' %' or @Title like Account + ',%' or @Title like Account + '.%' or @Title like Account + ')%'
+
+or @Title like '% ' + Account or @Title like '%(' + Account
+
+) 
+
+select a.MembershipID, b.Account, a.ProductName into #A02 from MembershipPermission (nolock) a join Membership (nolock) b on a.MembershipID=b.ID and a.Code='Product' and len(a.ProductName)>0
+
+and (
+
+@Description like '% ' + ProductName + ' %' 
+
+or @Description like ProductName + ' %' or @Description like ProductName + ',%' or @Description like ProductName + '.%' or @Description like ProductName + ')%'
+
+or @Description like '% ' + ProductName or @Description like '%(' + ProductName
+
+or @Title like '% ' + ProductName + ' %' 
+
+or @Title like ProductName + ' %' or @Title like ProductName + ',%' or @Title like ProductName + '.%' or @Title like ProductName + ')%'
+
+or @Title like '% ' + ProductName or @Title like '%(' + ProductName
+
+) 
+
+select b.* into #A03 from #A01 a join #A02 b on a.MembershipID=b.MembershipID
+
+select * from (
+
+select * from #A01 a 
+
+union
+
+select * from #A03
+
+) a order by a.Account asc
+
+
+IF OBJECT_ID('tempdb..#A01') IS NOT NULL
+    DROP TABLE #A01
+
+IF OBJECT_ID('tempdb..#A02') IS NOT NULL
+    DROP TABLE #A02
+
+IF OBJECT_ID('tempdb..#A03') IS NOT NULL
+    DROP TABLE #A03

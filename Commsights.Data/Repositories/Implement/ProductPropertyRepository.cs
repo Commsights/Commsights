@@ -145,6 +145,58 @@ namespace Commsights.Data.Repositories
 
             return list;
         }
+        public List<ProductProperty> GetRequestUserIDAndParentIDAndCodeAndDateUpdatedToList(int requestUserID, int parentID, string code, DateTime dateUpdated)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            if (requestUserID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@RequestUserID",requestUserID),
+                new SqlParameter("@ParentID",parentID),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@DateUpdated",dateUpdated),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectByRequestUserIDAndParentIDAndCodeAndDateUpdated", parameters);
+                list = SQLHelper.ToList<ProductProperty>(dt);
+            }
+            return list;
+        }
+        public List<ProductProperty> GetRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActiveToList(int requestUserID, int parentID, string code, DateTime dateUpdated, bool active)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            if (requestUserID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@RequestUserID",requestUserID),
+                new SqlParameter("@ParentID",parentID),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@DateUpdated",dateUpdated),
+                new SqlParameter("@Active",active),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectByRequestUserIDAndParentIDAndCodeAndDateUpdatedAndActive", parameters);
+                list = SQLHelper.ToList<ProductProperty>(dt);
+            }
+            return list;
+        }
+        public List<ProductProperty> GetRequestUserIDAndParentIDAndCodeAndActiveToList(int requestUserID, int parentID, string code, bool active)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            if (requestUserID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@RequestUserID",requestUserID),
+                new SqlParameter("@ParentID",parentID),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@Active",active),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectByRequestUserIDAndParentIDAndCodeAndActive", parameters);
+                list = SQLHelper.ToList<ProductProperty>(dt);
+            }
+            return list;
+        }
         public List<ProductPropertyDataTransfer> GetDataTransferIndustryByParentIDToList(int parentID)
         {
             List<ProductPropertyDataTransfer> list = new List<ProductPropertyDataTransfer>();
@@ -187,6 +239,45 @@ namespace Commsights.Data.Repositories
 
             return list;
         }
+        public ProductProperty GetTitleAndCopyVersionAndIsCoding(string title, int copyVersion, bool isCoding)
+        {
+            ProductProperty model = new ProductProperty();
+
+            SqlParameter[] parameters =
+                   {
+                new SqlParameter("@Title",title),
+                new SqlParameter("@CopyVersion",copyVersion),
+                new SqlParameter("@IsCoding",isCoding),
+             };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectByTitleAndCopyVersionAndIsCoding", parameters);
+            model = SQLHelper.ToList<ProductProperty>(dt).FirstOrDefault();
+
+            return model;
+        }
+        public List<ProductProperty> GetTitleAndSourceToList(string title, int source)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            SqlParameter[] parameters =
+                   {
+                new SqlParameter("@Title",title),
+                new SqlParameter("@Source",source),
+             };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectByTitleAndSource", parameters);
+            list = SQLHelper.ToList<ProductProperty>(dt);
+            return list;
+        }
+        public List<ProductProperty> GetByIDAndCodeToList(int ID, string code)
+        {
+            List<ProductProperty> list = new List<ProductProperty>();
+            SqlParameter[] parameters =
+                   {
+                new SqlParameter("@ID",ID),
+                new SqlParameter("@Code",code),
+             };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectByIDAndCode", parameters);
+            list = SQLHelper.ToList<ProductProperty>(dt);
+            return list;
+        }
         public string Initialization()
         {
             return SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInitialization");
@@ -206,6 +297,33 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@ID",ID),
             };
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertItemByID", parameters);
+            return result;
+        }
+        public string InsertItemsByIDAndRequestUserIDAndCode(int ID, int RequestUserID, string code)
+        {
+            SqlParameter[] parameters =
+                      {
+                new SqlParameter("@ID",ID),
+                new SqlParameter("@RequestUserID",RequestUserID),
+                new SqlParameter("@Code",code),
+            };
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertItemsByIDAndRequestUserIDAndCode", parameters);
+            return result;
+        }
+        public string UpdateItemsByIDAndRequestUserIDAndProductFeatureListAndCode(int ID, int RequestUserID, string productFeatureList, string code)
+        {
+            if (string.IsNullOrEmpty(productFeatureList))
+            {
+                productFeatureList = "";
+            }
+            SqlParameter[] parameters =
+                      {
+                new SqlParameter("@ID",ID),
+                new SqlParameter("@RequestUserID",RequestUserID),
+                new SqlParameter("@ProductFeatureList",productFeatureList),
+                new SqlParameter("@Code",code),
+            };
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyUpdateItemsByIDAndRequestUserIDAndProductFeatureListAndCode", parameters);
             return result;
         }
         public string UpdateSingleItemByCodeData(CodeData model)
@@ -264,6 +382,16 @@ new SqlParameter("@Title",model.Title),
         }
         public string UpdateItemsByCodeDataCopyVersion(CodeData model)
         {
+            if (!string.IsNullOrEmpty(model.CategorySub))
+            {
+                if (model.CategorySub.Split(':').Length > 1)
+                {
+                    model.CategoryMain = model.CategorySub.Split(':')[0];
+                    model.CategorySub = model.CategorySub.Split(':')[1];
+                    model.CategoryMain = model.CategoryMain.Trim();
+                    model.CategorySub = model.CategorySub.Trim();
+                }
+            }
             SqlParameter[] parameters =
             {
 new SqlParameter("@ID",model.ProductPropertyID),
@@ -316,7 +444,28 @@ new SqlParameter("@Title",model.Title),
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyUpdateItemsByCodeDataCopyVersion", parameters);
             return result;
         }
-        public int InsertItemsByCopyCodeData(int ID, int RequestUserID, int rowIndex)
+        public string UpdateItemsByDailyDownload(DateTime dateUpdatedBegin, DateTime dateUpdatedEnd, int hourBegin, int hourEnd, int industryID, string companyName, bool isCoding, bool isAnalysis, int RequestUserID)
+        {
+            string result = "";
+            if (industryID > 0)
+            {
+                dateUpdatedBegin = new DateTime(dateUpdatedBegin.Year, dateUpdatedBegin.Month, dateUpdatedBegin.Day, hourBegin, 0, 0);
+                dateUpdatedEnd = new DateTime(dateUpdatedEnd.Year, dateUpdatedEnd.Month, dateUpdatedEnd.Day, hourEnd, 59, 59);
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@DateUpdatedBegin",dateUpdatedBegin),
+                new SqlParameter("@DateUpdatedEnd",dateUpdatedEnd),
+                new SqlParameter("@IndustryID",industryID),
+                new SqlParameter("@CompanyName",companyName),
+                new SqlParameter("@IsCoding",isCoding),
+                new SqlParameter("@IsAnalysis",isAnalysis),
+                new SqlParameter("@@RequestUserID",RequestUserID),
+                };
+                result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyUpdateItemsByDailyDownload", parameters);
+            }
+            return result;
+        }
+        public int InsertItemsByCopyCodeData(int ID, int RequestUserID)
         {
             List<ProductProperty> listSame = GetProductPropertySelectItemsSameParentIDByIDToList(ID);
             List<ProductProperty> listParentID = GetProductPropertySelectItemsDistinctParentIDSameTitleAndDifferentURLCodeByIDToList(ID);
@@ -333,6 +482,7 @@ new SqlParameter("@Title",model.Title),
                         for (int i = rowBegin; i < rowEnd; i++)
                         {
                             ProductProperty itemCopy = listSame[i];
+                            itemCopy.IsCoding = true;
                             itemCopy.ParentID = parentID;
                             itemCopy.Source = listDifferent[0].Source;
                             itemCopy.CopyVersion = listSame[i].CopyVersion;
@@ -350,7 +500,7 @@ new SqlParameter("@Title",model.Title),
                     }
                 }
             }
-            return rowIndex;
+            return 0;
         }
         public string InitializationCodeDataByID(int ID)
         {
@@ -361,15 +511,25 @@ new SqlParameter("@Title",model.Title),
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInitializationCodeDataByID", parameters);
             return result;
         }
-        public string InsertSingleItemByCopyCodeData(int ID, int RequestUserID)
+        public int InsertSingleItemByCopyCodeData(int ID, int RequestUserID)
         {
-            SqlParameter[] parameters =
+            int IDNew = 0;
+            using (SqlConnection cn = new SqlConnection(AppGlobal.ConectionString))
             {
-                new SqlParameter("@ID",ID),
-                new SqlParameter("@RequestUserID",RequestUserID),
-            };
-            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyInsertSingleItemByCopyCodeData", parameters);
-            return result;
+                SqlCommand cmd = new SqlCommand("sp_ProductPropertyInsertSingleItemByCopyCodeData", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@ID", SqlDbType.Int).Value = ID;
+                cmd.Parameters.Add("@RequestUserID", SqlDbType.Int).Value = RequestUserID;
+                cmd.Parameters.Add("@returnValue", SqlDbType.Int);
+                cmd.Parameters["@returnValue"].Direction = ParameterDirection.Output;
+                cn.Open();
+                int ret = cmd.ExecuteNonQuery();
+                if (ret > 0)
+                {
+                    IDNew = (int)cmd.Parameters["@returnValue"].Value;
+                }
+            }
+            return IDNew;
         }
         public string DeleteItemsByIDCodeData(int ID)
         {
@@ -378,6 +538,15 @@ new SqlParameter("@Title",model.Title),
                 new SqlParameter("@ID",ID),
             };
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyDeleteItemsByIDCodeData", parameters);
+            return result;
+        }
+        public string DeleteItemsByID(int ID)
+        {
+            SqlParameter[] parameters =
+            {
+                new SqlParameter("@ID",ID),
+            };
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyDeleteItemsByID", parameters);
             return result;
         }
         public List<ProductProperty> GetSQLByParentIDToList(int parentID)
@@ -434,6 +603,19 @@ new SqlParameter("@Title",model.Title),
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPropertySelectItemsSameParentIDByID", parameters);
             list = SQLHelper.ToList<ProductProperty>(dt);
             return list;
+        }
+        public string DeleteItemsByIDList(string IDList)
+        {
+            string result = "";
+            if (!string.IsNullOrEmpty(IDList))
+            {
+                SqlParameter[] parameters =
+                {
+                new SqlParameter("@IDList",IDList),
+                };
+                result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ProductPropertyDeleteItemsByIDList", parameters);
+            }
+            return result;
         }
     }
 }

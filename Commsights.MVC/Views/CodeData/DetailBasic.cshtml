@@ -15,48 +15,43 @@
                     @Html.HiddenFor(Model => Model.Advalue)
                     @Html.HiddenFor(Model => Model.URLCode)
                     <div class="row">
-                        <div class='col-md-1'>
+                        <div class='col-md-2'>
                         </div>
                         <div class='col-md-1'>
                             @(Html.CheckBoxFor(Model => Model.IsCoding.Value, new { @disabled = "disabled" }))
-                            <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Coding</p>
-                        </div>
-                        <div class='col-md-1'>
-                            <a id="RowBack" onclick="onRowMove(@Model.RowBack)" style="color:#ffffff;" title="Back" class="btn btn-info">
-                                <span class="fas fa-angle-left"></span> (1)
-                            </a>
+                            <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Code</p>
                         </div>
                         <div class='col-md-2 text-center'>
-                            <span style="font-weight:bold; font-size:18px;">@Model.RowBegin.Value.ToString("N0") < <span style="color: blue;">@Model.RowCurrent</span> > @Model.RowEnd.Value.ToString("N0") / @Model.RowIndexCount</span>
+                            <span style="font-weight:bold; font-size:18px;">@Model.RowIndexCount / @Model.RowCount</span>
                         </div>
                         <div class='col-md-1'>
-                            <a id="RowNext" onclick="onRowMove(@Model.RowNext)" style="color:#ffffff;" title="First" class="btn btn-info">
-                                <span class="fas fa-angle-right"></span> (2)
+                            <a id="RowNext" onclick="onRowMove(@Model.RowNext)" style="color:#ffffff;" title="Next" class="btn btn-info">
+                                <span class="fas fa-angle-right"></span> (1)
                             </a>
                         </div>
                         <div class='col-md-1'>
-                            <a id="URLCode" onclick="onOpenBlank('@Model.URLCode')" title='@Model.Title' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i> (3)</a>
+                            <a id="URLCode" onclick="onOpenBlank('@Model.URLCode')" title='@Model.Title' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i> (2)</a>
                         </div>
                         <div class='col-md-2'>
                             @(Html.CheckBoxFor(Model => Model.IsSummary.Value))
-                            <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Brief (4)</p>
+                            <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Brief (3)</p>
                         </div>
                         <div class='col-md-1'>
                             <button id="SaveCoding" style="width:100%;" type="submit" title="Save" class="btn btn-primary" autofocus="autofocus">
-                                <span class="fas fa-save"></span> (5)
+                                <span class="fas fa-save"></span> (4)
                             </button>
                         </div>
                         <div class='col-md-1'>
-                            <a id="CopyURLSame" onclick="onCopyURLSame()" title='Copy URL Same' class='btn btn-primary' style='color:white; cursor: pointer;'>Copy =URL (6)</a>
+                            <a id="CopyURLSame" onclick="onCopyURLSame()" title='Copy URL Same' class='btn btn-primary' style='color:white; cursor: pointer;'>=URL (5)</a>
                         </div>
                         <div class='col-md-1'>
-                            <a id="CopyURLAnother" onclick="onCopyURLAnother()" title='Copy URL Another' class='btn btn-primary' style='color:white; cursor: pointer;'>Copy #URL (7)</a>
+                            <a id="CopyURLAnother" onclick="onCopyURLAnother()" title='Copy URL Another' class='btn btn-primary' style='color:white; cursor: pointer;'>#URL (6)</a>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class='form-group'>
-                                <label for='CategorySub'>Category Sub</label>
+                                <label for='CategorySub'>Category Sub (@Model.CategorySubHiden)</label>
                                 @(Html.Kendo().DropDownListFor(Model => Model.CategorySub)
                      .DataValueField("CodeName")
                      .DataTextField("CodeName")
@@ -117,16 +112,14 @@
                             )
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class='form-group'>
-                                <label for='TierCommsights'>Tier Commsights</label>
-                                @(Html.Kendo().DropDownListFor(Model => Model.TierCommsights)
-                     .DataValueField("CodeName")
-                     .DataTextField("CodeName")
-                    .HtmlAttributes(new { @class = "form-control" })
-                       .Filter(FilterType.Contains)
-                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetMediaTierToList", "Config")))
-                            )
+                                <label for='DatePublish'>Publish (MM/dd/yyyy)</label>
+                                @(Html.Kendo().DatePickerFor(Model => Model.DatePublish)
+                                     .Format("MM/dd/yyyy")
+                                     .HtmlAttributes(new { @class = "form-control text-right"})
+                                     .DateInput()
+                                )
                             </div>
                             <div class='form-group'>
                                 <label for='Title'>Headline (Vie)</label>
@@ -153,7 +146,33 @@
                                 <div id="DescriptionEnglishHiden" style="display:none;">@Model.DescriptionEnglish</div>
                             </div>
                         </div>
-                        <div class="col-md-3">                            
+                        <div class="col-md-4">
+                            <div class='form-group'>
+                                <label for='Note'>Note</label>
+                                @(Html.TextBoxFor(Model => Model.Note, new { @class = "form-control", @title = Model.Note }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='TitleProperty'>Headline (Property)</label>
+                                @(Html.TextBoxFor(Model => Model.TitleProperty, new { @class = "form-control", @title = Model.TitleProperty }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='SourceProperty'>Source (Property)</label>
+                                @(Html.TextBoxFor(Model => Model.SourceProperty, new { @class = "form-control text-right", @title = Model.SourceProperty }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='Source'>Source</label>
+                                @(Html.TextBoxFor(Model => Model.Source, new { @class = "form-control text-right", @title = Model.Source, @readonly = "readonly" }))
+                            </div>
+                            <div class='form-group'>
+                                <label for='TierCommsights'>Tier Commsights</label>
+                                @(Html.Kendo().DropDownListFor(Model => Model.TierCommsights)
+                     .DataValueField("CodeName")
+                     .DataTextField("CodeName")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetMediaTierToList", "Config")))
+                            )
+                            </div>
                             <div class='form-group'>
                                 <label for='KeyMessage'>Key Message</label>
                                 @(Html.Kendo().DropDownListFor(Model => Model.KeyMessage)
@@ -184,67 +203,8 @@
                                    .Filter(FilterType.Contains)
                                  .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetCampaignKeyMessageByCampaignNameAndIndustryIDToList", "Config").Data("filterCampaignKeyMessage")))
                             )
-                            </div>                           
-                            <div class='form-group'>
-                                <label for='CategoryMain'>Category Main</label>
-                                @(Html.TextBoxFor(Model => Model.CategoryMain, new { @class = "form-control", @readonly = "readonly" }))
                             </div>
-                            <div class='form-group'>
-                                <label for='Segment'>Segment</label>
-                                @(Html.TextBoxFor(Model => Model.Segment, new { @class = "form-control", @readonly = "readonly" }))
-                            </div>
-                            <div class='form-group'>
-                                <label for='CorpCopy'>Corp Copy</label>
-                                @(Html.TextBoxFor(Model => Model.CorpCopy, new { @class = "form-control", @readonly = "readonly" }))
-                            </div>
-                            <div class='form-group'>
-                                <label for='DatePublish'>Date Publish</label>
-                                @(Html.TextBoxFor(Model => Model.DatePublish, "{0:MM/dd/yyyy}", new { @class = "form-control text-right", @readonly = "readonly" }))
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class='form-group'>
-                                <label for='Advalue'>Advalue</label>
-                                @(Html.TextBoxFor(Model => Model.AdvalueString, new { @class = "form-control text-right", @readonly = "readonly" }))
-                            </div>
-                            <div class='form-group'>
-                                <label for='ROME_Corp_VND'>Media Value Corp</label>
-                                @(Html.TextBoxFor(Model => Model.ROME_Corp_VND, "{0:N0}", new { @class = "form-control text-right", @readonly = "readonly" }))
-                            </div>
-                            <div class='form-group'>
-                                <label for='ROME_Product_VND'>Media Value Product</label>
-                                @(Html.TextBoxFor(Model => Model.ROME_Product_VND, "{0:N0}", new { @class = "form-control text-right", @readonly = "readonly" }))
-                            </div>
-
-                            <div class='form-group'>
-                                <label for='Source'>Source</label>
-                                @(Html.TextBoxFor(Model => Model.Source, "{0:N0}", new { @class = "form-control text-right",  @readonly = "readonly" }))
-                            </div>
-                            <div class='form-group'>
-                                <label for='FileName'>File name</label>
-                                @(Html.TextBoxFor(Model => Model.FileName, new { @class = "form-control",  @readonly = "readonly", @title = Model.FileName }))
-                            </div>
-                            <div class='form-group'>
-                                <label for='MediaTitle'>Media Title</label>
-                                @(Html.TextBoxFor(Model => Model.MediaTitle, new { @class = "form-control", @readonly = "readonly" }))
-                            </div>
-                            <div class='form-group'>
-                                <label for='MediaType'>Media Type</label>
-                                @(Html.TextBoxFor(Model => Model.MediaType, new { @class = "form-control", @readonly = "readonly" }))
-                            </div>
-                            <div class='form-group'>
-                                <label for='CopyVersion'>Copy Version</label>
-                                @(Html.TextBoxFor(Model => Model.CopyVersion, new { @class = "form-control text-right" }))
-                            </div>
-                            <div class='form-group'>
-                                <label for='ProductID'>ProductID</label>
-                                @(Html.TextBoxFor(Model => Model.ProductID, new { @class = "form-control text-right", @readonly = "readonly" }))
-                            </div>
-                            <div class='form-group'>
-                                <label for='ProductPropertyID'>PropertyID</label>
-                                @(Html.TextBoxFor(Model => Model.ProductPropertyID, new { @class = "form-control text-right", @readonly = "readonly" }))
-                            </div>
-                        </div>
+                        </div>                      
                     </div>
                 </form>
             </div>
@@ -261,7 +221,7 @@
         onLoad();
     });
     function onLoad() {
-        var actionMessage = getParameterByName('ActionMessage');        
+        var actionMessage = getParameterByName('ActionMessage');
         if (actionMessage != null) {
             if (actionMessage.length > 0) {
                 var messageType = actionMessage.split('-')[0];
@@ -273,15 +233,15 @@
     }
      function onCopyURLSame() {
         BeginRequestHandler();
-        var rowIndexValue = $("#RowIndex").val();
+        var productPropertyIDValue = $("#ProductPropertyID").val();
         $.ajax({
             type: 'GET',
             url: "@Url.Action("BasicCopyURLSame", "CodeData")",
             data: {
-                rowIndex: rowIndexValue
+                productPropertyID: productPropertyIDValue
             },
-            success: function (rowIndex) {
-                var url = "/CodeData/DetailBasic?RowIndex=" + rowIndex;
+            success: function (productPropertyIDResult) {                
+                var url = "/CodeData/DetailBasic?ProductPropertyID=" + productPropertyIDResult;
                 location.replace(url);
             }
             }).done(() => {
@@ -289,15 +249,15 @@
     }
     function onCopyURLAnother() {
         BeginRequestHandler();
-        var rowIndexValue = $("#RowIndex").val();
+        var productPropertyIDValue = $("#ProductPropertyID").val();
         $.ajax({
             type: 'GET',
             url: "@Url.Action("BasicCopyURLAnother", "CodeData")",
             data: {
-                rowIndex: rowIndexValue
+                productPropertyID: productPropertyIDValue
             },
-            success: function (rowIndex) {
-                var url = "/CodeData/DetailBasic?RowIndex=" + rowIndex;
+            success: function (productPropertyIDResult) {
+                var url = "/CodeData/DetailBasic?ProductPropertyID=" + productPropertyIDResult;
                 location.replace(url);
             }
             }).done(() => {
@@ -326,8 +286,8 @@
         $("#ProductName_ProjectName").data("kendoDropDownList").dataSource.read();
     }
 
-    function onRowMove(rowIndex) {
-        var url = "/CodeData/DetailBasic?RowIndex=" + rowIndex;
+    function onRowMove(productPropertyID) {
+        var url = "/CodeData/DetailBasic?ProductPropertyID=" + productPropertyID;
         location.replace(url);
     }
     function onOpenBlank(url) {
@@ -338,21 +298,12 @@
         if (e.altKey == true) {
             switch (e.keyCode) {
                 case 49:
-                    document.getElementById('RowFirst').click();
-                    break;
-                case 50:
-                    document.getElementById('RowBack').click();
-                    break;
-                case 51:
                     document.getElementById('RowNext').click();
                     break;
-                case 52:
-                    document.getElementById('RowLast').click();
-                    break;
-                case 53:
+                case 50:
                     document.getElementById('URLCode').click();
                     break;
-                case 54:
+                case 51:
                     var isSummary_ValueChecked = document.getElementById("IsSummary_Value").checked;
                     if (isSummary_ValueChecked == true) {
                         document.getElementById("IsSummary_Value").checked = false;
@@ -361,13 +312,13 @@
                         document.getElementById("IsSummary_Value").checked = true;
                     }
                     break;
-                case 55:
+                case 52:
                     document.getElementById('SaveCoding').click();
                     break;
-                case 56:
+                case 53:
                     document.getElementById('CopyURLSame').click();
                     break;
-                case 57:
+                case 54:
                     document.getElementById('CopyURLAnother').click();
                     break;
             }

@@ -1,0 +1,113 @@
+﻿@{ ViewData["Title"] = "Product feature"; }
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">System - Product Feature</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class='col-md-2'>
+                        Industry
+                    </div>
+                    <div class='col-md-3'>
+                        @(Html.Kendo().DropDownList()
+                        .Name("Industry")
+                     .DataValueField("ID")
+                     .DataTextField("CodeName")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.StartsWith)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
+                            )
+                    </div>
+                    <div class='col-md-1'>
+                        <a id="Search" onclick="onSearch()" title='Search' class='btn btn-success' style='color:white; cursor: pointer;'><span class="fas fa-search"></span></a>
+                    </div>
+                </div>
+                <br />
+                @(Html.Kendo().Grid<Commsights.Data.Models.Config>()
+.Name("Config")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150);
+    columns.Bound(t => t.CodeName).Title("Product feature").Width(300);
+    columns.Bound(t => t.Note).Title("Vietnamese").Width(300);
+    columns.Bound(t => t.SortOrder).Title("Sort").Width(100);    
+})
+.ToolBar(toolBar => toolBar.Create().Text("&nbsp;").IconClass("fas fa-plus").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#009966; color:#ffffff; padding-left:16px;" }))
+.ToolBar(toolBar => toolBar.Search())
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Config.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Config"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Config.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid" })
+.Search(search => { search.Field(f => f.CodeName); search.Field(f => f.Note);})
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(1000)
+.Model(model =>
+{
+    model.Id(t => t.ID);
+    model.Field(t => t.ID).Editable(false);
+})
+.Events(t => { t.RequestEnd("onGridRequestEnd"); })
+.Read(t => t.Action("GetProductFeatureByIndustryIDToList", "Config").Data("filterProductFeature"))
+.Destroy(t => t.Action("Delete", "Config"))
+.Create(t => t.Action("CreateProductFeature", "Config").Data("filterProductFeature"))
+.Update(t => t.Action("Update", "Config"))
+)
+)
+            </div>
+        </div>
+    </div>
+</div>
+
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+
+<script>
+
+    function onGridRequestEnd(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            var response = e.response;
+            var messageType = response.split('-')[0];
+            var note = response.split('-')[1];
+            var notification = $("#Notification").data("kendoNotification");
+            notification.show(note, messageType);
+            $("#Config").data("kendoGrid").dataSource.read();
+        }
+    }
+    function filterProductFeature(e) {
+        var industryIDValue = $("#Industry").data("kendoDropDownList").value();
+        return { industryID: industryIDValue };
+    }
+    function onSearch() {
+        $("#Config").data("kendoGrid").dataSource.read();
+    }
+    $(document).ready(() => {
+        onSearch();
+    });
+</script>

@@ -170,6 +170,14 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        public IActionResult IndustryCategory()
+        {
+            return View();
+        }
+        public IActionResult ProductFeature()
+        {
+            return View();
+        }
         public IActionResult IndustryKeyWord()
         {
             return View();
@@ -191,6 +199,10 @@ namespace Commsights.MVC.Controllers
             return View();
         }
         public IActionResult Sentiment()
+        {
+            return View();
+        }
+        public IActionResult PressList001()
         {
             return View();
         }
@@ -241,6 +253,15 @@ namespace Commsights.MVC.Controllers
         public IActionResult MediaTierAndWebsite()
         {
             return View();
+        }
+        public IActionResult TotalSize()
+        {
+            return View();
+        }
+        public IActionResult PressListLogo()
+        {
+            Config model = new Config();
+            return View(model);
         }
         public IActionResult WebsiteScan(int ID)
         {
@@ -320,6 +341,11 @@ namespace Commsights.MVC.Controllers
             var data = _configResposistory.GetDataTransferTierByTierIDAndIndustryIDToList(tierID, industryID);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetTotalSizeToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.TotalSize);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetColorToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Color).Where(item => item.ParentID == 0);
@@ -386,6 +412,11 @@ namespace Commsights.MVC.Controllers
             var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategoryMain).Where(item => item.Active == true).OrderBy(item => item.SortOrder);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true, true);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetSegmentByParentIDToList([DataSourceRequest] DataSourceRequest request)
         {
             List<Config> data = new List<Config>();
@@ -427,7 +458,7 @@ namespace Commsights.MVC.Controllers
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetCategorySubByIndustryIDToList([DataSourceRequest] DataSourceRequest request)
-        {            
+        {
             int industryID = 0;
             try
             {
@@ -435,8 +466,8 @@ namespace Commsights.MVC.Controllers
             }
             catch
             {
-            }            
-            var data = _configResposistory.GetSQLByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategorySub, industryID);
+            }
+            var data = _configResposistory.GetSQLCategorySubByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.CategorySub, industryID);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetCategorySubByCategoryMainAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, string categoryMain)
@@ -518,6 +549,29 @@ namespace Commsights.MVC.Controllers
             var data = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.IndustryKeyWord, industryID);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetIndustryCategoryByIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.IndustryCategory, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetProductFeatureByIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {
+            var data = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.ProductFeature, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetIndustryCategoryByIndustryIDCookieToList([DataSourceRequest] DataSourceRequest request)
+        {
+            int industryID = 0;
+            try
+            {
+                industryID = int.Parse(Request.Cookies["CodeDataIndustryID"]);
+            }
+            catch
+            {
+            }
+            var data = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.IndustryCategory, industryID);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetKeyMessageByIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)
         {
             var data = _configResposistory.GetByGroupNameAndCodeAndIndustryIDToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.KeyMessage, industryID);
@@ -540,7 +594,7 @@ namespace Commsights.MVC.Controllers
         }
         public ActionResult GetPressListToList([DataSourceRequest] DataSourceRequest request)
         {
-            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.PressList).Where(item => item.ParentID == 0);
+            var data = _configResposistory.GetByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.PressList);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetAssessTypeToList([DataSourceRequest] DataSourceRequest request)
@@ -607,6 +661,11 @@ namespace Commsights.MVC.Controllers
             var data = _configResposistory.GetSQLWebsiteByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
             return Json(data.ToDataSourceResult(request));
         }
+        public ActionResult GetSQLWebsiteByGroupNameAndCodeToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetSQLWebsiteByGroupNameAndCodeToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website);
+            return Json(data.ToDataSourceResult(request));
+        }
         public ActionResult GetWebsiteByGroupNameAndCodeAndActiveToList001([DataSourceRequest] DataSourceRequest request)
         {
             var data = _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
@@ -620,6 +679,11 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetDataTransferWebsiteByGroupNameAndCodeAndActiveToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _configResposistory.GetDataTransferWebsiteByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetProductPermissionDistinctIndustryByEmployeeIDToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _configResposistory.GetProductPermissionDistinctIndustryByEmployeeIDToList(RequestUserID);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetWebsiteScanByIDToList([DataSourceRequest] DataSourceRequest request, int parentID)
@@ -718,6 +782,29 @@ namespace Commsights.MVC.Controllers
             Initialization(model);
             model.GroupName = AppGlobal.CRM;
             model.Code = AppGlobal.EmailStorageCategory;
+            model.ParentID = 0;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            if (_configResposistory.IsValidByGroupNameAndCodeAndCodeName(model.GroupName, model.Code, model.CodeName) == true)
+            {
+                result = _configResposistory.Create(model);
+            }
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateTotalSize(Config model)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.TotalSize;
             model.ParentID = 0;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
@@ -921,6 +1008,29 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
+        public IActionResult CreatePressList(Config model)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.PressList;
+            model.ParentID = 0;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            if (_configResposistory.IsValidByGroupNameAndCodeAndCodeName(model.GroupName, model.Code, model.CodeName) == true)
+            {
+                result = _configResposistory.Create(model);
+            }
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
         public IActionResult CreateArticleType(Config model)
         {
             Initialization(model);
@@ -1018,6 +1128,46 @@ namespace Commsights.MVC.Controllers
             Initialization(model);
             model.GroupName = AppGlobal.CRM;
             model.Code = AppGlobal.CategoryMain;
+            model.IndustryID = industryID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _configResposistory.Create(model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateIndustryCategory(Config model, int industryID)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.IndustryCategory;
+            model.IndustryID = industryID;
+            string note = AppGlobal.InitString;
+            model.Initialization(InitType.Insert, RequestUserID);
+            int result = 0;
+            result = _configResposistory.Create(model);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.CreateSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.CreateFail;
+            }
+            return Json(note);
+        }
+        public IActionResult CreateProductFeature(Config model, int industryID)
+        {
+            Initialization(model);
+            model.GroupName = AppGlobal.CRM;
+            model.Code = AppGlobal.ProductFeature;
             model.IndustryID = industryID;
             string note = AppGlobal.InitString;
             model.Initialization(InitType.Insert, RequestUserID);
@@ -1512,6 +1662,21 @@ namespace Commsights.MVC.Controllers
             }
             return Json(note);
         }
+        public IActionResult DeleteMenu(int ID)
+        {
+            string note = AppGlobal.InitString;
+            int result = 1;
+            _configResposistory.DeleteMenuByID(ID);
+            if (result > 0)
+            {
+                note = AppGlobal.Success + " - " + AppGlobal.DeleteSuccess;
+            }
+            else
+            {
+                note = AppGlobal.Error + " - " + AppGlobal.DeleteFail;
+            }
+            return Json(note);
+        }
         public IActionResult DeleteByParentIDAndGroupNameAndCode(int parentID)
         {
             string note = AppGlobal.InitString;
@@ -1907,6 +2072,59 @@ namespace Commsights.MVC.Controllers
                 controller = "Config";
             }
             return RedirectToAction(action, controller);
+        }
+
+
+        public ActionResult UploadPressListLogo(Commsights.Data.Models.Config model)
+        {
+            Config config = _configResposistory.GetByID(model.ID);
+            try
+            {
+                if (config != null)
+                {
+                    if (config.ID > 0)
+                    {
+                        if (Request.Form.Files.Count > 0)
+                        {
+                            var file = Request.Form.Files[0];
+                            if (file == null || file.Length == 0)
+                            {
+                            }
+                            if (file != null)
+                            {
+                                string fileExtension = Path.GetExtension(file.FileName);
+                                string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                                fileName = fileName + "-" + AppGlobal.DateTimeCode + fileExtension;
+                                fileName = fileName.Replace(@"%", @"p");
+                                string directoryDay = AppGlobal.DateTimeCodeYearMonthDay;
+                                string mainPath = _hostingEnvironment.WebRootPath;
+                                string url = AppGlobal.Domain;
+                                url = url + AppGlobal.PressList + "/" + fileName;
+                                string subPath = AppGlobal.PressList;
+                                string fullPath = mainPath + @"\" + subPath;
+                                if (!Directory.Exists(fullPath))
+                                {
+                                    Directory.CreateDirectory(fullPath);
+                                }
+                                var physicalPath = Path.Combine(mainPath, subPath, fileName);
+                                using (var stream = new FileStream(physicalPath, FileMode.Create))
+                                {
+                                    file.CopyTo(stream);
+                                    config.Note = fileName;
+                                    config.Icon = url;
+                                    config.Initialization(InitType.Update, RequestUserID);
+                                    _configResposistory.Update(config.ID, config);
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+            return RedirectToAction("PressListLogo");
         }
     }
 }

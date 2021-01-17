@@ -8,9 +8,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
+using System.Windows.Forms;
 using System.Xml;
 
 namespace Commsights.Data.Helpers
@@ -19,6 +22,14 @@ namespace Commsights.Data.Helpers
     {
         public string Href;
         public string Text;
+    }
+    public class DatePublish
+    {
+        public DateTime DateTime { get; set; }
+        public string Time { get; set; }
+        public string DateTimeString { get; set; }
+        public int Count { get; set; }
+        public bool IsTime { get; set; }
     }
     public class YearFinance
     {
@@ -36,8 +47,9 @@ namespace Commsights.Data.Helpers
                 list.Add(model);
             }
             return list;
-        }      
+        }
     }
+
     public class MonthFinance
     {
         public int Display { get; set; }
@@ -65,7 +77,7 @@ namespace Commsights.Data.Helpers
         public static List<HourFinance> GetAllToList()
         {
             List<HourFinance> list = new List<HourFinance>();
-            for (int i = 1; i <= 24; i++)
+            for (int i = 0; i < 24; i++)
             {
                 HourFinance model = new HourFinance();
                 model.Display = i;
@@ -153,7 +165,63 @@ namespace Commsights.Data.Helpers
         public static string InitGuiCode => Guid.NewGuid().ToString();
         #endregion
 
-        #region AppSettings 
+        #region AppSettings    
+        public static string ProductFeature
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("ProductFeature").Value;
+            }
+        }
+        public static string IndustryCategory
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("IndustryCategory").Value;
+            }
+        }
+        public static string TV
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("TV").Value;
+            }
+        }
+        public static string Newspage
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("Newspage").Value;
+            }
+        }
+        public static string TotalSize
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("TotalSize").Value;
+            }
+        }
+        public static string FTPScanFiles
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("FTPScanFiles").Value;
+            }
+        }
+        public static string URLScanFiles
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("AppSettings").GetSection("URLScanFiles").Value;
+            }
+        }
         public static int AdValue
         {
             get
@@ -2251,7 +2319,7 @@ namespace Commsights.Data.Helpers
         public static List<string> SetContentByDauChamPhay(string content)
         {
             List<string> list = new List<string>();
-            content = content.Replace(@",", @";");            
+            content = content.Replace(@",", @";");
             foreach (string item in content.Split(';'))
             {
                 if (!string.IsNullOrEmpty(item))
@@ -2736,6 +2804,137 @@ namespace Commsights.Data.Helpers
             {
                 string mes1 = e1.Message;
             }
+        }
+
+        public static string LinkFinder002(string urlCategory, string urlRoot, bool repeat, List<LinkItem> list)
+        {
+            try
+            {
+                Uri root = new Uri(urlRoot);
+                Uri myUri = new Uri(urlRoot);
+                string html = "";
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlCategory);
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    Stream receiveStream = response.GetResponseStream();
+                    StreamReader readStream = null;
+                    if (response.CharacterSet == null)
+                    {
+                        readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                    }
+                    else
+                    {
+                        readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                    }
+                    html = readStream.ReadToEnd();
+                    response.Close();
+                    readStream.Close();
+                }
+                List<LinkItem> listTrue = new List<LinkItem>();
+                if (!string.IsNullOrEmpty(html))
+                {
+                    MatchCollection m1 = Regex.Matches(html, @"(<a.*?>.*?</a>)", RegexOptions.Singleline);
+                    foreach (Match m in m1)
+                    {
+                        string value = m.Groups[1].Value;
+                        LinkItem i = new LinkItem();
+                        Match m2 = Regex.Match(value, @"href=\""(.*?)\""", RegexOptions.Singleline);
+                        if (m2.Success)
+                        {
+                            i.Href = m2.Groups[1].Value;
+                        }
+                        else
+                        {
+                            m2 = Regex.Match(value, @"href=\'(.*?)\'", RegexOptions.Singleline);
+                            if (m2.Success)
+                            {
+                                i.Href = m2.Groups[1].Value;
+                            }
+                        }
+                        if (!string.IsNullOrEmpty(i.Href))
+                        {
+                            bool checkHref = false;
+                            try
+                            {
+                                myUri = new Uri(i.Href);
+                                checkHref = true;
+                            }
+                            catch (Exception e)
+                            {
+                                string mes = e.Message;
+                                i.Href = root.OriginalString + "/" + i.Href;
+                                i.Href = i.Href.Replace(@"://", @"~SOHU~");
+                                i.Href = i.Href.Replace(@"//", @"/");
+                                i.Href = i.Href.Replace(@"~SOHU~", @"://");
+                                try
+                                {
+                                    myUri = new Uri(i.Href);
+                                    checkHref = true;
+                                }
+                                catch (Exception e1)
+                                {
+                                    string mes1 = e1.Message;
+                                }
+                            }
+                            if (checkHref == true)
+                            {
+                                if (myUri.Host == root.Host)
+                                {
+                                    string rootOriginalString = root.OriginalString + "/";
+                                    if (myUri.OriginalString != rootOriginalString)
+                                    {
+                                        string localPath = myUri.LocalPath;
+                                        if (localPath.Contains(@".") == true)
+                                        {
+                                            string extension = localPath.Split('.')[1];
+                                            if ((extension.Contains(@"/") == false) || (extension.Contains(@"#") == false))
+                                            {
+                                                if (i.Href.Contains(@"#") == true)
+                                                {
+
+                                                }
+                                                else
+                                                {
+                                                    checkHref = true;
+                                                    for (int j = 0; j < list.Count; j++)
+                                                    {
+                                                        if (list[j].Href == i.Href)
+                                                        {
+                                                            checkHref = false;
+                                                            j = list.Count;
+                                                        }
+                                                    }
+                                                    if (checkHref == true)
+                                                    {
+                                                        list.Add(i);
+                                                        if (repeat == true)
+                                                        {
+                                                            listTrue.Add(i);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (repeat == true)
+                {
+                    foreach (LinkItem item in listTrue)
+                    {
+                        LinkFinder002(item.Href, urlRoot, false, list);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                string mes = e.Message;
+            }
+            return "";
         }
         public static void FinderContent(string html, Product product)
         {
@@ -3660,6 +3859,247 @@ namespace Commsights.Data.Helpers
                 }
             }
         }
+        public static void DatePublish003(string html, Product product)
+        {
+            string htmlspan = html;
+            htmlspan = HTMLReplaceAndSplit(htmlspan);
+            htmlspan = htmlspan.Replace(@"~", @"");
+            htmlspan = htmlspan.Replace(@"<body", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            Regex reg = new Regex("<[^>]+>", RegexOptions.IgnoreCase);
+            string content = reg.Replace(html, " ");
+            content = HttpUtility.HtmlDecode(content);
+            content = content.Trim();
+            List<DatePublish> listDatePublish = new List<DatePublish>();
+            DateTime dateTime = new DateTime();
+            DateTime now = DateTime.Now;
+            for (int k = 0; k < content.Split(' ').Length; k++)
+            {
+                string item = content.Split(' ')[k];
+                if (!string.IsNullOrEmpty(item))
+                {
+                    string date = item;
+                    date = Regex.Replace(date, @"\t|\n|\r", "");
+                    date = date.Replace(@",", @"");
+                    date = date.Replace(@"|", @"");
+                    int timeCount = date.Count(f => f == '/');
+                    if (timeCount == 0)
+                    {
+                        timeCount = date.Count(f => f == '-');
+                    }
+                    if (timeCount == 2)
+                    {
+                        if ((date.Length > 7) && (date.Length < 11))
+                        {
+                            string time = "";
+                            bool timeCheck = false;
+                            try
+                            {
+                                time = content.Split(' ')[k + 1];
+                                if (time.Contains(@":") == true)
+                                {
+                                    if ((time.Length == 5) || (time.Length == 4))
+                                    {
+                                        timeCheck = true;
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                                try
+                                {
+                                    time = content.Split(' ')[k - 1];
+                                    if (time.Contains(@":") == true)
+                                    {
+                                        if ((time.Length == 5) || (time.Length == 4))
+                                        {
+                                            timeCheck = true;
+                                        }
+                                    }
+                                }
+                                catch
+                                {
+                                }
+                            }
+                            time = time.Trim();
+                            try
+                            {
+                                dateTime = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), 0, 0, 0);
+                                if (dateTime.Year > 2020)
+                                {
+                                    if (listDatePublish.Count == 0)
+                                    {
+                                        DatePublish datePublish = new DatePublish();
+                                        datePublish.Time = "";
+                                        datePublish.IsTime = false;
+                                        datePublish.DateTime = dateTime;
+                                        datePublish.Count = 1;
+                                        if (timeCheck == true)
+                                        {
+                                            datePublish.Time = time;
+                                            datePublish.IsTime = timeCheck;
+                                        }
+                                        listDatePublish.Add(datePublish);
+                                    }
+                                    else
+                                    {
+                                        bool check = true;
+                                        DatePublish datePublish = new DatePublish();
+                                        for (int i = 0; i < listDatePublish.Count; i++)
+                                        {
+                                            if ((listDatePublish[i].DateTime.Year == dateTime.Year) && (listDatePublish[i].DateTime.Month == dateTime.Month) && (listDatePublish[i].DateTime.Day == dateTime.Day))
+                                            {
+                                                listDatePublish[i].Count = listDatePublish[i].Count + 1;
+                                                if (timeCheck == true)
+                                                {
+                                                    datePublish.Time = time;
+                                                    datePublish.IsTime = timeCheck;
+                                                }
+                                                i = listDatePublish.Count;
+                                                check = false;
+                                            }
+                                        }
+                                        if (check == true)
+                                        {
+                                            datePublish.Time = "";
+                                            datePublish.IsTime = false;
+                                            datePublish.DateTime = dateTime;
+                                            datePublish.Count = 1;
+                                            if (timeCheck == true)
+                                            {
+                                                datePublish.Time = time;
+                                                datePublish.IsTime = timeCheck;
+                                            }
+                                            listDatePublish.Add(datePublish);
+                                        }
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                            }
+                        }
+                    }
+                }
+            }
+            DateTime productDatePublish = DateTime.Now;
+            bool productActive = false;
+            if (listDatePublish.Count == 1)
+            {
+                productDatePublish = listDatePublish[0].DateTime;
+                productActive = true;
+            }
+            else
+            {
+                for (int i = 0; i < listDatePublish.Count; i++)
+                {
+                    DatePublish item = listDatePublish[i];
+                    if (item.IsTime == true)
+                    {
+                        try
+                        {
+                            item.DateTime = new DateTime(item.DateTime.Year, item.DateTime.Month, item.DateTime.Day, int.Parse(item.Time.Split(':')[0]), int.Parse(item.Time.Split(':')[1]), 0);
+                            if (item.DateTime < productDatePublish)
+                            {
+                                productDatePublish = item.DateTime;
+                                productActive = true;
+                            }
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+            }
+            if (productActive == true)
+            {
+                product.DatePublish = productDatePublish;
+                product.Active = productActive;
+            }
+        }
+        public static void DatePublish004(string html, Product product)
+        {
+            string htmlspan = html;
+            htmlspan = HTMLReplaceAndSplit(htmlspan);
+            htmlspan = htmlspan.Replace(@"~", @"");
+            htmlspan = htmlspan.Replace(@"<body", @"~");
+            if (htmlspan.Split('~').Length > 1)
+            {
+                htmlspan = htmlspan.Split('~')[1];
+            }
+            Regex reg = new Regex("<[^>]+>", RegexOptions.IgnoreCase);
+            string content = reg.Replace(html, " ");
+            content = HttpUtility.HtmlDecode(content);
+            content = content.Trim();
+            List<DatePublish> listDatePublish = new List<DatePublish>();
+
+            DateTime now = DateTime.Now;
+            for (int k = 0; k < content.Split(' ').Length; k++)
+            {
+                string item = content.Split(' ')[k];
+                if (!string.IsNullOrEmpty(item))
+                {
+                    string date = item;
+                    date = Regex.Replace(date, @"\t|\n|\r", "");
+                    date = date.Replace(@",", @"");
+                    date = date.Replace(@"|", @"");
+                    int timeCount = date.Count(f => f == '/');
+                    if (timeCount == 0)
+                    {
+                        timeCount = date.Count(f => f == '-');
+                    }
+                    if (timeCount == 2)
+                    {
+                        if ((date.Length > 7) && (date.Length < 11))
+                        {
+                            try
+                            {
+                                DateTime dateTime = new DateTime(int.Parse(date.Split('/')[2]), int.Parse(date.Split('/')[1]), int.Parse(date.Split('/')[0]), 0, 0, 0);
+                                if (dateTime.Year > 2020)
+                                {
+                                    DatePublish datePublish = new DatePublish();
+                                    datePublish.DateTimeString = date;
+                                    if (date.Contains(@":") == true)
+                                    {
+                                        datePublish.IsTime = true;
+                                    }
+                                    listDatePublish.Add(datePublish);
+                                }
+                            }
+                            catch
+                            {
+                            }
+                        }
+                    }
+                }
+            }
+            DateTime productDatePublish = DateTime.Now;
+            bool productActive = false;
+            if (listDatePublish.Count == 1)
+            {
+                try
+                {
+                    productDatePublish = DateTime.Parse(listDatePublish[0].DateTimeString);
+                    productActive = true;
+                }
+                catch
+                {
+                }
+            }
+            else
+            {
+
+            }
+
+            if (productActive == true)
+            {
+                product.DatePublish = productDatePublish;
+                product.Active = productActive;
+            }
+        }
         public static void FinderContent002(string html, string tagName, Product product)
         {
             string htmlspan = html;
@@ -3947,6 +4387,314 @@ namespace Commsights.Data.Helpers
                     FinderContent002(htmlspan, "div", product);
                 }
             }
+        }
+        public static void FinderContentAndDatePublish002(string html, Product product)
+        {
+            if (!string.IsNullOrEmpty(html))
+            {
+                DateTime now = DateTime.Now;
+                html = html.Replace(@"~", @"");
+                string htmlspan = html;
+                MatchCollection m1;
+                product.Active = false;
+                DateTime datePublish = new DateTime(2019, 1, 1);
+                string yearString = "";
+                string monthString = "";
+                string dayString = "";
+                int year = now.Year;
+                int month = now.Month;
+                int day = now.Day;
+                int hour = now.Hour;
+                int minute = now.Minute;
+                int second = now.Second;
+                product.DatePublish = now;
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    m1 = Regex.Matches(htmlspan, @"(<meta.*?/>)", RegexOptions.Singleline);
+                    for (int i = 0; i < m1.Count; i++)
+                    {
+                        string value = m1[i].Groups[1].Value;
+                        if ((value.Contains(@"published") == true) || (value.Contains(@"pubdate") == true) || (value.Contains(@"dateModified") == true) || (value.Contains(@"dateCreated") == true))
+                        {
+                            value = value.Replace(@"content=""", @"~");
+                            value = value.Replace(@"content='", @"~");
+                            if (value.Split('~').Length > 1)
+                            {
+                                value = value.Split('~')[1];
+                                value = value.Replace(@"""", @"~");
+                                value = value.Replace(@"'", @"~");
+                                value = value.Split('~')[0];
+                                value = value.Trim();
+                                bool datePublishCheck = false;
+                                try
+                                {
+                                    int count = value.Count(f => f == '-');
+                                    if (count > 1)
+                                    {
+                                        datePublish = DateTime.Parse(value);
+                                        datePublishCheck = true;
+                                    }
+                                }
+                                catch
+                                {
+                                    try
+                                    {
+                                        yearString = value.Split('-')[0];
+                                        monthString = value.Split('-')[1];
+                                        dayString = value.Split('-')[2];
+                                        dayString = dayString.Substring(0, 2);
+                                        datePublish = new DateTime(int.Parse(yearString), int.Parse(monthString), int.Parse(dayString), hour, minute, second);
+                                        datePublishCheck = true;
+                                    }
+                                    catch
+                                    {
+                                    }
+                                }
+                                if (datePublishCheck == true)
+                                {
+                                    product.DatePublish = datePublish;
+                                    product.Active = true;
+                                    i = m1.Count;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish003(htmlspan, product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "abbr", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "i", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "em", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "dd", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "time", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h1", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h2", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h3", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h4", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h5", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "h6", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "li", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "span", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "div", product);
+                }
+                if (product.Active == false)
+                {
+                    htmlspan = html;
+                    DatePublish002(htmlspan, "p", product);
+                }
+                if (string.IsNullOrEmpty(product.Description) || product.Description.Length < 1000)
+                {
+                    htmlspan = html;
+                    FinderContent002(htmlspan, "p", product);
+                }
+                if (string.IsNullOrEmpty(product.Description) || product.Description.Length < 500)
+                {
+                    htmlspan = html;
+                    product.Description = "";
+                    FinderContent002(htmlspan, "div", product);
+                }
+            }
+        }
+        public static void FinderContent004(string html, Product product)
+        {
+            if (!string.IsNullOrEmpty(html))
+            {
+                string htmlspan = "";
+                if (string.IsNullOrEmpty(product.Description) || product.Description.Length < 1000)
+                {
+                    htmlspan = html;
+                    FinderContent002(htmlspan, "p", product);
+                }
+                if (string.IsNullOrEmpty(product.Description) || product.Description.Length < 500)
+                {
+                    htmlspan = html;
+                    product.Description = "";
+                    FinderContent002(htmlspan, "div", product);
+                }
+            }
+        }
+        public static string FinderTitle(string url)
+        {
+            string title = "";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Stream receiveStream = response.GetResponseStream();
+                StreamReader readStream = null;
+                readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                string html = readStream.ReadToEnd();
+                response.Close();
+                readStream.Close();
+                html = html.Replace(@"~", @"");
+                string htmlTitle = html;
+                if ((htmlTitle.Contains(@"<meta property=""og:title"" content=""") == true) || (htmlTitle.Contains(@"<meta property='og:title' content='") == true))
+                {
+                    htmlTitle = htmlTitle.Replace(@"<meta property=""og:title"" content=""", @"~");
+                    htmlTitle = htmlTitle.Replace(@"<meta property='og:title' content='", @"~");
+                    if (htmlTitle.Split('~').Length > 1)
+                    {
+                        htmlTitle = htmlTitle.Split('~')[1];
+                        htmlTitle = htmlTitle.Replace(@"""", @"~");
+                        htmlTitle = htmlTitle.Replace(@"'", @"~");
+                        htmlTitle = htmlTitle.Split('~')[0];
+                        title = htmlTitle.Trim();
+                    }
+                }
+                else
+                {
+                    MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
+                    if (m1.Count > 0)
+                    {
+                        string value = m1[m1.Count - 1].Groups[1].Value;
+                        if (!string.IsNullOrEmpty(value))
+                        {
+                            value = value.Replace(@"<title>", @"");
+                            value = value.Replace(@"</title>", @"");
+                            title = value.Trim();
+                        }
+                    }
+                }
+                bool isUnicode = AppGlobal.ContainsUnicodeCharacter(title);
+                if ((title.Contains(@"&#") == true) || (isUnicode == false))
+                {
+                    MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
+                    if (m1.Count > 0)
+                    {
+                        string value = m1[m1.Count - 1].Groups[1].Value;
+                        if (!string.IsNullOrEmpty(value))
+                        {
+                            value = value.Replace(@"<title>", @"");
+                            value = value.Replace(@"</title>", @"");
+                            title = value.Trim();
+                        }
+                    }
+                }
+                if (title.Split('|').Length > 2)
+                {
+                    title = title.Split('|')[1];
+                }
+                if (title.Split('|').Length > 1)
+                {
+                    title = title.Split('|')[0];
+                }
+                title = title.Trim();
+            }
+            return title;
+        }
+        public static string FinderTitle001(string url)
+        {
+            string title = "";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Stream receiveStream = response.GetResponseStream();
+                StreamReader readStream = null;
+                readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                string html = readStream.ReadToEnd();
+                response.Close();
+                readStream.Close();
+                html = html.Replace(@"~", @"");
+                string htmlTitle = html;
+                MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
+                if (m1.Count > 0)
+                {
+                    string value = m1[m1.Count - 1].Groups[1].Value;
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        value = value.Replace(@"<title>", @"");
+                        value = value.Replace(@"</title>", @"");
+                        title = value.Trim();
+                    }
+                }
+                if (title.Split('|').Length > 2)
+                {
+                    title = title.Split('|')[1];
+                }
+                if (title.Split('|').Length > 1)
+                {
+                    title = title.Split('|')[0];
+                }
+                title = title.Trim();
+            }
+            return title;
+        }
+        public static string FinderHTMLContent(string url)
+        {
+            string html = "";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Stream receiveStream = response.GetResponseStream();
+                StreamReader readStream = null;
+                readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                html = readStream.ReadToEnd();
+                response.Close();
+                readStream.Close();
+                html = html.Replace(@"~", @"");
+            }
+            return html;
         }
         public static List<LinkItem> ImgFinder(string html)
         {

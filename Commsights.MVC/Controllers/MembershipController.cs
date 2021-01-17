@@ -241,6 +241,10 @@ namespace Commsights.MVC.Controllers
         {
             return RedirectToAction("CustomerDetail", new { ID = 0 });
         }
+        public IActionResult ProductByIndustry()
+        {
+            return View();
+        }
         public string Sidebar()
         {
             string result = "";
@@ -329,10 +333,10 @@ namespace Commsights.MVC.Controllers
                     Response.Cookies.Append("UserID", membership.ID.ToString(), cookieExpires);
                     Response.Cookies.Append("FullName", fullName, cookieExpires);
                     Response.Cookies.Append("Avatar", avatar, cookieExpires);
-                    string avatarURL = Commsights.Data.Helpers.AppGlobal.Domain + Commsights.Data.Helpers.AppGlobal.URLImagesMembership + "/" + avatar;
+                    string avatarURL = "http://crm.commsightsvn.com/" + Commsights.Data.Helpers.AppGlobal.URLImagesMembership + "/" + avatar;
                     if (string.IsNullOrEmpty(avatar))
                     {
-                        avatarURL = AppGlobal.Domain + "images/logo.png";
+                        avatarURL = "http://crm.commsightsvn.com/images/logo.png";
                     }
                     Response.Cookies.Append("AvatarURL", avatarURL, cookieExpires);
                     controller = "Membership";
@@ -600,14 +604,11 @@ namespace Commsights.MVC.Controllers
             int result = 0;
             model.Account = model.Account.Trim();
             Membership membership = _membershipRepository.GetByAccount(model.Account);
-            if (membership.ID > 0)
-            {
-            }
-            else
+            if (membership == null)
             {
                 result = _membershipRepository.Create(model);
                 membership = model;
-            }
+            }           
             if (membership.ID > 0)
             {
                 MembershipPermission membershipPermission = new MembershipPermission();

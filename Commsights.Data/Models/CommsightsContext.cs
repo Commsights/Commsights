@@ -29,6 +29,8 @@ namespace Commsights.Data.Models
         public virtual DbSet<ReportMonthly> ReportMonthly { get; set; }
         public virtual DbSet<ReportMonthlyProperty> ReportMonthlyProperty { get; set; }
         public virtual DbSet<ProductPermission> ProductPermission { get; set; }
+        public virtual DbSet<BaiVietUploadCount> BaiVietUploadCount { get; set; }
+        public virtual DbSet<BaiVietUpload> BaiVietUpload { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

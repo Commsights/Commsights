@@ -1,0 +1,368 @@
+﻿@{ Layout = "~/Views/Shared/_LayoutNoHeader.cshtml"; ViewData["Title"] = "Daily - Data"; }
+
+@model Commsights.MVC.Models.BaseViewModel
+
+@Html.HiddenFor(Model => Model.ID)
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-body">
+                <div class="row">
+                    <div class='col-sm-2'>
+                        @(Html.Kendo().DatePickerFor(Model => Model.DatePublishBegin)
+                                     .Format("dd/MM/yyyy")
+                                     .HtmlAttributes(new { @class = "form-control text-right", title = "Date begin" })
+                                     .DateInput()
+                                )
+                    </div>
+                    <div class='col-sm-2'>
+                        @(Html.Kendo().DatePickerFor(Model => Model.DatePublishEnd)
+                                     .Format("dd/MM/yyyy")
+                                     .HtmlAttributes(new { @class = "form-control text-right", title = "Date end" })
+                                     .DateInput()
+                                )
+                    </div>
+                    <div class='col-sm-2'>
+                        @(Html.Kendo().DropDownListFor(Model=>Model.IndustryID)
+                     .DataValueField("ID")
+                     .DataTextField("CodeName")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.StartsWith)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
+                            )
+                    </div>
+                    <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
+                        <input id="IsUpload" type="checkbox">
+                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px; margin-right:10px;">Up/Pub</p>
+                    </div>
+                    <div class='col-sm-3'>
+                        <button style="width:50px;" type="button" class="btn btn-success" title="Search" onclick="onSearch()">
+                            <span class="fas fa-search"></span>
+                        </button>
+                        <button style="width:50px;" type="button" class="btn btn-success" title="Preview" onclick="onPreview()">
+                            <span class="fas fa-print"></span>
+                        </button>
+                        <button style="width:50px;" type="button" class="btn btn-success" title="Excel Vietnamese" onclick="onExcelVietnamese()">
+                            <span class="fas fa-file-download"></span>
+                        </button>
+                        <button style="width:50px;" type="button" class="btn btn-success" title="Excel English" onclick="onExcelEnglish()">
+                            <span class="fas fa-file-excel"></span>
+                        </button>
+                        <button style="width:50px;" type="button" class="btn btn-info" title="Next" onclick="onNext()">
+                            <span class="fas fa-arrow-right"></span>
+                        </button>
+                        <button style="width:50px;" type="button" class="btn btn-danger" title="Delete" onclick="onDelete()">
+                            <span class="fas fa-trash-alt"></span>
+                        </button>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div id="DataMain" class='col-sm-12'></div>
+                </div>
+                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.ProductDataTransfer>()
+.Name("ProductDataTransfer")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150).Locked(true);
+    columns.Command(command => { command.Custom("Copy").Click("addProductProperty").HtmlAttributes(new { style = "font-size: 16px; border-radius: 6px; font-weight:bold; background-color:#007bff; color:#ffffff; padding-left:10px;" }); }).Width(80).Locked(true);
+    columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70).Locked(true);
+    columns.Bound(t => t.Company.TextName).EditorTemplateName("MembershipByIndustry001").Title("Company").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.AssessType.TextName).EditorTemplateName("Config_Sentiment").Title("Sentiment").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Description).Title("Summary").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Title).Title("Headline (Vie)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Segment.TextName).EditorTemplateName("Config_SegmentByIndustry").Title("Segment").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.ArticleType.TextName).EditorTemplateName("Config_ArticleType").Title("Category").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Media).Title("Media").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.AdvertisementValue).Title("Ad Value").Width(200).Format("{0:N0}").HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Product.TextName).EditorTemplateName("MembershipPermission_ProductByCode").Title("Product").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Page).Title("Page").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Duration).Title("Duration").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Frequency).Title("Frequency").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.SourceID).Title("Source").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.TargetID).Title("Target").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.IsSummary).Title("Brief").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.IsData).Title("Send").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.DatePublish).Title("Publish").Format("{0:dd/MM/yyyy}").Width(120).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.DateUpdated).Title("Upload").Width(150).Format("{0:dd/MM/yyyy HH:mm}").HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+})
+.ToolBar(toolBar => toolBar.Search())
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Article.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Article"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Article.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid" })
+.Search(search => { search.Field(f => f.CompanyName); search.Field(f => f.ArticleTypeName); search.Field(f => f.AssessName); search.Field(f => f.TitleEnglish); search.Field(f => f.Description); search.Field(f => f.DescriptionEnglish); search.Field(f => f.Media); search.Field(f => f.Title); search.Field(f => f.URLCode); })
+.Events(ev => ev.Change("onGridChange"))
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(10000)
+.Model(model =>
+{
+    model.Id(t => t.ID);
+    model.Field(t => t.ID).Editable(false);
+    model.Field(t => t.DateUpdated).Editable(false);
+    model.Field(t => t.ProductID).Editable(false);
+    model.Field(t => t.Page).Editable(false);    
+    model.Field(t => t.DatePublish).Editable(false);
+    model.Field(t => t.Media).Editable(false);
+    model.Field(t => t.MediaType).Editable(false);
+    model.Field(t => t.Company).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Field(t => t.Segment).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Field(t => t.ArticleType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Field(t => t.AssessType).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+    model.Field(t => t.Product).DefaultValue(new Commsights.Data.DataTransferObject.ModelTemplate());
+})
+.Events(t => { t.RequestEnd("onGridRequestEnd"); })
+.Read(t => t.Action("GetProductDataTransferByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsDailyAndIsUploadToList", "Report").Data("filterProduct"))
+.Destroy(t => t.Action("DeleteProductAndProductProperty", "Report"))
+.Update(t => t.Action("UpdateDataTransfer", "Report").Data("filterProduct"))))
+            </div>
+        </div>
+    </div>
+</div>
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+<input type="hidden" id="timeStamp" name="timeStamp" value="">
+<input type="hidden" id="MembershipID" name="MembershipID" value="">
+<script>
+    function onGridChange(arg) {
+        $("#ID").val(this.selectedKeyNames().join(";"));
+    }
+    $(document).ready(() => {
+        onSearch();
+    });
+    function onGridRequestEnd(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            var response = e.response;
+            var messageType = response.split('-')[0];
+            var note = response.split('-')[1];
+            var notification = $("#Notification").data("kendoNotification");
+            notification.show(note, messageType);
+            $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
+        }
+    }
+    function onDelete() {
+        BeginRequestHandler();
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
+        var datePublishEndValue = toDate02($("#DatePublishEnd").val());
+        var isUploadValue = document.getElementById('IsUpload').checked;
+            $.ajax({
+                type: 'GET',
+                url: "@Url.Action("DeleteByDatePublishBeginAndDatePublishEndAndIndustryIDAndIsUpload", "Report")",
+                data: {
+                    industryID: industryIDValue,
+                    datePublishBegin: datePublishBeginValue,
+                    datePublishEnd: datePublishEndValue,
+                    isUpload: isUploadValue
+                },
+                success: function () { }
+            }).done(() => {
+                $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
+                EndRequestHandler();
+            });        
+    }
+    function addProductProperty(e) {
+        var productProperty = this.dataItem($(e.currentTarget).closest("tr"));
+        var timeStamp = $("#timeStamp").val();
+        if (timeStamp != e.timeStamp) {
+            $("#timeStamp").val(e.timeStamp);
+            BeginRequestHandler();
+            $.ajax({
+                type: 'GET',
+                url: "@Url.Action("CopyProductPropertyByID", "Report")",
+                data: {
+                    ID: productProperty.ID
+                },
+                success: function () { }
+            }).done(() => {
+                $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
+                EndRequestHandler();
+            });
+        }
+    }
+    function filterConfig_SegmentByIndustry(e) {
+        var parentIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        return { parentID: parentIDValue };
+    }
+    function filterMembership_CompanyByIndustry(e) {
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        return { industryID: industryIDValue };
+    }
+    function filterMembership(e) {
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        return { industryID: industryIDValue };
+    }
+
+    function filterProduct(e) {
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
+        var datePublishEndValue = toDate02($("#DatePublishEnd").val());
+        var isUploadValue = document.getElementById('IsUpload').checked;
+        return { datePublishBegin: datePublishBeginValue, datePublishEnd: datePublishEndValue, industryID: industryIDValue, isUpload: isUploadValue };
+    }
+    function onSaveAllData() {
+        BeginRequestHandler();
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
+        var datePublishEndValue = toDate02($("#DatePublishEnd").val());
+        var allDataValue = document.getElementById('chkAllData').checked;
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("UpdateByIndustryIDAndDatePublishBeginAndDatePublishEndAndAllData", "Report")",
+            data: {
+                industryID: industryIDValue,
+                datePublishBegin: datePublishBeginValue,
+                datePublishEnd: datePublishEndValue,
+                allData: allDataValue
+            },
+             success: function () {}
+         }).done(() => {
+             $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
+             EndRequestHandler();
+        });
+
+    }
+    function GetByIndustryIDAndParrentIDToList() {
+        $("#DataMain").html('');
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetByIndustryIDAndParrentIDToListToJSON", "Membership")",
+            data: {
+                industryID: industryIDValue,
+            },
+             success: function (listMembership) {
+                var html = '<table class="border01" id="Data" cellspacing="4" style="background-color:#ffffff; width: 100%;">';
+                html = html + '<thead>';
+                html = html + '<tr>';
+                html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Customer</a></th>";
+                html = html + "<th class='text-center' style='width: 30%;'><a style='cursor:pointer;'>Competitor</a></th>";
+                html = html + "<th class='text-center' style='width: 50%;'><a style='cursor:pointer;'>Section</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in listMembership) {
+                     $(listMembership[index]).each(function (iRec, item) {
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                        }
+                        html = html + '<td class="text-left"><b>' + item.Account + '</b></td>';
+                         html = html + '<td class="text-left">' + item.FirstName + '</td>';
+                         html = html + '<td class="text-left">' + item.LastName + '</td>';
+                         html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                $("#DataMain").append(html);
+            }
+        }).done(() => {
+        });
+    }
+    function onSearch() {
+        GetByIndustryIDAndParrentIDToList();
+        $("#ProductDataTransfer").data("kendoGrid").dataSource.read();
+    }
+    function onNext() {
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
+        var datePublishEndValue = toDate02($("#DatePublishEnd").val());
+        datePublishBeginValue = datePublishBeginValue.replace("/", "-");
+        datePublishBeginValue = datePublishBeginValue.replace("/", "-");
+        datePublishEndValue = datePublishEndValue.replace("/", "-");
+        datePublishEndValue = datePublishEndValue.replace("/", "-");
+        var url = "/Report/DailyPreview?industryID=" + industryIDValue + "&datePublishBeginString=" + datePublishBeginValue + "&datePublishEndString=" + datePublishEndValue;
+        window.location.replace(url);
+    }
+    function onPreview() {
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
+        var datePublishEndValue = toDate02($("#DatePublishEnd").val());
+        datePublishBeginValue = datePublishBeginValue.replace("/", "-");
+        datePublishBeginValue = datePublishBeginValue.replace("/", "-");
+        datePublishEndValue = datePublishEndValue.replace("/", "-");
+        datePublishEndValue = datePublishEndValue.replace("/", "-");
+        var isUploadValue = document.getElementById('IsUpload').checked;
+        var url = "/Report/DailyPrintPreviewByIndustryIDAndDatePublishBeginAndDatePublishEnd?industryID=" + industryIDValue + "&datePublishBeginString=" + datePublishBeginValue + "&datePublishEndString=" + datePublishEndValue + "&isUpload=" + isUploadValue;
+        OpenWindowByURL(url);
+    }
+    function onExcelEnglish() {
+        BeginRequestHandler();
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
+        var datePublishEndValue = toDate02($("#DatePublishEnd").val());
+        datePublishBeginValue = datePublishBeginValue.replace("/", "-");
+        datePublishBeginValue = datePublishBeginValue.replace("/", "-");
+        datePublishEndValue = datePublishEndValue.replace("/", "-");
+        datePublishEndValue = datePublishEndValue.replace("/", "-");
+        var isUploadValue = document.getElementById('IsUpload').checked;
+        var url = "/Report/ExportExcelReportDailyByDatePublishBeginAndDatePublishEndAndIndustryID?industryID=" + industryIDValue + "&datePublishBeginString=" + datePublishBeginValue + "&datePublishEndString=" + datePublishEndValue + "&isUpload=" + isUploadValue;
+        window.location.replace(url);
+        EndRequestHandler();
+    }
+    function onExcelVietnamese() {
+        BeginRequestHandler();
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        var datePublishBeginValue = toDate02($("#DatePublishBegin").val());
+        var datePublishEndValue = toDate02($("#DatePublishEnd").val());
+        datePublishBeginValue = datePublishBeginValue.replace("/", "-");
+        datePublishBeginValue = datePublishBeginValue.replace("/", "-");
+        datePublishEndValue = datePublishEndValue.replace("/", "-");
+        datePublishEndValue = datePublishEndValue.replace("/", "-");
+        var isUploadValue = document.getElementById('IsUpload').checked;
+        var url = "/Report/ExportExcelReportDailyByDatePublishBeginAndDatePublishEndAndIndustryIDWithVietnamese?industryID=" + industryIDValue + "&datePublishBeginString=" + datePublishBeginValue + "&datePublishEndString=" + datePublishEndValue + "&isUpload=" + isUploadValue;
+        window.location.replace(url);
+        EndRequestHandler();
+    }
+</script>
+<script>
+    function valueMapper(options) {
+        $.ajax({
+            url: "@Url.Action("Orders_ValueMapper", "MembershipPermission")",
+            data: convertValues(options.value),
+            success: function (data) {
+                options.success(data);
+            }
+        });
+    }
+    function convertValues(value) {
+        var data = {};
+        value = $.isArray(value) ? value : [value];
+        for (var idx = 0; idx < value.length; idx++) {
+            data["values[" + idx + "]"] = value[idx];
+        }
+        return data;
+    }
+</script>

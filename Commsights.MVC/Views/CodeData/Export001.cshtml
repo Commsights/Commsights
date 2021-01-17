@@ -1,0 +1,294 @@
+﻿@{ ViewData["Title"] = "Export by Date"; }
+
+@model Commsights.MVC.Models.CodeDataViewModel
+
+@Html.HiddenFor(Model => Model.ID)
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-body">
+                <div class="row">
+                    <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
+                        <input id="IsUpload" type="checkbox" checked="checked">
+                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px; margin-right:10px;">Up/Pub</p>
+                    </div>
+                    <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
+                        <input id="IsCoding" type="checkbox" checked="checked">
+                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Code</p>
+                    </div>
+                    <div class='col-sm-2' style="display:flex; justify-content:start; align-items:center;">
+                        <input id="IsAnalysis" type="checkbox">
+                        <p style="display:inline-block; font-size:14px; font-weight:bold; margin:0; padding-left:10px;">Analysis</p>
+                    </div>
+                    <div class='col-sm-1'>
+                        @(Html.Kendo().DropDownListFor(Model=>Model.HourBegin)
+                     .DataValueField("Display")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetHourFinanceToList", "AppGlobal")))
+                            )
+                    </div>
+                    <div class='col-sm-2'>
+                        @(Html.Kendo().DatePickerFor(Model => Model.DatePublishBegin)
+                                     .Format("dd/MM/yyyy")
+                                     .HtmlAttributes(new { @class = "form-control text-right", title = "Date begin" })
+                                     .DateInput()
+                                )
+                    </div>
+                    <div class='col-sm-1'>
+                        @(Html.Kendo().DropDownListFor(Model=>Model.HourEnd)
+                     .DataValueField("Display")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetHourFinanceToList", "AppGlobal")))
+                            )
+                    </div>
+                    <div class='col-sm-2'>
+                        @(Html.Kendo().DatePickerFor(Model => Model.DatePublishEnd)
+                                     .Format("dd/MM/yyyy")
+                                     .HtmlAttributes(new { @class = "form-control text-right", title = "Date begin" })
+                                     .DateInput()
+                                )
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class='col-sm-4'>
+                        @(Html.Kendo().DropDownListFor(Model=>Model.IndustryID)
+                     .DataValueField("ID")
+                     .DataTextField("CodeName")
+                    .HtmlAttributes(new { @class = "form-control" })
+                    .Events(e => e.DataBound("onIndustryDataBound").Change("onIndustryChange"))
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetIndustryToList", "Config")))
+                            )
+                    </div>
+                    <div class='col-sm-5'>
+                        @(Html.Kendo().DropDownListFor(Model => Model.CompanyName)
+                     .DataValueField("Account")
+                     .DataTextField("Account")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetByIndustryID004ByActiveToList", "Membership").Data("filterMembership")))
+                            )
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-success" title="Search" onclick="onSearch()">
+                            <span class="fas fa-search"></span>
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-success" title="Export Code" onclick="onExportCode()">
+                            <span class="fas fa-file-excel"></span> Code
+                        </button>
+                    </div>
+                    @*<div class='col-sm-1'>
+                        <button type="button" class="btn btn-success" title="Export Daily" onclick="onExportDaily()">
+                            <span class="fas fa-file-excel"></span> Daily
+                        </button>
+                    </div>*@
+                </div>
+                <br />
+                <div class="row">
+                    <div id="DataMain" class='col-sm-12'></div>
+                </div>
+                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.CodeData>()
+                .Name("CodeData")
+                .Columns(columns =>
+                {
+                    columns.Bound(t => t.RowIndex).Title("No").Width(100).HtmlAttributes(new { @class = "text-center", @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.Source).Title("Source").Width(100).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.CategoryMain).Title("Category Main").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.CategorySub).Title("Category Sub").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.CompanyName).Title("Company").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.CorpCopy).Title("Corp Copy").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.SOECompany).Title("SOE (%)").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.ProductName_ProjectName).Title("Product").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.SentimentCorp).Title("Sentiment").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.Title).Title("Headline (Vie)").Width(500).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.MediaTitle).Title("Media").Width(300).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.MediaType).Title("Type").Width(150).HtmlAttributes(new { @class = "text-center", @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(500).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.Description).Title("Summary").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.TierCommsights).Title("Tier Commsights").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.SpokePersonName).Title("Spoke Person Name").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.SpokePersonTitle).Title("Spoke Person Title").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.CampaignName).Title("Campaign Name").Width(150).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.CampaignKeyMessage).Title("Campaign Key Message").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.KeyMessage).Title("Key Message").Width(150).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.ToneValue).Title("Tone Value").Width(150).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.HeadlineValue).Title("Headline Value").Width(150).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.FeatureValue).Title("Feature Value").Width(150).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.SpokePersonValue).Title("Spoke Person Value").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.TierValue).Title("Tier Value").Width(150).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.PictureValue).Title("Picture Value").Width(150).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.KOLValue).Title("KOL Value").Width(150).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.OtherValue).Title("Other Value").Width(150).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.TasteValue).Title("Taste Value").Width(150).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.PriceValue).Title("Price Value").Width(150).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.NutritionFactValue).Title("Nutrition Fact Value").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.VitaminValue).Title("Vitamin Value").Width(150).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.GoodForHealthValue).Title("Good For Health Value").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.Bottle_CanDesignValue).Title("Bottle/Can Design Value").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.CompetitiveNewsValue).Title("Competitive News Value").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.MPS).Title("MPS").Width(150).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.ROME_Corp_VND).Title("Media Value Corp").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.ROME_Product_VND).Title("Media Value Product").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.ProductSource).Title("Upload").Width(100).HtmlAttributes(new { @class = "text-center", @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.Author).Title("Journalist").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.FeatureCorp).Title("Feature Corp").Width(150).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.FeatureProduct).Title("Feature Product").Width(150).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.Segment).Title("Segment").Width(300).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.DatePublish).Title("Publish").Format("{0:dd/MM/yyyy HH:mm:ss}").Width(200).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.DateUpload).Title("Upload").Width(200).Format("{0:dd/MM/yyyy HH:mm:ss}").HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.DateUpdated).Title("Updated").Width(200).Format("{0:dd/MM/yyyy HH:mm:ss}").HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.DateCoding).Title("Coding").Width(200).Format("{0:dd/MM/yyyy HH:mm:ss}").HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.Advalue).Title("Advalue").Width(200).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.FileName).Title("FileName").Width(1000).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.ProductID).Title("ProductID").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.ProductPropertyID).Title("PropertyID").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.RowBegin).Title("Begin").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.RowEnd).Title("End").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.RowIndexCount).Title("Count").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.IsCoding).Title("Coding").Width(100).HtmlAttributes(new { @class = "text-center", @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.IsAnalysis).Title("Analysis").Width(100).HtmlAttributes(new { @class = "text-center", @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.CopyVersion).Title("Copy").Width(100).HtmlAttributes(new { @class = "text-center", @style = "white-space: nowrap;" });
+                    columns.Bound(t => t.UserUpdated).Title("UserUpdated").Width(200).HtmlAttributes(new { @class = "text-center", @style = "white-space: nowrap;" });
+                })
+                .ToolBar(toolBar => toolBar.Search())
+                .Editable(editable => editable.Mode(GridEditMode.InLine))
+                .Sortable()
+                .Scrollable()
+                .Reorderable(r => r.Columns(true))
+                .Resizable(r => r.Columns(true))
+                .Pageable(pageable => pageable
+                .Refresh(true)
+                .PageSizes(true)
+                .ButtonCount(10))
+                .Excel(excel => excel
+                .FileName("Article.xlsx")
+                .Filterable(true)
+                .ProxyURL(Url.Action("ExportExcel", "Article"))
+                )
+                .Pdf(pdf => pdf
+                .AllPages()
+                .AvoidLinks()
+                .PaperSize("A4")
+                .Margin("2cm", "1cm", "1cm", "1cm")
+                .Landscape()
+                .RepeatHeaders()
+                .FileName("Article.pdf")
+                )
+                .HtmlAttributes(new { @class = "KendoGrid", @style = "font-size:11px;" })
+                .Search(search => { search.Field(f => f.URLCode); search.Field(f => f.Title); search.Field(f => f.TitleEnglish); search.Field(f => f.CompanyName); search.Field(f => f.MediaTitle); search.Field(f => f.TierCommsights); search.Field(f => f.MediaType); search.Field(f => f.ProductName_ProjectName); })
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                .PageSize(10000)
+                .Model(model =>
+                {
+                    model.Id(t => t.RowIndex);
+                })
+                .Read(t => t.Action("GetByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDAndCompanyNameAndIsCodingAndIsAnalysisAndIsUploadToList", "CodeData").Data("filterCodeData"))
+                ))
+            </div>
+        </div>
+    </div>
+</div>
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+<script>
+    $(document).ready(() => {
+    });
+    function GetByIndustryIDAndParrentIDToList() {
+        $("#DataMain").html('');
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetByIndustryIDAndParrentIDToListToJSON", "Membership")",
+            data: {
+                industryID: industryIDValue,
+            },
+             success: function (listMembership) {
+                var html = '<table class="border01" id="Data" cellspacing="4" style="background-color:#ffffff; width: 100%; font-size:11px;">';
+                html = html + '<thead>';
+                html = html + '<tr>';
+                html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Customer</a></th>";
+                html = html + "<th class='text-center' style='width: 80%;'><a style='cursor:pointer;'>Competitor</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in listMembership) {
+                     $(listMembership[index]).each(function (iRec, item) {
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                        }
+                        html = html + '<td class="text-left"><b>' + item.Account + '</b></td>';
+                        html = html + '<td class="text-left">' + item.FirstName + '</td>';
+                        html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                $("#DataMain").append(html);
+            }
+        }).done(() => {
+        });
+    }
+    function onSearch() {
+        //GetByIndustryIDAndParrentIDToList();
+        $("#CodeData").data("kendoGrid").dataSource.read();
+    }
+    function filterCodeData(e) {
+        var dateUpdatedBeginValue = toDate02($("#DatePublishBegin").val());
+        var dateUpdatedEndValue = toDate02($("#DatePublishEnd").val());
+        var hourBeginValue = $("#HourBegin").data("kendoDropDownList").value();
+        var hourEndValue = $("#HourEnd").data("kendoDropDownList").value();
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        var companyNameValue = $("#CompanyName").data("kendoDropDownList").value();
+        var isCodingValue = document.getElementById('IsCoding').checked;
+        var isAnalysisValue = document.getElementById('IsAnalysis').checked;
+        var isUploadValue = document.getElementById('IsUpload').checked;
+        return { dateUpdatedBegin: dateUpdatedBeginValue, dateUpdatedEnd: dateUpdatedEndValue, hourBegin: hourBeginValue, hourEnd: hourEndValue, industryID: industryIDValue, companyName: companyNameValue, isCoding: isCodingValue, isAnalysis: isAnalysisValue, isUpload: isUploadValue };
+    }
+    function onExportCode() {
+        BeginRequestHandler();
+        var IDValue = $("#ID").val();
+        $.post("/CodeData/Export001ExportExcel", { }, function (result) {
+            window.location.replace(result);
+            EndRequestHandler();
+        });
+    }
+    function onExportDaily() {
+        BeginRequestHandler();
+        var url = "/CodeData/Export001ExportExcelForDaily";
+        window.location.replace(url);
+        EndRequestHandler();
+    }
+    function onIndustryChange() {
+        $("#CompanyName").data("kendoDropDownList").dataSource.read();
+    }
+    function onIndustryDataBound() {
+        var control = $("#IndustryID").data("kendoDropDownList");
+        var controlLength = control.dataSource.data().length;
+        if (controlLength > 0) {
+            control.select(0);
+            control.trigger("change");
+        }
+    }
+    function filterMembership(e) {
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        return { industryID: industryIDValue };
+    }
+</script>

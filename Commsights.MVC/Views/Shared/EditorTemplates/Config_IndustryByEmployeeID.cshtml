@@ -1,0 +1,8 @@
+
+@(Html.Kendo().DropDownListFor(t => t)
+                   .DataValueField("CodeName")
+                   .DataTextField("CodeName")
+                   .HtmlAttributes(new {data_bind= "value: Industry", @class = "form-control", @style = "font-size:11px;" })
+                    .Filter(FilterType.Contains)
+                   .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetProductPermissionDistinctIndustryByEmployeeIDToList", "Config")))
+)

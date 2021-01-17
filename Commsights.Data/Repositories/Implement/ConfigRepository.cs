@@ -199,6 +199,19 @@ namespace Commsights.Data.Repositories
             list = SQLHelper.ToList<Config>(dt);
             return list;
         }
+        public List<Config> GetSQLCategorySubByGroupNameAndCodeAndIndustryIDToList(string groupName, string code, int industryID)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@IndustryID",industryID),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectCategorySubByGroupNameAndCodeAndIndustryID", parameters);
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
         public List<Config> GetSQLByGroupNameAndCodeAndIndustryIDAndParentIDToList(string groupName, string code, int industryID, int parentID)
         {
             List<Config> list = new List<Config>();
@@ -390,6 +403,17 @@ namespace Commsights.Data.Repositories
 
             return result;
         }
+        public string DeleteMenuByID(int ID)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@ID",ID),                
+            };
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ConfigDeleteMenuByID", parameters);
+
+            return result;
+        }
         public List<Config> GetByIDListToList(string IDList)
         {
             List<Config> list = new List<Config>();
@@ -414,6 +438,140 @@ namespace Commsights.Data.Repositories
             list = SQLHelper.ToList<Config>(dt);
             return list;
         }
+        public List<Config> GetSQLWebsiteByGroupNameAndCodeToList(string groupName, string code)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectWebsiteByGroupNameAndCode", parameters);
+            list = SQLHelper.ToList<Config>(dt);
+            //foreach (Config item in list)
+            //{
+            //    if (item.Active == false)
+            //    {
+            //        bool check = false;
+            //        if (string.IsNullOrEmpty(item.URLFull))
+            //        {
+            //            check = true;
+            //        }
+            //        else
+            //        {
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"@");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@".htm");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"sms");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"lich-thi-dau");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"maito");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"mailto");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"tel");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"#");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"?");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"+");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"tag");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"category");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"2020");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = item.URLFull.Contains(@"javascript");
+            //            }
+            //            if (check == false)
+            //            {
+            //                int length = item.URLFull.Split('/').Length;
+            //                if (length > 3)
+            //                {
+            //                    for (int i = 3; i < length; i++)
+            //                    {
+            //                        string last = item.URLFull.Split('/')[i];
+            //                        if (!string.IsNullOrEmpty(last))
+            //                        {
+            //                            check = true;
+            //                            i = length;
+            //                        }
+            //                    }
+            //                }
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = !item.URLFull.Contains(@".vn/");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = !item.URLFull.Contains(@".net/");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = !item.URLFull.Contains(@".info/");
+            //            }
+            //            if (check == false)
+            //            {
+            //                check = !item.URLFull.Contains(@".com/");
+            //            }
+            //        }
+            //        if (check == true)
+            //        {
+            //            DeleteSingleItem(item.ID);
+            //        }
+            //    }
+            //}
+            
+            return list;
+        }
+        public List<Config> GetSQLWebsiteByGroupNameAndCodeAndActiveAndRowBeginAndRowEndToList(string groupName, string code, bool active, int rowBegin, int rowEnd)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@Active",active),
+                new SqlParameter("@RowBegin",rowBegin),
+                new SqlParameter("@RowEnd",rowEnd),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectWebsiteByGroupNameAndCodeAndActiveAndRowBeginAndRowEnd", parameters);
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
         public List<Config> GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftToList(string groupName, string code, bool active, bool isMenuLeft)
         {
             List<Config> list = new List<Config>();
@@ -425,6 +583,22 @@ namespace Commsights.Data.Repositories
                 new SqlParameter("@IsMenuLeft",isMenuLeft),
             };
             DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeft", parameters);
+            list = SQLHelper.ToList<Config>(dt);
+            return list;
+        }
+        public List<Config> GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftAndRowBeginAndRowEndToList(string groupName, string code, bool active, bool isMenuLeft, int rowBegin, int rowEnd)
+        {
+            List<Config> list = new List<Config>();
+            SqlParameter[] parameters =
+                       {
+                new SqlParameter("@GroupName",groupName),
+                new SqlParameter("@Code",code),
+                new SqlParameter("@Active",active),
+                new SqlParameter("@IsMenuLeft",isMenuLeft),
+                new SqlParameter("@RowBegin",rowBegin),
+                new SqlParameter("@RowEnd",rowEnd),
+            };
+            DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ConfigSelectWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftAndRowBeginAndRowEnd", parameters);
             list = SQLHelper.ToList<Config>(dt);
             return list;
         }
@@ -495,9 +669,35 @@ new SqlParameter("@Title",config.Title),
 new SqlParameter("@IsMenuLeft",config.IsMenuLeft),
 new SqlParameter("@Color",config.Color),
 new SqlParameter("@BlackWhite",config.BlackWhite),
+new SqlParameter("@SortOrder",config.SortOrder),
 };
             string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ConfigUpdateSingleItem001", parameters);
             return result;
         }
+        public string DeleteSingleItem(int ID)
+        {
+
+            SqlParameter[] parameters =
+            {
+                new SqlParameter("@ID",ID),
+            };
+            string result = SQLHelper.ExecuteNonQuery(AppGlobal.ConectionString, "sp_ConfigDeleteSingleItemByID", parameters);
+            return result;
+        }
+        public List<Config> GetProductPermissionDistinctIndustryByEmployeeIDToList(int employeeID)
+        {
+            List<Config> list = new List<Config>();
+            if (employeeID > 0)
+            {
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@EmployeeID",employeeID),
+                };
+                DataTable dt = SQLHelper.Fill(AppGlobal.ConectionString, "sp_ProductPermissionSelectDistinctIndustryByEmployeeID", parameters);
+                list = SQLHelper.ToList<Config>(dt);
+            }
+            return list;
+        }
+
     }
 }

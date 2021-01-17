@@ -43,6 +43,7 @@ namespace Commsights.Data.Repositories
         public Task<List<Product>> AsyncGetByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source);
         public Task<List<ProductCompact>> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source);
         public Task<string> AsyncInsertSingleItem(Product product);
+        public Task<string> AsyncInsertSingleItemAuto(Product product);
         public string InsertSingleItem(Product product);
         public Task<string> AsyncUpdateSingleItem(Product product);
         public List<Product> GetByAndiToList();
@@ -60,5 +61,9 @@ namespace Commsights.Data.Repositories
         public List<ProductCompact001> GetProductCompact001BySourceAndRowBeginAndRowEndWithIDAndDescriptionToList(string source, int rowBegin, int rowEnd);
         public string UpdateSingleItemByCodeData(CodeData model);
         public string Initialization();
+        public Task<List<ProductCompact>> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceAndIsPublishToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source, bool isTitle, bool isDescription, bool isPublish);
+        public Task<List<ProductCompact>> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceAndIsUploadToList(DateTime datePublishBegin, DateTime datePublishEnd, string search, string source, bool isTitle, bool isDescription, bool isUpload);
+        public string InsertSingleItemAuto(Product product);
+        public Task<string> AsyncInsertSingleItemAutoNoFilter(Product product);
     }
 }

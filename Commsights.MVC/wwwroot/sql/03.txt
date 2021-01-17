@@ -1,0 +1,52 @@
+USE [CommSights]
+GO
+/****** Object:  StoredProcedure [dbo].[sp_CodeDataDailySelectByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndIsCoding]    Script Date: 1/3/2021 8:30:52 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[sp_CodeDataDailySelectByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndIsCoding]
+    
+    @DateUpdatedBegin datetime=null,
+
+	@DateUpdatedEnd datetime=null,
+
+	@IndustryID int=0,
+	
+	@IsCoding bit=0
+AS
+BEGIN
+
+SET NOCOUNT ON;
+
+declare @Industry nvarchar(4000)=''
+
+select @Industry=CodeName from Config (nolock) where ID=@IndustryID
+
+select ProductPropertyID=b.ID, ProductID=a.ID, a.DatePublish, b.Source, b.FileName, b.CategoryMain, CategoryMainVietnamese=c3.Note, CategorySub=b.CategoryMain + ': ' + b.CategorySub, CategorySubVietnamese=c4.Note, b.CompanyName, b.CorpCopy, b.SOECompany, b.FeatureCorp, TierCommsights=isnull(b.TierCommsights,'Other')
+
+, b.Segment, b.ProductName_ProjectName, b.SOEProduct, b.FeatureProduct, b.SentimentCorp, SentimentCorpVietnamese=c5.Note, b.MediaTitle, b.MediaType, b.CampaignName, b.CampaignKeyMessage, b.KeyMessage, b.CompetitiveWhat, Advalue=case when a.Source='Andi' and b.MediaType<>'Online' then a.Advalue else b.Advalue end
+
+, b.SpokePersonName, b.SpokePersonTitle, b.SpokePersonValue, b.ToneValue, b.HeadlineValue, b.FeatureValue, b.TierValue, b.PictureValue, b.SentimentValue, b.MPS, b.ROME_Corp_VND, b.ROME_Product_VND
+
+, b.KOLValue, b.OtherValue, b.TasteValue, b.PriceValue, b.NutritionFactValue, b.VitaminValue, b.GoodForHealthValue, b.Bottle_CanDesignValue, b.CompetitiveNewsValue, b.IsAnalysis, b.IsCoding, b.IsDownload, b.IsSend, b.DateUpdated, b.DateCoding, b.IsCopy, b.CopyVersion, b.UserUpdated, a.TitleProperty, b.SourceProperty, b.IsDailyDownload
+
+, a.Title, a.TitleEnglish, a.Description, a.DescriptionEnglish, a.Author, a.URLCode, ProductSource=a.Source, DateUpload=a.DateUpdated, a.IsSummary, a.Page, a.Duration, IndustryID=@IndustryID, Industry=@Industry, Frequency=c2.CodeName
+
+from Product (nolock) a join ProductProperty (nolock) b on a.ID=b.ParentID and b.Code<>'URLCode' 
+
+and b.IndustryID=@IndustryID and b.IsCoding=@IsCoding and (a.DateUpdated between @DateUpdatedBegin and @DateUpdatedEnd)
+
+join Config (nolock) c1 on a.ParentID=c1.ID
+
+left join Config (nolock) c2 on c1.FrequencyID=c2.ID
+
+left join Config (nolock) c3 on c3.CodeName=b.CategoryMain and c3.IndustryID=@IndustryID and c3.Code='CategoryMain'
+
+left join Config (nolock) c4 on c4.CodeName=b.CategorySub and c4.IndustryID=@IndustryID and c4.Code='CategorySub'
+
+left join Config (nolock) c5 on c5.CodeName=b.SentimentCorp and c5.Code='Sentiment'
+
+order by b.IsDailyDownload asc, a.DatePublish desc, a.Title asc, a.URLCode asc, b.CopyVersion asc
+
+END

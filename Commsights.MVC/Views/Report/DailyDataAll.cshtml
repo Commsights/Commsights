@@ -1,0 +1,239 @@
+﻿@{ Layout = "~/Views/Shared/_LayoutNoHeader.cshtml"; ViewData["Title"] = "Daily - Data all"; }
+
+@model Commsights.MVC.Models.CodeDataViewModel
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-body">
+                <div class="row">
+                    <div class='col-sm-1'>
+                        @(Html.Kendo().DropDownListFor(Model=>Model.HourBegin)
+                     .DataValueField("Display")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetHourFinanceToList", "AppGlobal")))
+                            )
+                    </div>
+                    <div class='col-sm-2'>
+                        @(Html.Kendo().DatePickerFor(Model => Model.DatePublishBegin)
+                                     .Format("dd/MM/yyyy")
+                                     .HtmlAttributes(new { @class = "form-control text-right", title = "Date begin" })
+                                     .DateInput()
+                                )
+                    </div>
+                    <div class='col-sm-1'>
+                        @(Html.Kendo().DropDownListFor(Model=>Model.HourEnd)
+                     .DataValueField("Display")
+                     .DataTextField("Display")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.Contains)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetHourFinanceToList", "AppGlobal")))
+                            )
+                    </div>
+                    <div class='col-sm-2'>
+                        @(Html.Kendo().DatePickerFor(Model => Model.DatePublishEnd)
+                                     .Format("dd/MM/yyyy")
+                                     .HtmlAttributes(new { @class = "form-control text-right", title = "Date begin" })
+                                     .DateInput()
+                                )
+                    </div>
+                    <div class='col-sm-3'>
+                        @(Html.Kendo().DropDownListFor(Model=>Model.IndustryID)
+                     .DataValueField("ID")
+                     .DataTextField("CodeName")
+                    .HtmlAttributes(new { @class = "form-control" })
+                       .Filter(FilterType.StartsWith)
+                     .DataSource(dataSource => dataSource.Ajax().Read(t => t.Action("GetProductPermissionDistinctIndustryByEmployeeIDToList", "Config")))
+                            )
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-success" title="Search" onclick="onSearch()">
+                            <span class="fas fa-search"></span>
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-success" title="Excel English" onclick="onExcelEnglish()">
+                            <span class="fas fa-file-excel"></span> EN
+                        </button>
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-success" title="Excel Vietnamese" onclick="onExcelVietnamese()">
+                            <span class="fas fa-file-download"></span> VN
+                        </button>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div id="DataMain" class='col-sm-12'></div>
+                </div>
+                @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.CodeData>()
+.Name("CodeData")
+.Columns(columns =>
+{
+    columns.Command(command => { command.Edit().Text("&nbsp;").CancelText("&nbsp;").UpdateText("&nbsp;").IconClass("fas fa-edit").HtmlAttributes(new { style = "font-size: 16px; padding-left:16px; padding-top:6px; border-radius: 6px; font-weight:bold; width:50px;" }); command.Destroy().Text("&nbsp;").IconClass("fas fa-trash-alt").HtmlAttributes(new { style = "font-size: 16px; color:#ffffff; background-color:#d73925; padding-left:16px; padding-top:6px; border-radius: 6px; width:50px;" }); }).Width(150).Locked(true);
+    columns.Template(@"<a target='_blank' href='#=URLCode#' title='#=Title#' class='btn btn-success' style='color:white; cursor: pointer;'><i class='fas fa-external-link-alt'></i></a>").Title("View").Width(70).Locked(true);
+    columns.Bound(t => t.IsDailyDownload).Title("Download").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.IsSummary).Title("Brief").Width(50).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.TitleEnglish).Title("Headline (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.DescriptionEnglish).Title("Summary (Eng)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Title).Title("Headline (Vie)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Description).Title("Summary (Vie)").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.DatePublish).Title("Publish (dd/MM/yyyy)").Width(180).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Note).Title("Note").Width(200).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.CategoryMain).Title("Category Main").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.CategorySub).Title("Category Sub").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.CompanyName).Title("Company").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.SentimentCorp).Title("Sentiment").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.MediaTitle).Title("Media").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.MediaType).Title("Type").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Page).Title("Page").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Duration).Title("Duration").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Advalue).Title("Advalue").Width(100).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Frequency).Title("Frequency").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });
+    columns.Bound(t => t.Author).Title("Journalist").Width(100).HtmlAttributes(new { @style = "white-space: nowrap;" });    
+    columns.Bound(t => t.ProductID).Title("ProductID").Width(100).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+    columns.Bound(t => t.ProductPropertyID).Title("PropertyID").Width(100).HtmlAttributes(new { @class = "text-right", @style = "white-space: nowrap;" });
+})
+.ToolBar(toolBar => toolBar.Search())
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Sortable()
+.Scrollable()
+.Reorderable(r => r.Columns(true))
+.Resizable(r => r.Columns(true))
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(10))
+.Excel(excel => excel
+.FileName("Article.xlsx")
+.Filterable(true)
+.ProxyURL(Url.Action("ExportExcel", "Article"))
+)
+.Pdf(pdf => pdf
+.AllPages()
+.AvoidLinks()
+.PaperSize("A4")
+.Margin("2cm", "1cm", "1cm", "1cm")
+.Landscape()
+.RepeatHeaders()
+.FileName("Article.pdf")
+)
+.HtmlAttributes(new { @class = "KendoGrid", @style="font-size:11px;" })
+.Search(search => { search.Field(f => f.URLCode); search.Field(f => f.Title); search.Field(f => f.TitleEnglish); search.Field(f => f.CompanyName); search.Field(f => f.MediaTitle); search.Field(f => f.TierCommsights); search.Field(f => f.MediaType); search.Field(f => f.ProductName_ProjectName); })
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(10000)
+.Model(model =>
+{
+    model.Id(t => t.ProductPropertyID);
+    model.Field(t => t.IsDailyDownload).Editable(false);
+    model.Field(t => t.CategoryMain).Editable(false);
+    model.Field(t => t.CategorySub).Editable(false);
+    model.Field(t => t.CompanyName).Editable(false);
+    model.Field(t => t.SentimentCorp).Editable(false);
+    model.Field(t => t.MediaTitle).Editable(false);
+    model.Field(t => t.MediaType).Editable(false);
+    model.Field(t => t.Page).Editable(false);
+    model.Field(t => t.Duration).Editable(false);
+    model.Field(t => t.Advalue).Editable(false);
+    model.Field(t => t.Frequency).Editable(false);
+    model.Field(t => t.Author).Editable(false);
+    model.Field(t => t.ProductID).Editable(false);
+    model.Field(t => t.ProductPropertyID).Editable(false);
+})
+.Events(t => { t.RequestEnd("onGridRequestEnd"); })
+.Read(t => t.Action("GetDailyByDateUpdatedBeginAndDateUpdatedEndAndHourBeginAndHourEndAndIndustryIDToList", "CodeData").Data("filterCodeData"))
+.Destroy(t => t.Action("DeleteProductPropertyByID", "CodeData"))
+.Update(t => t.Action("UpdateProduct", "CodeData"))
+))
+            </div>
+        </div>
+    </div>
+</div>
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+<script>
+    function onGridRequestEnd(e) {
+        if ((e.type == "create") || (e.type == "update") || (e.type == "destroy")) {
+            var response = e.response;
+            var messageType = response.split('-')[0];
+            var note = response.split('-')[1];
+            var notification = $("#Notification").data("kendoNotification");
+            notification.show(note, messageType);
+            $("#CodeData").data("kendoGrid").dataSource.read();
+        }
+    }
+    function onSearch() {
+        GetByIndustryIDAndParrentIDToList();
+        $("#CodeData").data("kendoGrid").dataSource.read();
+    }
+    function onExcelVietnamese() {
+        BeginRequestHandler();
+        var url = "/CodeData/Export001ExportExcelForDailyAllVietnamese";
+        window.location.replace(url);
+        EndRequestHandler();
+    }
+    function onExcelEnglish() {
+        BeginRequestHandler();
+        var url = "/CodeData/Export001ExportExcelForDailyAll";
+        window.location.replace(url);
+        EndRequestHandler();
+    }
+    function GetByIndustryIDAndParrentIDToList() {
+        $("#DataMain").html('');
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+         $.ajax({
+            type: 'GET',
+            url: "@Url.Action("GetByIndustryIDAndParrentIDToListToJSON", "Membership")",
+            data: {
+                industryID: industryIDValue,
+            },
+             success: function (listMembership) {
+                var html = '<table class="border01" id="Data" cellspacing="4" style="background-color:#ffffff; width: 100%; font-size:11px;">';
+                html = html + '<thead>';
+                html = html + '<tr>';
+                html = html + "<th class='text-center' style='width: 20%;'><a style='cursor:pointer;'>Customer</a></th>";
+                html = html + "<th class='text-center' style='width: 80%;'><a style='cursor:pointer;'>Competitor</a></th>";
+                html = html + '</tr>';
+                html = html + '</thead>';
+                html = html + '<tbody>';
+                var no = 0;
+                 for (var index in listMembership) {
+                     $(listMembership[index]).each(function (iRec, item) {
+                        no = no + 1;
+                        if (no % 2 == 0) {
+                            html = html + '<tr style="background-color:#ffffff;">';
+                        }
+                        else {
+                            html = html + '<tr style="background-color:#f1f1f1;">';
+                        }
+                        html = html + '<td class="text-left"><b>' + item.Account + '</b></td>';
+                        html = html + '<td class="text-left">' + item.FirstName + '</td>';
+                        html = html + '</tr>';
+                    });
+                }
+                html = html + '</tbody>';
+                html = html + '</table>';
+                html = $.parseHTML(html);
+                $("#DataMain").append(html);
+            }
+        }).done(() => {
+        });
+    }
+
+    function filterCodeData(e) {
+        var dateUpdatedBeginValue = toDate02($("#DatePublishBegin").val());
+        var dateUpdatedEndValue = toDate02($("#DatePublishEnd").val());
+        var hourBeginValue = $("#HourBegin").data("kendoDropDownList").value();
+        var hourEndValue = $("#HourEnd").data("kendoDropDownList").value();
+        var industryIDValue = $("#IndustryID").data("kendoDropDownList").value();
+        return { dateUpdatedBegin: dateUpdatedBeginValue, dateUpdatedEnd: dateUpdatedEndValue, hourBegin: hourBeginValue, hourEnd: hourEndValue, industryID: industryIDValue };
+    }
+
+</script>

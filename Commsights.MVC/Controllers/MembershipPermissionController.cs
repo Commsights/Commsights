@@ -36,6 +36,7 @@ namespace Commsights.MVC.Controllers
         {
             return View();
         }
+        
         public IActionResult Industry(int ID)
         {
             MembershipPermission model = new MembershipPermission();
@@ -225,6 +226,16 @@ namespace Commsights.MVC.Controllers
         public ActionResult GetProductToList([DataSourceRequest] DataSourceRequest request)
         {
             var data = _membershipPermissionRepository.GetByProductCodeToList(AppGlobal.Product);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetSQLProductByCodeToList([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = _membershipPermissionRepository.GetSQLProductByCodeToList(AppGlobal.Product);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult GetSQLProductByCodeAndIndustryIDToList([DataSourceRequest] DataSourceRequest request, int industryID)
+        {
+            var data = _membershipPermissionRepository.GetSQLProductByCodeAndIndustryIDToList(AppGlobal.Product, industryID);
             return Json(data.ToDataSourceResult(request));
         }
         public ActionResult GetMembershipProductToList([DataSourceRequest] DataSourceRequest request, int membershipID)
@@ -997,5 +1008,24 @@ namespace Commsights.MVC.Controllers
             }
             return RedirectToAction("CustomerFiles", "Membership", new { ID = model.MembershipID });
         }
+        public ActionResult Orders_ValueMapper(int[] values)
+        {
+            var indices = new List<int>();
+
+            if (values != null && values.Any())
+            {
+                var index = 0;
+
+                foreach (var order in _membershipPermissionRepository.GetSQLProductByCodeToList(AppGlobal.Product))
+                {
+                    if (values.Contains(order.ID))
+                    {
+                        indices.Add(index);
+                    }
+                    index += 1;
+                }
+            }
+            return Json(indices);
+        }      
     }
 }

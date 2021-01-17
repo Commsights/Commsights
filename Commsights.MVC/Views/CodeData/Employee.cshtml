@@ -1,0 +1,218 @@
+﻿@{ ViewData["Title"] = "Employee count"; }
+
+@model Commsights.MVC.Models.CodeDataViewModel
+
+@Html.HiddenFor(Model => Model.IndustryID)
+@Html.HiddenFor(Model => Model.ID)
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Code - Employee count</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class='col-sm-2'>
+                        @(Html.Kendo().DatePickerFor(Model => Model.DatePublishBegin)
+                                     .Format("dd/MM/yyyy")
+                                     .HtmlAttributes(new { @class = "form-control text-right", title = "Date begin" })
+                                     .DateInput()
+                                )
+                    </div>
+                    <div class='col-sm-2'>
+                        @(Html.Kendo().DatePickerFor(Model => Model.DatePublishEnd)
+                                     .Format("dd/MM/yyyy")
+                                     .HtmlAttributes(new { @class = "form-control text-right", title = "Date end" })
+                                     .DateInput()
+                                )
+                    </div>
+                    <div class='col-sm-1'>
+                        <button type="button" class="btn btn-success" title="Search" onclick="onSearch()">
+                            <span class="fas fa-search"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class='col-sm-6'>
+                        @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.CodeDataReport>()
+                            .Name("CodeDataReport")
+                             .Columns(columns =>
+                             {
+                                 columns.Select().Width(50);
+                                 columns.Bound(t => t.EmployeeID).Title("EmployeeID").Width(50);
+                                 columns.Bound(t => t.Employee).Title("Employee").Width(100);
+                                 columns.Bound(t => t.ProductPropertyCount).Title("Copy").Width(50).HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });
+                                 columns.Bound(t => t.ProductCount).Title("Source").Width(50).HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });
+                             })
+                            .ToolBar(toolBar => toolBar.Search())
+                            .Editable(editable => editable.Mode(GridEditMode.InLine))
+                            .Sortable()
+                            .Scrollable()
+                            .Reorderable(r => r.Columns(true))
+                            .Resizable(r => r.Columns(true))
+                            .Pageable(pageable => pageable
+                            .Refresh(true)
+                            .PageSizes(true)
+                            .ButtonCount(10))
+                            .Excel(excel => excel
+                            .FileName("Config.xlsx")
+                            .Filterable(true)
+                            .ProxyURL(Url.Action("ExportExcel", "Config"))
+                            )
+                            .Pdf(pdf => pdf
+                            .AllPages()
+                            .AvoidLinks()
+                            .PaperSize("A4")
+                            .Margin("2cm", "1cm", "1cm", "1cm")
+                            .Landscape()
+                            .RepeatHeaders()
+                            .FileName("Config.pdf")
+                            )
+                            .HtmlAttributes(new { @class = "KendoGrid", @style = "font-size:11px;" })
+                            .Search(search => { search.Field(f => f.Employee);})
+                            .Events(ev => ev.Change("onGridChange"))
+                            .DataSource(dataSource => dataSource
+                            .Ajax()
+                            .PageSize(1000)
+                            .Model(model =>
+                            {
+                                model.Id(t => t.EmployeeID);
+                            })
+                            .Read(t => t.Action("GetReportEmployeeByDateUpdatedBeginAndDateUpdatedEndToList", "CodeData").Data("filterCodeData"))
+                            )
+                            )
+                    </div>
+                    <div class='col-sm-6'>
+                        @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.CodeDataReport>()
+                            .Name("CodeDataReportIndustry")
+                            .Columns(columns =>
+                            {
+                                columns.Select().Width(50);
+                                columns.Bound(t => t.IndustryID).Title("ID").Width(50);
+                                columns.Bound(t => t.Industry).Title("Industry").Width(150);
+                                columns.Bound(t => t.ProductPropertyCount).Title("Copy").Width(50).HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });
+                                columns.Bound(t => t.ProductCount).Title("Source").Width(50).HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });
+                            })
+                            .Editable(editable => editable.Mode(GridEditMode.InLine))
+                            .Sortable()
+                            .Scrollable()
+                            .Reorderable(r => r.Columns(true))
+                            .Resizable(r => r.Columns(true))
+                            .Pageable(pageable => pageable
+                            .Refresh(true)
+                            .PageSizes(true)
+                            .ButtonCount(10))
+                            .Excel(excel => excel
+                            .FileName("Config.xlsx")
+                            .Filterable(true)
+                            .ProxyURL(Url.Action("ExportExcel", "Config"))
+                            )
+                            .Pdf(pdf => pdf
+                            .AllPages()
+                            .AvoidLinks()
+                            .PaperSize("A4")
+                            .Margin("2cm", "1cm", "1cm", "1cm")
+                            .Landscape()
+                            .RepeatHeaders()
+                            .FileName("Config.pdf")
+                            )
+                            .HtmlAttributes(new { @class = "KendoGrid", @style = "font-size:11px; height:300px;" })
+                            .Search(search => { search.Field(f => f.Employee);})
+                            .Events(ev => ev.Change("onCodeDataReportIndustryGridChange"))
+                            .DataSource(dataSource => dataSource
+                            .Ajax()
+                            .PageSize(1000)
+                            .Model(model =>
+                            {
+                                model.Id(t => t.IndustryID);
+                            })
+                            .Read(t => t.Action("GetReportIndustryByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDToList", "CodeData").Data("filterCodeDataReportIndustry"))
+                            )
+                            )
+                        @(Html.Kendo().Grid<Commsights.Data.DataTransferObject.CodeDataReport>()
+                            .Name("CodeDataReportCompany")
+                            .Columns(columns =>
+                            {
+                                columns.Bound(t => t.CompanyName).Title("Company").Width(150);
+                                columns.Bound(t => t.ProductPropertyCount).Title("Copy").Width(50).HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });
+                                columns.Bound(t => t.ProductCount).Title("Source").Width(50).HtmlAttributes(new { @class = "text-right", @style = "font-weight: bold;" });
+                            })
+                            .Editable(editable => editable.Mode(GridEditMode.InLine))
+                            .Sortable()
+                            .Scrollable()
+                            .Reorderable(r => r.Columns(true))
+                            .Resizable(r => r.Columns(true))
+                            .Pageable(pageable => pageable
+                            .Refresh(true)
+                            .PageSizes(true)
+                            .ButtonCount(10))
+                            .Excel(excel => excel
+                            .FileName("Config.xlsx")
+                            .Filterable(true)
+                            .ProxyURL(Url.Action("ExportExcel", "Config"))
+                            )
+                            .Pdf(pdf => pdf
+                            .AllPages()
+                            .AvoidLinks()
+                            .PaperSize("A4")
+                            .Margin("2cm", "1cm", "1cm", "1cm")
+                            .Landscape()
+                            .RepeatHeaders()
+                            .FileName("Config.pdf")
+                            )
+                            .HtmlAttributes(new { @class = "KendoGrid", @style = "font-size:11px; height:300px;" })
+                            .Search(search => { search.Field(f => f.Employee);})
+                            .DataSource(dataSource => dataSource
+                            .Ajax()
+                            .PageSize(1000)
+                            .Model(model =>
+                            {
+                            })
+                            .Read(t => t.Action("GetReportCompanyNameByDateUpdatedBeginAndDateUpdatedEndAndEmployeeIDAndIndustryIDToList", "CodeData").Data("filterCodeDataReportCompany"))
+                            )
+                            )
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@(Html.Kendo().Notification()
+    .Name("Notification")
+    .Position(p => p.Pinned(true).Top(30).Right(30))
+    .Width(400)
+)
+
+<script>
+    function onSearch() {
+        $("#CodeDataReport").data("kendoGrid").dataSource.read();
+    }
+    function filterCodeData(e) {
+        var dateUpdatedBeginValue = toDate02($("#DatePublishBegin").val());
+        var dateUpdatedEndValue = toDate02($("#DatePublishEnd").val());
+        return { dateUpdatedBegin: dateUpdatedBeginValue, dateUpdatedEnd: dateUpdatedEndValue };
+    }
+    function filterCodeDataReportIndustry(e) {
+        var dateUpdatedBeginValue = toDate02($("#DatePublishBegin").val());
+        var dateUpdatedEndValue = toDate02($("#DatePublishEnd").val());
+        var employeeIDValue = $("#ID").val();
+        return { dateUpdatedBegin: dateUpdatedBeginValue, dateUpdatedEnd: dateUpdatedEndValue, employeeID: employeeIDValue };
+    }
+    function filterCodeDataReportCompany(e) {
+        var dateUpdatedBeginValue = toDate02($("#DatePublishBegin").val());
+        var dateUpdatedEndValue = toDate02($("#DatePublishEnd").val());
+        var employeeIDValue = $("#ID").val();
+        var industryIDValue = $("#IndustryID").val();
+        return { dateUpdatedBegin: dateUpdatedBeginValue, dateUpdatedEnd: dateUpdatedEndValue, employeeID: employeeIDValue, industryID: industryIDValue };
+    }
+    function onGridChange(arg) {
+        $("#ID").val(this.selectedKeyNames().join(";"));
+        $("#CodeDataReportIndustry").data("kendoGrid").dataSource.read();        
+    }
+    function onCodeDataReportIndustryGridChange(arg) {
+        $("#IndustryID").val(this.selectedKeyNames().join(";"));
+        $("#CodeDataReportCompany").data("kendoGrid").dataSource.read();
+    }
+</script>

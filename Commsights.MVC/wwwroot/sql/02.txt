@@ -1,0 +1,222 @@
+USE [CommSights]
+GO
+/****** Object:  StoredProcedure [dbo].[sp_CodeDataSelectByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndEmployeeID]    Script Date: 1/3/2021 3:33:26 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[sp_CodeDataSelectByDateUpdatedBeginAndDateUpdatedEndAndIndustryIDAndEmployeeID]
+    
+    @DatePublishBegin datetime=null,
+
+	@DatePublishEnd datetime=null,
+
+	@IndustryID int=0,
+
+	@EmployeeID int=0   
+AS
+BEGIN
+
+SET NOCOUNT ON;
+
+IF OBJECT_ID('tempdb..#A01') IS NOT NULL
+    DROP TABLE #A01
+
+IF OBJECT_ID('tempdb..#A02') IS NOT NULL
+    DROP TABLE #A02
+
+IF OBJECT_ID('tempdb..#A03') IS NOT NULL
+    DROP TABLE #A03
+
+IF OBJECT_ID('tempdb..#A04') IS NOT NULL
+    DROP TABLE #A04
+
+IF OBJECT_ID('tempdb..#A05') IS NOT NULL
+    DROP TABLE #A05
+
+IF OBJECT_ID('tempdb..#A06') IS NOT NULL
+    DROP TABLE #A06
+
+IF OBJECT_ID('tempdb..#A07') IS NOT NULL
+    DROP TABLE #A07
+
+IF OBJECT_ID('tempdb..#A08') IS NOT NULL
+    DROP TABLE #A08
+
+
+declare @Industry nvarchar(4000)=''
+
+select @Industry=CodeName from Config (nolock) where ID=@IndustryID
+
+update ProductProperty set TierCommsights=e.CodeName from ProductProperty (nolock) a join Product (nolock) b on a.ParentID=b.ID and a.IndustryID=@IndustryID and (a.TierCommsights is null or len(a.TierCommsights)=0) join Config (nolock) c on b.ParentID=c.ID join Config (nolock) d on c.ID=d.ParentID and d.GroupName='CRM' and d.Code='Tier' join Config (nolock) e on d.TierID=e.ID 
+
+update ProductProperty set MediaTitle=c.Title from ProductProperty (nolock) a join Product (nolock) b on a.ParentID=b.ID and a.IndustryID=@IndustryID and (a.MediaTitle is null or len(a.MediaTitle)=0) join Config (nolock) c on b.ParentID=c.ID 
+
+update ProductProperty set Advalue=b.Advalue from ProductProperty (nolock) a join Product (nolock) b on a.ParentID=b.ID and a.IndustryID=@IndustryID
+
+update ProductProperty set Advalue=c.Color from ProductProperty (nolock) a join Product (nolock) b on a.ParentID=b.ID and a.IndustryID=@IndustryID and (a.Advalue is null or a.Advalue=0) join Config (nolock) c on b.ParentID=c.ID 
+
+update ProductProperty set MediaType=d.CodeName from ProductProperty (nolock) a join Product (nolock) b on a.ParentID=b.ID and a.IndustryID=@IndustryID and (a.MediaType is null or len(a.MediaType)=0) join Config (nolock) c on b.ParentID=c.ID join Config (nolock) d on c.ParentID=d.ID 
+
+update ProductProperty set SentimentCorp=b.CodeName, SentimentCorpID=AssessID from ProductProperty (nolock) a join Config (nolock) b on a.AssessID=b.ID and a.IndustryID=@IndustryID and (a.SentimentCorp is null or len(a.SentimentCorp)=0)
+
+update ProductProperty set CategoryMain=b.CodeName, CategoryMainID=ArticleTypeID from ProductProperty (nolock) a join Config (nolock) b on a.ArticleTypeID=b.ID and a.IndustryID=@IndustryID and (a.CategoryMain is null or len(a.CategoryMain)=0)
+
+update ProductProperty set Segment=b.CodeName from ProductProperty (nolock) a join Config (nolock) b on a.SegmentID=b.ID and a.IndustryID=@IndustryID and (a.Segment is null or len(a.Segment)=0)
+
+update ProductProperty set CompanyName=b.Account from ProductProperty (nolock) a join Membership (nolock) b on a.CompanyID=b.ID and a.IndustryID=@IndustryID and (a.CompanyName is null or len(a.CompanyName)=0)
+
+update ProductProperty set ProductName_ProjectName=b.ProductName from ProductProperty (nolock) a join MembershipPermission (nolock) b on a.ProductID=b.ID and a.IndustryID=@IndustryID and (a.ProductName_ProjectName is null or len(a.ProductName_ProjectName)=0)
+
+update ProductProperty set CopyVersion=0 where CopyVersion is null
+
+select ProductPropertyID=b.ID, ProductID=a.ID, b.MediaTitle, b.MediaType, a.DatePublish, a.Page, FullName=isnull(c.FullName,'Unknown')
+
+into #A01 from Product (nolock) a join ProductProperty (nolock) b on a.ID=b.ParentID and b.Code<>'URLCode' 
+
+and b.IndustryID=@IndustryID and (a.DateUpdated between @DatePublishBegin and @DatePublishEnd)
+
+left join Membership (nolock) c on b.UserUpdated=c.ID order by a.DatePublish asc, a.ProductID asc
+
+select distinct ProductID into #A02 from #A01 
+
+select * into #A03 from (select Row_Number() over (order by ProductID asc) as ProductRowIndex, * from #A02 (nolock)) as Product 
+
+update ProductProperty set Source=cast(b.ProductRowIndex as nvarchar(4000)) from ProductProperty (nolock) a join #A03 (nolock) b on a.ParentID=b.ProductID and (a.Source is null or a.Source=0)
+
+select * into #A04 from (select Row_Number() over (order by DatePublish asc) as RowIndex, * from #A01 (nolock)) as Product order by RowIndex asc
+
+update ProductProperty set FileName=cast(year(b.DatePublish) as nvarchar(4000)) + cast(month(b.DatePublish) as nvarchar(4000)) + cast(day(b.DatePublish) as nvarchar(4000)) 
+
++ '_' + b.MediaType + '_' + b.MediaTitle + '_' + isnull(b.Page,'0') + '_' + cast(year(b.RowIndex) as nvarchar(4000)) + '_' + b.FullName
+
+from ProductProperty (nolock) a join #A04 (nolock) b on a.ID=b.ProductPropertyID and (a.FileName is null or len(a.FileName)=0)
+
+select ProductPropertyID=b.ID, ProductID=a.ID, a.DatePublish, b.Source, b.FileName, b.CategoryMain, CategorySub=b.CategoryMain + ': ' + b.CategorySub, b.CompanyName, b.CorpCopy, b.SOECompany, b.FeatureCorp, TierCommsights=isnull(b.TierCommsights,'Other')
+
+, b.Segment, b.ProductName_ProjectName, b.SOEProduct, b.FeatureProduct, b.SentimentCorp, b.MediaTitle, b.MediaType, b.CampaignName, b.CampaignKeyMessage, b.KeyMessage, b.CompetitiveWhat, Advalue=case when a.Source='Andi' and b.MediaType<>'Online' then a.Advalue else b.Advalue end
+
+, b.SpokePersonName, b.SpokePersonTitle, b.SpokePersonValue, b.ToneValue, b.HeadlineValue, b.FeatureValue, b.TierValue, b.PictureValue, b.SentimentValue, b.MPS, b.ROME_Corp_VND, b.ROME_Product_VND
+
+, b.KOLValue, b.OtherValue, b.TasteValue, b.PriceValue, b.NutritionFactValue, b.VitaminValue, b.GoodForHealthValue, b.Bottle_CanDesignValue, b.CompetitiveNewsValue, b.IsAnalysis, b.IsCoding, b.IsDownload, b.IsSend, b.DateUpdated, b.DateCoding, b.IsCopy, b.CopyVersion, b.UserUpdated, a.TitleProperty, b.SourceProperty
+
+, a.Title, a.TitleEnglish, a.Description, a.DescriptionEnglish, a.Author, a.URLCode, ProductSource=a.Source, DateUpload=a.DateUpdated, a.IsSummary, a.Page, a.Duration, IndustryID=@IndustryID, Industry=@Industry
+
+into #A05 from Product (nolock) a join ProductProperty (nolock) b on a.ID=b.ParentID and b.Code<>'URLCode' 
+
+and b.IndustryID=@IndustryID and (a.DateUpdated between @DatePublishBegin and @DatePublishEnd)
+
+select * into #A06 from (select Row_Number() over (order by Title asc, DatePublish asc, URLCode asc, CopyVersion asc, IsCoding asc) as RowIndex, * from #A05 (nolock)) as Product 
+
+declare @RowIndexCount money=0
+
+select @RowIndexCount=count(RowIndex) from #A06
+
+select 
+
+EmployeeID
+
+, RowPercent
+
+, SortOrder 
+
+, RowIndexCount=@RowIndexCount
+
+, RowIndexCountByEmployeeID=cast(RowPercent as money)/100 * @RowIndexCount
+
+into #A07
+
+from ProductPermission (nolock) where IndustryID=@IndustryID order by SortOrder asc
+
+declare @ProductPermissionRowPercentCount int=0
+
+select @ProductPermissionRowPercentCount=count(EmployeeID) from #A07 where RowPercent>0 and RowPercent<100
+
+SELECT 
+
+b.EmployeeID
+
+, b.RowPercent
+
+, b.SortOrder 
+
+, b.RowIndexCount
+
+, b.RowIndexCountByEmployeeID
+
+, RowBegin=case when b.RowPercent<1 or b.RowPercent>100 or @ProductPermissionRowPercentCount=1 then 0 else b.RowIndexCount-(select sum(RowIndexCountByEmployeeID) from #A07 a where a.SortOrder>=b.SortOrder and a.RowPercent>0) end
+
+, RowEnd=case when b.RowPercent<1 or b.RowPercent>100 then b.RowIndexCount else case when @ProductPermissionRowPercentCount=1 then b.RowIndexCountByEmployeeID else (select sum(RowIndexCountByEmployeeID) from #A07 a where a.SortOrder<=b.SortOrder and a.RowPercent>0) end end
+
+into #A08
+
+FROM #A07 b 
+
+declare @RowBegin money=0
+
+declare @RowEnd money=0
+
+select @RowBegin=RowBegin, @RowEnd=RowEnd from #A08 where EmployeeID=@EmployeeID
+
+declare @IsMenuLeft bit=0
+
+select @IsMenuLeft=IsMenuLeft from Config (nolock) where ID=@IndustryID
+
+declare @URLCoding nvarchar(4000)='/CodeData/DetailBasic?ProductPropertyID='
+
+if(@IsMenuLeft=1)
+begin
+set @URLCoding ='/CodeData/Detail?ProductPropertyID='
+end
+
+select 
+
+b.FullName
+
+, a.* 
+
+from 
+
+( 
+
+select 
+
+EmployeeID=(select top 1 EmployeeID from #A08 where RowPercent>0 and RowIndex between RowBegin and RowEnd)
+
+, URLCoding=@URLCoding + cast(ProductPropertyID as nvarchar(4000))
+
+, RowBegin=@RowBegin, RowEnd=@RowEnd
+
+, RowIndexCount=@RowIndexCount 
+
+, * 
+
+from #A06 where RowIndex between @RowBegin and @RowEnd 
+
+) a left join Membership (nolock) b on a.EmployeeID=b.ID order by a.RowIndex asc
+
+IF OBJECT_ID('tempdb..#A01') IS NOT NULL
+    DROP TABLE #A01
+
+IF OBJECT_ID('tempdb..#A02') IS NOT NULL
+    DROP TABLE #A02
+
+IF OBJECT_ID('tempdb..#A03') IS NOT NULL
+    DROP TABLE #A03
+
+IF OBJECT_ID('tempdb..#A04') IS NOT NULL
+    DROP TABLE #A04
+
+IF OBJECT_ID('tempdb..#A05') IS NOT NULL
+    DROP TABLE #A05
+
+IF OBJECT_ID('tempdb..#A06') IS NOT NULL
+    DROP TABLE #A06
+
+IF OBJECT_ID('tempdb..#A07') IS NOT NULL
+    DROP TABLE #A07
+
+IF OBJECT_ID('tempdb..#A08') IS NOT NULL
+    DROP TABLE #A08
+
+END

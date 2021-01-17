@@ -37,6 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\Download\Report\Daily\" />
     <Folder Include="wwwroot\Download\Report\Month\" />
     <Folder Include="wwwroot\images\Customer\" />
     <Folder Include="wwwroot\images\Membership\" />

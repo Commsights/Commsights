@@ -21,6 +21,8 @@ using System.Diagnostics.Eventing.Reader;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Web;
 
 namespace Commsights.MVC.Controllers
 {
@@ -153,11 +155,13 @@ namespace Commsights.MVC.Controllers
             List<ProductProperty> listProductProperty = new List<ProductProperty>();
             if (ID > 0)
             {
-                model.Product = _productRepository.GetByID(ID);
+                model.Product = _productRepository.GetByID001(ID);
                 if (model.Product != null)
                 {
                     listProductProperty = _productPropertyRepository.GetByParentIDAndCodeToList(model.Product.ID, AppGlobal.URLCode).OrderBy(item => item.Note).ToList();
+                    model.Parent = _configResposistory.GetByID(model.Product.ParentID.Value);
                 }
+
             }
             if (model.Product == null)
             {
@@ -173,27 +177,30 @@ namespace Commsights.MVC.Controllers
             }
             if (model.Product.IsVideo == false)
             {
-                ProductProperty header = listProductProperty.FirstOrDefault(item => item.Note.Contains("getHeader.ashx") == true);
+                ProductProperty header = listProductProperty.FirstOrDefault(item => !string.IsNullOrEmpty(item.Note) && item.Note.Contains("getHeader.ashx") == true);
                 if (header != null)
                 {
                     ProductProperty productProperty01 = new ProductProperty();
                     productProperty01.ID = 1;
                     productProperty01.Note = header.Note;
                     model.ListProductProperty.Add(productProperty01);
-                }
-                int no = 2;
-                foreach (ProductProperty item in listProductProperty)
-                {
-                    if (item.ID != header.ID)
+                    int no = 2;
+                    foreach (ProductProperty item in listProductProperty)
                     {
-                        ProductProperty productProperty02 = new ProductProperty();
-                        productProperty02.ID = no;
-                        productProperty02.Note = item.Note;
-                        model.ListProductProperty.Add(productProperty02);
-                        no = no + 1;
+                        if (item.ID != header.ID)
+                        {
+                            ProductProperty productProperty02 = new ProductProperty();
+                            productProperty02.ID = no;
+                            productProperty02.Note = item.Note;
+                            model.ListProductProperty.Add(productProperty02);
+                            no = no + 1;
+                        }
                     }
                 }
-
+                else
+                {
+                    model.ListProductProperty = listProductProperty;
+                }
             }
             if (model.Product == null)
             {
@@ -227,6 +234,16 @@ namespace Commsights.MVC.Controllers
         public async Task<ActionResult> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList([DataSourceRequest] DataSourceRequest request, string search, DateTime datePublishBegin, DateTime datePublishEnd)
         {
             var data = await _productRepository.AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndSourceToList(datePublishBegin, datePublishEnd, search, AppGlobal.SourceAuto);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public async Task<ActionResult> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceAndIsPublishToList([DataSourceRequest] DataSourceRequest request, string search, DateTime datePublishBegin, DateTime datePublishEnd, bool isTitle, bool isDescription, bool isPublish)
+        {
+            var data = await _productRepository.AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceAndIsPublishToList(datePublishBegin, datePublishEnd, search, AppGlobal.SourceAuto, isTitle, isDescription, isPublish);
+            return Json(data.ToDataSourceResult(request));
+        }
+        public async Task<ActionResult> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceAndIsUploadToList([DataSourceRequest] DataSourceRequest request, string search, DateTime datePublishBegin, DateTime datePublishEnd, bool isTitle, bool isDescription, bool isUpload)
+        {
+            var data = await _productRepository.AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceAndIsUploadToList(datePublishBegin, datePublishEnd, search, AppGlobal.SourceAuto, isTitle, isDescription, isUpload);
             return Json(data.ToDataSourceResult(request));
         }
         public async Task<ActionResult> AsyncGetProductCompactByDatePublishBeginAndDatePublishEndAndSearchAndIsTitleAndIsDescriptionAndSourceToList([DataSourceRequest] DataSourceRequest request, string search, DateTime datePublishBegin, DateTime datePublishEnd, bool isTitle, bool isDescription)
@@ -695,16 +712,12 @@ namespace Commsights.MVC.Controllers
         }
         public async Task<string> AsyncScanWebsiteNoFilterProductByIndexBeginVoid(int indexBegin)
         {
-            List<Config> listConfig = _configResposistory.GetByGroupNameAndCodeAndActiveToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true);
-            int listConfigCount = listConfig.Count;
-            int indexEnd = indexBegin + 10;
-            for (int i = indexBegin; i < indexEnd; i++)
+            indexBegin = indexBegin + 1;
+            int indexEnd = indexBegin + 49;
+            List<Config> listConfig = _configResposistory.GetSQLWebsiteByGroupNameAndCodeAndActiveAndRowBeginAndRowEndToList(Commsights.Data.Helpers.AppGlobal.CRM, Commsights.Data.Helpers.AppGlobal.Website, true, indexBegin, indexEnd);
+            foreach (Config item in listConfig)
             {
-                if (i == listConfigCount)
-                {
-                    i = indexEnd;
-                }
-                await this.AsyncCreateProductScanWebsiteNoFilterProduct0001(listConfig[i]);
+                await this.AsyncCreateProductScanWebsiteNoFilterProduct0001(item);
             }
             return "";
         }
@@ -725,16 +738,12 @@ namespace Commsights.MVC.Controllers
         }
         public async Task<string> AsyncScanWebsitePriorityNoFilterProductByIndexBeginVoid001(int indexBegin)
         {
-            List<Config> listConfig = _configResposistory.GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftToList(AppGlobal.CRM, AppGlobal.Website, true, true);
-            int listConfigCount = listConfig.Count;
+            indexBegin = indexBegin + 1;
             int indexEnd = indexBegin + 5;
-            for (int i = indexBegin; i < indexEnd; i++)
+            List<Config> listConfig = _configResposistory.GetSQLWebsiteByGroupNameAndCodeAndActiveAndIsMenuLeftAndRowBeginAndRowEndToList(AppGlobal.CRM, AppGlobal.Website, true, true, indexBegin, indexEnd);
+            foreach (Config item in listConfig)
             {
-                if (i == listConfigCount)
-                {
-                    i = indexEnd;
-                }
-                await this.AsyncCreateProductScanWebsiteNoFilterProduct0001(listConfig[i]);
+                await this.AsyncCreateProductScanWebsiteNoFilterProduct0001(item);
             }
             return "";
         }
@@ -1168,6 +1177,126 @@ namespace Commsights.MVC.Controllers
             }
             return "";
         }
+        //public async Task<string> AsyncCreateProductScanWebsiteNoFilterProduct0001(Config config)
+        //{
+        //    try
+        //    {
+        //        if (config != null)
+        //        {
+        //            List<LinkItem> list = new List<LinkItem>();
+        //            AppGlobal.LinkFinder001(config.URLFull, config.URLFull, true, list);
+        //            foreach (LinkItem linkItem in list)
+        //            {
+        //                try
+        //                {
+        //                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(linkItem.Href);
+        //                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+        //                    if (response.StatusCode == HttpStatusCode.OK)
+        //                    {
+        //                        Stream receiveStream = response.GetResponseStream();
+        //                        StreamReader readStream = null;
+        //                        readStream = new StreamReader(receiveStream, Encoding.UTF8);
+        //                        string html = readStream.ReadToEnd();
+        //                        html = html.Replace(@"~", @"");
+        //                        html = AppGlobal.HTMLReplaceAndSplit(html);
+        //                        string title = "";
+        //                        string htmlTitle = html;
+        //                        if ((htmlTitle.Contains(@"<meta property=""og:title"" content=""") == true) || (htmlTitle.Contains(@"<meta property='og:title' content='") == true))
+        //                        {
+        //                            htmlTitle = htmlTitle.Replace(@"<meta property=""og:title"" content=""", @"~");
+        //                            htmlTitle = htmlTitle.Replace(@"<meta property='og:title' content='", @"~");
+        //                            if (htmlTitle.Split('~').Length > 1)
+        //                            {
+        //                                htmlTitle = htmlTitle.Split('~')[1];
+        //                                htmlTitle = htmlTitle.Replace(@"""", @"~");
+        //                                htmlTitle = htmlTitle.Replace(@"'", @"~");
+        //                                htmlTitle = htmlTitle.Split('~')[0];
+        //                                title = htmlTitle.Trim();
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
+        //                            if (m1.Count > 0)
+        //                            {
+        //                                string value = m1[m1.Count - 1].Groups[1].Value;
+        //                                if (!string.IsNullOrEmpty(value))
+        //                                {
+        //                                    value = value.Replace(@"<title>", @"");
+        //                                    value = value.Replace(@"</title>", @"");
+        //                                    title = value.Trim();
+        //                                }
+        //                            }
+        //                        }
+        //                        bool isUnicode = AppGlobal.ContainsUnicodeCharacter(title);
+        //                        if ((title.Contains(@"&#") == true) || (isUnicode == false))
+        //                        {
+        //                            MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
+        //                            if (m1.Count > 0)
+        //                            {
+        //                                string value = m1[m1.Count - 1].Groups[1].Value;
+        //                                if (!string.IsNullOrEmpty(value))
+        //                                {
+        //                                    value = value.Replace(@"<title>", @"");
+        //                                    value = value.Replace(@"</title>", @"");
+        //                                    title = value.Trim();
+        //                                }
+        //                            }
+        //                        }
+        //                        if (title.Split('|').Length > 2)
+        //                        {
+        //                            title = title.Split('|')[1];
+        //                        }
+        //                        if (title.Split('|').Length > 1)
+        //                        {
+        //                            title = title.Split('|')[0];
+        //                        }
+        //                        title = title.Trim();
+        //                        Product product = new Product();
+        //                        product.Description = "";
+        //                        product.Title = title;
+        //                        product.ParentID = config.ID;
+        //                        product.CategoryID = config.ID;
+        //                        product.Source = AppGlobal.SourceAuto;
+        //                        if (string.IsNullOrEmpty(product.Title))
+        //                        {
+        //                            product.Title = linkItem.Text;
+        //                        }
+        //                        product.URLCode = linkItem.Href;
+        //                        product.DatePublish = DateTime.Now;
+        //                        product.Initialization(InitType.Insert, RequestUserID);
+        //                        product.DatePublish = DateTime.Now;
+        //                        AppGlobal.FinderContentAndDatePublish001(html, product);
+        //                        if ((product.DatePublish.Year > 2019) && (product.Active == true))
+        //                        {
+        //                            if (!string.IsNullOrEmpty(product.Title))
+        //                            {
+        //                                product.Title = AppGlobal.Decode(product.Title);
+        //                                product.MetaTitle = AppGlobal.SetName(product.Title);
+        //                            }
+        //                            if (!string.IsNullOrEmpty(product.Description))
+        //                            {
+        //                                product.Description = AppGlobal.Decode(product.Description);
+        //                            }
+        //                            await _productRepository.AsyncInsertSingleItem(product);
+        //                        }
+        //                        response.Close();
+        //                        readStream.Close();
+        //                    }
+        //                }
+        //                catch (Exception e1)
+        //                {
+        //                    string mes1 = e1.Message;
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        string mes = e.Message;
+        //    }
+        //    return "";
+        //}
         public async Task<string> AsyncCreateProductScanWebsiteNoFilterProduct0001(Config config)
         {
             try
@@ -1175,113 +1304,37 @@ namespace Commsights.MVC.Controllers
                 if (config != null)
                 {
                     List<LinkItem> list = new List<LinkItem>();
-                    AppGlobal.LinkFinder001(config.URLFull, config.URLFull, true, list);
-                    //LinkItem item = new LinkItem();
-                    //item.Href = "https://thanhnien.vn/thoi-su/sai-pham-o-saigon-coop-kiem-diem-nhieu-ca-nhan-to-chuc-1314984.html";
-                    //item.Text = "Sai phạm ở Saigon Co.op: Kiểm điểm nhiều cá nhân, tổ chức";
-                    //list.Add(item);
+                    AppGlobal.LinkFinder002(config.URLFull, config.URLFull, true, list);
                     foreach (LinkItem linkItem in list)
                     {
-                        try
+                        Product product = new Product();
+                        product.Description = "";
+                        product.Title = AppGlobal.FinderTitle001(linkItem.Href);
+                        product.ParentID = config.ID;
+                        product.CategoryID = config.ID;
+                        product.Source = AppGlobal.SourceAuto;
+                        product.URLCode = linkItem.Href;
+                        product.DatePublish = DateTime.Now;
+                        product.Initialization(InitType.Insert, RequestUserID);
+                        product.DatePublish = DateTime.Now;
+                        string html = AppGlobal.FinderHTMLContent(linkItem.Href);
+                        AppGlobal.FinderContentAndDatePublish002(html, product);
+                        if ((product.DatePublish.Year > 2020) && (product.Active == true))
                         {
-                            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(linkItem.Href);
-                            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                            if (response.StatusCode == HttpStatusCode.OK)
+                            if (!string.IsNullOrEmpty(product.Title))
                             {
-                                Stream receiveStream = response.GetResponseStream();
-                                StreamReader readStream = null;
-                                readStream = new StreamReader(receiveStream, Encoding.UTF8);
-                                string html = readStream.ReadToEnd();
-                                html = html.Replace(@"~", @"");
-                                html = AppGlobal.HTMLReplaceAndSplit(html);
-                                string title = "";
-                                string htmlTitle = html;
-                                if ((htmlTitle.Contains(@"<meta property=""og:title"" content=""") == true) || (htmlTitle.Contains(@"<meta property='og:title' content='") == true))
-                                {
-                                    htmlTitle = htmlTitle.Replace(@"<meta property=""og:title"" content=""", @"~");
-                                    htmlTitle = htmlTitle.Replace(@"<meta property='og:title' content='", @"~");
-                                    if (htmlTitle.Split('~').Length > 1)
-                                    {
-                                        htmlTitle = htmlTitle.Split('~')[1];
-                                        htmlTitle = htmlTitle.Replace(@"""", @"~");
-                                        htmlTitle = htmlTitle.Replace(@"'", @"~");
-                                        htmlTitle = htmlTitle.Split('~')[0];
-                                        title = htmlTitle.Trim();
-                                    }
-                                }
-                                else
-                                {
-                                    MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
-                                    if (m1.Count > 0)
-                                    {
-                                        string value = m1[m1.Count - 1].Groups[1].Value;
-                                        if (!string.IsNullOrEmpty(value))
-                                        {
-                                            value = value.Replace(@"<title>", @"");
-                                            value = value.Replace(@"</title>", @"");
-                                            title = value.Trim();
-                                        }
-                                    }
-                                }
-                                bool isUnicode = AppGlobal.ContainsUnicodeCharacter(title);
-                                if ((title.Contains(@"&#") == true) || (isUnicode == false))
-                                {
-                                    MatchCollection m1 = Regex.Matches(htmlTitle, @"(<title>.*?</title>)", RegexOptions.Singleline);
-                                    if (m1.Count > 0)
-                                    {
-                                        string value = m1[m1.Count - 1].Groups[1].Value;
-                                        if (!string.IsNullOrEmpty(value))
-                                        {
-                                            value = value.Replace(@"<title>", @"");
-                                            value = value.Replace(@"</title>", @"");
-                                            title = value.Trim();
-                                        }
-                                    }
-                                }
-                                if (title.Split('|').Length > 2)
-                                {
-                                    title = title.Split('|')[1];
-                                }
-                                if (title.Split('|').Length > 1)
-                                {
-                                    title = title.Split('|')[0];
-                                }
-                                title = title.Trim();
-                                Product product = new Product();
-                                product.Description = "";
-                                product.Title = title;
-                                product.ParentID = config.ID;
-                                product.CategoryID = config.ID;
-                                product.Source = AppGlobal.SourceAuto;
-                                if (string.IsNullOrEmpty(product.Title))
-                                {
-                                    product.Title = linkItem.Text;
-                                }
-                                product.URLCode = linkItem.Href;
-                                product.DatePublish = DateTime.Now;
-                                product.Initialization(InitType.Insert, RequestUserID);
-                                product.DatePublish = DateTime.Now;
-                                AppGlobal.FinderContentAndDatePublish001(html, product);
-                                if ((product.DatePublish.Year > 2019) && (product.Active == true))
-                                {
-                                    if (!string.IsNullOrEmpty(product.Title))
-                                    {
-                                        product.Title = AppGlobal.Decode(product.Title);
-                                        product.MetaTitle = AppGlobal.SetName(product.Title);
-                                    }
-                                    if (!string.IsNullOrEmpty(product.Description))
-                                    {
-                                        product.Description = AppGlobal.Decode(product.Description);
-                                    }
-                                    await _productRepository.AsyncInsertSingleItem(product);
-                                }
-                                response.Close();
-                                readStream.Close();
+                                product.Title = HttpUtility.HtmlDecode(product.Title);
+                                product.MetaTitle = AppGlobal.SetName(product.Title);
                             }
-                        }
-                        catch (Exception e1)
-                        {
-                            string mes1 = e1.Message;
+                            if (!string.IsNullOrEmpty(product.Description))
+                            {
+                                product.Description = HttpUtility.HtmlDecode(product.Description);
+                            }
+                            if (!string.IsNullOrEmpty(product.ContentMain))
+                            {
+                                product.ContentMain = HttpUtility.HtmlDecode(product.ContentMain);
+                            }
+                            await _productRepository.AsyncInsertSingleItemAutoNoFilter(product);
                         }
                     }
                 }
